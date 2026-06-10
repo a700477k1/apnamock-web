@@ -1,0 +1,12 @@
+{
+  "name": "apnamock-web",
+  "version": "1.0.0",
+  "description": "ApnaMock - Free mock tests for Indian competitive exams",
+  "scripts": {
+    "build": "echo 'No build needed for static site'",
+    "deploy": "wrangler pages deploy ."
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
