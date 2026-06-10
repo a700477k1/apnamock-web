@@ -23,17 +23,17 @@ jobs:
         node-version: '20'
     
     - name: Install Wrangler
-      run: npm install -g wrangler
+      run: npm install -g wrangler@3
     
     - name: Deploy to Cloudflare Pages
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       run: |
-        wrangler pages deploy . --project-name=apnamock-web --branch=main
+        wrangler pages deploy . --project-name=apnamock-web --branch=main --commit-dirty=true
     
     - name: Purge jsDelivr Cache
       run: |
         # Purge jsDelivr cache for updated assets
-        curl -X GET "https://purge.jsdelivr.net/gh/a700477k1/apnamock-static@main/" || true
+        curl -X GET "https://purge.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/" || true
       continue-on-error: true
