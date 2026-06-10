@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Test Builder - ApnaMock</title>
+  <meta name="description" content="Create custom mock tests tailored to your needs. Choose subjects, topics, difficulty levels and number of questions.">
+  <meta name="theme-color" content="#4F46E5">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
+    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
+    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
+    .builder-container { max-width: 900px; margin: 0 auto; }
+    .builder-section { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-8); margin-bottom: var(--space-6); border: 1px solid var(--border-light); }
+    .builder-section-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3); }
+    .builder-section-title i { color: var(--primary); }
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-8); }
+    .preset-card { background: var(--bg-card); border: 2px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-6); cursor: pointer; transition: all var(--transition-fast); text-align: center; }
+    .preset-card:hover { border-color: var(--primary-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .preset-card.active { border-color: var(--primary); background: var(--primary-50); }
+    .preset-icon { font-size: var(--text-3xl); margin-bottom: var(--space-3); }
+    .preset-name { font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-1); }
+    .preset-desc { font-size: var(--text-sm); color: var(--text-secondary); }
+    .builder-form { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    .form-group { margin-bottom: var(--space-6); }
+    .form-group.full-width { grid-column: 1 / -1; }
+    .form-label { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2); }
+    .form-input, .form-select { width: 100%; padding: var(--space-3) var(--space-4); font-size: var(--text-base); font-family: var(--font-sans); color: var(--text-primary); background: var(--bg-primary); border: 2px solid var(--border-light); border-radius: var(--radius-lg); transition: all var(--transition-fast); }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
+    .chip-group { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .chip { padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; cursor: pointer; transition: all var(--transition-fast); }
+    .chip:hover { border-color: var(--primary-light); color: var(--primary); }
+    .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .preview-box { background: var(--bg-tertiary); border-radius: var(--radius-xl); padding: var(--space-6); border: 2px dashed var(--border-medium); }
+    .preview-title { font-weight: 700; margin-bottom: var(--space-4); }
+    .preview-item { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-light); font-size: var(--text-sm); }
+    .preview-item:last-child { border-bottom: none; }
+    .preview-label { color: var(--text-secondary); }
+    .preview-value { font-weight: 600; color: var(--text-primary); }
+    .preview-warning { background: var(--warning-50); color: var(--warning-dark); padding: var(--space-4); border-radius: var(--radius-lg); margin-top: var(--space-4); font-size: var(--text-sm); }
+    .preview-success { background: var(--success-50); color: var(--success-dark); padding: var(--space-4); border-radius: var(--radius-lg); margin-top: var(--space-4); font-size: var(--text-sm); }
+    .range-input { width: 100%; margin-top: var(--space-2); }
+    .range-value { text-align: center; font-weight: 600; color: var(--primary); margin-top: var(--space-2); }
+    @media (max-width: 768px) {
+      .builder-form { grid-template-columns: 1fr; }
+      .preset-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <nav style="display: flex; gap: var(--space-6); align-items: center;">
+          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
+          <a href="tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Tests</a>
+          <a href="custom-tests.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Custom</a>
+          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
+          <a href="history.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">History</a>
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Custom Test Builder</h1>
+      <p>Create a personalized mock test tailored to your preparation needs</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <div class="builder-container">
+        <!-- Presets -->
+        <div class="builder-section">
+          <div class="builder-section-title">
+            <i class="fas fa-bolt"></i>
+            Quick Presets
+          </div>
+          <div class="preset-grid">
+            <div class="preset-card" data-preset="full-length">
+              <div class="preset-icon">📋</div>
+              <div class="preset-name">Full Length</div>
+              <div class="preset-desc">100 questions, 60 minutes</div>
+            </div>
+            <div class="preset-card" data-preset="sectional">
+              <div class="preset-icon">🎯</div>
+              <div class="preset-name">Sectional</div>
+              <div class="preset-desc">25 questions per section</div>
+            </div>
+            <div class="preset-card" data-preset="topic-wise">
+              <div class="preset-icon">🔍</div>
+              <div class="preset-name">Topic Wise</div>
+              <div class="preset-desc">Focus on specific topics</div>
+            </div>
+            <div class="preset-card" data-preset="quick">
+              <div class="preset-icon">⚡</div>
+              <div class="preset-name">Quick Practice</div>
+              <div class="preset-desc">20 questions, 15 minutes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Configuration -->
+        <div class="builder-section">
+          <div class="builder-section-title">
+            <i class="fas fa-sliders"></i>
+            Test Configuration
+          </div>
+          <form id="custom-test-form" class="builder-form">
+            <div class="form-group">
+              <label class="form-label">Exam Type</label>
+              <select class="form-select" id="exam-type" required>
+                <option value="">Select Exam</option>
+                <option value="ssc">SSC (CGL/CHSL/CPO)</option>
+                <option value="banking">Banking (IBPS/SBI/RBI)</option>
+                <option value="railway">Railway (RRB NTPC/Group D)</option>
+                <option value="teaching">Teaching (CTET/TET)</option>
+                <option value="defence">Defence (CDS/AFCAT)</option>
+                <option value="upsc">UPSC (CSAT)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subjects (Select multiple)</label>
+              <div class="chip-group" id="subjects">
+                <button type="button" class="chip" data-value="quant">Quantitative Aptitude</button>
+                <button type="button" class="chip" data-value="reasoning">Reasoning</button>
+                <button type="button" class="chip" data-value="english">English</button>
+                <button type="button" class="chip" data-value="gk">General Knowledge</button>
+                <button type="button" class="chip" data-value="computer">Computer Awareness</button>
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Number of Questions: <span id="question-count">50</span></label>
+              <input type="range" class="range-input" id="num-questions" min="10" max="200" value="50" step="10">
+              <div class="range-value">10 <span style="float:right;">200</span></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Difficulty Level</label>
+              <select class="form-select" id="difficulty">
+                <option value="mixed">Mixed (Easy + Moderate + Hard)</option>
+                <option value="easy">Easy Only</option>
+                <option value="moderate">Moderate Only</option>
+                <option value="hard">Hard Only</option>
+                <option value="easy-moderate">Easy + Moderate</option>
+                <option value="moderate-hard">Moderate + Hard</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Question Type</label>
+              <select class="form-select" id="question-type">
+                <option value="mixed">Mixed (MCQ + True/False + Fill in blanks)</option>
+                <option value="mcq">Multiple Choice Only</option>
+                <option value="previous-year">Previous Year Questions Only</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Time Limit (minutes): <span id="time-display">30</span></label>
+              <input type="range" class="range-input" id="time-limit" min="5" max="180" value="30" step="5">
+              <div class="range-value">5 min <span style="float:right;">180 min</span></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Language</label>
+              <select class="form-select" id="language">
+                <option value="bilingual">Bilingual (Hindi + English)</option>
+                <option value="english">English Only</option>
+                <option value="hindi">Hindi Only</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Negative Marking</label>
+              <select class="form-select" id="negative-marking">
+                <option value="0">No Negative Marking</option>
+                <option value="0.25">-0.25 per wrong answer</option>
+                <option value="0.33">-0.33 per wrong answer</option>
+                <option value="0.5">-0.5 per wrong answer</option>
+              </select>
+            </div>
+          </form>
+        </div>
+
+        <!-- Preview -->
+        <div class="builder-section">
+          <div class="builder-section-title">
+            <i class="fas fa-eye"></i>
+            Test Preview
+          </div>
+          <div class="preview-box" id="preview-box">
+            <div class="preview-title">Your Custom Test</div>
+            <div class="preview-item">
+              <span class="preview-label">Exam Type:</span>
+              <span class="preview-value" id="preview-exam">Not selected</span>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Subjects:</span>
+              <span class="preview-value" id="preview-subjects">None selected</span>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Questions:</span>
+              <span class="preview-value" id="preview-questions">50</span>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Time Limit:</span>
+              <span class="preview-value" id="preview-time">30 minutes</span>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Difficulty:</span>
+              <span class="preview-value" id="preview-difficulty">Mixed</span>
+            </div>
+            <div class="preview-item">
+              <span class="preview-label">Negative Marking:</span>
+              <span class="preview-value" id="preview-negative">None</span>
+            </div>
+            <div class="preview-success" id="preview-status">
+              ✅ Ready to generate! Click "Generate Test" to start.
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: var(--space-4); justify-content: center; margin-top: var(--space-8);">
+          <button type="button" class="btn btn-primary btn-lg" id="generate-btn">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate Test
+          </button>
+          <button type="button" class="btn btn-outline btn-lg" id="reset-btn">
+            <i class="fas fa-rotate-left"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+          © 2024 ApnaMock. Practice. Improve. Succeed.
+        </div>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
+          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
+          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      const presets = {
+        'full-length': { questions: 100, time: 60 },
+        'sectional': { questions: 25, time: 20 },
+        'topic-wise': { questions: 30, time: 25 },
+        'quick': { questions: 20, time: 15 }
+      };
+
+      let selectedSubjects = new Set();
+
+      // Preset selection
+      document.querySelectorAll('.preset-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          
+          const preset = presets[card.dataset.preset];
+          if (preset) {
+            document.getElementById('num-questions').value = preset.questions;
+            document.getElementById('question-count').textContent = preset.questions;
+            document.getElementById('time-limit').value = preset.time;
+            document.getElementById('time-display').textContent = preset.time;
+            updatePreview();
+          }
+        });
+      });
+
+      // Subject chips
+      document.querySelectorAll('#subjects .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const value = chip.dataset.value;
+          if (selectedSubjects.has(value)) {
+            selectedSubjects.delete(value);
+            chip.classList.remove('active');
+          } else {
+            selectedSubjects.add(value);
+            chip.classList.add('active');
+          }
+          updatePreview();
+        });
+      });
+
+      // Range inputs
+      document.getElementById('num-questions').addEventListener('input', (e) => {
+        document.getElementById('question-count').textContent = e.target.value;
+        updatePreview();
+      });
+
+      document.getElementById('time-limit').addEventListener('input', (e) => {
+        document.getElementById('time-display').textContent = e.target.value;
+        updatePreview();
+      });
+
+      // Form changes
+      ['exam-type', 'difficulty', 'question-type', 'language', 'negative-marking'].forEach(id => {
+        document.getElementById(id).addEventListener('change', updatePreview);
+      });
+
+      function updatePreview() {
+        const exam = document.getElementById('exam-type');
+        const examText = exam.options[exam.selectedIndex]?.text || 'Not selected';
+        
+        const subjects = selectedSubjects.size > 0 
+          ? Array.from(selectedSubjects).map(s => {
+              const map = { quant: 'Quant', reasoning: 'Reasoning', english: 'English', gk: 'GK', computer: 'Computer' };
+              return map[s] || s;
+            }).join(', ')
+          : 'None selected';
+        
+        const questions = document.getElementById('num-questions').value;
+        const time = document.getElementById('time-limit').value;
+        
+        const difficulty = document.getElementById('difficulty');
+        const difficultyText = difficulty.options[difficulty.selectedIndex]?.text || 'Mixed';
+        
+        const negative = document.getElementById('negative-marking');
+        const negativeText = negative.options[negative.selectedIndex]?.text || 'None';
+
+        document.getElementById('preview-exam').textContent = examText;
+        document.getElementById('preview-subjects').textContent = subjects;
+        document.getElementById('preview-questions').textContent = questions;
+        document.getElementById('preview-time').textContent = time + ' minutes';
+        document.getElementById('preview-difficulty').textContent = difficultyText;
+        document.getElementById('preview-negative').textContent = negativeText;
+
+        // Validation
+        const statusEl = document.getElementById('preview-status');
+        if (!exam.value || selectedSubjects.size === 0) {
+          statusEl.className = 'preview-warning';
+          statusEl.innerHTML = '⚠️ Please select an exam type and at least one subject.';
+        } else {
+          statusEl.className = 'preview-success';
+          statusEl.innerHTML = '✅ Ready to generate! Click "Generate Test" to start.';
+        }
+      }
+
+      // Generate test
+      document.getElementById('generate-btn').addEventListener('click', () => {
+        const exam = document.getElementById('exam-type').value;
+        if (!exam || selectedSubjects.size === 0) {
+          ApnaMock.toast.warning('Please select an exam type and at least one subject.');
+          return;
+        }
+
+        const config = {
+          exam,
+          subjects: Array.from(selectedSubjects),
+          questions: parseInt(document.getElementById('num-questions').value),
+          time: parseInt(document.getElementById('time-limit').value),
+          difficulty: document.getElementById('difficulty').value,
+          questionType: document.getElementById('question-type').value,
+          language: document.getElementById('language').value,
+          negativeMarking: parseFloat(document.getElementById('negative-marking').value),
+          generated_at: new Date().toISOString()
+        };
+
+        // Store config and redirect to quiz
+        const configData = encodeURIComponent(JSON.stringify(config));
+        window.location.href = `quiz.html?custom=${configData}`;
+      });
+
+      // Reset
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        document.getElementById('custom-test-form').reset();
+        selectedSubjects.clear();
+        document.querySelectorAll('#subjects .chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+        document.getElementById('question-count').textContent = '50';
+        document.getElementById('time-display').textContent = '30';
+        updatePreview();
+      });
+
+      // Initialize preview
+      updatePreview();
+    })();
+  </script>
+</body>
+</html>
