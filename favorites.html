@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorites - ApnaMock</title>
+  <meta name="description" content="Your saved favorite questions for quick revision.">
+  <meta name="theme-color" content="#4F46E5">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
+    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
+    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
+    .favorites-grid { display: grid; gap: var(--space-6); }
+    .favorite-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); border: 1px solid var(--border-light); transition: all var(--transition-base); }
+    .favorite-card:hover { box-shadow: var(--shadow-lg); }
+    .favorite-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4); }
+    .favorite-meta { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap; }
+    .favorite-meta span { font-size: var(--text-xs); color: var(--text-secondary); background: var(--bg-secondary); padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); }
+    .favorite-actions { display: flex; gap: var(--space-3); margin-top: var(--space-4); }
+    .remove-btn { color: var(--danger); background: none; border: none; cursor: pointer; font-size: var(--text-sm); padding: var(--space-2); }
+    .remove-btn:hover { background: var(--danger-50); border-radius: var(--radius-lg); }
+    .practice-btn { color: var(--primary); background: none; border: 1px solid var(--primary); padding: var(--space-2) var(--space-4); border-radius: var(--radius-lg); font-size: var(--text-sm); text-decoration: none; }
+    .practice-btn:hover { background: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <nav style="display: flex; gap: var(--space-6); align-items: center;">
+          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
+          <a href="tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Tests</a>
+          <a href="custom-tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Custom</a>
+          <a href="favorites.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Favorites</a>
+          <a href="history.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">History</a>
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Favorites</h1>
+      <p>Your saved questions for quick revision</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <div id="favorites-container"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+          © 2024 ApnaMock. Practice. Improve. Succeed.
+        </div>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
+          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
+          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      function renderFavorites() {
+        const container = document.getElementById('favorites-container');
+        const favorites = ApnaMock.favorites.getAll();
+
+        if (!favorites.length) {
+          container.innerHTML = ApnaMock.ui.emptyState(
+            '⭐',
+            'No Favorites Yet',
+            'Save questions during practice to see them here.',
+            { href: 'tests.html', label: 'Start Practicing' }
+          );
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="favorites-grid">
+            ${favorites.map((fav, index) => `
+              <div class="favorite-card" data-index="${index}">
+                <div class="favorite-header">
+                  <div class="favorite-meta">
+                    <span>${fav.exam || 'General'}</span>
+                    <span>${fav.subject || 'Mixed'}</span>
+                    <span>${fav.difficulty || 'Moderate'}</span>
+                  </div>
+                  <button class="remove-btn" data-index="${index}" title="Remove from favorites">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <p style="font-weight: 600; margin-bottom: var(--space-4);">${fav.question_text || 'Question text unavailable'}</p>
+                <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+                  <p>Correct Answer: <span style="color: var(--secondary); font-weight: 600;">${fav.correct_answer || 'N/A'}</span></p>
+                  ${fav.explanation ? `<p style="margin-top: var(--space-2);">${fav.explanation}</p>` : ''}
+                </div>
+                <div class="favorite-actions">
+                  <a href="quiz.html?test=${fav.test_id}#question-${fav.question_index}" class="practice-btn">Practice Again</a>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        // Add remove event listeners
+        container.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            const favorites = ApnaMock.favorites.getAll();
+            const questionId = favorites[index]?.question_id;
+            if (questionId) {
+              ApnaMock.favorites.remove(questionId);
+              renderFavorites();
+            }
+          });
+        });
+      }
+
+      renderFavorites();
+    })();
+  </script>
+</body>
+</html>
