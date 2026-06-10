@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  
+  <title>ApnaMock - Practice. Improve. Succeed.</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="ApnaMock - Practice. Improve. Succeed. Free mock tests for SSC, Banking, Railway, Teaching, Defence and other competitive exams. Previous year questions, full-length tests, sectional tests, and custom test builder."/>
+  <meta name="keywords" content="mock test, SSC, Banking, Railway, Teaching, Defence, competitive exams, previous year questions, online test series, free mock tests, exam preparation"/>
+  <meta name="author" content="ApnaMock"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="theme-color" content="#4F46E5"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="ApnaMock"/>
+  
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="ApnaMock"/>
+  <meta property="og:title" content="ApnaMock - Practice. Improve. Succeed."/>
+  <meta property="og:description" content="Free mock tests for SSC, Banking, Railway, Teaching, Defence and other competitive exams. Build custom tests, practice previous year questions, track your progress."/>
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/assets/og-image.png"/>
+  <meta property="og:url" content="https://apnamock.pages.dev/"/>
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="ApnaMock - Practice. Improve. Succeed."/>
+  <meta name="twitter:description" content="Free mock tests for competitive exams."/>
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/assets/og-image.png"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E"/>
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234F46E5' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='50' fill='white' font-family='Arial'%3EA%3C/text%3E%3C/svg%3E"/>
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Font Awesome (free CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  
+  <!-- Critical CSS Inline (above-the-fold styles) -->
+  <style>
+    /* ===== CSS RESET AND BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; line-height: 1.6; color: #1e293b; background: #f8fafc; min-height: 100vh; }
+    
+    /* ===== CSS VARIABLES (Design Tokens) ===== */
+    :root {
+      /* Primary Colors */
+      --primary: #4F46E5; --primary-dark: #4338CA; --primary-light: #818CF8; --primary-50: #EEF2FF;
+      --primary-100: #E0E7FF; --primary-600: #4F46E5; --primary-700: #4338CA;
+      /* Secondary Colors */
+      --secondary: #10B981; --secondary-dark: #059669; --secondary-light: #34D399; --secondary-50: #ECFDF5;
+      /* Accent Colors */
+      --accent: #F59E0B; --accent-dark: #D97706; --accent-light: #FCD34D; --accent-50: #FFFBEB;
+      /* Danger/Error */
+      --danger: #EF4444; --danger-dark: #DC2626; --danger-light: #FCA5A5; --danger-50: #FEF2F2;
+      /* Info */
+      --info: #3B82F6; --info-dark: #2563EB; --info-light: #93C5FD; --info-50: #EFF6FF;
+      /* Neutral Colors */
+      --gray-50: #F9FAFB; --gray-100: #F3F4F6; --gray-200: #E5E7EB; --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF; --gray-500: #6B7280; --gray-600: #4B5563; --gray-700: #374151;
+      --gray-800: #1F2937; --gray-900: #111827;
+      /* Background Colors */
+      --bg-primary: #FFFFFF; --bg-secondary: #F8FAFC; --bg-dark: #111827; --bg-card: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      /* Text Colors */
+      --text-primary: #1E293B; --text-secondary: #64748B; --text-light: #FFFFFF;
+      --text-muted: #94A3B8; --text-placeholder: #CBD5E1;
+      /* Border Colors */
+      --border-light: #E2E8F0; --border-medium: #CBD5E1; --border-dark: #94A3B8;
+      /* Shadows */
+      --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.03); --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05), 0 1px 3px 0 rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.02);
+      --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.15);
+      /* Spacing Tokens */
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+      --space-12: 3rem; --space-16: 4rem; --space-20: 5rem; --space-24: 6rem;
+      /* Typography */
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Poppins', 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      /* Font Sizes */
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem;
+      --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 1.875rem; --text-4xl: 2.25rem;
+      --text-5xl: 3rem; --text-6xl: 3.75rem;
+      /* Border Radius */
+      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem;
+      --radius-2xl: 1.5rem; --radius-full: 9999px;
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Z-Index Scale */
+      --z-dropdown: 100; --z-sticky: 200; --z-modal-backdrop: 300; --z-modal: 350;
+      --z-popover: 400; --z-toast: 500; --z-tooltip: 600;
+      /* Layout */
+      --header-height: 64px; --header-height-mobile: 56px;
+      --max-width: 1280px; --content-padding: 1.5rem;
+      --sidebar-width: 280px;
+    }
+    
+    /* ===== DARK MODE ===== */
+    [data-theme="dark"] {
+      --bg-primary: #0F172A; --bg-secondary: #1E293B; --bg-card: #1E293B; --bg-elevated: #334155;
+      --text-primary: #F1F5F9; --text-secondary: #94A3B8; --text-muted: #64748B;
+      --border-light: #334155; --border-medium: #475569; --border-dark: #64748B;
+      --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.2); --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4); --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.5); --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.6);
+    }
+    
+    /* ===== APP CONTAINER ===== */
+    #app-root { min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* ===== HEADER / NAVBAR ===== */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-sticky);
+      height: var(--header-height); background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px) saturate(180%); -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-bottom: 1px solid var(--border-light); transition: all var(--transition-base);
+    }
+    [data-theme="dark"] .app-header { background: rgba(15,23,42,0.92); border-color: var(--border-light); }
+    
+    .app-header .header-inner {
+      max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding);
+      height: 100%; display: flex; align-items: center; justify-content: space-between;
+    }
+    
+    .app-header .brand {
+      display: flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--text-primary);
+    }
+    .app-header .brand-icon {
+      width: 36px; height: 36px; background: var(--primary); border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center; color: white;
+      font-weight: 700; font-size: var(--text-lg); font-family: var(--font-display);
+    }
+    .app-header .brand-text {
+      font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700;
+      color: var(--text-primary); letter-spacing: -0.02em;
+    }
+    .app-header .brand-tagline {
+      font-size: var(--text-xs); color: var(--text-secondary); font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase; margin-top: -2px;
+    }
+    
+    .app-header .nav-desktop { display: flex; align-items: center; gap: var(--space-1); }
+    .app-header .nav-desktop a {
+      padding: var(--space-2) var(--space-4); border-radius: var(--radius-md);
+      color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);
+      font-weight: 500; transition: all var(--transition-fast); position: relative;
+    }
+    .app-header .nav-desktop a:hover { color: var(--primary); background: var(--primary-50); }
+    .app-header .nav-desktop a.active { color: var(--primary); background: var(--primary-50); }
+    .app-header .nav-desktop a.active::after {
+      content: ''; position: absolute; bottom: -2px; left: var(--space-4); right: var(--space-4);
+      height: 2px; background: var(--primary); border-radius: var(--radius-full);
+    }
+    
+    .app-header .header-actions { display: flex; align-items: center; gap: var(--space-3); }
+    
+    /* Theme Toggle Button */
+    .theme-toggle {
+      width: 40px; height: 40px; border-radius: var(--radius-full); border: 1px solid var(--border-light);
+      background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); transition: all var(--transition-fast); font-size: var(--text-lg);
+    }
+    .theme-toggle:hover { background: var(--gray-100); color: var(--text-primary); border-color: var(--gray-300); }
+    [data-theme="dark"] .theme-toggle:hover { background: var(--gray-800); color: var(--text-primary); border-color: var(--gray-600); }
+    
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none; width: 40px; height: 40px; border-radius: var(--radius-md);
+      border: 1px solid var(--border-light); background: transparent; cursor: pointer;
+      align-items: center; justify-content: center; color: var(--text-primary); font-size: var(--text-xl);
+    }
+    
+    /* ===== MOBILE NAVIGATION ===== */
+    .mobile-nav-overlay {
+      position: fixed; inset: 0; z-index: var(--z-modal-backdrop); background: rgba(0,0,0,0.5);
+      opacity: 0; visibility: hidden; transition: all var(--transition-base);
+    }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    
+    .mobile-nav-drawer {
+      position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 85vw);
+      z-index: var(--z-modal); background: var(--bg-primary);
+      transform: translateX(-100%); transition: transform var(--transition-base);
+      box-shadow: var(--shadow-2xl); display: flex; flex-direction: column;
+    }
+    .mobile-nav-drawer.active { transform: translateX(0); }
+    
+    .mobile-nav-drawer .drawer-header {
+      padding: var(--space-6); border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .mobile-nav-drawer .drawer-close {
+      width: 36px; height: 36px; border-radius: var(--radius-full); border: none;
+      background: var(--gray-100); cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: var(--text-secondary); font-size: var(--text-lg);
+    }
+    [data-theme="dark"] .mobile-nav-drawer .drawer-close { background: var(--gray-800); color: var(--text-secondary); }
+    
+    .mobile-nav-drawer .drawer-nav { padding: var(--space-4); flex: 1; overflow-y: auto; }
+    .mobile-nav-drawer .drawer-nav a {
+      display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);
+      border-radius: var(--radius-lg); color: var(--text-secondary); text-decoration: none;
+      font-size: var(--text-base); font-weight: 500; transition: all var(--transition-fast);
+      margin-bottom: var(--space-1);
+    }
+    .mobile-nav-drawer .drawer-nav a:hover { background: var(--primary-50); color: var(--primary); }
+    .mobile-nav-drawer .drawer-nav a.active { background: var(--primary-50); color: var(--primary); }
+    .mobile-nav-drawer .drawer-nav a i { width: 24px; text-align: center; font-size: var(--text-lg); }
+    
+    .mobile-nav-drawer .drawer-footer {
+      padding: var(--space-6); border-top: 1px solid var(--border-light);
+    }
+    .mobile-nav-drawer .drawer-footer .theme-toggle-mobile {
+      width: 100%; padding: var(--space-3); border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light); background: transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+      color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500;
+    }
+    
+    /* ===== MAIN CONTENT AREA ===== */
+    .app-main {
+      flex: 1; padding-top: var(--header-height); min-height: 100vh;
+    }
+    .app-main .content-wrapper {
+      max-width: var(--max-width); margin: 0 auto; padding: var(--space-8) var(--content-padding);
+    }
+    
+    /* ===== HERO SECTION ===== */
+    .hero-section {
+      display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16);
+      align-items: center; padding: var(--space-16) 0;
+    }
+    .hero-title {
+      font-family: var(--font-display); font-size: var(--text-5xl); font-weight: 800;
+      color: var(--text-primary); line-height: 1.1; letter-spacing: -0.02em;
+      margin-bottom: var(--space-6);
+    }
+    .hero-subtitle {
+      font-size: var(--text-lg); color: var(--text-secondary); line-height: 1.7;
+      margin-bottom: var(--space-8); max-width: 540px;
+    }
+    .hero-actions { display: flex; gap: var(--space-4); margin-bottom: var(--space-10); }
+    .hero-actions .btn {
+      padding: var(--space-4) var(--space-8); border-radius: var(--radius-xl);
+      font-size: var(--text-base); font-weight: 600; text-decoration: none;
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      transition: all var(--transition-base); cursor: pointer; border: none;
+    }
+    .hero-actions .btn-primary {
+      background: var(--primary); color: white; box-shadow: var(--shadow-lg);
+    }
+    .hero-actions .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+    .hero-actions .btn-outline {
+      background: transparent; color: var(--primary); border: 2px solid var(--primary);
+    }
+    .hero-actions .btn-outline:hover { background: var(--primary-50); }
+    
+    .hero-stats { display: flex; gap: var(--space-8); }
+    .stat-item { text-align: center; }
+    .stat-number { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 700; color: var(--primary); display: block; }
+    .stat-label { font-size: var(--text-sm); color: var(--text-secondary); font-weight: 500; }
+    
+    .hero-visual { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .hero-card {
+      background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border-light);
+      transition: all var(--transition-base);
+    }
+    .hero-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl); }
+    .hero-card .card-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-lg); display: flex;
+      align-items: center; justify-content: center; font-size: var(--text-xl); margin-bottom: var(--space-4);
+    }
+    .hero-card-1 .card-icon { background: var(--primary-50); color: var(--primary); }
+    .hero-card-2 .card-icon { background: var(--secondary-50); color: var(--secondary); }
+    .hero-card-3 .card-icon { background: var(--accent-50); color: var(--accent); }
+    .hero-card .card-title { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-1); }
+    .hero-card .card-desc { font-size: var(--text-sm); color: var(--text-secondary); }
+    
+    /* ===== EXAMS SECTION ===== */
+    .section-exams { padding: var(--space-16) 0; }
+    .section-title {
+      font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 700;
+      color: var(--text-primary); text-align: center; margin-bottom: var(--space-10);
+    }
+    .exam-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);
+    }
+    .exam-card {
+      background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6);
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+      text-decoration: none; color: var(--text-primary); transition: all var(--transition-base);
+      display: flex; align-items: center; gap: var(--space-4);
+    }
+    .exam-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+    .exam-card .exam-icon {
+      width: 56px; height: 56px; border-radius: var(--radius-lg); display: flex;
+      align-items: center; justify-content: center; font-size: var(--text-2xl); flex-shrink: 0;
+    }
+    .exam-card .exam-name { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-1); }
+    .exam-card .exam-count { font-size: var(--text-sm); color: var(--text-secondary); }
+    
+    /* ===== FEATURES SECTION ===== */
+    .section-features { padding: var(--space-16) 0; background: var(--bg-secondary); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-6);
+    }
+    .feature-card {
+      background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-8);
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); text-align: center;
+      transition: all var(--transition-base);
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .feature-card .feature-icon {
+      width: 64px; height: 64px; border-radius: var(--radius-xl); display: flex;
+      align-items: center; justify-content: center; font-size: var(--text-3xl); margin: 0 auto var(--space-6);
+      background: var(--primary-50); color: var(--primary);
+    }
+    .feature-card h3 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; margin-bottom: var(--space-3); }
+    .feature-card p { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6; }
+    
+    /* ===== CUSTOM FOOTER ===== */
+    .app-footer {
+      background: var(--bg-secondary); border-top: 1px solid var(--border-light);
+      padding: var(--space-16) 0 var(--space-8);
+    }
+    .app-footer .footer-inner {
+      max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding);
+    }
+    .app-footer .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--space-12);
+      margin-bottom: var(--space-12);
+    }
+    .app-footer .footer-brand { margin-bottom: var(--space-4); }
+    .app-footer .footer-brand .brand-icon {
+      width: 40px; height: 40px; background: var(--primary); border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center; color: white;
+      font-weight: 700; font-size: var(--text-xl); font-family: var(--font-display); margin-bottom: var(--space-4);
+    }
+    .app-footer .footer-brand .brand-name {
+      font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--text-primary);
+    }
+    .app-footer .footer-brand .brand-desc {
+      font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6; margin-top: var(--space-2);
+    }
+    .app-footer .footer-column h4 {
+      font-size: var(--text-sm); font-weight: 600; color: var(--text-primary);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-5);
+    }
+    .app-footer .footer-column ul { list-style: none; }
+    .app-footer .footer-column li { margin-bottom: var(--space-3); }
+    .app-footer .footer-column a {
+      color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);
+      transition: color var(--transition-fast); display: flex; align-items: center; gap: var(--space-2);
+    }
+    .app-footer .footer-column a:hover { color: var(--primary); }
+    .app-footer .footer-bottom {
+      border-top: 1px solid var(--border-light); padding-top: var(--space-8);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);
+    }
+    .app-footer .footer-bottom p {
+      font-size: var(--text-sm); color: var(--text-muted); margin: 0;
+    }
+    .app-footer .footer-bottom .footer-links { display: flex; gap: var(--space-6); }
+    .app-footer .footer-bottom .footer-links a {
+      font-size: var(--text-sm); color: var(--text-muted); text-decoration: none; transition: color var(--transition-fast);
+    }
+    .app-footer .footer-bottom .footer-links a:hover { color: var(--primary); }
+    
+    /* ===== LOADING SKELETON ===== */
+    .skeleton { background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite; border-radius: var(--radius-md); }
+    [data-theme="dark"] .skeleton { background: linear-gradient(90deg, var(--gray-700) 25%, var(--gray-600) 50%, var(--gray-700) 75%); }
+    @keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--gray-400); border-radius: var(--radius-full); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gray-500); }
+    [data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--gray-600); }
+    [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: var(--gray-500); }
+    
+    /* ===== SELECTION ===== */
+    ::selection { background: var(--primary-light); color: white; }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .hero-section { grid-template-columns: 1fr; gap: var(--space-10); text-align: center; }
+      .hero-title { font-size: var(--text-4xl); }
+      .hero-subtitle { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { max-width: 500px; margin: 0 auto; }
+      .app-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+    }
+    @media (max-width: 768px) {
+      :root { --header-height: var(--header-height-mobile); --content-padding: 1rem; }
+      .app-header .nav-desktop { display: none; }
+      .mobile-menu-toggle { display: flex; }
+      .app-header .brand-text { font-size: var(--text-lg); }
+      .hero-title { font-size: var(--text-3xl); }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .hero-actions .btn { width: 100%; max-width: 300px; justify-content: center; }
+      .hero-stats { flex-direction: column; gap: var(--space-4); }
+      .hero-visual { grid-template-columns: 1fr; }
+      .exam-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .app-footer .footer-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+      .app-footer .footer-bottom { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .app-main .content-wrapper { padding: var(--space-6) var(--content-padding); }
+      .app-header .brand-tagline { display: none; }
+      .hero-title { font-size: var(--text-2xl); }
+    }
+  </style>
+  
+  <!-- Deferred CSS -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/css/apnamock.css"/></noscript>
+</head>
+
+<body data-theme="light">
+  <!-- Theme initialization (prevents flash) -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('apnamock_theme') || 'light';
+      document.body.setAttribute('data-theme', theme);
+    })();
+  </script>
+  
+  <div id="app-root">
+    <!-- ===== HEADER ===== -->
+    <header class="app-header" id="appHeader">
+      <div class="header-inner">
+        <a href="/" class="brand" aria-label="ApnaMock Home">
+          <div class="brand-icon">A</div>
+          <div>
+            <div class="brand-text">ApnaMock</div>
+            <div class="brand-tagline">Practice. Improve. Succeed.</div>
+          </div>
+        </a>
+        
+        <nav class="nav-desktop" aria-label="Main navigation">
+          <a href="/tests.html" class="nav-link" data-page="tests"><i class="fas fa-layer-group" style="margin-right:6px;"></i>Tests</a>
+          <a href="/custom-tests.html" class="nav-link" data-page="custom"><i class="fas fa-wand-magic-sparkles" style="margin-right:6px;"></i>Custom</a>
+          <a href="/favorites.html" class="nav-link" data-page="favorites"><i class="fas fa-heart" style="margin-right:6px;"></i>Favorites</a>
+          <a href="/history.html" class="nav-link" data-page="history"><i class="fas fa-clock-rotate-left" style="margin-right:6px;"></i>History</a>
+        </nav>
+        
+        <div class="header-actions">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+            <span id="themeIcon"><i class="fas fa-moon"></i></span>
+          </button>
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open menu" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- ===== MOBILE NAVIGATION DRAWER ===== -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile navigation">
+      <div class="drawer-header">
+        <a href="/" class="brand" style="text-decoration:none;">
+          <div class="brand-icon" style="width:32px;height:32px;font-size:var(--text-base);">A</div>
+          <span class="brand-text" style="font-size:var(--text-lg);">ApnaMock</span>
+        </a>
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <nav class="drawer-nav" aria-label="Mobile menu">
+        <a href="/tests.html" data-page="tests"><i class="fas fa-layer-group"></i> All Tests</a>
+        <a href="/custom-tests.html" data-page="custom"><i class="fas fa-wand-magic-sparkles"></i> Custom Tests</a>
+        <a href="/favorites.html" data-page="favorites"><i class="fas fa-heart"></i> Favorites</a>
+        <a href="/history.html" data-page="history"><i class="fas fa-clock-rotate-left"></i> History</a>
+      </nav>
+      <div class="drawer-footer">
+        <button class="theme-toggle-mobile" id="themeToggleMobile">
+          <i class="fas fa-moon" id="themeIconMobile"></i>
+          <span id="themeTextMobile">Dark Mode</span>
+        </button>
+      </div>
+    </aside>
+    
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="app-main" id="appMain">
+      <div class="content-wrapper">
+        <!-- Homepage: Show app landing page -->
+        <div id="page-home" class="page-container">
+          <div class="hero-section">
+            <div class="hero-content">
+              <h1 class="hero-title">Master Your Competitive Exams</h1>
+              <p class="hero-subtitle">Free mock tests for SSC, Banking, Railway, Teaching, Defence and more. Practice with previous year questions, custom tests, and detailed analytics.</p>
+              <div class="hero-actions">
+                <a href="/tests.html" class="btn btn-primary btn-lg">
+                  <i class="fas fa-play"></i> Start Practicing
+                </a>
+                <a href="/custom-tests.html" class="btn btn-outline btn-lg">
+                  <i class="fas fa-wand-magic-sparkles"></i> Build Custom Test
+                </a>
+              </div>
+              <div class="hero-stats">
+                <div class="stat-item"><span class="stat-number" id="statTests">1000+</span><span class="stat-label">Mock Tests</span></div>
+                <div class="stat-item"><span class="stat-number" id="statQuestions">25K+</span><span class="stat-label">Questions</span></div>
+                <div class="stat-item"><span class="stat-number" id="statExams">10+</span><span class="stat-label">Exams</span></div>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <div class="hero-card hero-card-1">
+                <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                <div class="card-title">Quick Practice</div>
+                <div class="card-desc">5-10 min tests</div>
+              </div>
+              <div class="hero-card hero-card-2">
+                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="card-title">Track Progress</div>
+                <div class="card-desc">Detailed analytics</div>
+              </div>
+              <div class="hero-card hero-card-3">
+                <div class="card-icon"><i class="fas fa-shuffle"></i></div>
+                <div class="card-title">Custom Tests</div>
+                <div class="card-desc">Build your own</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="section-exams">
+            <h2 class="section-title">Popular Exams</h2>
+            <div class="exam-grid" id="examGrid">
+              <a href="/tests.html?exam=SSC" class="exam-card">
+                <div class="exam-icon" style="background:var(--primary-50);color:var(--primary);"><i class="fas fa-building-columns"></i></div>
+                <div class="exam-name">SSC</div>
+                <div class="exam-count">CGL, CHSL, MTS &amp; more</div>
+              </a>
+              <a href="/tests.html?exam=Banking" class="exam-card">
+                <div class="exam-icon" style="background:var(--secondary-50);color:var(--secondary);"><i class="fas fa-landmark"></i></div>
+                <div class="exam-name">Banking</div>
+                <div class="exam-count">IBPS, SBI, RBI &amp; more</div>
+              </a>
+              <a href="/tests.html?exam=Railway" class="exam-card">
+                <div class="exam-icon" style="background:#FEF3C7;color:#D97706;"><i class="fas fa-train"></i></div>
+                <div class="exam-name">Railway</div>
+                <div class="exam-count">NTPC, Group D &amp; more</div>
+              </a>
+              <a href="/tests.html?exam=Teaching" class="exam-card">
+                <div class="exam-icon" style="background:#E0E7FF;color:#4338CA;"><i class="fas fa-chalkboard-user"></i></div>
+                <div class="exam-name">Teaching</div>
+                <div class="exam-count">CTET, TET &amp; more</div>
+              </a>
+              <a href="/tests.html?exam=Defence" class="exam-card">
+                <div class="exam-icon" style="background:var(--danger-50);color:var(--danger);"><i class="fas fa-shield-halved"></i></div>
+                <div class="exam-name">Defence</div>
+                <div class="exam-count">NDA, CDS, AFCAT &amp; more</div>
+              </a>
+              <a href="/tests.html?exam=State" class="exam-card">
+                <div class="exam-icon" style="background:#F3E8FF;color:#7C3AED;"><i class="fas fa-map-location-dot"></i></div>
+                <div class="exam-name">State Exams</div>
+                <div class="exam-count">UPSC, State PSC &amp; more</div>
+              </a>
+            </div>
+          </div>
+          
+          <div class="section-features">
+            <h2 class="section-title">Why ApnaMock?</h2>
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-infinity"></i></div>
+                <h3>Unlimited Practice</h3>
+                <p>Generate unlimited custom tests from our question bank. Never run out of practice material.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-language"></i></div>
+                <h3>Bilingual Content</h3>
+                <p>Practice in Hindi, English, or both. Switch languages anytime during the test.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                <h3>Detailed Analytics</h3>
+                <p>Track your progress with section-wise analysis, time management insights, and improvement trends.</p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-mobile-screen"></i></div>
+                <h3>Mobile First</h3>
+                <p>Practice anywhere, anytime. Optimized for mobile with offline support and saved progress.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- ===== FOOTER ===== -->
+    <footer class="app-footer" id="appFooter">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <div class="footer-brand">
+              <div class="brand-icon">A</div>
+              <div class="brand-name">ApnaMock</div>
+              <p class="brand-desc">Free mock tests and practice questions for Indian competitive exams. Built for aspirants, by aspirants.</p>
+            </div>
+          </div>
+          <div class="footer-column">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="/tests.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> All Tests</a></li>
+              <li><a href="/custom-tests.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Custom Tests</a></li>
+              <li><a href="/favorites.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Favorites</a></li>
+              <li><a href="/history.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> History</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Exams</h4>
+            <ul>
+              <li><a href="/tests.html?exam=SSC"><i class="fas fa-chevron-right" style="font-size:10px;"></i> SSC</a></li>
+              <li><a href="/tests.html?exam=Banking"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Banking</a></li>
+              <li><a href="/tests.html?exam=Railway"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Railway</a></li>
+              <li><a href="/tests.html?exam=Teaching"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Teaching</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="/privacy.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Privacy Policy</a></li>
+              <li><a href="/terms.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Terms of Use</a></li>
+              <li><a href="/contact.html"><i class="fas fa-chevron-right" style="font-size:10px;"></i> Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>2026 ApnaMock. All rights reserved. Practice. Improve. Succeed.</p>
+          <div class="footer-links">
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+            <a href="/contact.html">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- ===== SHARED JAVASCRIPT ===== -->
+  <script>
+    // ===== THEME MANAGER =====
+    (function() {
+      const STORAGE_KEY = 'apnamock_theme';
+      const THEME_ATTR = 'data-theme';
+      
+      function getTheme() { return localStorage.getItem(STORAGE_KEY) || 'light'; }
+      function setTheme(theme) {
+        localStorage.setItem(STORAGE_KEY, theme);
+        document.body.setAttribute(THEME_ATTR, theme);
+        updateThemeIcon(theme);
+        document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+      }
+      function toggleTheme() { setTheme(getTheme() === 'dark' ? 'light' : 'dark'); }
+      function updateThemeIcon(theme) {
+        const icon = document.getElementById('themeIcon');
+        const mobileIcon = document.getElementById('themeIconMobile');
+        const mobileText = document.getElementById('themeTextMobile');
+        if (icon) icon.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        if (mobileIcon) mobileIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (mobileText) mobileText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+      }
+      
+      // Initialize
+      updateThemeIcon(getTheme());
+      
+      // Event listeners
+      document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+      document.getElementById('themeToggleMobile')?.addEventListener('click', toggleTheme);
+      
+      // Expose globally
+      window.ApnaMockTheme = { getTheme, setTheme, toggleTheme };
+    })();
+    
+    // ===== MOBILE NAVIGATION =====
+    (function() {
+      const overlay = document.getElementById('mobileNavOverlay');
+      const drawer = document.getElementById('mobileNavDrawer');
+      const toggle = document.getElementById('mobileMenuToggle');
+      const close = document.getElementById('drawerClose');
+      
+      function open() {
+        overlay?.classList.add('active');
+        drawer?.classList.add('active');
+        toggle?.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeNav() {
+        overlay?.classList.remove('active');
+        drawer?.classList.remove('active');
+        toggle?.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+      
+      toggle?.addEventListener('click', open);
+      close?.addEventListener('click', closeNav);
+      overlay?.addEventListener('click', closeNav);
+      
+      // Close on escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && drawer?.classList.contains('active')) closeNav();
+      });
+      
+      // Close on link click
+      drawer?.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', closeNav);
+      });
+    })();
+    
+    // ===== ACTIVE NAV LINK =====
+    (function() {
+      var path = window.location.pathname;
+      var page = path.split('/').pop().replace('.html', '') || 'home';
+      document.querySelectorAll('[data-page]').forEach(function(link) {
+        if (link.getAttribute('data-page') === page) link.classList.add('active');
+      });
+    })();
+    
+    // ===== SCROLL HEADER EFFECT =====
+    (function() {
+      var header = document.getElementById('appHeader');
+      if (!header) return;
+      var lastScroll = 0;
+      window.addEventListener('scroll', function() {
+        var current = window.pageYOffset;
+        if (current > 10) { header.style.boxShadow = 'var(--shadow-md)'; }
+        else { header.style.boxShadow = 'none'; }
+        lastScroll = current;
+      }, { passive: true });
+    })();
+  </script>
+  
+  <!-- Deferred JS Modules -->
+  <script defer="defer" src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/js/apnamock-core.js"></script>
+  <script defer="defer" src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static@main/js/apnamock-ui.js"></script>
+</body>
+</html>
