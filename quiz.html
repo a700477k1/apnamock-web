@@ -76,10 +76,16 @@
 
       const urlParams = ApnaMock.utils.getUrlParams();
       const testId = urlParams.test;
+      const customConfig = urlParams.custom ? JSON.parse(decodeURIComponent(urlParams.custom)) : null;
 
       async function loadQuiz() {
+        if (customConfig) {
+          await loadCustomQuiz();
+          return;
+        }
+
         if (!testId) {
-          document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">No test selected. <a href="tests.html">Browse tests</a></p>';
+          document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">No test selected. <a href="tests.html">Browse tests</a> or <a href="custom-tests.html">Create custom test</a></p>';
           return;
         }
 
@@ -103,6 +109,71 @@
           console.error('Error loading quiz:', error);
           document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">Failed to load quiz. Please try again.</p>';
         }
+      }
+
+      async function loadCustomQuiz() {
+        try {
+          // Generate a custom test based on the configuration
+          const config = customConfig;
+          
+          // Fetch question pools based on subjects and exam type
+          const allQuestions = await fetchQuestionsForCustom(config);
+          
+          // Shuffle and select required number of questions
+          const shuffled = ApnaMock.utils.shuffleArray(allQuestions);
+          const selected = shuffled.slice(0, config.questions);
+          
+          testData = {
+            id: `generated_${new Date().toISOString().slice(0,10).replace(/-/g,'')}_${Math.random().toString(36).substr(2,6)}`,
+            title: `Custom ${config.exam.toUpperCase()} Test - ${config.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}`,
+            duration: config.time,
+            questions: selected,
+            negativeMarking: config.negativeMarking || 0,
+            isCustom: true,
+            config: config
+          };
+          
+          timeRemaining = config.time * 60;
+          startTimer();
+          renderQuiz();
+          
+          ApnaMock.toast.success(`Custom test generated with ${selected.length} questions!`);
+        } catch (error) {
+          console.error('Error generating custom quiz:', error);
+          document.getElementById('quiz-loading').innerHTML = `
+            <p style="color: var(--danger);">Failed to generate custom test. <a href="custom-tests.html">Try again</a></p>
+          `;
+        }
+      }
+
+      async function fetchQuestionsForCustom(config) {
+        // This is a placeholder - in production, you'd fetch from your question pool
+        // For now, we'll create sample questions based on the configuration
+        const questions = [];
+        const subjects = config.subjects;
+        const questionsPerSubject = Math.ceil(config.questions / subjects.length);
+        
+        for (const subject of subjects) {
+          for (let i = 0; i < questionsPerSubject; i++) {
+            questions.push({
+              question: {
+                en: `Sample ${subject} question ${i + 1} for ${config.exam.toUpperCase()} exam`,
+                hi: `${config.exam.toUpperCase()} परीक्षा के लिए नमूना ${subject} प्रश्न ${i + 1}`
+              },
+              options: [
+                { en: 'Option A', hi: 'विकल्प A' },
+                { en: 'Option B', hi: 'विकल्प B' },
+                { en: 'Option C', hi: 'विकल्प C' },
+                { en: 'Option D', hi: 'विकल्प D' }
+              ],
+              correct: Math.floor(Math.random() * 4),
+              subject: subject,
+              difficulty: config.difficulty === 'mixed' ? ['easy', 'moderate', 'hard'][Math.floor(Math.random() * 3)] : config.difficulty
+            });
+          }
+        }
+        
+        return questions;
       }
 
       function startTimer() {
@@ -206,7 +277,7 @@
         const timeTaken = (testData.duration * 60) - timeRemaining;
 
         const result = {
-          test_id: testId,
+          test_id: testId || testData.id,
           test_title: testData.title,
           score,
           totalMarks,
@@ -216,7 +287,8 @@
           unattempted,
           timeTaken,
           questions: resultQuestions,
-          submitted_at: new Date().toISOString()
+          submitted_at: new Date().toISOString(),
+          isCustom: testData.isCustom || false
         };
 
         // Save to history
