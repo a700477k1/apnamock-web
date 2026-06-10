@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Result - ApnaMock</title>
+  <meta name="description" content="View your test results and performance analysis.">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .result-container { max-width: 900px; margin: 0 auto; }
+    .result-header { text-align: center; padding: var(--space-12) 0; }
+    .result-score { font-size: var(--text-6xl); font-weight: 800; color: var(--primary); font-family: var(--font-display); line-height: 1; }
+    .result-score-label { font-size: var(--text-lg); color: var(--text-secondary); margin-top: var(--space-2); }
+    .result-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-12); }
+    .result-stat-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; border: 1px solid var(--border-light); }
+    .result-stat-value { font-size: var(--text-3xl); font-weight: 700; font-family: var(--font-display); }
+    .result-stat-label { font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-1); }
+    .result-stat-card.correct .result-stat-value { color: var(--secondary); }
+    .result-stat-card.incorrect .result-stat-value { color: var(--danger); }
+    .result-stat-card.unattempted .result-stat-value { color: var(--warning); }
+    .question-review { margin-top: var(--space-12); }
+    .question-review h2 { font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-6); }
+    .review-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-4); border: 1px solid var(--border-light); }
+    .review-card.correct { border-left: 4px solid var(--secondary); }
+    .review-card.incorrect { border-left: 4px solid var(--danger); }
+    .review-card.unattempted { border-left: 4px solid var(--warning); }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+    .review-status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; }
+    .review-status.correct { background: var(--secondary-50); color: var(--secondary-dark); }
+    .review-status.incorrect { background: var(--danger-50); color: var(--danger-dark); }
+    .review-status.unattempted { background: var(--warning-50); color: var(--warning-dark); }
+    .review-options { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-4); }
+    .review-option { padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); border: 2px solid var(--border-light); font-size: var(--text-sm); }
+    .review-option.correct { border-color: var(--secondary); background: var(--secondary-50); }
+    .review-option.incorrect { border-color: var(--danger); background: var(--danger-50); }
+    .review-option.selected { font-weight: 600; }
+    .actions { display: flex; gap: var(--space-4); justify-content: center; margin-top: var(--space-8); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <div style="display: flex; align-items: center; gap: var(--space-4);">
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <div id="result-loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading results...</p>
+      </div>
+
+      <div id="result-container" style="display: none;"></div>
+
+      <div id="no-result" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+          © 2024 ApnaMock. Practice. Improve. Succeed.
+        </div>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
+          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
+          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      const urlParams = ApnaMock.utils.getUrlParams();
+      const resultData = urlParams.data;
+
+      function loadResult() {
+        if (!resultData) {
+          document.getElementById('result-loading').style.display = 'none';
+          document.getElementById('no-result').style.display = 'block';
+          document.getElementById('no-result').innerHTML = ApnaMock.ui.emptyState(
+            '📊',
+            'No Result Found',
+            'Take a test to see your results here.',
+            { href: 'tests.html', label: 'Browse Tests' }
+          );
+          return;
+        }
+
+        try {
+          const result = JSON.parse(decodeURIComponent(resultData));
+          renderResult(result);
+        } catch (error) {
+          console.error('Error parsing result:', error);
+          document.getElementById('result-loading').innerHTML = '<p style="color: var(--danger);">Invalid result data.</p>';
+        }
+      }
+
+      function renderResult(result) {
+        document.getElementById('result-loading').style.display = 'none';
+        document.getElementById('result-container').style.display = 'block';
+
+        const container = document.getElementById('result-container');
+        
+        let questionsHtml = '';
+        if (result.questions) {
+          questionsHtml = `
+            <div class="question-review">
+              <h2>Question Review</h2>
+              ${result.questions.map((q, i) => {
+                const status = q.selected === null ? 'unattempted' : q.selected === q.correct ? 'correct' : 'incorrect';
+                return `
+                  <div class="review-card ${status}">
+                    <div class="review-header">
+                      <span class="font-semibold">Q${i + 1}</span>
+                      <span class="review-status ${status}">${status}</span>
+                    </div>
+                    <p>${q.question}</p>
+                    <div class="review-options">
+                      ${q.options.map((opt, idx) => {
+                        let classes = 'review-option';
+                        if (idx === q.correct) classes += ' correct';
+                        if (idx === q.selected && idx !== q.correct) classes += ' incorrect';
+                        if (idx === q.selected) classes += ' selected';
+                        return `<div class="${classes}">${String.fromCharCode(65 + idx)}. ${opt}${idx === q.correct ? ' ✓' : ''}${idx === q.selected && idx !== q.correct ? ' ✗' : ''}</div>`;
+                      }).join('')}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        container.innerHTML = `
+          <div class="result-container">
+            <div class="result-header">
+              <div class="result-score">${result.score}/${result.totalMarks}</div>
+              <div class="result-score-label">${result.percentage}% Accuracy</div>
+            </div>
+            <div class="result-stats-grid">
+              <div class="result-stat-card correct">
+                <div class="result-stat-value">${result.correct}</div>
+                <div class="result-stat-label">Correct</div>
+              </div>
+              <div class="result-stat-card incorrect">
+                <div class="result-stat-value">${result.incorrect}</div>
+                <div class="result-stat-label">Incorrect</div>
+              </div>
+              <div class="result-stat-card unattempted">
+                <div class="result-stat-value">${result.unattempted}</div>
+                <div class="result-stat-label">Unattempted</div>
+              </div>
+              <div class="result-stat-card">
+                <div class="result-stat-value">${ApnaMock.utils.formatDuration(result.timeTaken)}</div>
+                <div class="result-stat-label">Time Taken</div>
+              </div>
+            </div>
+            ${questionsHtml}
+            <div class="actions">
+              <a href="tests.html" class="btn btn-primary">Take Another Test</a>
+              <a href="history.html" class="btn btn-outline">View History</a>
+            </div>
+          </div>
+        `;
+      }
+
+      loadResult();
+    })();
+  </script>
+</body>
+</html>
