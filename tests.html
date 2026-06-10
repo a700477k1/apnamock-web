@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tests - ApnaMock</title>
+  <meta name="description" content="Browse all mock tests for SSC, Banking, Railway, Teaching, Defence and other competitive exams.">
+  <meta name="theme-color" content="#4F46E5">
+  <meta property="og:title" content="Tests - ApnaMock">
+  <meta property="og:description" content="Browse all mock tests for competitive exams">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
+    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
+    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
+    .filter-bar { display: flex; gap: var(--space-4); margin-bottom: var(--space-8); flex-wrap: wrap; align-items: center; }
+    .search-input { flex: 1; min-width: 250px; padding: var(--space-3) var(--space-4); font-size: var(--text-base); border: 2px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-primary); color: var(--text-primary); }
+    .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
+    .filter-select { min-width: 180px; padding: var(--space-3) var(--space-4); font-size: var(--text-base); border: 2px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-primary); color: var(--text-primary); }
+    .filter-select:focus { outline: none; border-color: var(--primary); }
+    .tests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6); }
+    .loading-state { text-align: center; padding: var(--space-16); }
+    .loading-state .spinner { width: 48px; height: 48px; border-width: 4px; margin: 0 auto var(--space-4); }
+    .loading-state p { color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <nav style="display: flex; gap: var(--space-6); align-items: center;">
+          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
+          <a href="tests.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Tests</a>
+          <a href="custom-tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Custom</a>
+          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
+          <a href="history.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">History</a>
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>All Tests</h1>
+      <p>Browse and practice mock tests for all competitive exams</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <!-- Filters -->
+      <div class="filter-bar">
+        <input type="text" class="search-input" id="search-input" placeholder="Search tests...">
+        <select class="filter-select" id="exam-filter">
+          <option value="">All Exams</option>
+          <option value="ssc">SSC</option>
+          <option value="banking">Banking</option>
+          <option value="railway">Railway</option>
+          <option value="teaching">Teaching</option>
+          <option value="defence">Defence</option>
+        </select>
+        <select class="filter-select" id="difficulty-filter">
+          <option value="">All Difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="moderate">Moderate</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading tests...</p>
+      </div>
+
+      <!-- Tests Grid -->
+      <div id="tests-container" class="tests-grid" style="display: none;"></div>
+
+      <!-- Empty State -->
+      <div id="empty-state" style="display: none;"></div>
+
+      <!-- Pagination -->
+      <div id="pagination"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+          © 2024 ApnaMock. Practice. Improve. Succeed.
+        </div>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
+          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
+          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      const testsPerPage = 12;
+      let currentPage = 1;
+      let allTests = [];
+      let filteredTests = [];
+
+      async function loadTests() {
+        try {
+          const data = await ApnaMock.data.fetch('data/tests-index.json');
+          allTests = data.tests || [];
+          filteredTests = [...allTests];
+          renderTests();
+        } catch (error) {
+          console.error('Error loading tests:', error);
+          document.getElementById('loading').innerHTML = '<p style="color: var(--danger);">Failed to load tests. Please try again later.</p>';
+        }
+      }
+
+      function renderTests() {
+        const container = document.getElementById('tests-container');
+        const loading = document.getElementById('loading');
+        const emptyState = document.getElementById('empty-state');
+        const pagination = document.getElementById('pagination');
+
+        loading.style.display = 'none';
+
+        if (!filteredTests.length) {
+          container.style.display = 'none';
+          emptyState.style.display = 'block';
+          emptyState.innerHTML = ApnaMock.ui.emptyState('📋', 'No tests found', 'Try adjusting your search or filters.');
+          pagination.innerHTML = '';
+          return;
+        }
+
+        const start = (currentPage - 1) * testsPerPage;
+        const end = start + testsPerPage;
+        const pageTests = filteredTests.slice(start, end);
+
+        container.style.display = 'grid';
+        emptyState.style.display = 'none';
+        container.innerHTML = pageTests.map(test => ApnaMock.ui.testCard(test)).join('');
+
+        const totalPages = Math.ceil(filteredTests.length / testsPerPage);
+        pagination.innerHTML = ApnaMock.ui.pagination(currentPage, totalPages, 'tests.html');
+
+        // Add pagination event listeners
+        pagination.querySelectorAll('[data-page]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const page = parseInt(btn.dataset.page);
+            if (page !== currentPage) {
+              currentPage = page;
+              renderTests();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          });
+        });
+      }
+
+      function filterTests() {
+        const search = document.getElementById('search-input').value.toLowerCase();
+        const exam = document.getElementById('exam-filter').value;
+        const difficulty = document.getElementById('difficulty-filter').value;
+
+        filteredTests = allTests.filter(test => {
+          const matchesSearch = !search || test.title.toLowerCase().includes(search) || test.exam.toLowerCase().includes(search);
+          const matchesExam = !exam || test.exam.toLowerCase() === exam;
+          const matchesDifficulty = !difficulty || test.difficulty === difficulty;
+          return matchesSearch && matchesExam && matchesDifficulty;
+        });
+
+        currentPage = 1;
+        renderTests();
+      }
+
+      // Event listeners
+      document.getElementById('search-input').addEventListener('input', ApnaMock.utils.debounce(filterTests, 300));
+      document.getElementById('exam-filter').addEventListener('change', filterTests);
+      document.getElementById('difficulty-filter').addEventListener('change', filterTests);
+
+      // Load tests on page load
+      loadTests();
+    })();
+  </script>
+</body>
+</html>
