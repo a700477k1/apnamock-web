@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History - ApnaMock</title>
+  <meta name="description" content="View your test attempt history and track your progress.">
+  <meta name="theme-color" content="#4F46E5">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
+    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
+    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
+    .stats-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10); }
+    .stat-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; border: 1px solid var(--border-light); }
+    .stat-value { font-size: var(--text-3xl); font-weight: 800; color: var(--primary); font-family: var(--font-display); }
+    .stat-label { color: var(--text-secondary); font-size: var(--text-sm); margin-top: var(--space-2); }
+    .history-list { display: flex; flex-direction: column; gap: var(--space-4); }
+    .history-item { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); transition: all var(--transition-base); }
+    .history-item:hover { box-shadow: var(--shadow-md); }
+    .history-info { flex: 1; min-width: 250px; }
+    .history-title { font-weight: 700; font-size: var(--text-lg); margin-bottom: var(--space-2); }
+    .history-meta { display: flex; gap: var(--space-4); color: var(--text-secondary); font-size: var(--text-sm); flex-wrap: wrap; }
+    .history-score { text-align: right; }
+    .history-score-value { font-size: var(--text-2xl); font-weight: 700; color: var(--primary); }
+    .history-score-label { font-size: var(--text-sm); color: var(--text-secondary); }
+    .history-actions { display: flex; gap: var(--space-3); }
+    .history-btn { padding: var(--space-2) var(--space-4); border-radius: var(--radius-lg); font-size: var(--text-sm); text-decoration: none; border: none; cursor: pointer; }
+    .history-btn-primary { background: var(--primary); color: white; }
+    .history-btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-light); }
+    .history-btn-danger { color: var(--danger); background: none; }
+    .history-btn-danger:hover { background: var(--danger-50); }
+    .empty-state { text-align: center; padding: var(--space-16); }
+    .empty-state-icon { font-size: var(--text-6xl); margin-bottom: var(--space-6); }
+    .empty-state-title { font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-3); }
+    .empty-state-desc { color: var(--text-secondary); margin-bottom: var(--space-8); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <nav style="display: flex; gap: var(--space-6); align-items: center;">
+          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
+          <a href="tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Tests</a>
+          <a href="custom-tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Custom</a>
+          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
+          <a href="history.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">History</a>
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Test History</h1>
+      <p>Track your progress and review past attempts</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <!-- Stats Overview -->
+      <div id="stats-overview" class="stats-overview" style="display: none;"></div>
+
+      <!-- History List -->
+      <div id="history-container"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+          © 2024 ApnaMock. Practice. Improve. Succeed.
+        </div>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
+          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
+          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      function renderHistory() {
+        const container = document.getElementById('history-container');
+        const statsContainer = document.getElementById('stats-overview');
+        const history = ApnaMock.history.getAll();
+
+        if (!history.length) {
+          statsContainer.style.display = 'none';
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📊</div>
+              <div class="empty-state-title">No History Yet</div>
+              <div class="empty-state-desc">Take your first test to start tracking your progress.</div>
+              <a href="tests.html" class="btn btn-primary">Browse Tests</a>
+            </div>
+          `;
+          return;
+        }
+
+        // Render stats
+        const stats = ApnaMock.history.getStats();
+        statsContainer.style.display = 'grid';
+        statsContainer.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-value">${stats.totalAttempts}</div>
+            <div class="stat-label">Total Attempts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.totalTests}</div>
+            <div class="stat-label">Unique Tests</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.averageScore}%</div>
+            <div class="stat-label">Avg Score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.averageAccuracy}%</div>
+            <div class="stat-label">Avg Accuracy</div>
+          </div>
+        `;
+
+        // Render history list
+        container.innerHTML = `
+          <div class="history-list">
+            ${history.map((attempt, index) => `
+              <div class="history-item" data-index="${index}">
+                <div class="history-info">
+                  <div class="history-title">${attempt.test_title || 'Untitled Test'}</div>
+                  <div class="history-meta">
+                    <span>📅 ${ApnaMock.utils.formatDate(attempt.submitted_at || attempt.attempted_at)}</span>
+                    <span>⏱️ ${ApnaMock.utils.formatDuration(attempt.timeTaken || 0)}</span>
+                    <span>✅ ${attempt.correct || 0}/${attempt.totalMarks || 0} correct</span>
+                  </div>
+                </div>
+                <div class="history-score">
+                  <div class="history-score-value">${attempt.percentage || 0}%</div>
+                  <div class="history-score-label">Accuracy</div>
+                </div>
+                <div class="history-actions">
+                  <a href="quiz.html?test=${attempt.test_id}" class="history-btn history-btn-primary">Retake</a>
+                  <button class="history-btn history-btn-danger" data-index="${index}" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        // Add delete event listeners
+        container.querySelectorAll('.history-btn-danger').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            const history = ApnaMock.history.getAll();
+            const attemptId = history[index]?.attempt_id;
+            if (attemptId && confirm('Delete this attempt?')) {
+              ApnaMock.history.delete(attemptId);
+              renderHistory();
+            }
+          });
+        });
+      }
+
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>
