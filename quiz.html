@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz - ApnaMock</title>
+  <meta name="description" content="Take mock tests for competitive exams. Practice with previous year questions.">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <style>
+    .quiz-layout { display: grid; grid-template-columns: 1fr 300px; gap: var(--space-6); }
+    .quiz-main { min-width: 0; }
+    .quiz-sidebar { position: sticky; top: calc(var(--header-height) + var(--space-6)); height: fit-content; }
+    .quiz-timer { font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; }
+    .quiz-timer.warning { color: var(--warning); }
+    .quiz-timer.danger { color: var(--danger); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .option-card { cursor: pointer; }
+    .option-card:hover { border-color: var(--primary-light); background: var(--primary-50); }
+    .option-card.selected { border-color: var(--primary); background: var(--primary-50); }
+    .option-card.correct { border-color: var(--secondary); background: var(--secondary-50); }
+    .option-card.incorrect { border-color: var(--danger); background: var(--danger-50); }
+    .quiz-nav { display: flex; gap: var(--space-3); }
+    .quiz-actions { display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-6); }
+    @media (max-width: 1024px) {
+      .quiz-layout { grid-template-columns: 1fr; }
+      .quiz-sidebar { position: static; order: -1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
+        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
+        <div style="display: flex; align-items: center; gap: var(--space-4);">
+          <div class="quiz-timer" id="timer">⏱️ 60:00</div>
+          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="page-container">
+    <div class="container">
+      <div id="quiz-loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading quiz...</p>
+      </div>
+
+      <div id="quiz-container" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <script>
+    (function() {
+      let testData = null;
+      let currentQuestion = 0;
+      let answers = {};
+      let marked = [];
+      let timeRemaining = 0;
+      let timerInterval = null;
+
+      const urlParams = ApnaMock.utils.getUrlParams();
+      const testId = urlParams.test;
+
+      async function loadQuiz() {
+        if (!testId) {
+          document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">No test selected. <a href="tests.html">Browse tests</a></p>';
+          return;
+        }
+
+        try {
+          const index = await ApnaMock.data.fetch('data/tests-index.json');
+          const testMeta = (index.tests || []).find(t => t.id === testId);
+          
+          if (!testMeta) {
+            document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">Test not found. <a href="tests.html">Browse tests</a></p>';
+            return;
+          }
+
+          testData = await ApnaMock.data.fetch(testMeta.file);
+          testData.duration = testData.duration || testMeta.duration || 60;
+          testData.title = testData.title || testMeta.title;
+          
+          timeRemaining = testData.duration * 60;
+          startTimer();
+          renderQuiz();
+        } catch (error) {
+          console.error('Error loading quiz:', error);
+          document.getElementById('quiz-loading').innerHTML = '<p style="color: var(--danger);">Failed to load quiz. Please try again.</p>';
+        }
+      }
+
+      function startTimer() {
+        const timerEl = document.getElementById('timer');
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          const mins = Math.floor(timeRemaining / 60);
+          const secs = timeRemaining % 60;
+          timerEl.textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+
+          if (timeRemaining <= 300) timerEl.classList.add('danger');
+          else if (timeRemaining <= 600) timerEl.classList.add('warning');
+
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+          }
+        }, 1000);
+      }
+
+      function renderQuiz() {
+        document.getElementById('quiz-loading').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        
+        ApnaMock.components.renderQuiz('#quiz-container', testData, currentQuestion, answers, marked);
+        attachEventListeners();
+      }
+
+      function attachEventListeners() {
+        // Option selection
+        document.querySelectorAll('.option-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const option = parseInt(card.dataset.option);
+            answers[currentQuestion] = option;
+            renderQuiz();
+          });
+        });
+
+        // Navigation
+        document.getElementById('prev-btn')?.addEventListener('click', () => {
+          if (currentQuestion > 0) {
+            currentQuestion--;
+            renderQuiz();
+          }
+        });
+
+        document.getElementById('next-btn')?.addEventListener('click', () => {
+          if (currentQuestion < testData.questions.length - 1) {
+            currentQuestion++;
+            renderQuiz();
+          }
+        });
+
+        document.getElementById('mark-btn')?.addEventListener('click', () => {
+          const idx = marked.indexOf(currentQuestion);
+          if (idx > -1) marked.splice(idx, 1);
+          else marked.push(currentQuestion);
+          renderQuiz();
+        });
+
+        document.getElementById('submit-btn')?.addEventListener('click', () => {
+          if (confirm('Are you sure you want to submit?')) submitQuiz();
+        });
+
+        // Palette navigation
+        document.querySelectorAll('.palette-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentQuestion = parseInt(btn.dataset.index);
+            renderQuiz();
+          });
+        });
+      }
+
+      function submitQuiz() {
+        clearInterval(timerInterval);
+        
+        const questions = testData.questions;
+        let correct = 0;
+        let incorrect = 0;
+        let unattempted = 0;
+
+        const resultQuestions = questions.map((q, i) => {
+          const selected = answers[i] !== undefined ? answers[i] : null;
+          const isCorrect = selected === q.correct;
+          
+          if (selected === null) unattempted++;
+          else if (isCorrect) correct++;
+          else incorrect++;
+
+          return {
+            question: ApnaMock.language.getText(q.question),
+            options: q.options.map(o => ApnaMock.language.getText(o)),
+            selected,
+            correct: q.correct
+          };
+        });
+
+        const totalMarks = questions.length;
+        const score = correct;
+        const percentage = ((correct / totalMarks) * 100).toFixed(2);
+        const timeTaken = (testData.duration * 60) - timeRemaining;
+
+        const result = {
+          test_id: testId,
+          test_title: testData.title,
+          score,
+          totalMarks,
+          percentage,
+          correct,
+          incorrect,
+          unattempted,
+          timeTaken,
+          questions: resultQuestions,
+          submitted_at: new Date().toISOString()
+        };
+
+        // Save to history
+        ApnaMock.history.add(result);
+
+        // Redirect to results
+        const resultData = encodeURIComponent(JSON.stringify(result));
+        window.location.href = `result.html?data=${resultData}`;
+      }
+
+      // Load quiz on page load
+      loadQuiz();
+    })();
+  </script>
+</body>
+</html>
