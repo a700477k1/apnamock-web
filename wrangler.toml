@@ -1,8 +1,4 @@
 name = "apnamock-web"
 compatibility_date = "2024-01-01"
 
-[build]
-command = "echo 'No build needed'"
-
-[site]
-bucket = "."
+# Pages deployment - no build needed for static HTML
