@@ -47,6 +47,8 @@
       --radius-md: 10px;
       --radius-lg: 14px;
       --radius-xl: 20px;
+      
+      --header-height: 64px;
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -89,6 +91,17 @@
     ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
 
     /* ============================================================
+       ALIGNMENT UTILITIES
+    ============================================================ */
+    .align-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    /* ============================================================
        HEADER
     ============================================================ */
     .site-header {
@@ -99,47 +112,107 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      height: var(--header-height);
     }
     body:not(.dark-mode) .site-header { background: rgba(255,255,255,0.95); }
     body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
 
     .header-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px;
-      height: 60px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      height: 100%;
       gap: 16px;
     }
 
-    .back-link {
-      display: inline-flex;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      font-family: var(--font-heading);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .brand-tagline {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .nav-link i { font-size: 13px; }
+
+    .header-actions {
+      display: flex;
       align-items: center;
       gap: 8px;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      transition: color 0.15s;
     }
-
-    .back-link:hover { color: var(--text-primary); }
-
-    .header-title {
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-primary);
-      flex: 1;
+    .btn-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      background: transparent;
     }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+
+    .mobile-menu-btn { display: none; }
 
     /* ============================================================
        PAGE LAYOUT
     ============================================================ */
     .page-wrapper {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 28px 20px 60px;
+      padding-top: 28px;
+      padding-bottom: 60px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -164,37 +237,12 @@
       cursor: pointer;
       border: 1.5px solid transparent;
     }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(26,86,219,0.25);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      box-shadow: 0 4px 12px rgba(26,86,219,0.35);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--primary);
-      border-color: var(--primary);
-    }
-
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
+    .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.35); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
     .btn-outline:hover { background: var(--primary-light); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-secondary);
-      border-color: var(--border);
-    }
-
-    .btn-ghost:hover {
-      background: var(--bg-muted);
-      color: var(--text-primary);
-    }
-
+    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
     .btn i { font-size: 13px; }
 
     /* ============================================================
@@ -315,36 +363,26 @@
       font-weight: 600;
     }
 
-    .score-card-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .score-card-sub { font-size: 11px; color: var(--text-muted); }
 
-    /* Card color variants */
     .score-card.score { border-top: 3px solid var(--primary); }
     .score-card.score .score-card-icon { background: var(--primary-light); color: var(--primary); }
     .score-card.score .score-card-value { color: var(--primary); }
-
     .score-card.correct { border-top: 3px solid var(--success); }
     .score-card.correct .score-card-icon { background: var(--success-light); color: var(--success); }
     .score-card.correct .score-card-value { color: var(--success); }
-
     .score-card.wrong { border-top: 3px solid var(--error); }
     .score-card.wrong .score-card-icon { background: var(--error-light); color: var(--error); }
     .score-card.wrong .score-card-value { color: var(--error); }
-
     .score-card.skipped { border-top: 3px solid var(--text-muted); }
     .score-card.skipped .score-card-icon { background: var(--bg-muted); color: var(--text-muted); }
     .score-card.skipped .score-card-value { color: var(--text-muted); }
-
     .score-card.accuracy { border-top: 3px solid var(--purple); }
     .score-card.accuracy .score-card-icon { background: var(--purple-light); color: var(--purple); }
     .score-card.accuracy .score-card-value { color: var(--purple); }
-
     .score-card.negative { border-top: 3px solid var(--warning); }
     .score-card.negative .score-card-icon { background: var(--warning-light); color: var(--warning); }
     .score-card.negative .score-card-value { color: var(--warning); }
-
     .score-card.time { border-top: 3px solid var(--accent); }
     .score-card.time .score-card-icon { background: rgba(249, 115, 22, 0.15); color: var(--accent); }
     .score-card.time .score-card-value { color: var(--accent); }
@@ -362,35 +400,14 @@
       gap: 16px;
       box-shadow: var(--shadow-sm);
     }
-
-    .perf-emoji {
-      font-size: 40px;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-
-    .perf-title {
-      font-family: var(--font-heading);
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 6px;
-    }
-
-    .perf-message {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
+    .perf-emoji { font-size: 40px; flex-shrink: 0; line-height: 1; }
+    .perf-title { font-family: var(--font-heading); font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .perf-message { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
 
     /* ============================================================
        ACTION BUTTONS ROW
     ============================================================ */
-    .actions-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .actions-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
     /* ============================================================
        SIMILAR TEST CARD
@@ -405,7 +422,6 @@
       gap: 14px;
       box-shadow: var(--shadow-sm);
     }
-
     .similar-icon {
       width: 44px;
       height: 44px;
@@ -418,23 +434,9 @@
       color: var(--primary);
       flex-shrink: 0;
     }
-
     .similar-content { flex: 1; }
-
-    .similar-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-
-    .similar-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
+    .similar-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); font-weight: 600; margin-bottom: 3px; }
+    .similar-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
 
     /* ============================================================
        SECTION PERFORMANCE
@@ -446,7 +448,6 @@
       overflow: hidden;
       box-shadow: var(--shadow-sm);
     }
-
     .card-header {
       display: flex;
       align-items: center;
@@ -455,7 +456,6 @@
       border-bottom: 1px solid var(--border);
       background: var(--bg-muted);
     }
-
     .card-header-title {
       font-family: var(--font-heading);
       font-size: 15px;
@@ -465,97 +465,24 @@
       align-items: center;
       gap: 8px;
     }
-
     .card-header-title i { color: var(--primary); font-size: 14px; }
-
-    .section-perf-list {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .section-perf-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .section-perf-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-perf-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .section-perf-score {
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .progress-bar-wrap {
-      height: 8px;
-      background: var(--bg-muted);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      border-radius: 99px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      transition: width 0.5s ease;
-    }
-
-    .section-perf-stats {
-      display: flex;
-      gap: 12px;
-      font-size: 11px;
-    }
-
-    .section-stat-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .section-stat-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
+    .section-perf-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .section-perf-item { display: flex; flex-direction: column; gap: 6px; }
+    .section-perf-top { display: flex; align-items: center; justify-content: space-between; }
+    .section-perf-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .section-perf-score { font-size: 13px; color: var(--text-secondary); }
+    .progress-bar-wrap { height: 8px; background: var(--bg-muted); border-radius: 99px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.5s ease; }
+    .section-perf-stats { display: flex; gap: 12px; font-size: 11px; }
+    .section-stat-item { display: flex; align-items: center; gap: 4px; }
+    .section-stat-dot { width: 6px; height: 6px; border-radius: 50%; }
 
     /* ============================================================
        ANSWER REVIEW SECTION
     ============================================================ */
-    .review-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .review-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .review-header-title {
-      font-family: var(--font-heading);
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .review-section { display: flex; flex-direction: column; gap: 16px; }
+    .review-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .review-header-title { font-family: var(--font-heading); font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
 
     /* ============================================================
        REVIEW FILTER POPUP
@@ -575,12 +502,7 @@
       pointer-events: none;
       transition: opacity 0.2s;
     }
-
-    .overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
+    .overlay.open { opacity: 1; pointer-events: all; }
     .popup {
       background: var(--bg-card);
       border-radius: var(--radius-xl);
@@ -591,366 +513,80 @@
       transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
       overflow: hidden;
     }
-
-    .overlay.open .popup {
-      transform: scale(1) translateY(0);
-    }
-
-    .popup-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .popup-title {
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .popup-close {
-      width: 30px;
-      height: 30px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      color: var(--text-muted);
-      transition: all 0.15s;
-    }
-
-    .popup-close:hover {
-      background: var(--bg-muted);
-      color: var(--text-primary);
-    }
-
+    .overlay.open .popup { transform: scale(1) translateY(0); }
+    .popup-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .popup-title { font-family: var(--font-heading); font-size: 15px; font-weight: 700; }
+    .popup-close { width: 30px; height: 30px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); transition: all 0.15s; }
+    .popup-close:hover { background: var(--bg-muted); color: var(--text-primary); }
     .popup-body { padding: 16px 20px; }
-
-    .popup-footer {
-      padding: 12px 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-    }
-
-    .review-filter-options {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
+    .popup-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .review-filter-options { display: flex; flex-direction: column; gap: 6px; }
     .review-filter-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 14px;
-      color: var(--text-secondary);
-      font-weight: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer; transition: all 0.15s; font-size: 14px; color: var(--text-secondary); font-weight: 500;
     }
-
-    .review-filter-option:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    .review-filter-option.selected {
-      border-color: var(--primary);
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 600;
-    }
+    .review-filter-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .review-filter-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
 
     /* ============================================================
        REVIEW CARDS
     ============================================================ */
-    .review-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .review-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s;
-    }
-
+    .review-list { display: flex; flex-direction: column; gap: 12px; }
+    .review-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color 0.2s; }
     .review-card.correct { border-left: 4px solid var(--success); }
     .review-card.wrong { border-left: 4px solid var(--error); }
     .review-card.skipped { border-left: 4px solid var(--text-muted); }
     .review-card.marked { border-left: 4px solid var(--warning); }
-
-    .review-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      background: var(--bg-muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .review-card-header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .review-q-number {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .review-section-tag {
-      font-size: 11px;
-      background: var(--border);
-      color: var(--text-secondary);
-      padding: 2px 8px;
-      border-radius: 99px;
-      font-weight: 600;
-    }
-
-    .review-status-tag {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 99px;
-    }
-
+    .review-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-muted); border-bottom: 1px solid var(--border); }
+    .review-card-header-left { display: flex; align-items: center; gap: 8px; }
+    .review-q-number { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .review-section-tag { font-size: 11px; background: var(--border); color: var(--text-secondary); padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+    .review-status-tag { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
     .review-status-tag.correct { background: var(--success-light); color: var(--success); }
     .review-status-tag.wrong { background: var(--error-light); color: var(--error); }
     .review-status-tag.skipped { background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border); }
     .review-status-tag.marked { background: var(--warning-light); color: #92400e; }
-
-    .review-card-body {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .review-question-text {
-      font-size: 14.5px;
-      font-weight: 500;
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
-
-    .review-options {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .review-option {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border);
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    .review-option.user-selected {
-      border-color: var(--error);
-      background: var(--error-light);
-      color: #7f1d1d;
-    }
+    .review-card-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .review-question-text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); line-height: 1.6; }
+    .review-options { display: flex; flex-direction: column; gap: 6px; }
+    .review-option { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; }
+    .review-option.user-selected { border-color: var(--error); background: var(--error-light); color: #7f1d1d; }
     body.dark-mode .review-option.user-selected { color: var(--error); }
-
-    .review-option.correct-answer {
-      border-color: var(--success);
-      background: var(--success-light);
-      color: #14532d;
-      font-weight: 600;
-    }
+    .review-option.correct-answer { border-color: var(--success); background: var(--success-light); color: #14532d; font-weight: 600; }
     body.dark-mode .review-option.correct-answer { color: var(--success); }
-
-    .review-option.user-correct {
-      border-color: var(--success);
-      background: var(--success-light);
-      color: #14532d;
-      font-weight: 600;
-    }
+    .review-option.user-correct { border-color: var(--success); background: var(--success-light); color: #14532d; font-weight: 600; }
     body.dark-mode .review-option.user-correct { color: var(--success); }
-
-    .review-option-letter {
-      width: 22px;
-      height: 22px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      background: var(--bg-muted);
-      color: var(--text-muted);
-      flex-shrink: 0;
-    }
-
-    .review-option.correct-answer .review-option-letter,
-    .review-option.user-correct .review-option-letter {
-      background: var(--success);
-      color: #fff;
-    }
-
-    .review-option.user-selected .review-option-letter {
-      background: var(--error);
-      color: #fff;
-    }
-
-    .review-option-indicator {
-      margin-left: auto;
-      flex-shrink: 0;
-      font-size: 12px;
-    }
-
-    /* Explanation */
-    .explanation-box {
-      background: var(--primary-light);
-      border: 1px solid rgba(26,86,219,0.15);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-    }
-
-    .explanation-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--primary);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .explanation-text {
-      font-size: 13.5px;
-      color: var(--primary-dark);
-      line-height: 1.6;
-    }
+    .review-option-letter { width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; background: var(--bg-muted); color: var(--text-muted); flex-shrink: 0; }
+    .review-option.correct-answer .review-option-letter, .review-option.user-correct .review-option-letter { background: var(--success); color: #fff; }
+    .review-option.user-selected .review-option-letter { background: var(--error); color: #fff; }
+    .review-option-indicator { margin-left: auto; flex-shrink: 0; font-size: 12px; }
+    
+    .explanation-box { background: var(--primary-light); border: 1px solid rgba(26,86,219,0.15); border-radius: var(--radius-sm); padding: 12px 14px; }
+    .explanation-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .explanation-text { font-size: 13.5px; color: var(--primary-dark); line-height: 1.6; }
     body.dark-mode .explanation-text { color: var(--primary); }
 
-    /* Favorite Button */
-    .favorite-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      border: 1.5px solid var(--border);
-      transition: all 0.15s;
-      background: transparent;
-    }
-
-    .favorite-btn:hover {
-      color: var(--warning);
-      border-color: var(--warning);
-      background: var(--warning-light);
-    }
-
-    .favorite-btn.favorited {
-      color: var(--warning);
-      border-color: var(--warning);
-      background: var(--warning-light);
-    }
-
-    .review-card-footer {
-      padding: 10px 14px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-    }
+    .favorite-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--text-muted); border: 1.5px solid var(--border); transition: all 0.15s; background: transparent; }
+    .favorite-btn:hover { color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
+    .favorite-btn.favorited { color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
+    .review-card-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
 
     /* ============================================================
-       LOAD MORE
+       LOAD MORE & BADGES
     =========================================================== */
-    .load-more-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .load-more-text {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    /* ============================================================
-       SECTION BADGES
-    =========================================================== */
-    .section-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 9px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
+    .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .load-more-text { font-size: 13px; color: var(--text-muted); }
+    .section-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600; }
     .badge-strong { background: var(--success-light); color: var(--success); }
     .badge-weak { background: var(--error-light); color: var(--error); }
 
     /* ============================================================
        TOAST
     ============================================================ */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-      pointer-events: none;
-    }
-
-    .toast {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--text-primary);
-      color: #fff;
-      padding: 11px 18px;
-      border-radius: var(--radius-lg);
-      font-size: 13.5px;
-      font-weight: 500;
-      box-shadow: var(--shadow-lg);
-      animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      max-width: 320px;
-    }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     .toast.success { background: var(--success); }
     .toast.warning { background: var(--warning); }
     .toast.error { background: var(--error); }
@@ -958,40 +594,36 @@
     /* ============================================================
        FOOTER
     ============================================================ */
-    .site-footer {
-      background: var(--text-primary);
-      color: #fff;
-      padding: 32px 20px 20px;
-      margin-top: 40px;
-    }
-
-    .footer-bottom {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .footer-copy {
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-    }
+    .site-footer { background: var(--text-primary); color: #fff; padding: 32px 20px 20px; margin-top: 40px; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
     /* ============================================================
        RESPONSIVE
     ============================================================ */
+    @media (max-width: 768px) {
+      .site-nav {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+      }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+    }
+
     @media (max-width: 600px) {
       .score-summary-grid { grid-template-columns: repeat(2, 1fr); }
       .actions-row { flex-direction: column; }
       .btn { width: 100%; }
       .performance-message-card { flex-direction: column; text-align: center; }
-    }
-
-    @media (max-width: 400px) {
-      .score-summary-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -999,22 +631,50 @@
 <body>
 
   <header class="site-header">
-    <div class="header-inner">
-      <a href="/tests.html" class="back-link">
-        <i class="fa-solid fa-chevron-left"></i>
-        All Tests
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
       </a>
-      <div class="header-title" id="headerTitle">Result</div>
+ 
+      <nav class="site-nav">
+        <a href="/tests.html" class="nav-link">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Tests</span>
+        </a>
+        <a href="/custom-tests.html" class="nav-link">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Custom</span>
+        </a>
+        <a href="/favorites.html" class="nav-link">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Favorites</span>
+        </a>
+        <a href="/history.html" class="nav-link">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History</span>
+        </a>
+      </nav>
+ 
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="page-wrapper" id="mainContent">
-
+  <main class="page-wrapper align-wrapper" id="mainContent">
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
       <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px"></i>
       <div style="font-size:15px;font-weight:500">Loading your result...</div>
     </div>
-
   </main>
 
   <div class="overlay" id="reviewFilterOverlay">
@@ -1027,32 +687,26 @@
       </div>
       <div class="popup-body">
         <div class="review-filter-options">
-
           <div class="review-filter-option selected" data-filter="all" onclick="selectReviewFilter('all')">
             <span><i class="fa-solid fa-list" style="margin-right:8px"></i> All Questions</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px"></i>
           </div>
-
           <div class="review-filter-option" data-filter="correct" onclick="selectReviewFilter('correct')">
             <span><i class="fa-solid fa-circle-check" style="color:var(--success);margin-right:8px"></i> Correct Only</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
-
           <div class="review-filter-option" data-filter="wrong" onclick="selectReviewFilter('wrong')">
             <span><i class="fa-solid fa-circle-xmark" style="color:var(--error);margin-right:8px"></i> Wrong Only</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
-
           <div class="review-filter-option" data-filter="skipped" onclick="selectReviewFilter('skipped')">
             <span><i class="fa-solid fa-circle-minus" style="color:var(--text-muted);margin-right:8px"></i> Skipped Only</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
-
           <div class="review-filter-option" data-filter="marked" onclick="selectReviewFilter('marked')">
             <span><i class="fa-solid fa-bookmark" style="color:var(--warning);margin-right:8px"></i> Marked for Review</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
-
         </div>
       </div>
       <div class="popup-footer">
@@ -1066,7 +720,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <footer class="site-footer">
-    <div class="footer-bottom">
+    <div class="footer-bottom align-wrapper">
       <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
       <span class="footer-copy">Practice. Improve. Succeed.</span>
     </div>
@@ -1074,7 +728,7 @@
 
   <script>
     /* ============================================================
-       XSS UTILITY (Bug Fix)
+       XSS UTILITY 
     ============================================================ */
     function escapeHTML(str) {
       if (!str) return '';
@@ -1110,7 +764,74 @@
     };
 
     /* ============================================================
-       STORAGE
+       INDEXED DB WRAPPER FOR FAVORITES
+    ============================================================ */
+    const DB_NAME = 'ApnaMockDB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'favorites';
+
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'qId' });
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getFavorites() {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.getAllKeys();
+          request.onsuccess = () => resolve(new Set(request.result));
+          request.onerror = () => reject(request.error);
+        });
+      } catch (err) {
+        console.error("IndexedDB error:", err);
+        return new Set();
+      }
+    }
+
+    async function addFavoriteToDB(favData) {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          store.put(favData);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (err) {
+        console.error("IndexedDB error:", err);
+      }
+    }
+
+    async function removeFavoriteFromDB(qId) {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          store.delete(qId);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (err) {
+        console.error("IndexedDB error:", err);
+      }
+    }
+
+    /* ============================================================
+       LOCAL STORAGE
     ============================================================ */
     function storageGet(key) {
       try {
@@ -1202,11 +923,23 @@
        INIT
     ============================================================ */
     async function initResult() {
-      // Dark Mode Initialization (Bug Fix)
+      // Header toggles
       const savedTheme = storageGet('theme');
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
       }
+
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        storageSet('theme', isDark ? 'dark' : 'light');
+      });
+
+      document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+        document.querySelector('.site-nav').classList.toggle('mobile-open');
+      });
 
       const testId = new URLSearchParams(window.location.search).get('test');
       const timestamp = new URLSearchParams(window.location.search).get('t');
@@ -1222,9 +955,10 @@
       Result.questions = resultData.testData?.questions || [];
       Result.questionResults = resultData.questionResults || [];
       Result.language = resultData.language || 'bilingual';
-      Result.favorites = new Set(storageGet('favorites_ids') || []);
+      
+      // Load favorites from IndexedDB
+      Result.favorites = await getFavorites();
 
-      document.getElementById('headerTitle').textContent = 'Test Result';
       document.title = `Result — ${escapeHTML(resultData.testTitle) || 'ApnaMock'}`;
 
       renderPage();
@@ -1638,7 +1372,7 @@
               onclick="toggleFavorite('${qId}', ${qr.questionIndex})"
             >
               <i class="fa-${isFavorited ? 'solid' : 'regular'} fa-bookmark"></i>
-              ${isFavorited ? 'Favorited' : 'Save Question'}
+              ${isFavorited ? 'Favorited' : 'Mark as Favorite'}
             </button>
           </div>
 
@@ -1647,39 +1381,36 @@
     }
 
     /* ============================================================
-       FAVORITE TOGGLE
+       FAVORITE TOGGLE (Updated for IndexedDB)
     ============================================================ */
-    function toggleFavorite(qId, questionIndex) {
+    async function toggleFavorite(qId, questionIndex) {
       const btn = document.getElementById(`fav-btn-${qId}`);
       const q = Result.questions[questionIndex];
 
       if (Result.favorites.has(qId)) {
+        // Remove Favorite
         Result.favorites.delete(qId);
+        await removeFavoriteFromDB(qId);
+        
         btn.className = 'favorite-btn';
-        btn.innerHTML = `<i class="fa-regular fa-bookmark"></i> Save Question`;
+        btn.innerHTML = `<i class="fa-regular fa-bookmark"></i> Mark as Favorite`;
         showToast('Removed from favorites', 'info');
       } else {
+        // Add Favorite
         Result.favorites.add(qId);
-        btn.className = 'favorite-btn favorited';
-        btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
-
-        // Save full question to favorites store
-        const favorites = storageGet('favorites') || {};
-        favorites[qId] = {
+        await addFavoriteToDB({
           qId,
           questionIndex,
           testId: Result.data.testId,
           testTitle: Result.data.testTitle,
           question: q,
           savedAt: Date.now()
-        };
-        storageSet('favorites', favorites);
-
+        });
+        
+        btn.className = 'favorite-btn favorited';
+        btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
         showToast('Question saved to favorites!', 'success');
       }
-
-      // Update favorites index
-      storageSet('favorites_ids', [...Result.favorites]);
     }
 
     /* ============================================================
@@ -1701,7 +1432,7 @@
     }
 
     /* ============================================================
-       ERROR HANDLING (Completed)
+       ERROR HANDLING
     ============================================================ */
     function showError(message) {
       const main = document.getElementById('mainContent');
