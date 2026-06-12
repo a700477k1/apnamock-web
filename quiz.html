@@ -98,8 +98,31 @@
     ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
 
     /* ============================================================
-       BRANDING (Brought over from tests.html)
+       ALIGNMENT UTILITIES
     ============================================================ */
+    .align-wrapper {
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    /* ============================================================
+       BRANDING HEADER
+    ============================================================ */
+    .site-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .site-header-inner {
+      display: flex;
+      align-items: center;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
     .brand {
       display: flex;
       align-items: center;
@@ -138,7 +161,7 @@
     }
 
     /* ============================================================
-       SCREEN SYSTEM - shows screen1 or screen2
+       SCREEN SYSTEM
     ============================================================ */
     .screen { display: none; }
     .screen.active { display: block; }
@@ -174,7 +197,7 @@
 
     .preq-card-header {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      padding: 24px 28px 20px; /* Narrowed height */
+      padding: 24px 28px 20px;
       color: #fff;
     }
 
@@ -318,6 +341,8 @@
     /* ============================================================
        SCREEN 2 — LIVE QUIZ
     ============================================================ */
+    
+    /* Quiz Details Bar (Now separate from branding) */
     .quiz-topbar {
       position: sticky;
       top: 0;
@@ -332,13 +357,12 @@
     body.dark-mode .quiz-topbar { background: rgba(30, 41, 59, 0.97); }
 
     .quiz-topbar-inner {
-      max-width: 1300px; /* Widened */
-      margin: 0 auto;
-      padding: 8px 20px; /* Narrowed height */
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .quiz-title-wrap {
@@ -350,7 +374,7 @@
     }
 
     .quiz-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-primary);
       white-space: nowrap;
@@ -422,15 +446,9 @@
     .section-tabs-wrap {
       background: var(--bg-card);
       border-bottom: 1.5px solid var(--border);
-      position: sticky;
-      top: 55px;
-      z-index: 40;
     }
 
     .section-tabs {
-      max-width: 1300px; /* Widened */
-      margin: 0 auto;
-      padding: 0 20px;
       display: flex;
       gap: 0;
       overflow-x: auto;
@@ -439,7 +457,7 @@
     .section-tabs::-webkit-scrollbar { display: none; }
 
     .section-tab {
-      padding: 10px 18px; /* Narrowed height */
+      padding: 10px 18px;
       font-size: 13px;
       font-weight: 500;
       color: var(--text-muted);
@@ -471,11 +489,10 @@
        QUIZ BODY
     ============================================================ */
     .quiz-body {
-      max-width: 1300px; /* Widened */
-      margin: 0 auto;
-      padding: 24px 20px 140px;
+      padding-top: 24px;
+      padding-bottom: 140px;
       display: grid;
-      grid-template-columns: 1fr 320px; /* Wider panel to match widened layout */
+      grid-template-columns: 1fr 320px;
       gap: 24px;
       align-items: start;
     }
@@ -605,7 +622,7 @@
       flex-direction: column;
       gap: 16px;
       position: sticky;
-      top: 110px;
+      top: 80px;
     }
     .palette-card {
       background: var(--bg-card);
@@ -656,28 +673,15 @@
       color: #fff;
       border-color: var(--primary-dark);
     }
-    /* Fixed Hybrid State */
     .palette-btn.answered-marked {
       background: var(--palette-answered);
       color: #fff;
       border-bottom: 4px solid var(--palette-marked);
     }
-    .palette-btn.answered {
-      background: var(--palette-answered);
-      color: #fff;
-    }
-    .palette-btn.wrong {
-      background: var(--palette-wrong);
-      color: #fff;
-    }
-    .palette-btn.marked {
-      background: var(--palette-marked);
-      color: #fff;
-    }
-    .palette-btn.visited {
-      background: var(--palette-visited);
-      color: #fff;
-    }
+    .palette-btn.answered { background: var(--palette-answered); color: #fff; }
+    .palette-btn.wrong { background: var(--palette-wrong); color: #fff; }
+    .palette-btn.marked { background: var(--palette-marked); color: #fff; }
+    .palette-btn.visited { background: var(--palette-visited); color: #fff; }
 
     /* Legend */
     .legend-list { display: flex; flex-direction: column; gap: 6px; }
@@ -708,7 +712,7 @@
     }
 
     /* ============================================================
-       STICKY BOTTOM BAR - Grid Layout for Uniform Buttons
+       STICKY BOTTOM BAR 
     ============================================================ */
     .quiz-bottombar {
       position: fixed;
@@ -726,17 +730,16 @@
     body.dark-mode .quiz-bottombar { background: rgba(30, 41, 59, 0.98); }
 
     .quiz-bottombar-inner {
-      max-width: 1300px; /* Widened */
-      margin: 0 auto;
-      padding: 12px 20px;
       display: grid;
-      grid-template-columns: repeat(6, 1fr); /* 6 uniform columns */
+      grid-template-columns: repeat(6, 1fr); /* 6 perfectly uniform columns */
       gap: 12px;
+      padding-top: 12px;
+      padding-bottom: 12px;
     }
 
     /* Bottom bar buttons */
     .qbtn {
-      width: 100%; /* Take full grid cell */
+      width: 100%;
       height: 42px;
       border-radius: var(--radius-md);
       font-size: 13.5px;
@@ -978,7 +981,7 @@
     ============================================================ */
     .toast-container {
       position: fixed;
-      bottom: 140px; /* Raised above the new stacked mobile bar */
+      bottom: 160px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 999;
@@ -1014,20 +1017,24 @@
        RESPONSIVE
     ============================================================ */
     @media (max-width: 768px) {
-      .quiz-topbar-inner {
-        flex-wrap: wrap;
-      }
+      .align-wrapper { padding-left: 16px; padding-right: 16px; }
+
+      /* Tighter spacing for headers */
+      .site-header-inner { padding-top: 6px; padding-bottom: 6px; }
+      .quiz-topbar-inner { padding-top: 6px; padding-bottom: 6px; flex-wrap: wrap; }
+      
       .quiz-title-wrap {
         order: 3;
         width: 100%;
-        margin-top: 8px;
-        align-items: center; /* Center on mobile */
+        margin-top: 4px;
+        align-items: center;
         text-align: center;
       }
       
       .quiz-body {
         grid-template-columns: 1fr;
-        padding-bottom: 200px; /* Increased padding to clear 3-row bottom bar */
+        padding-top: 16px;
+        padding-bottom: 220px; /* Increased padding to clear 3-row bottom bar */
       }
       .palette-panel { position: static; }
 
@@ -1035,15 +1042,15 @@
       .quiz-bottombar-inner {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-        padding: 10px 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
       .qbtn {
         height: 40px;
         font-size: 13px;
         padding: 0 8px;
       }
-      /* Ensure text is visible */
-      .qbtn span { display: block !important; }
+      .qbtn span { display: block !important; } /* Force text visible */
     }
 
     @media (max-width: 480px) {
@@ -1065,7 +1072,6 @@
       </a>
 
       <div class="preq-card">
-
         <div class="preq-card-header">
           <div class="preq-exam-tag">
             <i class="fa-solid fa-graduation-cap"></i>
@@ -1089,7 +1095,6 @@
         </div>
 
         <div class="preq-card-body">
-
           <div class="lang-section">
             <span class="section-label">
               <i class="fa-solid fa-language" style="color:var(--primary)"></i>
@@ -1109,92 +1114,64 @@
               <i class="fa-solid fa-circle-info" style="color:var(--primary)"></i>
               Important Instructions
             </span>
-
             <div class="instruction-list">
               <div class="instruction-item info-blue">
                 <i class="fa-solid fa-circle-info"></i>
                 <span id="instr-marks">Each correct answer carries marks as specified per question. Wrong answers attract negative marking as applicable.</span>
               </div>
-
               <div class="instruction-item">
                 <i class="fa-solid fa-hand-pointer"></i>
                 <span>Click on the option to select your answer. Click again on the selected option to deselect it.</span>
               </div>
-
               <div class="instruction-item">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span><strong>Previous</strong> — Go to the previous question without saving.</span>
               </div>
-
               <div class="instruction-item">
                 <i class="fa-solid fa-eraser"></i>
                 <span><strong>Clear Response</strong> — Remove your selected answer for the current question.</span>
               </div>
-
               <div class="instruction-item" style="background:var(--warning-light);color:#92400e">
                 <i class="fa-solid fa-bookmark" style="color:var(--warning)"></i>
                 <span><strong>Mark for Review</strong> — Mark the question to revisit later. It will be highlighted in orange in the question palette.</span>
               </div>
-
               <div class="instruction-item" style="background:var(--success-light);color:#14532d">
                 <i class="fa-solid fa-floppy-disk" style="color:var(--success)"></i>
                 <span><strong>Save & Next</strong> — Save your answer and move to the next question.</span>
               </div>
-
               <div class="instruction-item">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span><strong>Submit</strong> — Submit your test. A confirmation popup will appear before final submission.</span>
               </div>
-
               <div class="instruction-item" style="background:var(--error-light);color:#7f1d1d">
                 <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i>
                 <span><strong>Quit Test</strong> — Exit the test without submitting. Your progress will be saved automatically.</span>
               </div>
-
               <div class="instruction-item" style="flex-direction:column;align-items:flex-start;gap:10px">
                 <div style="display:flex;align-items:center;gap:8px">
                   <i class="fa-solid fa-palette" style="color:var(--purple)"></i>
                   <strong>Question Palette Colors</strong>
                 </div>
                 <div class="palette-legend-row">
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--palette-answered)">1</div>
-                    <span>Answered</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--palette-marked)">2</div>
-                    <span>Marked for Review</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--palette-visited)">3</div>
-                    <span>Visited</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--palette-current)">4</div>
-                    <span>Current</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background:var(--border);color:var(--text-muted)">5</div>
-                    <span>Not Visited</span>
-                  </div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-answered)">1</div><span>Answered</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-marked)">2</div><span>Marked for Review</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-visited)">3</div><span>Visited</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-current)">4</div><span>Current</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--border);color:var(--text-muted)">5</div><span>Not Visited</span></div>
                 </div>
               </div>
-
               <div class="instruction-item highlight">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>The test will <strong>auto-submit</strong> when the timer reaches zero.</span>
               </div>
-
               <div class="instruction-item highlight">
                 <i class="fa-solid fa-language"></i>
                 <span>Please select your preferred language <strong>before</strong> starting the test. Language cannot be changed during the test.</span>
               </div>
-
               <div class="instruction-item">
                 <i class="fa-solid fa-rotate"></i>
                 <span>Your progress is automatically saved after every action. You can safely resume if you close the browser.</span>
               </div>
-
             </div>
           </div>
 
@@ -1209,7 +1186,6 @@
             <i class="fa-solid fa-play"></i>
             Start Test
           </button>
-
         </div>
       </div>
     </div>
@@ -1217,9 +1193,8 @@
 
   <div class="screen" id="screen2">
 
-    <div class="quiz-topbar">
-      <div class="quiz-topbar-inner">
-        
+    <header class="site-header">
+      <div class="site-header-inner align-wrapper">
         <a href="/tests.html" class="brand">
           <div class="brand-icon">A</div>
           <div class="brand-text">
@@ -1227,22 +1202,17 @@
             <span class="brand-tagline">Practice. Improve. Succeed.</span>
           </div>
         </a>
+      </div>
+    </header>
 
+    <div class="quiz-topbar">
+      <div class="quiz-topbar-inner align-wrapper">
         <div class="quiz-title-wrap">
           <div class="quiz-title" id="quiz-title">Loading...</div>
           <div class="quiz-topbar-meta">
-            <span class="topbar-meta-item">
-              <i class="fa-solid fa-list-ol"></i>
-              <span id="topbar-questions">—</span> Qs
-            </span>
-            <span class="topbar-meta-item">
-              <i class="fa-solid fa-clock"></i>
-              <span id="topbar-duration">—</span> min
-            </span>
-            <span class="topbar-meta-item">
-              <i class="fa-solid fa-star"></i>
-              <span id="topbar-marks">—</span> Marks
-            </span>
+            <span class="topbar-meta-item"><i class="fa-solid fa-list-ol"></i><span id="topbar-questions">—</span> Qs</span>
+            <span class="topbar-meta-item"><i class="fa-solid fa-clock"></i><span id="topbar-duration">—</span> min</span>
+            <span class="topbar-meta-item"><i class="fa-solid fa-star"></i><span id="topbar-marks">—</span> Marks</span>
           </div>
         </div>
 
@@ -1253,19 +1223,17 @@
             <div class="timer-value" id="timerValue">00:00</div>
           </div>
         </div>
-
       </div>
     </div>
 
     <div class="section-tabs-wrap">
-      <div class="section-tabs" id="sectionTabs">
+      <div class="section-tabs align-wrapper" id="sectionTabs">
         </div>
     </div>
 
-    <div class="quiz-body">
+    <div class="quiz-body align-wrapper">
 
       <div class="question-area">
-
         <div class="question-card" id="questionCard">
           <div class="question-card-header">
             <div class="question-header-left">
@@ -1283,82 +1251,44 @@
             <div class="options-list" id="optionsList"></div>
           </div>
         </div>
-
       </div>
 
       <div class="palette-panel" id="palettePanel">
-
         <div class="palette-card">
-          <div class="palette-card-header">
-            <div class="palette-card-title">Question Palette</div>
-          </div>
-          <div class="palette-card-body">
-            <div class="palette-grid" id="paletteGrid"></div>
-          </div>
+          <div class="palette-card-header"><div class="palette-card-title">Question Palette</div></div>
+          <div class="palette-card-body"><div class="palette-grid" id="paletteGrid"></div></div>
         </div>
 
         <div class="palette-card">
-          <div class="palette-card-header">
-            <div class="palette-card-title">Legend</div>
-          </div>
+          <div class="palette-card-header"><div class="palette-card-title">Legend</div></div>
           <div class="palette-card-body">
             <div class="legend-list">
-              <div class="legend-row">
-                <div class="legend-box" style="background:var(--palette-answered)"></div>
-                <span>Answered</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:var(--palette-marked)"></div>
-                <span>Marked for Review</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:var(--palette-visited)"></div>
-                <span>Visited</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:var(--palette-current)"></div>
-                <span>Current Question</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:var(--palette-unattempted);border:1.5px solid var(--border)"></div>
-                <span>Not Visited</span>
-              </div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-answered)"></div><span>Answered</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-marked)"></div><span>Marked for Review</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-visited)"></div><span>Visited</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-current)"></div><span>Current Question</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-unattempted);border:1.5px solid var(--border)"></div><span>Not Visited</span></div>
             </div>
           </div>
         </div>
 
         <div class="palette-card">
-          <div class="palette-card-header">
-            <div class="palette-card-title">Summary</div>
-          </div>
+          <div class="palette-card-header"><div class="palette-card-title">Summary</div></div>
           <div class="palette-card-body">
             <div class="summary-grid">
-              <div class="summary-item">
-                <div class="summary-value" id="sum-answered" style="color:var(--success)">0</div>
-                <div class="summary-label">Answered</div>
-              </div>
-              <div class="summary-item">
-                <div class="summary-value" id="sum-marked" style="color:var(--warning)">0</div>
-                <div class="summary-label">Marked</div>
-              </div>
-              <div class="summary-item">
-                <div class="summary-value" id="sum-skipped" style="color:var(--text-muted)">0</div>
-                <div class="summary-label">Skipped</div>
-              </div>
-              <div class="summary-item">
-                <div class="summary-value" id="sum-total" style="color:var(--primary)">0</div>
-                <div class="summary-label">Total</div>
-              </div>
+              <div class="summary-item"><div class="summary-value" id="sum-answered" style="color:var(--success)">0</div><div class="summary-label">Answered</div></div>
+              <div class="summary-item"><div class="summary-value" id="sum-marked" style="color:var(--warning)">0</div><div class="summary-label">Marked</div></div>
+              <div class="summary-item"><div class="summary-value" id="sum-skipped" style="color:var(--text-muted)">0</div><div class="summary-label">Skipped</div></div>
+              <div class="summary-item"><div class="summary-value" id="sum-total" style="color:var(--primary)">0</div><div class="summary-label">Total</div></div>
             </div>
           </div>
         </div>
-
       </div>
 
     </div>
 
     <div class="quiz-bottombar">
-      <div class="quiz-bottombar-inner">
+      <div class="quiz-bottombar-inner align-wrapper">
         <button class="qbtn qbtn-prev" id="btnPrev" onclick="goToPrev()">
           <i class="fa-solid fa-chevron-left"></i>
           <span>Previous</span>
@@ -1392,53 +1322,35 @@
     <div class="popup">
       <div class="popup-header">
         <span class="popup-title">Select Language</span>
-        <button class="popup-close" onclick="closeOverlay('langOverlay')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="popup-close" onclick="closeOverlay('langOverlay')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="popup-body">
         <div class="lang-options">
-
           <div class="lang-option" data-lang="en" onclick="selectLanguage('en')">
             <div class="lang-option-left">
               <div class="lang-option-icon" style="background:#e0f2fe;color:#0369a1">EN</div>
-              <div>
-                <div class="lang-option-name">English</div>
-                <div class="lang-option-desc">Questions and options in English only</div>
-              </div>
+              <div><div class="lang-option-name">English</div><div class="lang-option-desc">Questions and options in English only</div></div>
             </div>
             <div class="lang-option-check"><i class="fa-solid fa-check"></i></div>
           </div>
-
           <div class="lang-option" data-lang="hi" onclick="selectLanguage('hi')">
             <div class="lang-option-left">
               <div class="lang-option-icon" style="background:#fef3c7;color:#92400e">हि</div>
-              <div>
-                <div class="lang-option-name">हिंदी</div>
-                <div class="lang-option-desc">प्रश्न और विकल्प केवल हिंदी में</div>
-              </div>
+              <div><div class="lang-option-name">हिंदी</div><div class="lang-option-desc">प्रश्न और विकल्प केवल हिंदी में</div></div>
             </div>
             <div class="lang-option-check"><i class="fa-solid fa-check"></i></div>
           </div>
-
           <div class="lang-option selected" data-lang="bilingual" onclick="selectLanguage('bilingual')">
             <div class="lang-option-left">
               <div class="lang-option-icon" style="background:var(--purple-light);color:var(--purple)">द्वि</div>
-              <div>
-                <div class="lang-option-name">Bilingual</div>
-                <div class="lang-option-desc">English + हिंदी (Both languages)</div>
-              </div>
+              <div><div class="lang-option-name">Bilingual</div><div class="lang-option-desc">English + हिंदी (Both languages)</div></div>
             </div>
             <div class="lang-option-check"><i class="fa-solid fa-check"></i></div>
           </div>
-
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-primary btn-full" onclick="confirmLanguage()">
-          <i class="fa-solid fa-check"></i>
-          Confirm Language
-        </button>
+        <button class="btn btn-primary btn-full" onclick="confirmLanguage()"><i class="fa-solid fa-check"></i> Confirm Language</button>
       </div>
     </div>
   </div>
@@ -1447,9 +1359,7 @@
     <div class="popup">
       <div class="popup-header">
         <span class="popup-title">Resume Test?</span>
-        <button class="popup-close" onclick="closeOverlay('resumeOverlay')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="popup-close" onclick="closeOverlay('resumeOverlay')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="resume-popup-body">
         <div class="resume-icon">📋</div>
@@ -1458,27 +1368,14 @@
           You have a saved session for this test. Would you like to resume where you left off, or start fresh?
         </div>
         <div class="confirm-stats" style="margin-top:16px">
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="resume-answered" style="color:var(--success)">0</div>
-            <div class="confirm-stat-label">Answered</div>
-          </div>
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="resume-visited" style="color:var(--text-muted)">0</div>
-            <div class="confirm-stat-label">Visited</div>
-          </div>
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="resume-time" style="color:var(--primary)">—</div>
-            <div class="confirm-stat-label">Time Left</div>
-          </div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="resume-answered" style="color:var(--success)">0</div><div class="confirm-stat-label">Answered</div></div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="resume-visited" style="color:var(--text-muted)">0</div><div class="confirm-stat-label">Visited</div></div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="resume-time" style="color:var(--primary)">—</div><div class="confirm-stat-label">Time Left</div></div>
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1" onclick="startFresh()">
-          <i class="fa-solid fa-rotate-left"></i> Start Fresh
-        </button>
-        <button class="btn btn-primary" style="flex:1" onclick="resumeTest()">
-          <i class="fa-solid fa-play"></i> Resume Test
-        </button>
+        <button class="btn btn-ghost" style="flex:1" onclick="startFresh()"><i class="fa-solid fa-rotate-left"></i> Start Fresh</button>
+        <button class="btn btn-primary" style="flex:1" onclick="resumeTest()"><i class="fa-solid fa-play"></i> Resume Test</button>
       </div>
     </div>
   </div>
@@ -1487,42 +1384,23 @@
     <div class="popup">
       <div class="popup-header">
         <span class="popup-title">Submit Test</span>
-        <button class="popup-close" onclick="closeOverlay('submitOverlay')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="popup-close" onclick="closeOverlay('submitOverlay')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="popup-body">
         <div class="confirm-icon-wrap">
-          <div class="confirm-icon submit">
-            <i class="fa-solid fa-paper-plane"></i>
-          </div>
+          <div class="confirm-icon submit"><i class="fa-solid fa-paper-plane"></i></div>
           <div class="confirm-title">Ready to Submit?</div>
-          <div class="confirm-message" id="submit-message">
-            Please review your summary before submitting. You cannot change answers after submission.
-          </div>
+          <div class="confirm-message" id="submit-message">Please review your summary before submitting. You cannot change answers after submission.</div>
         </div>
         <div class="confirm-stats">
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="submit-answered" style="color:var(--success)">0</div>
-            <div class="confirm-stat-label">Answered</div>
-          </div>
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="submit-unanswered" style="color:var(--error)">0</div>
-            <div class="confirm-stat-label">Unanswered</div>
-          </div>
-          <div class="confirm-stat">
-            <div class="confirm-stat-value" id="submit-marked" style="color:var(--warning)">0</div>
-            <div class="confirm-stat-label">Marked</div>
-          </div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="submit-answered" style="color:var(--success)">0</div><div class="confirm-stat-label">Answered</div></div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="submit-unanswered" style="color:var(--error)">0</div><div class="confirm-stat-label">Unanswered</div></div>
+          <div class="confirm-stat"><div class="confirm-stat-value" id="submit-marked" style="color:var(--warning)">0</div><div class="confirm-stat-label">Marked</div></div>
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('submitOverlay')">
-          <i class="fa-solid fa-xmark"></i> Cancel
-        </button>
-        <button class="btn btn-success" style="flex:1" onclick="submitQuiz()">
-          <i class="fa-solid fa-paper-plane"></i> Submit Test
-        </button>
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('submitOverlay')"><i class="fa-solid fa-xmark"></i> Cancel</button>
+        <button class="btn btn-success" style="flex:1" onclick="submitQuiz()"><i class="fa-solid fa-paper-plane"></i> Submit Test</button>
       </div>
     </div>
   </div>
@@ -1531,28 +1409,18 @@
     <div class="popup">
       <div class="popup-header">
         <span class="popup-title">Quit Test</span>
-        <button class="popup-close" onclick="closeOverlay('quitOverlay')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="popup-close" onclick="closeOverlay('quitOverlay')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="popup-body">
         <div class="confirm-icon-wrap">
-          <div class="confirm-icon quit">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </div>
+          <div class="confirm-icon quit"><i class="fa-solid fa-right-from-bracket"></i></div>
           <div class="confirm-title">Quit the Test?</div>
-          <div class="confirm-message">
-            Your progress will be saved automatically. You can resume this test later from where you left off.
-          </div>
+          <div class="confirm-message">Your progress will be saved automatically. You can resume this test later from where you left off.</div>
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('quitOverlay')">
-          <i class="fa-solid fa-arrow-left"></i> Stay on Test
-        </button>
-        <button class="btn btn-danger" style="flex:1" onclick="quitQuiz()">
-          <i class="fa-solid fa-right-from-bracket"></i> Quit Test
-        </button>
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('quitOverlay')"><i class="fa-solid fa-arrow-left"></i> Stay on Test</button>
+        <button class="btn btn-danger" style="flex:1" onclick="quitQuiz()"><i class="fa-solid fa-right-from-bracket"></i> Quit Test</button>
       </div>
     </div>
   </div>
@@ -1560,133 +1428,57 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    /* ============================================================
-       XSS UTILITY
-    ============================================================ */
     function escapeHTML(str) {
       if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    /* ============================================================
-       CONFIG
-    ============================================================ */
     const CONFIG = {
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
       STORAGE_PREFIX: 'apnamock_',
       AUTO_SAVE_DELAY: 500
     };
 
-    /* ============================================================
-       STATE
-    ============================================================ */
     const Quiz = {
-      testId: null,
-      testData: null,
-      language: 'bilingual',
-      selectedLanguagePending: 'bilingual',
-      questions: [],
-      currentIndex: 0,
-      currentSection: 0,
-      answers: {},
-      marked: new Set(),
-      visited: new Set(),
-      timeLeft: 0,
-      timerInterval: null,
-      autoSaveTimeout: null,
-      isStarted: false,
-      startTime: null,
-      submitTime: null,
-      historyPushed: false // Tracker for back button protection
+      testId: null, testData: null, language: 'bilingual', selectedLanguagePending: 'bilingual',
+      questions: [], currentIndex: 0, currentSection: 0, answers: {}, marked: new Set(),
+      visited: new Set(), timeLeft: 0, timerInterval: null, autoSaveTimeout: null,
+      isStarted: false, startTime: null, submitTime: null, historyPushed: false
     };
 
-    /* ============================================================
-       STORAGE
-    ============================================================ */
-    function storageGet(key) {
-      try {
-        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key);
-        return raw ? JSON.parse(raw) : null;
-      } catch { return null; }
-    }
+    function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+    function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
+    function storageRemove(key) { try { localStorage.removeItem(CONFIG.STORAGE_PREFIX + key); } catch {} }
 
-    function storageSet(key, value) {
-      try {
-        localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value));
-      } catch {}
-    }
-
-    function storageRemove(key) {
-      try {
-        localStorage.removeItem(CONFIG.STORAGE_PREFIX + key);
-      } catch {}
-    }
-
-    /* ============================================================
-       TOAST
-    ============================================================ */
     function showToast(message, type = 'info', duration = 2500) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
-      toast.innerHTML = `<i class="fa-solid ${
-        type === 'success' ? 'fa-circle-check' :
-        type === 'error' ? 'fa-circle-xmark' :
-        type === 'warning' ? 'fa-triangle-exclamation' :
-        'fa-circle-info'
-      }"></i> ${message}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i> ${message}`;
       container.appendChild(toast);
       setTimeout(() => toast.remove(), duration);
     }
 
-    /* ============================================================
-       POPUP HELPERS
-    ============================================================ */
     function openOverlay(id) {
       document.getElementById(id).classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-
     function closeOverlay(id) {
       document.getElementById(id).classList.remove('open');
       document.body.style.overflow = '';
     }
-
-    // Close on overlay click
     document.querySelectorAll('.overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeOverlay(overlay.id);
-      });
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay.id); });
     });
 
-    /* ============================================================
-       URL PARAMS
-    ============================================================ */
-    function getParam(key) {
-      return new URLSearchParams(window.location.search).get(key);
-    }
+    function getParam(key) { return new URLSearchParams(window.location.search).get(key); }
 
-    /* ============================================================
-       INIT — SCREEN 1
-    ============================================================ */
     async function initScreen1() {
-      // Initialize Theme
       const savedTheme = storageGet('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-      }
+      if (savedTheme === 'dark') document.body.classList.add('dark-mode');
 
       Quiz.testId = getParam('test');
-
-      if (!Quiz.testId) {
-        showScreen1Error('No test ID specified. Please go back and select a test.');
-        return;
-      }
+      if (!Quiz.testId) return showScreen1Error('No test ID specified. Please go back and select a test.');
 
       try {
         const indexRes = await fetch(`${CONFIG.CDN_BASE}data/tests-index.json`, { cache: 'force-cache' });
@@ -1694,10 +1486,7 @@
         const tests = Array.isArray(indexData.tests) ? indexData.tests : (Array.isArray(indexData) ? indexData : []);
         const testMeta = tests.find(t => (t.id || t.test_id) === Quiz.testId);
 
-        const dataUrl = testMeta?.file
-          ? `${CONFIG.CDN_BASE}${testMeta.file}`
-          : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json`;
-
+        const dataUrl = testMeta?.file ? `${CONFIG.CDN_BASE}${testMeta.file}` : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json`;
         const testRes = await fetch(dataUrl, { cache: 'force-cache' });
         if (!testRes.ok) throw new Error(`HTTP ${testRes.status}`);
 
@@ -1706,17 +1495,14 @@
 
         populateScreen1();
         checkResumeState();
-
       } catch (err) {
-        console.error('Quiz load error:', err);
+        console.error(err);
         showScreen1Error('Failed to load test. Please go back and try again.');
       }
     }
 
     function populateScreen1() {
-      const t = Quiz.testData;
-      const lang = Quiz.language;
-
+      const t = Quiz.testData; const lang = Quiz.language;
       const title = t.title_i18n?.[lang] || t.title || 'Untitled Test';
       document.getElementById('preq-title').textContent = title;
       document.getElementById('preq-exam-label').textContent = t.exam_group || t.exam || 'Exam';
@@ -1726,8 +1512,7 @@
       document.title = `${title} — ApnaMock`;
 
       const nm = t.negativeMarking || 0;
-      document.getElementById('instr-marks').textContent =
-        `Each correct answer carries marks as specified per question. ${nm > 0 ? `Negative marking of ${nm} mark(s) per wrong answer applies.` : 'There is no negative marking in this test.'}`;
+      document.getElementById('instr-marks').textContent = `Each correct answer carries marks as specified per question. ${nm > 0 ? `Negative marking of ${nm} mark(s) per wrong answer applies.` : 'There is no negative marking in this test.'}`;
     }
 
     function showScreen1Error(message) {
@@ -1736,21 +1521,11 @@
       document.getElementById('startTestBtn').disabled = true;
     }
 
-    /* ============================================================
-       CONSENT CHECKBOX
-    ============================================================ */
-    document.getElementById('consentCheck').addEventListener('change', (e) => {
-      document.getElementById('startTestBtn').disabled = !e.target.checked;
-    });
+    document.getElementById('consentCheck').addEventListener('change', (e) => { document.getElementById('startTestBtn').disabled = !e.target.checked; });
 
-    /* ============================================================
-       LANGUAGE SELECTION
-    ============================================================ */
     function selectLanguage(lang) {
       Quiz.selectedLanguagePending = lang;
-      document.querySelectorAll('.lang-option').forEach(opt => {
-        opt.classList.toggle('selected', opt.dataset.lang === lang);
-      });
+      document.querySelectorAll('.lang-option').forEach(opt => { opt.classList.toggle('selected', opt.dataset.lang === lang); });
     }
 
     function confirmLanguage() {
@@ -1761,560 +1536,227 @@
       showToast(`Language set to ${labels[Quiz.language]}`, 'success');
     }
 
-    /* ============================================================
-       RESUME STATE CHECK
-    ============================================================ */
     function checkResumeState() {
       const savedProgress = storageGet(`quiz_progress_${Quiz.testId}`);
-
       if (savedProgress && savedProgress.answers) {
-        // Show resume popup
         const answered = Object.keys(savedProgress.answers).length;
         const visited = savedProgress.visited?.length || 0;
         const timeLeft = savedProgress.timeLeft || Quiz.testData.duration * 60;
-
         document.getElementById('resume-answered').textContent = answered;
         document.getElementById('resume-visited').textContent = visited;
-
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('resume-time').textContent =
-          `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-
-        document.getElementById('resumeMessage').textContent =
-          `You have a saved session with ${answered} answered question${answered !== 1 ? 's' : ''}. Would you like to resume or start fresh?`;
-
+        document.getElementById('resume-time').textContent = `${String(Math.floor(timeLeft / 60)).padStart(2,'0')}:${String(timeLeft % 60).padStart(2,'0')}`;
+        document.getElementById('resumeMessage').textContent = `You have a saved session with ${answered} answered question${answered !== 1 ? 's' : ''}. Would you like to resume or start fresh?`;
         openOverlay('resumeOverlay');
       }
     }
 
-    function startFresh() {
-      storageRemove(`quiz_progress_${Quiz.testId}`);
-      closeOverlay('resumeOverlay');
-    }
-
+    function startFresh() { storageRemove(`quiz_progress_${Quiz.testId}`); closeOverlay('resumeOverlay'); }
     function resumeTest() {
-      const savedProgress = storageGet(`quiz_progress_${Quiz.testId}`);
-      if (savedProgress) {
-        Quiz.answers = savedProgress.answers || {};
-        Quiz.marked = new Set(savedProgress.marked || []);
-        Quiz.visited = new Set(savedProgress.visited || []);
-        Quiz.currentIndex = savedProgress.currentIndex || 0;
-        Quiz.timeLeft = savedProgress.timeLeft || Quiz.testData.duration * 60;
-        Quiz.language = savedProgress.language || Quiz.language;
-        Quiz.startTime = savedProgress.startTime || Date.now();
+      const saved = storageGet(`quiz_progress_${Quiz.testId}`);
+      if (saved) {
+        Quiz.answers = saved.answers || {}; Quiz.marked = new Set(saved.marked || []); Quiz.visited = new Set(saved.visited || []);
+        Quiz.currentIndex = saved.currentIndex || 0; Quiz.timeLeft = saved.timeLeft || Quiz.testData.duration * 60;
+        Quiz.language = saved.language || Quiz.language; Quiz.startTime = saved.startTime || Date.now();
       }
-      closeOverlay('resumeOverlay');
-      beginQuiz(true);
+      closeOverlay('resumeOverlay'); beginQuiz(true);
     }
 
-    /* ============================================================
-       START TEST & BROWSER BACK PROTECTION
-    ============================================================ */
     function handleStartTest() {
-      if (!Quiz.language || Quiz.language === '') {
-        showToast('Please select a language before starting', 'warning');
-        openOverlay('langOverlay');
-        return;
-      }
+      if (!Quiz.language) { showToast('Please select a language before starting', 'warning'); openOverlay('langOverlay'); return; }
       beginQuiz(false);
     }
 
     function beginQuiz(isResume = false) {
       Quiz.isStarted = true;
-
-      // Protection against browser back button
-      if (!Quiz.historyPushed) {
-        history.pushState({quizLive: true}, document.title, location.href);
-        Quiz.historyPushed = true;
-      }
-
+      if (!Quiz.historyPushed) { history.pushState({quizLive: true}, document.title, location.href); Quiz.historyPushed = true; }
+      
       if (!isResume) {
-        Quiz.answers = {};
-        Quiz.marked = new Set();
-        Quiz.visited = new Set();
-        Quiz.currentIndex = 0;
-        Quiz.timeLeft = (Quiz.testData.duration || 60) * 60;
-        Quiz.startTime = Date.now();
+        Quiz.answers = {}; Quiz.marked = new Set(); Quiz.visited = new Set(); Quiz.currentIndex = 0;
+        Quiz.timeLeft = (Quiz.testData.duration || 60) * 60; Quiz.startTime = Date.now();
       }
 
-      // Populate screen 2
-      document.getElementById('quiz-title').textContent =
-        Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
+      document.getElementById('quiz-title').textContent = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
       document.getElementById('topbar-questions').textContent = Quiz.testData.totalQuestions || Quiz.questions.length;
       document.getElementById('topbar-duration').textContent = Quiz.testData.duration || '—';
       document.getElementById('topbar-marks').textContent = Quiz.testData.totalMarks || '—';
 
-      buildSectionTabs();
-      buildPaletteGrid();
-      renderQuestion(Quiz.currentIndex);
-      startTimer();
-
-      // Switch screens
-      document.getElementById('screen1').classList.remove('active');
-      document.getElementById('screen2').classList.add('active');
-
+      buildSectionTabs(); buildPaletteGrid(); renderQuestion(Quiz.currentIndex); startTimer();
+      document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
       autoSave();
     }
 
-    // Capture Browser Back Button
     window.addEventListener('popstate', (e) => {
       if (Quiz.isStarted) {
-        // Intercept it, push state back to prevent leaving
         history.pushState({quizLive: true}, document.title, location.href);
-        // Prompt quit overlay
         openOverlay('quitOverlay');
       }
     });
 
-    /* ============================================================
-       SECTION TABS
-    ============================================================ */
     function buildSectionTabs() {
       const sections = Quiz.testData.sections || [];
       const tabsContainer = document.getElementById('sectionTabs');
-
-      if (sections.length === 0) {
-        tabsContainer.innerHTML = `
-          <button class="section-tab active" data-section="0">All Questions</button>
-        `;
-        return;
-      }
-
-      tabsContainer.innerHTML = sections.map((section, index) => `
-        <button
-          class="section-tab ${index === 0 ? 'active' : ''}"
-          data-section="${index}"
-          onclick="switchSection(${index})"
-        >
-          ${escapeHTML(section.title?.[Quiz.language] || section.title?.en || `Section ${index + 1}`)}
-          <span class="tab-answered-count" id="tab-count-${index}">0</span>
+      if (!sections.length) { tabsContainer.innerHTML = `<button class="section-tab active" data-section="0">All Questions</button>`; return; }
+      tabsContainer.innerHTML = sections.map((sec, i) => `
+        <button class="section-tab ${i === 0 ? 'active' : ''}" data-section="${i}" onclick="switchSection(${i})">
+          ${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)} <span class="tab-answered-count" id="tab-count-${i}">0</span>
         </button>
       `).join('');
-
       updateSectionTabCounts();
     }
 
     function switchSection(index) {
       Quiz.currentSection = index;
-      document.querySelectorAll('.section-tab').forEach(tab => {
-        tab.classList.toggle('active', Number(tab.dataset.section) === index);
-      });
-
-      // Find first question in this section
+      document.querySelectorAll('.section-tab').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.section) === index));
       const sectionId = Quiz.testData.sections?.[index]?.section_id;
       if (sectionId) {
         const firstQIndex = Quiz.questions.findIndex(q => q.sectionId === sectionId);
-        if (firstQIndex !== -1) {
-          renderQuestion(firstQIndex);
-        }
+        if (firstQIndex !== -1) renderQuestion(firstQIndex);
       }
     }
 
     function updateSectionTabCounts() {
-      const sections = Quiz.testData.sections || [];
-      sections.forEach((section, index) => {
-        const sectionId = section.section_id;
-        const count = Quiz.questions.filter(q =>
-          q.sectionId === sectionId && Quiz.answers[q.id || q.question_id] !== undefined
-        ).length;
-        const el = document.getElementById(`tab-count-${index}`);
-        if (el) el.textContent = count;
+      (Quiz.testData.sections || []).forEach((sec, i) => {
+        const count = Quiz.questions.filter(q => q.sectionId === sec.section_id && Quiz.answers[q.id || q.question_id] !== undefined).length;
+        const el = document.getElementById(`tab-count-${i}`); if (el) el.textContent = count;
       });
     }
 
-    /* ============================================================
-       QUESTION RENDERING
-    ============================================================ */
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
+      Quiz.currentIndex = index; Quiz.visited.add(index);
+      const q = Quiz.questions[index]; const lang = Quiz.language;
 
-      Quiz.currentIndex = index;
-      Quiz.visited.add(index);
-
-      const q = Quiz.questions[index];
-      const lang = Quiz.language;
-
-      // Question text
-      const questionText = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
-      document.getElementById('questionText').innerHTML = questionText; // Assuming safe API html content
-
-      // Question header
+      document.getElementById('questionText').innerHTML = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
       document.getElementById('qNumberTag').textContent = `Q${index + 1}`;
-
-      const sectionName = getSectionName(q.sectionId);
-      document.getElementById('qSectionTag').textContent = escapeHTML(sectionName);
-
-      const marks = q.marks || Quiz.testData.negativeMarking !== undefined ? 1 : '—';
-      const negMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
+      
+      const secId = q.sectionId; const sec = Quiz.testData.sections?.find(s => s.section_id === secId);
+      document.getElementById('qSectionTag').textContent = escapeHTML(sec?.title?.[lang] || sec?.title?.en || secId || 'General');
+      
       document.getElementById('qMarksPos').textContent = `+${q.marks || 1}`;
-      document.getElementById('qMarksNeg').textContent = `-${negMarks}`;
+      document.getElementById('qMarksNeg').textContent = `-${q.negativeMarks || Quiz.testData.negativeMarking || 0}`;
 
-      // Options
-      const optionsList = document.getElementById('optionsList');
-      const selectedAnswer = Quiz.answers[q.id || q.question_id];
-      const letters = ['A', 'B', 'C', 'D', 'E'];
-
-      optionsList.innerHTML = (q.options || []).map((opt, i) => {
-        const optText = typeof opt === 'object'
-          ? escapeHTML(opt[lang] || opt.en || opt.hi || '')
-          : escapeHTML(String(opt));
-
-        const isSelected = selectedAnswer === i;
-
-        return `
-          <button
-            class="option-item ${isSelected ? 'selected' : ''}"
-            onclick="selectOption(${i})"
-          >
-            <span class="option-letter">${letters[i]}</span>
-            <span class="option-text">${optText}</span>
-          </button>
-        `;
+      const selected = Quiz.answers[q.id || q.question_id];
+      document.getElementById('optionsList').innerHTML = (q.options || []).map((opt, i) => {
+        const optText = typeof opt === 'object' ? escapeHTML(opt[lang] || opt.en || opt.hi || '') : escapeHTML(String(opt));
+        return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optText}</span></button>`;
       }).join('');
 
-      updatePaletteGrid();
-      updateSummary();
-      autoSave();
+      updatePaletteGrid(); updateSummary(); autoSave();
     }
 
-    function getSectionName(sectionId) {
-      if (!sectionId || !Quiz.testData.sections?.length) return 'General';
-      const section = Quiz.testData.sections.find(s => s.section_id === sectionId);
-      return section?.title?.[Quiz.language] || section?.title?.en || sectionId;
-    }
-
-    /* ============================================================
-       OPTION SELECTION
-    ============================================================ */
     function selectOption(optionIndex) {
-      const q = Quiz.questions[Quiz.currentIndex];
-      const qId = q.id || q.question_id;
-
+      const qId = Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id;
       Quiz.answers[qId] = optionIndex;
-
-      // Update option UI without full re-render
-      document.querySelectorAll('.option-item').forEach((btn, i) => {
-        btn.classList.toggle('selected', i === optionIndex);
-      });
-
-      updatePaletteGrid();
-      updateSummary();
-      updateSectionTabCounts();
-      autoSave();
+      document.querySelectorAll('.option-item').forEach((btn, i) => btn.classList.toggle('selected', i === optionIndex));
+      updatePaletteGrid(); updateSummary(); updateSectionTabCounts(); autoSave();
     }
 
-    /* ============================================================
-       QUIZ ACTIONS
-    ============================================================ */
-    function goToPrev() {
-      if (Quiz.currentIndex > 0) {
-        renderQuestion(Quiz.currentIndex - 1);
-      }
-    }
-
+    function goToPrev() { if (Quiz.currentIndex > 0) renderQuestion(Quiz.currentIndex - 1); }
+    
     function clearResponse() {
-      const q = Quiz.questions[Quiz.currentIndex];
-      const qId = q.id || q.question_id;
+      const qId = Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id;
       delete Quiz.answers[qId];
-
       document.querySelectorAll('.option-item').forEach(btn => btn.classList.remove('selected'));
-      updatePaletteGrid();
-      updateSummary();
-      updateSectionTabCounts();
-      autoSave();
-      showToast('Response cleared', 'info');
+      updatePaletteGrid(); updateSummary(); updateSectionTabCounts(); autoSave(); showToast('Response cleared', 'info');
     }
 
     function markForReview() {
-      const index = Quiz.currentIndex;
-      
-      if (Quiz.marked.has(index)) {
-        Quiz.marked.delete(index);
-        showToast('Removed from review', 'info');
-        // Do not advance on unmark
-      } else {
-        Quiz.marked.add(index);
-        showToast('Marked for review', 'warning');
-        
-        // Advance to next question on explicit mark
-        if (Quiz.currentIndex < Quiz.questions.length - 1) {
-          renderQuestion(Quiz.currentIndex + 1);
-        }
-      }
-      
-      updatePaletteGrid();
-      updateSummary();
-      autoSave();
+      const i = Quiz.currentIndex;
+      if (Quiz.marked.has(i)) { Quiz.marked.delete(i); showToast('Removed from review', 'info'); }
+      else { Quiz.marked.add(i); showToast('Marked for review', 'warning'); if (i < Quiz.questions.length - 1) renderQuestion(i + 1); }
+      updatePaletteGrid(); updateSummary(); autoSave();
     }
 
     function saveAndNext() {
-      const q = Quiz.questions[Quiz.currentIndex];
-      const qId = q.id || q.question_id;
-
-      if (Quiz.answers[qId] !== undefined) {
-        showToast('Answer saved!', 'success', 1000);
-      }
-
-      // Always advance whether answered or not (Skip functionality)
-      if (Quiz.currentIndex < Quiz.questions.length - 1) {
-        renderQuestion(Quiz.currentIndex + 1);
-      } else {
-        showToast('This is the last question!', 'info');
-      }
+      if (Quiz.answers[Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id] !== undefined) showToast('Answer saved!', 'success', 1000);
+      if (Quiz.currentIndex < Quiz.questions.length - 1) renderQuestion(Quiz.currentIndex + 1);
+      else showToast('This is the last question!', 'info');
     }
 
-    /* ============================================================
-       PALETTE GRID
-    ============================================================ */
     function buildPaletteGrid() {
-      const grid = document.getElementById('paletteGrid');
-      grid.innerHTML = Quiz.questions.map((q, i) => `
-        <button
-          class="palette-btn"
-          id="palette-${i}"
-          onclick="renderQuestion(${i})"
-        >${i + 1}</button>
-      `).join('');
-
+      document.getElementById('paletteGrid').innerHTML = Quiz.questions.map((q, i) => `<button class="palette-btn" id="palette-${i}" onclick="renderQuestion(${i})">${i + 1}</button>`).join('');
       updatePaletteGrid();
     }
 
     function updatePaletteGrid() {
       Quiz.questions.forEach((q, i) => {
-        const btn = document.getElementById(`palette-${i}`);
-        if (!btn) return;
-
-        const qId = q.id || q.question_id;
-        const isAnswered = Quiz.answers[qId] !== undefined;
-        const isMarked = Quiz.marked.has(i);
-        const isVisited = Quiz.visited.has(i);
-        const isCurrent = i === Quiz.currentIndex;
-
+        const btn = document.getElementById(`palette-${i}`); if (!btn) return;
+        const isAns = Quiz.answers[q.id || q.question_id] !== undefined; const isMrk = Quiz.marked.has(i); const isVis = Quiz.visited.has(i);
         btn.className = 'palette-btn';
-
-        if (isCurrent) {
-          btn.classList.add('current');
-        } else if (isAnswered && isMarked) {
-          btn.classList.add('answered-marked'); // Hybrid state
-        } else if (isMarked) {
-          btn.classList.add('marked');
-        } else if (isAnswered) {
-          btn.classList.add('answered');
-        } else if (isVisited) {
-          btn.classList.add('visited');
-        }
+        if (i === Quiz.currentIndex) btn.classList.add('current');
+        else if (isAns && isMrk) btn.classList.add('answered-marked');
+        else if (isMrk) btn.classList.add('marked');
+        else if (isAns) btn.classList.add('answered');
+        else if (isVis) btn.classList.add('visited');
       });
     }
 
-    /* ============================================================
-       SUMMARY
-    ============================================================ */
     function updateSummary() {
-      const answered = Object.keys(Quiz.answers).length;
-      const marked = Quiz.marked.size;
-      const total = Quiz.questions.length;
-      const skipped = total - answered;
-
-      document.getElementById('sum-answered').textContent = answered;
-      document.getElementById('sum-marked').textContent = marked;
-      document.getElementById('sum-skipped').textContent = skipped;
-      document.getElementById('sum-total').textContent = total;
-
-      // Also update submit popup
-      document.getElementById('submit-answered').textContent = answered;
-      document.getElementById('submit-unanswered').textContent = skipped;
-      document.getElementById('submit-marked').textContent = marked;
+      const ans = Object.keys(Quiz.answers).length; const mrk = Quiz.marked.size; const tot = Quiz.questions.length;
+      document.getElementById('sum-answered').textContent = ans; document.getElementById('sum-marked').textContent = mrk;
+      document.getElementById('sum-skipped').textContent = tot - ans; document.getElementById('sum-total').textContent = tot;
+      document.getElementById('submit-answered').textContent = ans; document.getElementById('submit-unanswered').textContent = tot - ans;
+      document.getElementById('submit-marked').textContent = mrk;
     }
 
-    /* ============================================================
-       TIMER
-    ============================================================ */
     function startTimer() {
       updateTimerDisplay();
-
       Quiz.timerInterval = setInterval(() => {
-        Quiz.timeLeft--;
-        updateTimerDisplay();
-        autoSave();
-
-        if (Quiz.timeLeft <= 0) {
-          clearInterval(Quiz.timerInterval);
-          showToast('Time is up! Submitting your test...', 'warning');
-          setTimeout(() => submitQuiz(true), 2000);
-        }
+        Quiz.timeLeft--; updateTimerDisplay(); autoSave();
+        if (Quiz.timeLeft <= 0) { clearInterval(Quiz.timerInterval); showToast('Time is up! Submitting your test...', 'warning'); setTimeout(() => submitQuiz(true), 2000); }
       }, 1000);
     }
 
     function updateTimerDisplay() {
-      const timer = document.getElementById('quizTimer');
-      const value = document.getElementById('timerValue');
-
-      const mins = Math.floor(Quiz.timeLeft / 60);
-      const secs = Quiz.timeLeft % 60;
-      value.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-
+      const timer = document.getElementById('quizTimer'); const value = document.getElementById('timerValue');
+      value.textContent = `${String(Math.floor(Quiz.timeLeft / 60)).padStart(2,'0')}:${String(Quiz.timeLeft % 60).padStart(2,'0')}`;
       timer.classList.remove('warning', 'danger');
-
-      if (Quiz.timeLeft <= 60) {
-        timer.classList.add('danger');
-      } else if (Quiz.timeLeft <= 300) {
-        timer.classList.add('warning');
-      }
+      if (Quiz.timeLeft <= 60) timer.classList.add('danger'); else if (Quiz.timeLeft <= 300) timer.classList.add('warning');
     }
 
-    /* ============================================================
-       AUTO SAVE
-    ============================================================ */
     function autoSave() {
       clearTimeout(Quiz.autoSaveTimeout);
       Quiz.autoSaveTimeout = setTimeout(() => {
-        const progress = {
-          testId: Quiz.testId,
-          language: Quiz.language,
-          answers: Quiz.answers,
-          marked: [...Quiz.marked],
-          visited: [...Quiz.visited],
-          currentIndex: Quiz.currentIndex,
-          timeLeft: Quiz.timeLeft,
-          startTime: Quiz.startTime,
-          savedAt: Date.now()
-        };
-        storageSet(`quiz_progress_${Quiz.testId}`, progress);
+        storageSet(`quiz_progress_${Quiz.testId}`, { testId: Quiz.testId, language: Quiz.language, answers: Quiz.answers, marked: [...Quiz.marked], visited: [...Quiz.visited], currentIndex: Quiz.currentIndex, timeLeft: Quiz.timeLeft, startTime: Quiz.startTime, savedAt: Date.now() });
       }, CONFIG.AUTO_SAVE_DELAY);
     }
 
-    /* ============================================================
-       SUBMIT
-    ============================================================ */
     function submitQuiz(autoSubmit = false) {
-      clearInterval(Quiz.timerInterval);
-
-      Quiz.submitTime = Date.now();
-
-      const result = calculateResult();
-
-      storageSet(`result_${Quiz.testId}`, result);
-      storageSet(`latest_result`, result);
-
-      // Save to attempt history
-      const history = storageGet('attempt_history') || {};
-      history[Quiz.testId] = {
-        date: new Date(Quiz.submitTime).toLocaleDateString('en-IN'),
-        time: new Date(Quiz.submitTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-        score: `${result.score}/${result.totalMarks}`,
-        accuracy: result.accuracy
-      };
-      storageSet('attempt_history', history);
-
-      // Clear progress
-      storageRemove(`quiz_progress_${Quiz.testId}`);
-
-      closeOverlay('submitOverlay');
-
-      showToast('Test submitted! Loading results...', 'success');
-
-      setTimeout(() => {
-        window.location.href = `/result.html?test=${Quiz.testId}&t=${Quiz.submitTime}`;
-      }, 1200);
-    }
-
-    function calculateResult() {
-      let score = 0;
-      let correct = 0;
-      let wrong = 0;
-      let skipped = 0;
-      const questionResults = [];
-
+      clearInterval(Quiz.timerInterval); Quiz.submitTime = Date.now();
+      let score = 0; let correct = 0; let wrong = 0; let skipped = 0; const results = [];
       Quiz.questions.forEach((q, i) => {
-        const qId = q.id || q.question_id;
-        const userAnswer = Quiz.answers[qId];
-        const correctAnswer = q.correct;
-        const marks = q.marks || 1;
-        const negMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
-
-        let status;
-        let questionScore = 0;
-
-        if (userAnswer === undefined || userAnswer === null) {
-          status = Quiz.marked.has(i) ? 'marked' : 'skipped';
-          skipped++;
-        } else if (userAnswer === correctAnswer) {
-          status = 'correct';
-          questionScore = marks;
-          score += marks;
-          correct++;
-        } else {
-          status = 'wrong';
-          questionScore = -negMarks;
-          score -= negMarks;
-          wrong++;
-        }
-
-        questionResults.push({
-          questionIndex: i,
-          questionId: qId,
-          userAnswer,
-          correctAnswer,
-          status,
-          score: questionScore,
-          marked: Quiz.marked.has(i)
-        });
+        const uAns = Quiz.answers[q.id || q.question_id]; const cAns = q.correct; const marks = q.marks || 1; const nMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
+        let stat; let qScore = 0;
+        if (uAns === undefined) { stat = Quiz.marked.has(i) ? 'marked' : 'skipped'; skipped++; }
+        else if (uAns === cAns) { stat = 'correct'; qScore = marks; score += marks; correct++; }
+        else { stat = 'wrong'; qScore = -nMarks; score -= nMarks; wrong++; }
+        results.push({ questionIndex: i, questionId: q.id || q.question_id, userAnswer: uAns, correctAnswer: cAns, status: stat, score: qScore, marked: Quiz.marked.has(i) });
       });
 
-      const totalMarks = Quiz.testData.totalMarks || Quiz.questions.length;
-      const accuracy = correct + wrong > 0
-        ? Math.round((correct / (correct + wrong)) * 100)
-        : 0;
-
-      const timeTaken = Math.round((Quiz.submitTime - Quiz.startTime) / 1000);
-
-      return {
-        testId: Quiz.testId,
-        testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title,
-        language: Quiz.language,
-        score: Math.max(0, Math.round(score * 100) / 100),
-        totalMarks,
-        correct,
-        wrong,
-        skipped,
-        totalQuestions: Quiz.questions.length,
-        accuracy,
-        timeTaken,
-        submittedAt: Quiz.submitTime,
-        questionResults,
-        testData: {
-          title: Quiz.testData.title,
-          title_i18n: Quiz.testData.title_i18n,
-          exam: Quiz.testData.exam,
-          sections: Quiz.testData.sections,
-          questions: Quiz.questions
-        }
+      const resObj = {
+        testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
+        score: Math.max(0, Math.round(score * 100) / 100), totalMarks: Quiz.testData.totalMarks || Quiz.questions.length,
+        correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
+        timeTaken: Math.round((Quiz.submitTime - Quiz.startTime) / 1000), submittedAt: Quiz.submitTime, questionResults: results,
+        testData: { title: Quiz.testData.title, title_i18n: Quiz.testData.title_i18n, exam: Quiz.testData.exam, sections: Quiz.testData.sections, questions: Quiz.questions }
       };
-    }
 
-    /* ============================================================
-       QUIT
-    ============================================================ */
-    function quitQuiz() {
-      clearInterval(Quiz.timerInterval);
-      autoSave();
-      closeOverlay('quitOverlay');
+      storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
+      const history = storageGet('attempt_history') || {};
+      history[Quiz.testId] = { date: new Date(Quiz.submitTime).toLocaleDateString('en-IN'), time: new Date(Quiz.submitTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }), score: `${resObj.score}/${resObj.totalMarks}`, accuracy: resObj.accuracy };
+      storageSet('attempt_history', history); storageRemove(`quiz_progress_${Quiz.testId}`);
       
-      // Since we pushed state, go back smoothly
-      if (Quiz.historyPushed) {
-         history.back();
-      }
-      setTimeout(() => {
-         window.location.href = '/tests.html';
-      }, 100);
+      closeOverlay('submitOverlay'); showToast('Test submitted! Loading results...', 'success');
+      setTimeout(() => { window.location.href = `/result.html?test=${Quiz.testId}&t=${Quiz.submitTime}`; }, 1200);
     }
 
-    /* ============================================================
-       INIT
-    ============================================================ */
+    function quitQuiz() {
+      clearInterval(Quiz.timerInterval); autoSave(); closeOverlay('quitOverlay');
+      if (Quiz.historyPushed) history.back();
+      setTimeout(() => { window.location.href = '/tests.html'; }, 100);
+    }
+
     initScreen1();
   </script>
-
 </body>
 </html>
