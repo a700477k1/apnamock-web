@@ -1,195 +1,1705 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Result - ApnaMock</title>
-  <meta name="description" content="View your test results and performance analysis.">
-  <meta name="theme-color" content="#4F46E5">
-  <meta name="robots" content="noindex">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Result — ApnaMock</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
-    .result-container { max-width: 900px; margin: 0 auto; }
-    .result-header { text-align: center; padding: var(--space-12) 0; }
-    .result-score { font-size: var(--text-6xl); font-weight: 800; color: var(--primary); font-family: var(--font-display); line-height: 1; }
-    .result-score-label { font-size: var(--text-lg); color: var(--text-secondary); margin-top: var(--space-2); }
-    .result-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-12); }
-    .result-stat-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; border: 1px solid var(--border-light); }
-    .result-stat-value { font-size: var(--text-3xl); font-weight: 700; font-family: var(--font-display); }
-    .result-stat-label { font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-1); }
-    .result-stat-card.correct .result-stat-value { color: var(--secondary); }
-    .result-stat-card.incorrect .result-stat-value { color: var(--danger); }
-    .result-stat-card.unattempted .result-stat-value { color: var(--warning); }
-    .question-review { margin-top: var(--space-12); }
-    .question-review h2 { font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-6); }
-    .review-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-4); border: 1px solid var(--border-light); }
-    .review-card.correct { border-left: 4px solid var(--secondary); }
-    .review-card.incorrect { border-left: 4px solid var(--danger); }
-    .review-card.unattempted { border-left: 4px solid var(--warning); }
-    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
-    .review-status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; }
-    .review-status.correct { background: var(--secondary-50); color: var(--secondary-dark); }
-    .review-status.incorrect { background: var(--danger-50); color: var(--danger-dark); }
-    .review-status.unattempted { background: var(--warning-50); color: var(--warning-dark); }
-    .review-options { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-4); }
-    .review-option { padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); border: 2px solid var(--border-light); font-size: var(--text-sm); }
-    .review-option.correct { border-color: var(--secondary); background: var(--secondary-50); }
-    .review-option.incorrect { border-color: var(--danger); background: var(--danger-50); }
-    .review-option.selected { font-weight: 600; }
-    .actions { display: flex; gap: var(--space-4); justify-content: center; margin-top: var(--space-8); }
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --primary-light: #e8f0fe;
+      --accent: #f97316;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --error: #dc2626;
+      --error-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+
+      --bg-base: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-muted: #f1f5f9;
+
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    a { text-decoration: none; color: inherit; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-muted); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .back-link:hover { color: var(--text-primary); }
+
+    .header-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    /* ============================================================
+       PAGE LAYOUT
+    ============================================================ */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 20px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,86,219,0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 12px rgba(26,86,219,0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-outline:hover { background: var(--primary-light); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .btn i { font-size: 13px; }
+
+    /* ============================================================
+       RESULT HEADER CARD
+    ============================================================ */
+    .result-header-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-header-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .result-header-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -20px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .result-exam-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.9);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .result-test-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .result-submission-time {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ============================================================
+       SCORE SUMMARY CARDS
+    ============================================================ */
+    .score-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .score-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .score-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .score-card-value {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .score-card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .score-card-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Card color variants */
+    .score-card.score { border-top: 3px solid var(--primary); }
+    .score-card.score .score-card-icon { background: var(--primary-light); color: var(--primary); }
+    .score-card.score .score-card-value { color: var(--primary); }
+
+    .score-card.correct { border-top: 3px solid var(--success); }
+    .score-card.correct .score-card-icon { background: var(--success-light); color: var(--success); }
+    .score-card.correct .score-card-value { color: var(--success); }
+
+    .score-card.wrong { border-top: 3px solid var(--error); }
+    .score-card.wrong .score-card-icon { background: var(--error-light); color: var(--error); }
+    .score-card.wrong .score-card-value { color: var(--error); }
+
+    .score-card.skipped { border-top: 3px solid var(--text-muted); }
+    .score-card.skipped .score-card-icon { background: var(--bg-muted); color: var(--text-muted); }
+    .score-card.skipped .score-card-value { color: var(--text-muted); }
+
+    .score-card.accuracy { border-top: 3px solid var(--purple); }
+    .score-card.accuracy .score-card-icon { background: var(--purple-light); color: var(--purple); }
+    .score-card.accuracy .score-card-value { color: var(--purple); }
+
+    .score-card.negative { border-top: 3px solid var(--warning); }
+    .score-card.negative .score-card-icon { background: var(--warning-light); color: var(--warning); }
+    .score-card.negative .score-card-value { color: var(--warning); }
+
+    .score-card.time { border-top: 3px solid var(--accent); }
+    .score-card.time .score-card-icon { background: #fff7ed; color: var(--accent); }
+    .score-card.time .score-card-value { color: var(--accent); }
+
+    /* ============================================================
+       PERFORMANCE MESSAGE
+    ============================================================ */
+    .performance-message-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .perf-emoji {
+      font-size: 40px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .perf-content {}
+
+    .perf-title {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .perf-message {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       ACTION BUTTONS ROW
+    ============================================================ */
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================================
+       SIMILAR TEST CARD
+    ============================================================ */
+    .similar-test-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .similar-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .similar-content { flex: 1; }
+
+    .similar-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .similar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================================================
+       SECTION PERFORMANCE
+    ============================================================ */
+    .section-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-muted);
+    }
+
+    .card-header-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-header-title i { color: var(--primary); font-size: 14px; }
+
+    .section-perf-list {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-perf-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .section-perf-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-perf-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-perf-score {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .progress-bar-wrap {
+      height: 8px;
+      background: var(--bg-muted);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.5s ease;
+    }
+
+    .section-perf-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+    }
+
+    .section-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .section-stat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* ============================================================
+       ANSWER REVIEW SECTION
+    ============================================================ */
+    .review-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .review-header-title {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ============================================================
+       REVIEW FILTER POPUP
+    ============================================================ */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .popup {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.95) translateY(12px);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      overflow: hidden;
+    }
+
+    .overlay.open .popup {
+      transform: scale(1) translateY(0);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .popup-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .popup-close {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .popup-close:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .popup-body { padding: 16px 20px; }
+
+    .popup-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .review-filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-filter-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .review-filter-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .review-filter-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       REVIEW CARDS
+    ============================================================ */
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .review-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s;
+    }
+
+    .review-card.correct { border-left: 4px solid var(--success); }
+    .review-card.wrong { border-left: 4px solid var(--error); }
+    .review-card.skipped { border-left: 4px solid var(--text-muted); }
+    .review-card.marked { border-left: 4px solid var(--warning); }
+
+    .review-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .review-card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-q-number {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .review-section-tag {
+      font-size: 11px;
+      background: var(--border);
+      color: var(--text-secondary);
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    .review-status-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+
+    .review-status-tag.correct { background: var(--success-light); color: var(--success); }
+    .review-status-tag.wrong { background: var(--error-light); color: var(--error); }
+    .review-status-tag.skipped { background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border); }
+    .review-status-tag.marked { background: var(--warning-light); color: #92400e; }
+
+    .review-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .review-question-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .review-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .review-option.user-selected {
+      border-color: var(--error);
+      background: var(--error-light);
+      color: #7f1d1d;
+    }
+
+    .review-option.correct-answer {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .review-option.user-correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .review-option-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--bg-muted);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .review-option.correct-answer .review-option-letter,
+    .review-option.user-correct .review-option-letter {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .review-option.user-selected .review-option-letter {
+      background: var(--error);
+      color: #fff;
+    }
+
+    .review-option-indicator {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+
+    /* Explanation */
+    .explanation-box {
+      background: var(--primary-light);
+      border: 1px solid rgba(26,86,219,0.15);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+
+    .explanation-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .explanation-text {
+      font-size: 13.5px;
+      color: var(--primary-dark);
+      line-height: 1.6;
+    }
+
+    /* Favorite Button */
+    .favorite-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      transition: all 0.15s;
+      background: transparent;
+    }
+
+    .favorite-btn:hover {
+      color: var(--warning);
+      border-color: var(--warning);
+      background: var(--warning-light);
+    }
+
+    .favorite-btn.favorited {
+      color: var(--warning);
+      border-color: var(--warning);
+      background: var(--warning-light);
+    }
+
+    .review-card-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* ============================================================
+       LOAD MORE
+    ============================================================ */
+    .load-more-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .load-more-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       SECTION BADGES - strongest/weakest
+    ============================================================ */
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-strong { background: var(--success-light); color: var(--success); }
+    .badge-weak { background: var(--error-light); color: var(--error); }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--text-primary);
+      color: #fff;
+      padding: 11px 18px;
+      border-radius: var(--radius-lg);
+      font-size: 13.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      max-width: 320px;
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast.success { background: var(--success); }
+    .toast.warning { background: var(--warning); }
+    .toast.error { background: var(--error); }
+
+    /* ============================================================
+       FOOTER (same as tests.html)
+    ============================================================ */
+    .site-footer {
+      background: var(--text-primary);
+      color: #fff;
+      padding: 32px 20px 20px;
+      margin-top: 40px;
+    }
+
+    .footer-bottom {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 600px) {
+      .score-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions-row {
+        flex-direction: column;
+      }
+
+      .btn { width: 100%; }
+
+      .performance-message-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .score-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
+
 <body>
-  <!-- Header -->
-  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
-        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
-        <div style="display: flex; align-items: center; gap: var(--space-4);">
-          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
-            <i class="fas fa-moon"></i>
-          </button>
-        </div>
-      </div>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/tests.html" class="back-link">
+        <i class="fa-solid fa-chevron-left"></i>
+        All Tests
+      </a>
+      <div class="header-title" id="headerTitle">Result</div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="page-container">
-    <div class="container">
-      <div id="result-loading" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading results...</p>
-      </div>
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
+  <main class="page-wrapper" id="mainContent">
 
-      <div id="result-container" style="display: none;"></div>
-
-      <div id="no-result" style="display: none;"></div>
+    <!-- Will be populated by JS -->
+    <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px"></i>
+      <div style="font-size:15px;font-weight:500">Loading your result...</div>
     </div>
+
   </main>
 
-  <!-- Footer -->
-  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
-        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
-          © 2024 ApnaMock. Practice. Improve. Succeed.
-        </div>
-        <div style="display: flex; gap: var(--space-4);">
-          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
-          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
-          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+  <!-- ============================================================
+       REVIEW FILTER POPUP
+  ============================================================ -->
+  <div class="overlay" id="reviewFilterOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Filter Review</span>
+        <button class="popup-close" onclick="closeOverlay('reviewFilterOverlay')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="popup-body">
+        <div class="review-filter-options">
+
+          <div class="review-filter-option selected" data-filter="all" onclick="selectReviewFilter('all')">
+            <span><i class="fa-solid fa-list" style="margin-right:8px"></i> All Questions</span>
+            <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px"></i>
+          </div>
+
+          <div class="review-filter-option" data-filter="correct" onclick="selectReviewFilter('correct')">
+            <span><i class="fa-solid fa-circle-check" style="color:var(--success);margin-right:8px"></i> Correct Only</span>
+            <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
+          </div>
+
+          <div class="review-filter-option" data-filter="wrong" onclick="selectReviewFilter('wrong')">
+            <span><i class="fa-solid fa-circle-xmark" style="color:var(--error);margin-right:8px"></i> Wrong Only</span>
+            <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
+          </div>
+
+          <div class="review-filter-option" data-filter="skipped" onclick="selectReviewFilter('skipped')">
+            <span><i class="fa-solid fa-circle-minus" style="color:var(--text-muted);margin-right:8px"></i> Skipped Only</span>
+            <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
+          </div>
+
+          <div class="review-filter-option" data-filter="marked" onclick="selectReviewFilter('marked')">
+            <span><i class="fa-solid fa-bookmark" style="color:var(--warning);margin-right:8px"></i> Marked for Review</span>
+            <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
+          </div>
+
         </div>
       </div>
+      <div class="popup-footer">
+        <button class="btn btn-primary" style="flex:1" onclick="applyReviewFilter()">
+          <i class="fa-solid fa-check"></i> Apply Filter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST
+  ============================================================ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
-    (function() {
-      const urlParams = ApnaMock.utils.getUrlParams();
-      const resultData = urlParams.data;
+    /* ============================================================
+       CONFIG
+    ============================================================ */
+    const CONFIG = {
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
+      STORAGE_PREFIX: 'apnamock_',
+      REVIEW_PER_PAGE: 10
+    };
 
-      function loadResult() {
-        if (!resultData) {
-          document.getElementById('result-loading').style.display = 'none';
-          document.getElementById('no-result').style.display = 'block';
-          document.getElementById('no-result').innerHTML = ApnaMock.ui.emptyState(
-            '📊',
-            'No Result Found',
-            'Take a test to see your results here.',
-            { href: 'tests.html', label: 'Browse Tests' }
-          );
-          return;
-        }
+    /* ============================================================
+       STATE
+    ============================================================ */
+    const Result = {
+      data: null,
+      questions: [],
+      questionResults: [],
+      filteredResults: [],
+      displayedReviews: 0,
+      reviewFilter: 'all',
+      favorites: new Set(),
+      language: 'bilingual'
+    };
 
-        try {
-          const result = JSON.parse(decodeURIComponent(resultData));
-          renderResult(result);
-        } catch (error) {
-          console.error('Error parsing result:', error);
-          document.getElementById('result-loading').innerHTML = '<p style="color: var(--danger);">Invalid result data.</p>';
-        }
+    /* ============================================================
+       STORAGE
+    ============================================================ */
+    function storageGet(key) {
+      try {
+        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key);
+        return raw ? JSON.parse(raw) : null;
+      } catch { return null; }
+    }
+
+    function storageSet(key, value) {
+      try {
+        localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value));
+      } catch {}
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    function showToast(message, type = 'info', duration = 2500) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${
+        type === 'success' ? 'fa-circle-check' :
+        type === 'error' ? 'fa-circle-xmark' :
+        'fa-circle-info'
+      }"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
+
+    /* ============================================================
+       POPUP
+    ============================================================ */
+    function openOverlay(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeOverlay(overlay.id);
+      });
+    });
+
+    /* ============================================================
+       REVIEW FILTER
+    ============================================================ */
+    let pendingReviewFilter = 'all';
+
+    function selectReviewFilter(filter) {
+      pendingReviewFilter = filter;
+      document.querySelectorAll('.review-filter-option').forEach(opt => {
+        const isSelected = opt.dataset.filter === filter;
+        opt.classList.toggle('selected', isSelected);
+        opt.querySelector('i.fa-check').style.display = isSelected ? 'block' : 'none';
+      });
+    }
+
+    function applyReviewFilter() {
+      Result.reviewFilter = pendingReviewFilter;
+      closeOverlay('reviewFilterOverlay');
+      applyAndRenderReview();
+    }
+
+    function applyAndRenderReview() {
+      const filter = Result.reviewFilter;
+      const qrs = Result.questionResults;
+
+      if (filter === 'all') {
+        Result.filteredResults = qrs;
+      } else {
+        Result.filteredResults = qrs.filter(qr => qr.status === filter);
       }
 
-      function renderResult(result) {
-        document.getElementById('result-loading').style.display = 'none';
-        document.getElementById('result-container').style.display = 'block';
+      Result.displayedReviews = 0;
 
-        const container = document.getElementById('result-container');
-        
-        let questionsHtml = '';
-        if (result.questions) {
-          questionsHtml = `
-            <div class="question-review">
-              <h2>Question Review</h2>
-              ${result.questions.map((q, i) => {
-                const status = q.selected === null ? 'unattempted' : q.selected === q.correct ? 'correct' : 'incorrect';
-                return `
-                  <div class="review-card ${status}">
-                    <div class="review-header">
-                      <span class="font-semibold">Q${i + 1}</span>
-                      <span class="review-status ${status}">${status}</span>
-                    </div>
-                    <p>${q.question}</p>
-                    <div class="review-options">
-                      ${q.options.map((opt, idx) => {
-                        let classes = 'review-option';
-                        if (idx === q.correct) classes += ' correct';
-                        if (idx === q.selected && idx !== q.correct) classes += ' incorrect';
-                        if (idx === q.selected) classes += ' selected';
-                        return `<div class="${classes}">${String.fromCharCode(65 + idx)}. ${opt}${idx === q.correct ? ' ✓' : ''}${idx === q.selected && idx !== q.correct ? ' ✗' : ''}</div>`;
-                      }).join('')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          `;
-        }
+      const reviewList = document.getElementById('reviewList');
+      if (reviewList) reviewList.innerHTML = '';
 
-        container.innerHTML = `
-          <div class="result-container">
-            <div class="result-header">
-              <div class="result-score">${result.score}/${result.totalMarks}</div>
-              <div class="result-score-label">${result.percentage}% Accuracy</div>
+      renderMoreReviews();
+    }
+
+    /* ============================================================
+       INIT
+    ============================================================ */
+    async function initResult() {
+      const testId = new URLSearchParams(window.location.search).get('test');
+      const timestamp = new URLSearchParams(window.location.search).get('t');
+
+      const resultData = storageGet(`result_${testId}`) || storageGet('latest_result');
+
+      if (!resultData) {
+        showError('Result not found. Please complete the quiz first.');
+        return;
+      }
+
+      Result.data = resultData;
+      Result.questions = resultData.testData?.questions || [];
+      Result.questionResults = resultData.questionResults || [];
+      Result.language = resultData.language || 'bilingual';
+      Result.favorites = new Set(storageGet('favorites_ids') || []);
+
+      document.getElementById('headerTitle').textContent = 'Test Result';
+      document.title = `Result — ${resultData.testTitle || 'ApnaMock'}`;
+
+      renderPage();
+    }
+
+    /* ============================================================
+       RENDER PAGE
+    ============================================================ */
+    function renderPage() {
+      const R = Result.data;
+      const lang = Result.language;
+      const main = document.getElementById('mainContent');
+
+      const submittedDate = R.submittedAt
+        ? new Date(R.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '';
+      const submittedTime = R.submittedAt
+        ? new Date(R.submittedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+        : '';
+
+      const perf = getPerformanceMessage(R.accuracy, R.score, R.totalMarks);
+      const sections = computeSectionPerformance();
+
+      const strongestSection = sections.length > 0
+        ? sections.reduce((a, b) => a.accuracy > b.accuracy ? a : b)
+        : null;
+      const weakestSection = sections.length > 0
+        ? sections.reduce((a, b) => a.accuracy < b.accuracy ? a : b)
+        : null;
+
+      const similarTest = R.testData?.similarTests?.[0];
+
+      const timeTakenFormatted = R.timeTaken
+        ? `${Math.floor(R.timeTaken / 60)}m ${R.timeTaken % 60}s`
+        : '—';
+
+      const negativeMarks = Math.abs(
+        R.questionResults?.reduce((sum, qr) => sum + (qr.score < 0 ? qr.score : 0), 0) || 0
+      ).toFixed(2);
+
+      main.innerHTML = `
+
+        <!-- Result Header -->
+        <div class="result-header-card">
+          <div class="result-exam-tag">
+            <i class="fa-solid fa-graduation-cap"></i>
+            ${R.testData?.exam || 'Exam'}
+          </div>
+          <div class="result-test-title">${R.testTitle || 'Test Result'}</div>
+          <div class="result-submission-time">
+            <i class="fa-solid fa-clock"></i>
+            Submitted on ${submittedDate} at ${submittedTime}
+          </div>
+        </div>
+
+        <!-- Score Summary Cards -->
+        <div class="score-summary-grid">
+
+          <div class="score-card score">
+            <div class="score-card-icon"><i class="fa-solid fa-trophy"></i></div>
+            <div class="score-card-value">${R.score}</div>
+            <div class="score-card-label">Score</div>
+            <div class="score-card-sub">out of ${R.totalMarks}</div>
+          </div>
+
+          <div class="score-card correct">
+            <div class="score-card-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="score-card-value">${R.correct}</div>
+            <div class="score-card-label">Correct</div>
+            <div class="score-card-sub">out of ${R.totalQuestions}</div>
+          </div>
+
+          <div class="score-card wrong">
+            <div class="score-card-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="score-card-value">${R.wrong}</div>
+            <div class="score-card-label">Wrong</div>
+            <div class="score-card-sub">&nbsp;</div>
+          </div>
+
+          <div class="score-card skipped">
+            <div class="score-card-icon"><i class="fa-solid fa-circle-minus"></i></div>
+            <div class="score-card-value">${R.skipped}</div>
+            <div class="score-card-label">Skipped</div>
+            <div class="score-card-sub">&nbsp;</div>
+          </div>
+
+          <div class="score-card accuracy">
+            <div class="score-card-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="score-card-value">${R.accuracy}%</div>
+            <div class="score-card-label">Accuracy</div>
+            <div class="score-card-sub">&nbsp;</div>
+          </div>
+
+          <div class="score-card negative">
+            <div class="score-card-icon"><i class="fa-solid fa-minus"></i></div>
+            <div class="score-card-value">-${negativeMarks}</div>
+            <div class="score-card-label">Negative Marks</div>
+            <div class="score-card-sub">&nbsp;</div>
+          </div>
+
+          <div class="score-card time">
+            <div class="score-card-icon"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="score-card-value">${timeTakenFormatted}</div>
+            <div class="score-card-label">Time Taken</div>
+            <div class="score-card-sub">&nbsp;</div>
+          </div>
+
+          ${strongestSection ? `
+          <div class="score-card">
+            <div class="score-card-icon" style="background:#dcfce7;color:#16a34a">
+              <i class="fa-solid fa-arrow-trend-up"></i>
             </div>
-            <div class="result-stats-grid">
-              <div class="result-stat-card correct">
-                <div class="result-stat-value">${result.correct}</div>
-                <div class="result-stat-label">Correct</div>
-              </div>
-              <div class="result-stat-card incorrect">
-                <div class="result-stat-value">${result.incorrect}</div>
-                <div class="result-stat-label">Incorrect</div>
-              </div>
-              <div class="result-stat-card unattempted">
-                <div class="result-stat-value">${result.unattempted}</div>
-                <div class="result-stat-label">Unattempted</div>
-              </div>
-              <div class="result-stat-card">
-                <div class="result-stat-value">${ApnaMock.utils.formatDuration(result.timeTaken)}</div>
-                <div class="result-stat-label">Time Taken</div>
-              </div>
+            <div class="score-card-value" style="font-size:14px;text-align:center;line-height:1.3">
+              ${strongestSection.name}
             </div>
-            ${questionsHtml}
-            <div class="actions">
-              <a href="tests.html" class="btn btn-primary">Take Another Test</a>
-              <a href="history.html" class="btn btn-outline">View History</a>
+            <div class="score-card-label">Strongest Section</div>
+            <span class="section-badge badge-strong">${strongestSection.accuracy}%</span>
+          </div>
+          ` : ''}
+
+          ${weakestSection && weakestSection.name !== strongestSection?.name ? `
+          <div class="score-card">
+            <div class="score-card-icon" style="background:#fee2e2;color:#dc2626">
+              <i class="fa-solid fa-arrow-trend-down"></i>
+            </div>
+            <div class="score-card-value" style="font-size:14px;text-align:center;line-height:1.3">
+              ${weakestSection.name}
+            </div>
+            <div class="score-card-label">Weakest Section</div>
+            <span class="section-badge badge-weak">${weakestSection.accuracy}%</span>
+          </div>
+          ` : ''}
+
+        </div>
+
+        <!-- Performance Message -->
+        <div class="performance-message-card">
+          <div class="perf-emoji">${perf.emoji}</div>
+          <div class="perf-content">
+            <div class="perf-title">${perf.title}</div>
+            <div class="perf-message">${perf.message}</div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-row">
+          <a href="/tests.html" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Back to Tests
+          </a>
+          <a href="/quiz.html?test=${R.testId}" class="btn btn-outline">
+            <i class="fa-solid fa-rotate-right"></i> Reattempt
+          </a>
+        </div>
+
+        <!-- Similar Test -->
+        ${similarTest ? `
+        <a href="/quiz.html?test=${similarTest.test_id}" class="similar-test-card">
+          <div class="similar-icon"><i class="fa-solid fa-book-open-reader"></i></div>
+          <div class="similar-content">
+            <div class="similar-label">Similar Test Recommendation</div>
+            <div class="similar-title">${similarTest.test_id}</div>
+          </div>
+          <i class="fa-solid fa-arrow-right" style="color:var(--primary);font-size:14px"></i>
+        </a>
+        ` : ''}
+
+        <!-- Section Performance -->
+        ${sections.length > 1 ? `
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-header-title">
+              <i class="fa-solid fa-chart-bar"></i>
+              Section-wise Performance
             </div>
           </div>
+          <div class="section-perf-list">
+            ${sections.map(section => `
+              <div class="section-perf-item">
+                <div class="section-perf-top">
+                  <span class="section-perf-name">${section.name}</span>
+                  <span class="section-perf-score">${section.correct}/${section.total} correct &bull; ${section.accuracy}%</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar" style="width:${section.accuracy}%"></div>
+                </div>
+                <div class="section-perf-stats">
+                  <div class="section-stat-item">
+                    <div class="section-stat-dot" style="background:var(--success)"></div>
+                    <span style="color:var(--success)">+${section.correct} correct</span>
+                  </div>
+                  <div class="section-stat-item">
+                    <div class="section-stat-dot" style="background:var(--error)"></div>
+                    <span style="color:var(--error)">-${section.wrong} wrong</span>
+                  </div>
+                  <div class="section-stat-item">
+                    <div class="section-stat-dot" style="background:var(--text-muted)"></div>
+                    <span style="color:var(--text-muted)">${section.skipped} skipped</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <!-- Answer Review -->
+        <div class="review-section">
+          <div class="review-header">
+            <div class="review-header-title">
+              <i class="fa-solid fa-magnifying-glass" style="color:var(--primary)"></i>
+              Answer Review
+            </div>
+            <button class="btn btn-ghost" style="height:36px;padding:0 14px;font-size:13px" onclick="openOverlay('reviewFilterOverlay')">
+              <i class="fa-solid fa-filter"></i>
+              Filter: ${getFilterLabel(Result.reviewFilter)}
+            </button>
+          </div>
+          <div class="review-list" id="reviewList"></div>
+          <div class="load-more-wrap" id="reviewLoadMoreWrap" style="display:none">
+            <span class="load-more-text" id="reviewLoadMoreText"></span>
+            <button class="btn btn-outline" onclick="renderMoreReviews()">
+              <i class="fa-solid fa-arrow-down"></i> Load More
+            </button>
+          </div>
+        </div>
+
+      `;
+
+      // Start rendering reviews
+      Result.filteredResults = Result.questionResults;
+      renderMoreReviews();
+    }
+
+    /* ============================================================
+       SECTION PERFORMANCE COMPUTE
+    ============================================================ */
+    function computeSectionPerformance() {
+      const sections = Result.data.testData?.sections || [];
+      const questions = Result.questions;
+      const questionResults = Result.questionResults;
+      const lang = Result.language;
+
+      if (sections.length === 0) return [];
+
+      return sections.map(section => {
+        const sectionQuestions = questions
+          .map((q, i) => ({ q, i }))
+          .filter(({ q }) => q.sectionId === section.section_id);
+
+        const sectionResults = sectionQuestions.map(({ i }) =>
+          questionResults.find(qr => qr.questionIndex === i)
+        ).filter(Boolean);
+
+        const correct = sectionResults.filter(qr => qr.status === 'correct').length;
+        const wrong = sectionResults.filter(qr => qr.status === 'wrong').length;
+        const skipped = sectionResults.filter(qr => qr.status === 'skipped' || qr.status === 'marked').length;
+        const total = sectionResults.length;
+        const accuracy = correct + wrong > 0
+          ? Math.round((correct / (correct + wrong)) * 100)
+          : 0;
+
+        return {
+          name: section.title?.[lang] || section.title?.en || section.section_id,
+          correct, wrong, skipped, total, accuracy
+        };
+      });
+    }
+
+    /* ============================================================
+       PERFORMANCE MESSAGE
+    ============================================================ */
+    function getPerformanceMessage(accuracy, score, totalMarks) {
+      const pct = totalMarks > 0 ? (score / totalMarks) * 100 : 0;
+
+      if (pct >= 85) return {
+        emoji: '🏆',
+        title: 'Excellent Performance!',
+        message: `Outstanding! You scored ${score} out of ${totalMarks} with ${accuracy}% accuracy. You're well prepared for the exam. Keep practicing to maintain this consistency!`
+      };
+
+      if (pct >= 70) return {
+        emoji: '🎯',
+        title: 'Good Performance!',
+        message: `Well done! You scored ${score} out of ${totalMarks}. Your accuracy is ${accuracy}%. Focus on the topics where you went wrong and you'll score even better next time.`
+      };
+
+      if (pct >= 50) return {
+        emoji: '📚',
+        title: 'Average Performance',
+        message: `You scored ${score} out of ${totalMarks} with ${accuracy}% accuracy. There's room for improvement. Review the wrong answers carefully and identify the weak areas.`
+      };
+
+      return {
+        emoji: '💪',
+        title: 'Keep Practicing!',
+        message: `You scored ${score} out of ${totalMarks}. Don't be discouraged — every attempt teaches you something new. Focus on understanding the concepts and practice more regularly.`
+      };
+    }
+
+    /* ============================================================
+       RENDER REVIEW CARDS
+    ============================================================ */
+    function renderMoreReviews() {
+      const reviewList = document.getElementById('reviewList');
+      if (!reviewList) return;
+
+      const start = Result.displayedReviews;
+      const end = Math.min(start + CONFIG.REVIEW_PER_PAGE, Result.filteredResults.length);
+      const batch = Result.filteredResults.slice(start, end);
+
+      batch.forEach(qr => {
+        const q = Result.questions[qr.questionIndex];
+        if (!q) return;
+
+        reviewList.insertAdjacentHTML('beforeend', renderReviewCard(qr, q));
+      });
+
+      Result.displayedReviews = end;
+
+      // Load more button
+      const wrap = document.getElementById('reviewLoadMoreWrap');
+      const text = document.getElementById('reviewLoadMoreText');
+      const remaining = Result.filteredResults.length - Result.displayedReviews;
+
+      if (remaining > 0) {
+        wrap.style.display = 'flex';
+        text.textContent = `${remaining} more question${remaining !== 1 ? 's' : ''} remaining`;
+      } else {
+        wrap.style.display = 'none';
+      }
+    }
+
+    function renderReviewCard(qr, q) {
+      const lang = Result.language;
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      const qId = q.id || q.question_id;
+      const isFavorited = Result.favorites.has(qId);
+
+      const sectionName = getSectionName(q.sectionId);
+      const questionText = q.question?.[lang] || q.question?.en || String(q.question || '');
+      const explanation = q.explanation?.[lang] || q.explanation?.en || '';
+
+      const statusConfig = {
+        correct: { label: 'Correct', icon: 'fa-circle-check' },
+        wrong: { label: 'Wrong', icon: 'fa-circle-xmark' },
+        skipped: { label: 'Skipped', icon: 'fa-circle-minus' },
+        marked: { label: 'Marked for Review', icon: 'fa-bookmark' }
+      };
+
+      const sc = statusConfig[qr.status] || statusConfig.skipped;
+
+      const optionsHtml = (q.options || []).map((opt, i) => {
+        const optText = typeof opt === 'object'
+          ? (opt[lang] || opt.en || opt.hi || '')
+          : String(opt);
+
+        const isUserAnswer = qr.userAnswer === i;
+        const isCorrectAnswer = qr.correctAnswer === i;
+
+        let cls = 'review-option';
+        let indicator = '';
+
+        if (isUserAnswer && isCorrectAnswer) {
+          cls += ' user-correct';
+          indicator = `<span class="review-option-indicator" style="color:var(--success)"><i class="fa-solid fa-check"></i></span>`;
+        } else if (isUserAnswer && !isCorrectAnswer) {
+          cls += ' user-selected';
+          indicator = `<span class="review-option-indicator" style="color:var(--error)"><i class="fa-solid fa-xmark"></i></span>`;
+        } else if (isCorrectAnswer) {
+          cls += ' correct-answer';
+          indicator = `<span class="review-option-indicator" style="color:var(--success)"><i class="fa-solid fa-check"></i></span>`;
+        }
+
+        return `
+          <div class="${cls}">
+            <span class="review-option-letter">${letters[i]}</span>
+            <span style="flex:1">${optText}</span>
+            ${indicator}
+          </div>
         `;
+      }).join('');
+
+      return `
+        <div class="review-card ${qr.status}">
+
+          <div class="review-card-header">
+            <div class="review-card-header-left">
+              <span class="review-q-number">Q${qr.questionIndex + 1}</span>
+              <span class="review-section-tag">${sectionName}</span>
+            </div>
+            <div class="review-status-tag ${qr.status}">
+              <i class="fa-solid ${sc.icon}"></i>
+              ${sc.label}
+            </div>
+          </div>
+
+          <div class="review-card-body">
+
+            <div class="review-question-text">${questionText}</div>
+
+            <div class="review-options">${optionsHtml}</div>
+
+            ${explanation ? `
+              <div class="explanation-box">
+                <div class="explanation-label">
+                  <i class="fa-solid fa-lightbulb"></i> Explanation
+                </div>
+                <div class="explanation-text">${explanation}</div>
+              </div>
+            ` : ''}
+
+          </div>
+
+          <div class="review-card-footer">
+            <button
+              class="favorite-btn ${isFavorited ? 'favorited' : ''}"
+              id="fav-btn-${qId}"
+              onclick="toggleFavorite('${qId}', ${qr.questionIndex})"
+            >
+              <i class="fa-${isFavorited ? 'solid' : 'regular'} fa-bookmark"></i>
+              ${isFavorited ? 'Favorited' : 'Save Question'}
+            </button>
+          </div>
+
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       FAVORITE TOGGLE
+    ============================================================ */
+    function toggleFavorite(qId, questionIndex) {
+      const btn = document.getElementById(`fav-btn-${qId}`);
+      const q = Result.questions[questionIndex];
+
+      if (Result.favorites.has(qId)) {
+        Result.favorites.delete(qId);
+        btn.className = 'favorite-btn';
+        btn.innerHTML = `<i class="fa-regular fa-bookmark"></i> Save Question`;
+        showToast('Removed from favorites', 'info');
+      } else {
+        Result.favorites.add(qId);
+        btn.className = 'favorite-btn favorited';
+        btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
+
+        // Save full question to favorites store
+        const favorites = storageGet('favorites') || {};
+        favorites[qId] = {
+          qId,
+          questionIndex,
+          testId: Result.data.testId,
+          testTitle: Result.data.testTitle,
+          question: q,
+          savedAt: Date.now()
+        };
+        storageSet('favorites', favorites);
+
+        showToast('Question saved to favorites!', 'success');
       }
 
-      loadResult();
-    })();
-  </script>
-</body>
-</html>
+      // Update favorites index
+      storageSet('favorites_ids', [...Result.favorites]);
+    }
+
+    /* ============================================================
+       HELPERS
+    ============================================================ */
+    function getSectionName(sectionId) {
+      if (!sectionId || !Result.data.testData?.sections?.length) return 'General';
+      const lang = Result.language;
+      const section = Result.data.testData.sections.find(s => s.section_id === sectionId);
+      return section?.title?.[lang] || section?.title?.en || sectionId;
+    }
+
+    function getFilterLabel(filter) {
+      const labels = {
+        all: 'All', correct: 'Correct', wrong: 'Wrong',
+        skipped: 'Skipped', marked: 'Marked'
+      };
+      return labels[filter] || 'All';
+    }
+
+    function showError(message) {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div style="text-align:center;padding:60px 20px">
+          <div style="font-size:48px;margin-bottom:16px">😕</div>
+          <div
