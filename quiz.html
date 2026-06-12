@@ -119,8 +119,8 @@
     .site-header-inner {
       display: flex;
       align-items: center;
-      padding-top: 12px;
-      padding-bottom: 12px;
+      padding-top: 6px; /* Narrowed */
+      padding-bottom: 6px; /* Narrowed */
     }
 
     .brand {
@@ -342,7 +342,7 @@
        SCREEN 2 — LIVE QUIZ
     ============================================================ */
     
-    /* Quiz Details Bar (Now separate from branding) */
+    /* Quiz Details Bar */
     .quiz-topbar {
       position: sticky;
       top: 0;
@@ -361,8 +361,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding-top: 8px;
-      padding-bottom: 8px;
+      padding-top: 6px; /* Narrowed */
+      padding-bottom: 6px; /* Narrowed */
     }
 
     .quiz-title-wrap {
@@ -380,7 +380,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 3px;
+      margin-bottom: 0px; /* Tightened */
       width: 100%;
     }
 
@@ -1017,18 +1017,30 @@
        RESPONSIVE
     ============================================================ */
     @media (max-width: 768px) {
-      .align-wrapper { padding-left: 16px; padding-right: 16px; }
+      .align-wrapper { padding-left: 12px; padding-right: 12px; }
 
       /* Tighter spacing for headers */
-      .site-header-inner { padding-top: 6px; padding-bottom: 6px; }
-      .quiz-topbar-inner { padding-top: 6px; padding-bottom: 6px; flex-wrap: wrap; }
+      .site-header-inner { padding-top: 4px; padding-bottom: 4px; }
+      
+      /* Keep Timer on the Right Side */
+      .quiz-topbar-inner { 
+        padding-top: 4px; 
+        padding-bottom: 4px; 
+        flex-wrap: nowrap; 
+        gap: 8px;
+      }
       
       .quiz-title-wrap {
-        order: 3;
-        width: 100%;
-        margin-top: 4px;
-        align-items: center;
-        text-align: center;
+        margin-top: 0;
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .quiz-timer {
+        padding: 4px 8px;
+      }
+      .timer-value {
+        font-size: 14px;
       }
       
       .quiz-body {
