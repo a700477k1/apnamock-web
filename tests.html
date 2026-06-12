@@ -1,205 +1,2174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tests - ApnaMock</title>
-  <meta name="description" content="Browse all mock tests for SSC, Banking, Railway, Teaching, Defence and other competitive exams.">
-  <meta name="theme-color" content="#4F46E5">
-  <meta property="og:title" content="Tests - ApnaMock">
-  <meta property="og:description" content="Browse all mock tests for competitive exams">
-  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Mock Tests — ApnaMock</title>
+  <meta name="description" content="Practice exam-wise, topic-wise, and previous year mock tests for SSC, Railway, Banking and more." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
-    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
-    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
-    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
-    .filter-bar { display: flex; gap: var(--space-4); margin-bottom: var(--space-8); flex-wrap: wrap; align-items: center; }
-    .search-input { flex: 1; min-width: 250px; padding: var(--space-3) var(--space-4); font-size: var(--text-base); border: 2px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-primary); color: var(--text-primary); }
-    .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
-    .filter-select { min-width: 180px; padding: var(--space-3) var(--space-4); font-size: var(--text-base); border: 2px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-primary); color: var(--text-primary); }
-    .filter-select:focus { outline: none; border-color: var(--primary); }
-    .tests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6); }
-    .loading-state { text-align: center; padding: var(--space-16); }
-    .loading-state .spinner { width: 48px; height: 48px; border-width: 4px; margin: 0 auto var(--space-4); }
-    .loading-state p { color: var(--text-secondary); }
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --primary-light: #e8f0fe;
+      --accent: #f97316;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --error: #dc2626;
+      --error-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+
+      --bg-base: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-muted: #f1f5f9;
+
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+
+      --header-height: 64px;
+
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    /* ============================================================
+       RESET AND BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-muted); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: var(--header-height);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      font-family: var(--font-heading);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-link i { font-size: 13px; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      background: transparent;
+    }
+
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+
+    /* Mobile nav toggle */
+    .mobile-menu-btn { display: none; }
+
+    /* ============================================================
+       PAGE LAYOUT
+    ============================================================ */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    /* ============================================================
+       PAGE HEADER SECTION
+    ============================================================ */
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* ============================================================
+       CONTROLS BAR
+    ============================================================ */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Search */
+    .search-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 42px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0 12px 0 38px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      background: var(--bg-card);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.10);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 4px;
+      border-radius: 50%;
+      transition: color 0.15s, background 0.15s;
+      display: none;
+    }
+
+    .search-clear:hover { color: var(--text-primary); background: var(--bg-muted); }
+
+    /* Control Buttons */
+    .ctrl-btn {
+      height: 42px;
+      padding: 0 16px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .ctrl-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .ctrl-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .ctrl-btn i { font-size: 13px; }
+
+    .ctrl-btn .badge {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* ============================================================
+       ACTIVE FILTERS ROW
+    ============================================================ */
+    .active-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .active-filters:empty { display: none; }
+
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(26,86,219,0.2);
+      border-radius: 99px;
+      padding: 4px 10px 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .filter-chip-remove {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(26,86,219,0.15);
+      color: var(--primary);
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); }
+
+    .clear-all-btn {
+      font-size: 12px;
+      color: var(--error);
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 99px;
+      transition: background 0.15s;
+    }
+
+    .clear-all-btn:hover { background: var(--error-light); }
+
+    /* ============================================================
+       RESULTS META
+    ============================================================ */
+    .results-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .results-count {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .results-count strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       TESTS GRID
+    ============================================================ */
+    .tests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    /* ============================================================
+       TEST CARD
+    ============================================================ */
+    .test-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .test-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .test-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .test-card:hover::before { opacity: 1; }
+
+    /* Card: Tags row */
+    .card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .tag-exam {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .tag-type {
+      background: var(--warning-light);
+      color: #92400e;
+    }
+
+    .tag-attempted {
+      background: var(--success-light);
+      color: var(--success);
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .tag-pyq {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    /* Card: Title */
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* Card: Attempt badge */
+    .attempt-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--success-light);
+      border: 1px solid rgba(22,163,74,0.2);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+    }
+
+    .attempt-badge i {
+      color: var(--success);
+      font-size: 13px;
+    }
+
+    .attempt-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .attempt-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--success);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .attempt-detail {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .attempt-score {
+      margin-left: auto;
+      background: var(--success);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Card: Meta row */
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .meta-item i { font-size: 11px; color: var(--text-muted); }
+
+    /* Card: Language badges */
+    .lang-badges {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .lang-badge {
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    /* Card: Stats boxes */
+    .card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat-box {
+      background: var(--bg-muted);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .stat-box-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-box-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-weight: 500;
+    }
+
+    /* Card: Actions */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 20px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,86,219,0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 12px rgba(26,86,219,0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .btn-sm {
+      height: 34px;
+      padding: 0 14px;
+      font-size: 13px;
+    }
+
+    .btn-full { width: 100%; }
+
+    .btn i { font-size: 13px; }
+
+    /* ============================================================
+       LOAD MORE
+    ============================================================ */
+    .load-more-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .load-more-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       SKELETON LOADER
+    ============================================================ */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shine 1.4s infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    @keyframes skeleton-shine {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skeleton-line { height: 14px; border-radius: 4px; }
+    .skeleton-title { height: 18px; width: 75%; border-radius: 4px; }
+    .skeleton-tag { height: 22px; width: 60px; border-radius: 99px; }
+    .skeleton-stat { height: 56px; border-radius: var(--radius-sm); }
+    .skeleton-btn { height: 40px; border-radius: var(--radius-md); }
+
+    /* ============================================================
+       EMPTY STATE
+    ============================================================ */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 24px;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--bg-muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .empty-title {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .empty-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       POPUP OVERLAY
+    ============================================================ */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    @media (min-width: 600px) {
+      .overlay { align-items: center; }
+    }
+
+    /* ============================================================
+       POPUP PANEL
+    ============================================================ */
+    .popup {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(24px);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      overflow: hidden;
+    }
+
+    @media (min-width: 600px) {
+      .popup {
+        border-radius: var(--radius-xl);
+        max-height: 90vh;
+      }
+    }
+
+    .overlay.open .popup { transform: translateY(0); }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .popup-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .popup-close {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .popup-close:hover {
+      background: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    .popup-body {
+      overflow-y: auto;
+      flex: 1;
+      padding: 16px 20px;
+    }
+
+    .popup-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       FILTER POPUP CONTENTS
+    ============================================================ */
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    .filter-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .filter-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .filter-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .filter-option i { font-size: 12px; }
+
+    .filter-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-chip-select {
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--bg-card);
+    }
+
+    .filter-chip-select:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .filter-chip-select.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       SORT POPUP CONTENTS
+    ============================================================ */
+    .sort-options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sort-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .sort-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .sort-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .sort-option .sort-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--bg-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sort-option.selected .sort-icon {
+      background: rgba(26,86,219,0.15);
+      color: var(--primary);
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--text-primary);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      max-width: 340px;
+      text-align: center;
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+    .toast.warning { background: var(--warning); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: var(--text-primary);
+      color: #fff;
+      padding: 40px 20px 24px;
+      margin-top: 60px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-name {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .footer-col-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      transition: color 0.15s;
+    }
+
+    .footer-link:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .site-nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+
+      .page-title { font-size: 22px; }
+
+      .tests-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-bar { gap: 8px; }
+      .ctrl-btn span { display: none; }
+
+      .brand-tagline { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .page-wrapper { padding: 20px 16px 48px; }
+      .card-stats { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
+
 <body>
-  <!-- Header -->
-  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
-        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
-        <nav style="display: flex; gap: var(--space-6); align-items: center;">
-          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
-          <a href="tests.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Tests</a>
-          <a href="custom-tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Custom</a>
-          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
-          <a href="history.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">History</a>
-          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
-            <i class="fas fa-moon"></i>
-          </button>
-        </nav>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/tests.html" class="nav-link active">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Tests</span>
+        </a>
+        <a href="/custom-tests.html" class="nav-link">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Custom</span>
+        </a>
+        <a href="/favorites.html" class="nav-link">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Favorites</span>
+        </a>
+        <a href="/history.html" class="nav-link">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
+
     </div>
   </header>
 
-  <!-- Page Header -->
-  <section class="page-header">
-    <div class="container">
-      <h1>All Tests</h1>
-      <p>Browse and practice mock tests for all competitive exams</p>
-    </div>
-  </section>
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
+  <main class="page-wrapper">
 
-  <!-- Main Content -->
-  <main class="page-container">
-    <div class="container">
-      <!-- Filters -->
-      <div class="filter-bar">
-        <input type="text" class="search-input" id="search-input" placeholder="Search tests...">
-        <select class="filter-select" id="exam-filter">
-          <option value="">All Exams</option>
-          <option value="ssc">SSC</option>
-          <option value="banking">Banking</option>
-          <option value="railway">Railway</option>
-          <option value="teaching">Teaching</option>
-          <option value="defence">Defence</option>
-        </select>
-        <select class="filter-select" id="difficulty-filter">
-          <option value="">All Difficulties</option>
-          <option value="easy">Easy</option>
-          <option value="moderate">Moderate</option>
-          <option value="hard">Hard</option>
-        </select>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">All Mock Tests</h1>
+      <p class="page-subtitle">
+        Practice exam-wise, topic-wise, and previous year mock tests for SSC, Railway, Banking and more
+      </p>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search by exam, title, subject, topic..."
+          autocomplete="off"
+        />
+        <button class="search-clear" id="searchClear">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      <!-- Loading State -->
-      <div id="loading" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading tests...</p>
-      </div>
+      <!-- Filter Button -->
+      <button class="ctrl-btn" id="filterBtn">
+        <i class="fa-solid fa-filter"></i>
+        <span>Filter Tests</span>
+        <span class="badge" id="filterBadge" style="display:none">0</span>
+      </button>
 
-      <!-- Tests Grid -->
-      <div id="tests-container" class="tests-grid" style="display: none;"></div>
+      <!-- Sort Button -->
+      <button class="ctrl-btn" id="sortBtn">
+        <i class="fa-solid fa-arrow-up-wide-short"></i>
+        <span>Sort By</span>
+      </button>
 
-      <!-- Empty State -->
-      <div id="empty-state" style="display: none;"></div>
-
-      <!-- Pagination -->
-      <div id="pagination"></div>
     </div>
+
+    <!-- Active Filters Row -->
+    <div class="active-filters" id="activeFilters"></div>
+
+    <!-- Results Meta -->
+    <div class="results-meta">
+      <span class="results-count" id="resultsCount">
+        Showing <strong>0</strong> of <strong>0</strong> tests
+      </span>
+    </div>
+
+    <!-- Tests Grid -->
+    <div class="tests-grid" id="testsGrid">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <span class="load-more-text" id="loadMoreText"></span>
+      <button class="btn btn-outline" id="loadMoreBtn">
+        <i class="fa-solid fa-arrow-down"></i>
+        Load More Tests
+      </button>
+    </div>
+
   </main>
 
-  <!-- Footer -->
-  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
-        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
-          © 2024 ApnaMock. Practice. Improve. Succeed.
+  <!-- ============================================================
+       FILTER POPUP
+  ============================================================ -->
+  <div class="overlay" id="filterOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Filter Tests</span>
+        <button class="popup-close" id="filterClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="popup-body">
+
+        <!-- By Exam -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Exam Group</div>
+          <div class="filter-chips-wrap" id="filterExams"></div>
         </div>
-        <div style="display: flex; gap: var(--space-4);">
-          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
-          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
-          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+
+        <!-- By Year -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Year</div>
+          <div class="filter-chips-wrap" id="filterYears"></div>
+        </div>
+
+        <!-- By Subject -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Subject</div>
+          <div class="filter-chips-wrap" id="filterSubjects"></div>
+        </div>
+
+        <!-- By Paper Type -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Paper Type</div>
+          <div class="filter-chips-wrap" id="filterPaperTypes"></div>
+        </div>
+
+        <!-- By Difficulty -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Difficulty</div>
+          <div class="filter-chips-wrap" id="filterDifficulty"></div>
+        </div>
+
+        <!-- By Attempt History -->
+        <div class="filter-section">
+          <div class="filter-section-title">By Attempt History</div>
+          <div class="filter-chips-wrap" id="filterAttempt">
+            <button class="filter-chip-select" data-type="attempt" data-value="attempted">
+              Attempted
+            </button>
+            <button class="filter-chip-select" data-type="attempt" data-value="not-attempted">
+              Not Attempted
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost btn-sm" id="filterClearAll">
+          <i class="fa-solid fa-rotate-left"></i> Clear All
+        </button>
+        <button class="btn btn-primary btn-sm" id="filterApply" style="flex:1">
+          <i class="fa-solid fa-check"></i> Apply Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SORT POPUP
+  ============================================================ -->
+  <div class="overlay" id="sortOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Sort Tests</span>
+        <button class="popup-close" id="sortClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="popup-body">
+        <div class="sort-options" id="sortOptions">
+
+          <div class="sort-option" data-sort="year-desc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-calendar-days"></i></div>
+              <span>Latest Year First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="year-asc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-calendar"></i></div>
+              <span>Oldest Year First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="duration-asc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-gauge-high"></i></div>
+              <span>Shortest Duration First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="duration-desc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-gauge"></i></div>
+              <span>Longest Duration First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="marks-desc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-star"></i></div>
+              <span>Highest Marks First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="marks-asc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-star-half-stroke"></i></div>
+              <span>Lowest Marks First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="questions-desc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-list-ol"></i></div>
+              <span>Most Questions First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
+          <div class="sort-option" data-sort="questions-asc">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sort-icon"><i class="fa-solid fa-list"></i></div>
+              <span>Least Questions First</span>
+            </div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
         </div>
       </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost btn-sm" id="sortClear">
+          <i class="fa-solid fa-rotate-left"></i> Clear Sort
+        </button>
+        <button class="btn btn-primary btn-sm" id="sortApply" style="flex:1">
+          <i class="fa-solid fa-check"></i> Apply Sort
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">SSC CGL</a>
+          <a href="#" class="footer-link">IBPS PO</a>
+          <a href="#" class="footer-link">Railway NTPC</a>
+          <a href="#" class="footer-link">CTET</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Use</a>
+          <a href="#" class="footer-link">Disclaimer</a>
+          <a href="#" class="footer-link">Contact</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
-    (function() {
-      const testsPerPage = 12;
-      let currentPage = 1;
-      let allTests = [];
-      let filteredTests = [];
+    /* ============================================================
+       CONFIG
+    ============================================================ */
+    const CONFIG = {
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
+      TESTS_PER_PAGE: 20,
+      STORAGE_PREFIX: 'apnamock_'
+    };
 
-      async function loadTests() {
+    /* ============================================================
+       STATE
+    ============================================================ */
+    const State = {
+      allTests: [],
+      filteredTests: [],
+      displayedCount: 0,
+      filters: {
+        exam: [],
+        year: [],
+        subject: [],
+        paperType: [],
+        difficulty: [],
+        attempt: null
+      },
+      sort: null,
+      search: '',
+      attemptHistory: {}
+    };
+
+    /* ============================================================
+       STORAGE HELPERS
+    ============================================================ */
+    function storageGet(key) {
+      try {
+        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key);
+        return raw ? JSON.parse(raw) : null;
+      } catch { return null; }
+    }
+
+    function storageSet(key, value) {
+      try {
+        localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value));
+      } catch {}
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${
+        type === 'success' ? 'fa-circle-check' :
+        type === 'error' ? 'fa-circle-xmark' :
+        type === 'warning' ? 'fa-triangle-exclamation' :
+        'fa-circle-info'
+      }"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
+
+    /* ============================================================
+       DATA LOADING
+    ============================================================ */
+    async function loadTestsData() {
+      renderSkeletons();
+
+      try {
+        // Try with cache-busting for version check
+        const versionUrl = `${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`;
+        let version = 'main';
+
         try {
-          const data = await ApnaMock.data.fetch('data/tests-index.json');
-          allTests = data.tests || [];
-          filteredTests = [...allTests];
-          renderTests();
-        } catch (error) {
-          console.error('Error loading tests:', error);
-          document.getElementById('loading').innerHTML = '<p style="color: var(--danger);">Failed to load tests. Please try again later.</p>';
-        }
-      }
+          const vRes = await fetch(versionUrl, { cache: 'no-store' });
+          if (vRes.ok) {
+            const vData = await vRes.json();
+            version = vData.build_id || 'main';
+          }
+        } catch {}
 
-      function renderTests() {
-        const container = document.getElementById('tests-container');
-        const loading = document.getElementById('loading');
-        const emptyState = document.getElementById('empty-state');
-        const pagination = document.getElementById('pagination');
+        const cached = storageGet('tests_index');
+        const cachedVersion = storageGet('tests_index_version');
 
-        loading.style.display = 'none';
-
-        if (!filteredTests.length) {
-          container.style.display = 'none';
-          emptyState.style.display = 'block';
-          emptyState.innerHTML = ApnaMock.ui.emptyState('📋', 'No tests found', 'Try adjusting your search or filters.');
-          pagination.innerHTML = '';
+        if (cached && cachedVersion === version) {
+          State.allTests = cached;
+          onDataReady();
           return;
         }
 
-        const start = (currentPage - 1) * testsPerPage;
-        const end = start + testsPerPage;
-        const pageTests = filteredTests.slice(start, end);
+        const url = `${CONFIG.CDN_BASE}data/tests-index.json?v=${encodeURIComponent(version)}`;
+        const res = await fetch(url, { cache: 'force-cache' });
 
-        container.style.display = 'grid';
-        emptyState.style.display = 'none';
-        container.innerHTML = pageTests.map(test => ApnaMock.ui.testCard(test)).join('');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const totalPages = Math.ceil(filteredTests.length / testsPerPage);
-        pagination.innerHTML = ApnaMock.ui.pagination(currentPage, totalPages, 'tests.html');
+        const data = await res.json();
+        State.allTests = Array.isArray(data.tests) ? data.tests : (Array.isArray(data) ? data : []);
 
-        // Add pagination event listeners
-        pagination.querySelectorAll('[data-page]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const page = parseInt(btn.dataset.page);
-            if (page !== currentPage) {
-              currentPage = page;
-              renderTests();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          });
+        storageSet('tests_index', State.allTests);
+        storageSet('tests_index_version', version);
+
+        onDataReady();
+
+      } catch (error) {
+        console.error('Error loading tests:', error);
+        renderError();
+      }
+    }
+
+    function onDataReady() {
+      State.attemptHistory = storageGet('attempt_history') || {};
+      buildFilterOptions();
+      applyFiltersAndSort();
+    }
+
+    /* ============================================================
+       FILTER OPTIONS BUILDER
+    ============================================================ */
+    function buildFilterOptions() {
+      const exams = [...new Set(State.allTests.map(t => t.exam_group || t.exam).filter(Boolean))];
+      const years = [...new Set(State.allTests.map(t => t.year).filter(Boolean))].sort((a, b) => b - a);
+      const subjects = [...new Set(State.allTests.map(t => t.subject).filter(Boolean))];
+      const paperTypes = [...new Set(State.allTests.map(t => t.paper_type).filter(Boolean))];
+      const difficulties = ['Easy', 'Moderate', 'Hard'];
+
+      renderChipGroup('filterExams', exams, 'exam');
+      renderChipGroup('filterYears', years, 'year');
+      renderChipGroup('filterSubjects', subjects, 'subject');
+      renderChipGroup('filterPaperTypes', paperTypes, 'paperType');
+      renderChipGroup('filterDifficulty', difficulties, 'difficulty');
+    }
+
+    function renderChipGroup(containerId, values, type) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = values.map(value => `
+        <button
+          class="filter-chip-select ${State.filters[type]?.includes(String(value)) ? 'selected' : ''}"
+          data-type="${type}"
+          data-value="${value}"
+        >${value}</button>
+      `).join('');
+
+      container.querySelectorAll('.filter-chip-select').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('selected');
         });
+      });
+    }
+
+    /* ============================================================
+       FILTER AND SORT LOGIC
+    ============================================================ */
+    function applyFiltersAndSort() {
+      let tests = [...State.allTests];
+
+      // Search
+      if (State.search) {
+        const q = State.search.toLowerCase();
+        tests = tests.filter(t =>
+          (t.title || '').toLowerCase().includes(q) ||
+          (t.exam || '').toLowerCase().includes(q) ||
+          (t.exam_group || '').toLowerCase().includes(q) ||
+          (t.subject || '').toLowerCase().includes(q) ||
+          (t.topic || '').toLowerCase().includes(q) ||
+          (t.category || '').toLowerCase().includes(q) ||
+          (t.year ? String(t.year).includes(q) : false)
+        );
       }
 
-      function filterTests() {
-        const search = document.getElementById('search-input').value.toLowerCase();
-        const exam = document.getElementById('exam-filter').value;
-        const difficulty = document.getElementById('difficulty-filter').value;
-
-        filteredTests = allTests.filter(test => {
-          const matchesSearch = !search || test.title.toLowerCase().includes(search) || test.exam.toLowerCase().includes(search);
-          const matchesExam = !exam || test.exam.toLowerCase() === exam;
-          const matchesDifficulty = !difficulty || test.difficulty === difficulty;
-          return matchesSearch && matchesExam && matchesDifficulty;
-        });
-
-        currentPage = 1;
-        renderTests();
+      // Filters
+      if (State.filters.exam.length) {
+        tests = tests.filter(t =>
+          State.filters.exam.includes(t.exam_group || t.exam)
+        );
       }
 
-      // Event listeners
-      document.getElementById('search-input').addEventListener('input', ApnaMock.utils.debounce(filterTests, 300));
-      document.getElementById('exam-filter').addEventListener('change', filterTests);
-      document.getElementById('difficulty-filter').addEventListener('change', filterTests);
+      if (State.filters.year.length) {
+        tests = tests.filter(t =>
+          State.filters.year.includes(String(t.year))
+        );
+      }
 
-      // Load tests on page load
-      loadTests();
-    })();
+      if (State.filters.subject.length) {
+        tests = tests.filter(t =>
+          State.filters.subject.includes(t.subject)
+        );
+      }
+
+      if (State.filters.paperType.length) {
+        tests = tests.filter(t =>
+          State.filters.paperType.includes(t.paper_type)
+        );
+      }
+
+      if (State.filters.difficulty.length) {
+        tests = tests.filter(t =>
+          State.filters.difficulty.includes(t.difficulty)
+        );
+      }
+
+      if (State.filters.attempt === 'attempted') {
+        tests = tests.filter(t => State.attemptHistory[t.id || t.test_id]);
+      } else if (State.filters.attempt === 'not-attempted') {
+        tests = tests.filter(t => !State.attemptHistory[t.id || t.test_id]);
+      }
+
+      // Sort
+      if (State.sort) {
+        tests = sortTests(tests, State.sort);
+      }
+
+      State.filteredTests = tests;
+      State.displayedCount = 0;
+
+      renderResults();
+    }
+
+    function sortTests(tests, sort) {
+      return [...tests].sort((a, b) => {
+        switch (sort) {
+          case 'year-desc': return (b.year || 0) - (a.year || 0);
+          case 'year-asc': return (a.year || 0) - (b.year || 0);
+          case 'duration-asc': return (a.duration || 0) - (b.duration || 0);
+          case 'duration-desc': return (b.duration || 0) - (a.duration || 0);
+          case 'marks-desc': return (b.marks || 0) - (a.marks || 0);
+          case 'marks-asc': return (a.marks || 0) - (b.marks || 0);
+          case 'questions-desc': return (b.questions || 0) - (a.questions || 0);
+          case 'questions-asc': return (a.questions || 0) - (b.questions || 0);
+          default: return 0;
+        }
+      });
+    }
+
+    /* ============================================================
+       RENDERING
+    ============================================================ */
+    function renderResults() {
+      const grid = document.getElementById('testsGrid');
+      grid.innerHTML = '';
+
+      if (State.filteredTests.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-file-circle-question"></i></div>
+            <div class="empty-title">No Tests Found</div>
+            <div class="empty-subtitle">Try adjusting your search or filters to find tests.</div>
+            <button class="btn btn-outline" onclick="clearAllFilters()">
+              <i class="fa-solid fa-rotate-left"></i> Clear All Filters
+            </button>
+          </div>
+        `;
+        updateMeta(0, 0);
+        document.getElementById('loadMoreWrap').style.display = 'none';
+        return;
+      }
+
+      loadMoreTests(true);
+    }
+
+    function loadMoreTests(fresh = false) {
+      const start = State.displayedCount;
+      const end = Math.min(start + CONFIG.TESTS_PER_PAGE, State.filteredTests.length);
+      const batch = State.filteredTests.slice(start, end);
+
+      const grid = document.getElementById('testsGrid');
+
+      if (fresh) grid.innerHTML = '';
+
+      batch.forEach(test => {
+        grid.insertAdjacentHTML('beforeend', renderTestCard(test));
+      });
+
+      State.displayedCount = end;
+
+      updateMeta(end, State.filteredTests.length);
+      updateLoadMore();
+    }
+
+    function renderTestCard(test) {
+      const testId = test.id || test.test_id;
+      const attempt = State.attemptHistory[testId];
+
+      const examTag = test.exam_group || test.exam || 'Exam';
+      const typeTag = test.category || test.subject || 'Full Test';
+
+      const attemptBadgeHtml = attempt ? `
+        <div class="attempt-badge">
+          <i class="fa-solid fa-circle-check"></i>
+          <div class="attempt-info">
+            <span class="attempt-label">Attempted</span>
+            <span class="attempt-detail">${attempt.date || 'Previously'} &bull; ${attempt.time || ''}</span>
+          </div>
+          <span class="attempt-score">${attempt.score || '—'}</span>
+        </div>
+      ` : '';
+
+      const metaItems = [
+        test.year ? `<span class="meta-item"><i class="fa-solid fa-calendar-days"></i> ${test.year}</span>` : '',
+        test.subject ? `<span class="meta-item"><i class="fa-solid fa-book"></i> ${test.subject}</span>` : '',
+        test.topic ? `<span class="meta-item"><i class="fa-solid fa-tag"></i> ${test.topic}</span>` : '',
+      ].filter(Boolean).join('');
+
+      const langMode = test.language_mode || 'bilingual';
+      const langBadges = langMode === 'bilingual'
+        ? `<span class="lang-badge">EN</span><span class="lang-badge">हि</span>`
+        : langMode === 'en'
+          ? `<span class="lang-badge">EN</span>`
+          : `<span class="lang-badge">हि</span>`;
+
+      const duration = test.duration
+        ? (test.duration >= 60 ? `${Math.floor(test.duration/60)}h ${test.duration % 60 > 0 ? (test.duration % 60) + 'm' : ''}`.trim() : `${test.duration}m`)
+        : '—';
+
+      return `
+        <div class="test-card" data-test-id="${testId}">
+
+          <!-- Tags -->
+          <div class="card-tags">
+            <span class="tag tag-exam">${examTag}</span>
+            <span class="tag tag-type">${typeTag}</span>
+            ${test.paper_type === 'PYQ' ? '<span class="tag tag-pyq">PYQ</span>' : ''}
+            ${attempt ? '<span class="tag tag-attempted"><i class="fa-solid fa-check" style="font-size:9px"></i> Attempted</span>' : ''}
+          </div>
+
+          <!-- Title -->
+          <div class="card-title">${test.title || test.title_i18n?.en || 'Untitled Test'}</div>
+
+          <!-- Attempt Badge -->
+          ${attemptBadgeHtml}
+
+          <!-- Meta -->
+          <div class="card-meta">
+            ${metaItems}
+            <div class="lang-badges" style="margin-left:auto">${langBadges}</div>
+          </div>
+
+          <!-- Stats -->
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-box-value">${test.questions || '—'}</span>
+              <span class="stat-box-label">Questions</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-value">${duration}</span>
+              <span class="stat-box-label">Duration</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-value">${test.marks || '—'}</span>
+              <span class="stat-box-label">Marks</span>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer">
+            <a
+              href="/quiz.html?test=${testId}"
+              class="btn btn-primary btn-sm btn-full"
+            >
+              <i class="fa-solid fa-play"></i>
+              ${attempt ? 'Reattempt Test' : 'Start Test'}
+            </a>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function renderSkeletons() {
+      const grid = document.getElementById('testsGrid');
+      grid.innerHTML = Array(6).fill(0).map(() => `
+        <div class="skeleton-card">
+          <div style="display:flex;gap:8px">
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
+          </div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-line" style="width:90%"></div>
+          <div class="skeleton skeleton-line" style="width:60%"></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div class="skeleton skeleton-stat"></div>
+            <div class="skeleton skeleton-stat"></div>
+            <div class="skeleton skeleton-stat"></div>
+          </div>
+          <div class="skeleton skeleton-btn"></div>
+        </div>
+      `).join('');
+    }
+
+    function renderError() {
+      const grid = document.getElementById('testsGrid');
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon"><i class="fa-solid fa-wifi" style="color:var(--error)"></i></div>
+          <div class="empty-title">Failed to Load Tests</div>
+          <div class="empty-subtitle">Could not connect to server. Please check your connection and try again.</div>
+          <button class="btn btn-primary" onclick="loadTestsData()">
+            <i class="fa-solid fa-rotate-right"></i> Retry
+          </button>
+        </div>
+      `;
+      updateMeta(0, 0);
+    }
+
+    function updateMeta(shown, total) {
+      document.getElementById('resultsCount').innerHTML =
+        `Showing <strong>${shown}</strong> of <strong>${total}</strong> tests`;
+    }
+
+    function updateLoadMore() {
+      const wrap = document.getElementById('loadMoreWrap');
+      const text = document.getElementById('loadMoreText');
+      const remaining = State.filteredTests.length - State.displayedCount;
+
+      if (remaining > 0) {
+        wrap.style.display = 'flex';
+        text.textContent = `${remaining} more test${remaining !== 1 ? 's' : ''} available`;
+      } else {
+        wrap.style.display = 'none';
+      }
+    }
+
+    /* ============================================================
+       ACTIVE FILTERS RENDER
+    ============================================================ */
+    function renderActiveFilters() {
+      const container = document.getElementById('activeFilters');
+      const chips = [];
+
+      const typeLabels = {
+        exam: 'Exam', year: 'Year', subject: 'Subject',
+        paperType: 'Type', difficulty: 'Difficulty', attempt: 'Attempt'
+      };
+
+      ['exam', 'year', 'subject', 'paperType', 'difficulty'].forEach(type => {
+        (State.filters[type] || []).forEach(value => {
+          chips.push(`
+            <div class="filter-chip">
+              <span>${typeLabels[type]}: ${value}</span>
+              <button class="filter-chip-remove" onclick="removeFilter('${type}','${value}')">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          `);
+        });
+      });
+
+      if (State.filters.attempt) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>${State.filters.attempt === 'attempted' ? 'Attempted' : 'Not Attempted'}</span>
+            <button class="filter-chip-remove" onclick="removeFilter('attempt',null)">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+
+      if (chips.length) {
+        chips.push(`
+          <button class="clear-all-btn" onclick="clearAllFilters()">
+            Clear All
+          </button>
+        `);
+      }
+
+      container.innerHTML = chips.join('');
+
+      // Update filter badge
+      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
+      const badge = document.getElementById('filterBadge');
+      const filterBtn = document.getElementById('filterBtn');
+
+      if (totalFilters > 0) {
+        badge.textContent = totalFilters;
+        badge.style.display = 'inline-flex';
+        filterBtn.classList.add('active');
+      } else {
+        badge.style.display = 'none';
+        filterBtn.classList.remove('active');
+      }
+    }
+
+    function removeFilter(type, value) {
+      if (type === 'attempt') {
+        State.filters.attempt = null;
+      } else if (State.filters[type]) {
+        State.filters[type] = State.filters[type].filter(v => v !== value);
+      }
+      renderActiveFilters();
+      applyFiltersAndSort();
+    }
+
+    function clearAllFilters() {
+      State.filters = { exam: [], year: [], subject: [], paperType: [], difficulty: [], attempt: null };
+      State.search = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchClear').style.display = 'none';
+      renderActiveFilters();
+      applyFiltersAndSort();
+      // Reset popup chips
+      buildFilterOptions();
+      // Reset attempt chips
+      document.querySelectorAll('#filterAttempt .filter-chip-select').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+    }
+
+    /* ============================================================
+       POPUP HELPERS
+    ============================================================ */
+    function openOverlay(id) {
+      const overlay = document.getElementById(id);
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay(id) {
+      const overlay = document.getElementById(id);
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ============================================================
+       FILTER POPUP LOGIC
+    ============================================================ */
+    document.getElementById('filterBtn').addEventListener('click', () => {
+      openOverlay('filterOverlay');
+    });
+
+    document.getElementById('filterClose').addEventListener('click', () => {
+      closeOverlay('filterOverlay');
+    });
+
+    document.getElementById('filterOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeOverlay('filterOverlay');
+    });
+
+    document.getElementById('filterClearAll').addEventListener('click', () => {
+      // Reset all chips in popup
+      document.querySelectorAll('#filterOverlay .filter-chip-select').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+    });
+
+    document.getElementById('filterApply').addEventListener('click', () => {
+      // Gather all selected values from popup
+      const newFilters = { exam: [], year: [], subject: [], paperType: [], difficulty: [], attempt: null };
+
+      document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => {
+        newFilters.exam.push(btn.dataset.value);
+      });
+      document.querySelectorAll('#filterYears .filter-chip-select.selected').forEach(btn => {
+        newFilters.year.push(btn.dataset.value);
+      });
+      document.querySelectorAll('#filterSubjects .filter-chip-select.selected').forEach(btn => {
+        newFilters.subject.push(btn.dataset.value);
+      });
+      document.querySelectorAll('#filterPaperTypes .filter-chip-select.selected').forEach(btn => {
+        newFilters.paperType.push(btn.dataset.value);
+      });
+      document.querySelectorAll('#filterDifficulty .filter-chip-select.selected').forEach(btn => {
+        newFilters.difficulty.push(btn.dataset.value);
+      });
+
+      const attemptSelected = document.querySelector('#filterAttempt .filter-chip-select.selected');
+      if (attemptSelected) newFilters.attempt = attemptSelected.dataset.value;
+
+      State.filters = newFilters;
+
+      closeOverlay('filterOverlay');
+      renderActiveFilters();
+      applyFiltersAndSort();
+    });
+
+    // Attempt chips in filter
+    document.querySelectorAll('#filterAttempt .filter-chip-select').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#filterAttempt .filter-chip-select').forEach(b => b.classList.remove('selected'));
+        btn.classList.toggle('selected');
+      });
+    });
+
+    /* ============================================================
+       SORT POPUP LOGIC
+    ============================================================ */
+    document.getElementById('sortBtn').addEventListener('click', () => {
+      openOverlay('sortOverlay');
+    });
+
+    document.getElementById('sortClose').addEventListener('click', () => {
+      closeOverlay('sortOverlay');
+    });
+
+    document.getElementById('sortOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeOverlay('sortOverlay');
+    });
+
+    document.querySelectorAll('.sort-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.sort-option').forEach(o => {
+          o.classList.remove('selected');
+          o.querySelector('i.fa-check').style.display = 'none';
+        });
+        opt.classList.add('selected');
+        opt.querySelector('i.fa-check').style.display = 'block';
+      });
+    });
+
+    document.getElementById('sortClear').addEventListener('click', () => {
+      document.querySelectorAll('.sort-option').forEach(o => {
+        o.classList.remove('selected');
+        o.querySelector('i.fa-check').style.display = 'none';
+      });
+    });
+
+    document.getElementById('sortApply').addEventListener('click', () => {
+      const selected = document.querySelector('.sort-option.selected');
+      State.sort = selected ? selected.dataset.sort : null;
+
+      // Update sort button active state
+      if (State.sort) {
+        document.getElementById('sortBtn').classList.add('active');
+      } else {
+        document.getElementById('sortBtn').classList.remove('active');
+      }
+
+      closeOverlay('sortOverlay');
+      applyFiltersAndSort();
+    });
+
+    /* ============================================================
+       SEARCH
+    ============================================================ */
+    let searchDebounce;
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const val = e.target.value;
+      State.search = val;
+      document.getElementById('searchClear').style.display = val ? 'flex' : 'none';
+
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => {
+        applyFiltersAndSort();
+      }, 300);
+    });
+
+    document.getElementById('searchClear').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      State.search = '';
+      document.getElementById('searchClear').style.display = 'none';
+      applyFiltersAndSort();
+    });
+
+    /* ============================================================
+       LOAD MORE
+    ============================================================ */
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+      loadMoreTests(false);
+    });
+
+    /* ============================================================
+       INIT
+    ============================================================ */
+    loadTestsData();
   </script>
+
 </body>
 </html>
