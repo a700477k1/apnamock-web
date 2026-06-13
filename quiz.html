@@ -1203,7 +1203,7 @@
             </span>
           </label>
 
-          <button class="btn btn-primary btn-full" id="startTestBtn" disabled onclick="handleStartTest()">
+          <button class="btn btn-primary btn-full" id="startTestBtn" onclick="handleStartTest()">
             <i class="fa-solid fa-play"></i>
             Start Test
           </button>
@@ -1564,8 +1564,6 @@
       document.getElementById('startTestBtn').disabled = true;
     }
 
-    document.getElementById('consentCheck').addEventListener('change', (e) => { document.getElementById('startTestBtn').disabled = !e.target.checked; });
-
     function selectLanguage(lang) {
       Quiz.selectedLanguagePending = lang;
       document.querySelectorAll('.lang-option').forEach(opt => { opt.classList.toggle('selected', opt.dataset.lang === lang); });
@@ -1615,6 +1613,12 @@
     }
 
     function handleStartTest() {
+      const isConsentChecked = document.getElementById('consentCheck').checked;
+      if (!isConsentChecked) {
+        showToast('Please check the box to agree to the instructions before starting.', 'error');
+        return;
+      }
+
       if (!Quiz.language || Quiz.language === '') { 
         showToast('Please select a language before starting', 'warning'); 
         openOverlay('langOverlay'); 
