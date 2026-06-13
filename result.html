@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Result — ApnaMock</title>
+  <title>Result Analysis — ApnaMock</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -208,7 +208,7 @@
     .mobile-menu-btn { display: none; }
 
     /* ============================================================
-       PAGE LAYOUT
+       PAGE LAYOUT & TYPOGRAPHY
     ============================================================ */
     .page-wrapper {
       padding-top: 28px;
@@ -216,6 +216,15 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
+    }
+
+    .page-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.2;
     }
 
     /* ============================================================
@@ -239,9 +248,9 @@
     }
     .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
     .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.35); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); border-width: 1.5px; }
     .btn-outline:hover { background: var(--primary-light); }
-    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); border-width: 1.5px; }
     .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
     .btn i { font-size: 13px; }
 
@@ -567,10 +576,30 @@
     .explanation-text { font-size: 13.5px; color: var(--primary-dark); line-height: 1.6; }
     body.dark-mode .explanation-text { color: var(--primary); }
 
-    .favorite-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--text-muted); border: 1.5px solid var(--border); transition: all 0.15s; background: transparent; }
-    .favorite-btn:hover { color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
-    .favorite-btn.favorited { color: var(--warning); border-color: var(--warning); background: var(--warning-light); }
-    .review-card-footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+    /* Favorite Button Refinements */
+    .favorite-btn { 
+      display: flex; align-items: center; gap: 6px; padding: 8px 16px; 
+      border-radius: var(--radius-md); font-size: 13px; font-weight: 600; 
+      color: var(--primary); border: 1.5px solid var(--primary); 
+      transition: all 0.15s; background: transparent; 
+    }
+    .favorite-btn:hover { 
+      color: var(--primary-dark); 
+      border-color: var(--primary-dark); 
+      background: var(--primary-light); 
+    }
+    .favorite-btn.favorited { 
+      color: #fff; 
+      border-color: var(--warning); 
+      background: var(--warning); 
+    }
+    .favorite-btn.favorited:hover {
+      background: #d97706; /* slightly darker warning */
+      border-color: #d97706;
+      color: #fff;
+    }
+
+    .review-card-footer { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
 
     /* ============================================================
        LOAD MORE & BADGES
@@ -617,6 +646,10 @@
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+
+      .page-title {
+        font-size: 22px;
+      }
     }
 
     @media (max-width: 600px) {
@@ -630,6 +663,9 @@
 
 <body>
 
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
   <header class="site-header">
     <div class="header-inner align-wrapper">
       <a href="/index.html" class="brand">
@@ -670,6 +706,9 @@
     </div>
   </header>
 
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
   <main class="page-wrapper align-wrapper" id="mainContent">
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
       <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px"></i>
@@ -677,6 +716,9 @@
     </div>
   </main>
 
+  <!-- ============================================================
+       REVIEW FILTER POPUP
+  ============================================================ -->
   <div class="overlay" id="reviewFilterOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -717,8 +759,14 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       TOAST
+  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
   <footer class="site-footer">
     <div class="footer-bottom align-wrapper">
       <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
@@ -726,6 +774,9 @@
     </div>
   </footer>
 
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
     /* ============================================================
        XSS UTILITY 
@@ -1001,6 +1052,10 @@
 
       main.innerHTML = `
 
+        <!-- Page Title -->
+        <h1 class="page-title">Result Analysis</h1>
+
+        <!-- Result Header -->
         <div class="result-header-card">
           <div class="result-exam-tag">
             <i class="fa-solid fa-graduation-cap"></i>
@@ -1013,6 +1068,7 @@
           </div>
         </div>
 
+        <!-- Score Summary Cards -->
         <div class="score-summary-grid">
 
           <div class="score-card score">
@@ -1092,6 +1148,7 @@
 
         </div>
 
+        <!-- Performance Message -->
         <div class="performance-message-card">
           <div class="perf-emoji">${perf.emoji}</div>
           <div class="perf-content">
@@ -1100,6 +1157,7 @@
           </div>
         </div>
 
+        <!-- Actions -->
         <div class="actions-row">
           <a href="/tests.html" class="btn btn-ghost">
             <i class="fa-solid fa-arrow-left"></i> Back to Tests
@@ -1109,6 +1167,7 @@
           </a>
         </div>
 
+        <!-- Similar Test -->
         ${similarTest ? `
         <a href="/quiz.html?test=${escapeHTML(similarTest.test_id)}" class="similar-test-card">
           <div class="similar-icon"><i class="fa-solid fa-book-open-reader"></i></div>
@@ -1120,6 +1179,7 @@
         </a>
         ` : ''}
 
+        <!-- Section Performance -->
         ${sections.length > 1 ? `
         <div class="section-card">
           <div class="card-header">
@@ -1158,6 +1218,7 @@
         </div>
         ` : ''}
 
+        <!-- Answer Review -->
         <div class="review-section">
           <div class="review-header">
             <div class="review-header-title">
