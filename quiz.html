@@ -47,6 +47,8 @@
       --radius-md: 10px;
       --radius-lg: 14px;
       --radius-xl: 20px;
+      
+      --header-height: 64px;
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -119,8 +121,8 @@
     .site-header-inner {
       display: flex;
       align-items: center;
-      padding-top: 6px; /* Narrowed */
-      padding-bottom: 6px; /* Narrowed */
+      padding-top: 6px; 
+      padding-bottom: 6px; 
     }
 
     .brand {
@@ -361,8 +363,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding-top: 6px; /* Narrowed */
-      padding-bottom: 6px; /* Narrowed */
+      padding-top: 6px; 
+      padding-bottom: 6px; 
     }
 
     .quiz-title-wrap {
@@ -380,7 +382,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 0px; /* Tightened */
+      margin-bottom: 0px; 
       width: 100%;
     }
 
@@ -561,6 +563,13 @@
       color: var(--text-primary);
       line-height: 1.7;
       margin-bottom: 20px;
+    }
+    /* Bilingual styling helper */
+    .bilingual-hi-text {
+      color: var(--text-secondary);
+      font-size: 0.95em;
+      display: block;
+      margin-top: 4px;
     }
 
     /* Options */
@@ -1352,7 +1361,7 @@
             </div>
             <div class="lang-option-check"><i class="fa-solid fa-check"></i></div>
           </div>
-          <div class="lang-option selected" data-lang="bilingual" onclick="selectLanguage('bilingual')">
+          <div class="lang-option" data-lang="bilingual" onclick="selectLanguage('bilingual')">
             <div class="lang-option-left">
               <div class="lang-option-icon" style="background:var(--purple-light);color:var(--purple)">द्वि</div>
               <div><div class="lang-option-name">Bilingual</div><div class="lang-option-desc">English + हिंदी (Both languages)</div></div>
@@ -1440,28 +1449,45 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
+    /* ============================================================
+       XSS UTILITY (Security Fix)
+    ============================================================ */
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    /* ============================================================
+       CONFIG
+    ============================================================ */
     const CONFIG = {
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
       STORAGE_PREFIX: 'apnamock_',
       AUTO_SAVE_DELAY: 500
     };
 
+    /* ============================================================
+       STATE
+    ============================================================ */
     const Quiz = {
-      testId: null, testData: null, language: 'bilingual', selectedLanguagePending: 'bilingual',
+      testId: null, testData: null, 
+      language: null, // Fixed: Force language selection initially
+      selectedLanguagePending: null,
       questions: [], currentIndex: 0, currentSection: 0, answers: {}, marked: new Set(),
       visited: new Set(), timeLeft: 0, timerInterval: null, autoSaveTimeout: null,
       isStarted: false, startTime: null, submitTime: null, historyPushed: false
     };
 
+    /* ============================================================
+       STORAGE
+    ============================================================ */
     function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
     function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
     function storageRemove(key) { try { localStorage.removeItem(CONFIG.STORAGE_PREFIX + key); } catch {} }
 
+    /* ============================================================
+       TOAST & POPUPS
+    ============================================================ */
     function showToast(message, type = 'info', duration = 2500) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -1471,20 +1497,23 @@
       setTimeout(() => toast.remove(), duration);
     }
 
-    function openOverlay(id) {
-      document.getElementById(id).classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeOverlay(id) {
-      document.getElementById(id).classList.remove('open');
-      document.body.style.overflow = '';
-    }
-    document.querySelectorAll('.overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay.id); });
-    });
+    function openOverlay(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay.id); }); });
 
     function getParam(key) { return new URLSearchParams(window.location.search).get(key); }
 
+    /* ============================================================
+       QUESTION ID HELPER (Fix for State Bleeding)
+    ============================================================ */
+    // Standardizes ID retrieval to prevent 'undefined' keys from overwriting everything globally
+    function getQId(q, index) {
+      return String(q.id || q.question_id || 'q_' + index);
+    }
+
+    /* ============================================================
+       INIT — SCREEN 1
+    ============================================================ */
     async function initScreen1() {
       const savedTheme = storageGet('theme');
       if (savedTheme === 'dark') document.body.classList.add('dark-mode');
@@ -1496,7 +1525,7 @@
         const indexRes = await fetch(`${CONFIG.CDN_BASE}data/tests-index.json`, { cache: 'force-cache' });
         const indexData = await indexRes.json();
         const tests = Array.isArray(indexData.tests) ? indexData.tests : (Array.isArray(indexData) ? indexData : []);
-        const testMeta = tests.find(t => (t.id || t.test_id) === Quiz.testId);
+        const testMeta = tests.find(t => getQId(t, '') === Quiz.testId || t.test_id === Quiz.testId);
 
         const dataUrl = testMeta?.file ? `${CONFIG.CDN_BASE}${testMeta.file}` : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json`;
         const testRes = await fetch(dataUrl, { cache: 'force-cache' });
@@ -1514,8 +1543,10 @@
     }
 
     function populateScreen1() {
-      const t = Quiz.testData; const lang = Quiz.language;
+      const t = Quiz.testData; 
+      const lang = Quiz.language || 'en'; // fallback for initial title
       const title = t.title_i18n?.[lang] || t.title || 'Untitled Test';
+      
       document.getElementById('preq-title').textContent = title;
       document.getElementById('preq-exam-label').textContent = t.exam_group || t.exam || 'Exam';
       document.getElementById('preq-questions').textContent = t.totalQuestions || Quiz.questions.length || '—';
@@ -1541,6 +1572,10 @@
     }
 
     function confirmLanguage() {
+      if (!Quiz.selectedLanguagePending) {
+        showToast('Please select a language option first', 'warning');
+        return;
+      }
       Quiz.language = Quiz.selectedLanguagePending;
       const labels = { en: 'English', hi: 'हिंदी', bilingual: 'Bilingual (EN + हि)' };
       document.getElementById('langTriggerText').textContent = labels[Quiz.language] || Quiz.language;
@@ -1563,18 +1598,28 @@
     }
 
     function startFresh() { storageRemove(`quiz_progress_${Quiz.testId}`); closeOverlay('resumeOverlay'); }
+    
     function resumeTest() {
       const saved = storageGet(`quiz_progress_${Quiz.testId}`);
       if (saved) {
-        Quiz.answers = saved.answers || {}; Quiz.marked = new Set(saved.marked || []); Quiz.visited = new Set(saved.visited || []);
-        Quiz.currentIndex = saved.currentIndex || 0; Quiz.timeLeft = saved.timeLeft || Quiz.testData.duration * 60;
-        Quiz.language = saved.language || Quiz.language; Quiz.startTime = saved.startTime || Date.now();
+        Quiz.answers = saved.answers || {}; 
+        Quiz.marked = new Set(saved.marked || []); 
+        Quiz.visited = new Set(saved.visited || []);
+        Quiz.currentIndex = saved.currentIndex || 0; 
+        Quiz.timeLeft = saved.timeLeft || Quiz.testData.duration * 60;
+        Quiz.language = saved.language || Quiz.language; 
+        Quiz.startTime = saved.startTime || Date.now();
       }
-      closeOverlay('resumeOverlay'); beginQuiz(true);
+      closeOverlay('resumeOverlay'); 
+      beginQuiz(true);
     }
 
     function handleStartTest() {
-      if (!Quiz.language) { showToast('Please select a language before starting', 'warning'); openOverlay('langOverlay'); return; }
+      if (!Quiz.language || Quiz.language === '') { 
+        showToast('Please select a language before starting', 'warning'); 
+        openOverlay('langOverlay'); 
+        return; 
+      }
       beginQuiz(false);
     }
 
@@ -1604,6 +1649,9 @@
       }
     });
 
+    /* ============================================================
+       SECTION TABS
+    ============================================================ */
     function buildSectionTabs() {
       const sections = Quiz.testData.sections || [];
       const tabsContainer = document.getElementById('sectionTabs');
@@ -1628,17 +1676,31 @@
 
     function updateSectionTabCounts() {
       (Quiz.testData.sections || []).forEach((sec, i) => {
-        const count = Quiz.questions.filter(q => q.sectionId === sec.section_id && Quiz.answers[q.id || q.question_id] !== undefined).length;
+        // Fix: Use getQId to accurately count answers
+        const count = Quiz.questions.filter((q, qIndex) => q.sectionId === sec.section_id && Quiz.answers[getQId(q, qIndex)] !== undefined).length;
         const el = document.getElementById(`tab-count-${i}`); if (el) el.textContent = count;
       });
     }
 
+    /* ============================================================
+       QUESTION RENDERING (With Bilingual Fix)
+    ============================================================ */
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
       Quiz.currentIndex = index; Quiz.visited.add(index);
       const q = Quiz.questions[index]; const lang = Quiz.language;
 
-      document.getElementById('questionText').innerHTML = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
+      // Handle Bilingual text correctly
+      let questionHtml = '';
+      if (lang === 'bilingual') {
+          const enText = q.question?.en || q.question || '';
+          const hiText = q.question?.hi ? `<span class="bilingual-hi-text">${q.question.hi}</span>` : '';
+          questionHtml = String(enText) + hiText;
+      } else {
+          questionHtml = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
+      }
+      
+      document.getElementById('questionText').innerHTML = questionHtml; 
       document.getElementById('qNumberTag').textContent = `Q${index + 1}`;
       
       const secId = q.sectionId; const sec = Quiz.testData.sections?.find(s => s.section_id === secId);
@@ -1647,17 +1709,31 @@
       document.getElementById('qMarksPos').textContent = `+${q.marks || 1}`;
       document.getElementById('qMarksNeg').textContent = `-${q.negativeMarks || Quiz.testData.negativeMarking || 0}`;
 
-      const selected = Quiz.answers[q.id || q.question_id];
+      const selected = Quiz.answers[getQId(q, index)];
+      
       document.getElementById('optionsList').innerHTML = (q.options || []).map((opt, i) => {
-        const optText = typeof opt === 'object' ? escapeHTML(opt[lang] || opt.en || opt.hi || '') : escapeHTML(String(opt));
-        return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optText}</span></button>`;
+        let optTextHtml = '';
+        if (typeof opt === 'object') {
+            if (lang === 'bilingual') {
+                const enOpt = escapeHTML(opt.en || '');
+                const hiOpt = opt.hi ? `<span class="bilingual-hi-text">${escapeHTML(opt.hi)}</span>` : '';
+                optTextHtml = enOpt + hiOpt;
+            } else {
+                optTextHtml = escapeHTML(opt[lang] || opt.en || opt.hi || '');
+            }
+        } else {
+            optTextHtml = escapeHTML(String(opt));
+        }
+
+        return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
       }).join('');
 
       updatePaletteGrid(); updateSummary(); autoSave();
     }
 
     function selectOption(optionIndex) {
-      const qId = Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id;
+      const q = Quiz.questions[Quiz.currentIndex];
+      const qId = getQId(q, Quiz.currentIndex);
       Quiz.answers[qId] = optionIndex;
       document.querySelectorAll('.option-item').forEach((btn, i) => btn.classList.toggle('selected', i === optionIndex));
       updatePaletteGrid(); updateSummary(); updateSectionTabCounts(); autoSave();
@@ -1666,7 +1742,8 @@
     function goToPrev() { if (Quiz.currentIndex > 0) renderQuestion(Quiz.currentIndex - 1); }
     
     function clearResponse() {
-      const qId = Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id;
+      const q = Quiz.questions[Quiz.currentIndex];
+      const qId = getQId(q, Quiz.currentIndex);
       delete Quiz.answers[qId];
       document.querySelectorAll('.option-item').forEach(btn => btn.classList.remove('selected'));
       updatePaletteGrid(); updateSummary(); updateSectionTabCounts(); autoSave(); showToast('Response cleared', 'info');
@@ -1674,17 +1751,27 @@
 
     function markForReview() {
       const i = Quiz.currentIndex;
-      if (Quiz.marked.has(i)) { Quiz.marked.delete(i); showToast('Removed from review', 'info'); }
-      else { Quiz.marked.add(i); showToast('Marked for review', 'warning'); if (i < Quiz.questions.length - 1) renderQuestion(i + 1); }
+      if (Quiz.marked.has(i)) { 
+        Quiz.marked.delete(i); 
+        showToast('Removed from review', 'info'); 
+      } else { 
+        Quiz.marked.add(i); 
+        showToast('Marked for review', 'warning'); 
+        if (i < Quiz.questions.length - 1) renderQuestion(i + 1); 
+      }
       updatePaletteGrid(); updateSummary(); autoSave();
     }
 
     function saveAndNext() {
-      if (Quiz.answers[Quiz.questions[Quiz.currentIndex].id || Quiz.questions[Quiz.currentIndex].question_id] !== undefined) showToast('Answer saved!', 'success', 1000);
+      const q = Quiz.questions[Quiz.currentIndex];
+      if (Quiz.answers[getQId(q, Quiz.currentIndex)] !== undefined) showToast('Answer saved!', 'success', 1000);
       if (Quiz.currentIndex < Quiz.questions.length - 1) renderQuestion(Quiz.currentIndex + 1);
       else showToast('This is the last question!', 'info');
     }
 
+    /* ============================================================
+       PALETTE GRID
+    ============================================================ */
     function buildPaletteGrid() {
       document.getElementById('paletteGrid').innerHTML = Quiz.questions.map((q, i) => `<button class="palette-btn" id="palette-${i}" onclick="renderQuestion(${i})">${i + 1}</button>`).join('');
       updatePaletteGrid();
@@ -1693,7 +1780,10 @@
     function updatePaletteGrid() {
       Quiz.questions.forEach((q, i) => {
         const btn = document.getElementById(`palette-${i}`); if (!btn) return;
-        const isAns = Quiz.answers[q.id || q.question_id] !== undefined; const isMrk = Quiz.marked.has(i); const isVis = Quiz.visited.has(i);
+        const isAns = Quiz.answers[getQId(q, i)] !== undefined; 
+        const isMrk = Quiz.marked.has(i); 
+        const isVis = Quiz.visited.has(i);
+        
         btn.className = 'palette-btn';
         if (i === Quiz.currentIndex) btn.classList.add('current');
         else if (isAns && isMrk) btn.classList.add('answered-marked');
@@ -1711,6 +1801,9 @@
       document.getElementById('submit-marked').textContent = mrk;
     }
 
+    /* ============================================================
+       TIMER
+    ============================================================ */
     function startTimer() {
       updateTimerDisplay();
       Quiz.timerInterval = setInterval(() => {
@@ -1733,16 +1826,19 @@
       }, CONFIG.AUTO_SAVE_DELAY);
     }
 
+    /* ============================================================
+       SUBMIT & QUIT
+    ============================================================ */
     function submitQuiz(autoSubmit = false) {
       clearInterval(Quiz.timerInterval); Quiz.submitTime = Date.now();
       let score = 0; let correct = 0; let wrong = 0; let skipped = 0; const results = [];
       Quiz.questions.forEach((q, i) => {
-        const uAns = Quiz.answers[q.id || q.question_id]; const cAns = q.correct; const marks = q.marks || 1; const nMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
+        const uAns = Quiz.answers[getQId(q, i)]; const cAns = q.correct; const marks = q.marks || 1; const nMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
         let stat; let qScore = 0;
         if (uAns === undefined) { stat = Quiz.marked.has(i) ? 'marked' : 'skipped'; skipped++; }
         else if (uAns === cAns) { stat = 'correct'; qScore = marks; score += marks; correct++; }
         else { stat = 'wrong'; qScore = -nMarks; score -= nMarks; wrong++; }
-        results.push({ questionIndex: i, questionId: q.id || q.question_id, userAnswer: uAns, correctAnswer: cAns, status: stat, score: qScore, marked: Quiz.marked.has(i) });
+        results.push({ questionIndex: i, questionId: getQId(q, i), userAnswer: uAns, correctAnswer: cAns, status: stat, score: qScore, marked: Quiz.marked.has(i) });
       });
 
       const resObj = {
