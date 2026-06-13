@@ -1084,6 +1084,9 @@
 
 <body>
 
+  <!-- ============================================================
+       SCREEN 1 — PRE-QUIZ INFO
+  ============================================================ -->
   <div class="screen active" id="screen1">
     <div class="preq-wrapper">
 
@@ -1121,6 +1124,7 @@
               <i class="fa-solid fa-language" style="color:var(--primary)"></i>
               Select Test Language
             </span>
+            <!-- Removed the selected state initially so user must choose -->
             <button class="lang-trigger" id="langTrigger" onclick="openOverlay('langOverlay')">
               <div class="lang-trigger-left">
                 <i class="fa-solid fa-globe"></i>
@@ -1203,6 +1207,7 @@
             </span>
           </label>
 
+          <!-- Button is no longer disabled so we can catch clicks and show an error -->
           <button class="btn btn-primary btn-full" id="startTestBtn" onclick="handleStartTest()">
             <i class="fa-solid fa-play"></i>
             Start Test
@@ -1212,8 +1217,12 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       SCREEN 2 — LIVE QUIZ
+  ============================================================ -->
   <div class="screen" id="screen2">
 
+    <!-- Independent Brand Header -->
     <header class="site-header">
       <div class="site-header-inner align-wrapper">
         <a href="/tests.html" class="brand">
@@ -1226,6 +1235,7 @@
       </div>
     </header>
 
+    <!-- Sticky Quiz Info Bar -->
     <div class="quiz-topbar">
       <div class="quiz-topbar-inner align-wrapper">
         <div class="quiz-title-wrap">
@@ -1233,6 +1243,7 @@
           <div class="quiz-topbar-meta">
             <span class="topbar-meta-item"><i class="fa-solid fa-list-ol"></i><span id="topbar-questions">—</span> Qs</span>
             <span class="topbar-meta-item"><i class="fa-solid fa-clock"></i><span id="topbar-duration">—</span> min</span>
+            <!-- Fixed Bug: Correct Total Marks calculation here -->
             <span class="topbar-meta-item"><i class="fa-solid fa-star"></i><span id="topbar-marks">—</span> Marks</span>
           </div>
         </div>
@@ -1247,13 +1258,17 @@
       </div>
     </div>
 
+    <!-- Section Tabs -->
     <div class="section-tabs-wrap">
       <div class="section-tabs align-wrapper" id="sectionTabs">
-        </div>
+        <!-- Tabs injected by JS -->
+      </div>
     </div>
 
+    <!-- Quiz Body -->
     <div class="quiz-body align-wrapper">
 
+      <!-- Left: Question Area -->
       <div class="question-area">
         <div class="question-card" id="questionCard">
           <div class="question-card-header">
@@ -1274,6 +1289,7 @@
         </div>
       </div>
 
+      <!-- Right: Palette Panel -->
       <div class="palette-panel" id="palettePanel">
         <div class="palette-card">
           <div class="palette-card-header"><div class="palette-card-title">Question Palette</div></div>
@@ -1308,6 +1324,7 @@
 
     </div>
 
+    <!-- Sticky Bottom Bar -->
     <div class="quiz-bottombar">
       <div class="quiz-bottombar-inner align-wrapper">
         <button class="qbtn qbtn-prev" id="btnPrev" onclick="goToPrev()">
@@ -1339,6 +1356,9 @@
 
   </div>
 
+  <!-- ============================================================
+       LANGUAGE POPUP
+  ============================================================ -->
   <div class="overlay" id="langOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1376,6 +1396,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       RESUME POPUP
+  ============================================================ -->
   <div class="overlay" id="resumeOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1401,6 +1424,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       SUBMIT POPUP
+  ============================================================ -->
   <div class="overlay" id="submitOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1426,6 +1452,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       QUIT POPUP
+  ============================================================ -->
   <div class="overlay" id="quitOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1446,8 +1475,14 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
     /* ============================================================
        XSS UTILITY (Security Fix)
@@ -1551,7 +1586,11 @@
       document.getElementById('preq-exam-label').textContent = t.exam_group || t.exam || 'Exam';
       document.getElementById('preq-questions').textContent = t.totalQuestions || Quiz.questions.length || '—';
       document.getElementById('preq-duration').textContent = t.duration || '—';
-      document.getElementById('preq-marks').textContent = t.totalMarks || '—';
+      
+      // FIX: Dynamically calculate marks if missing from testData
+      const calculatedMarks = t.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
+      document.getElementById('preq-marks').textContent = calculatedMarks;
+
       document.title = `${title} — ApnaMock`;
 
       const nm = t.negativeMarking || 0;
@@ -1639,7 +1678,10 @@
       document.getElementById('quiz-title').textContent = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
       document.getElementById('topbar-questions').textContent = Quiz.testData.totalQuestions || Quiz.questions.length;
       document.getElementById('topbar-duration').textContent = Quiz.testData.duration || '—';
-      document.getElementById('topbar-marks').textContent = Quiz.testData.totalMarks || '—';
+      
+      // FIX: Dynamically calculate marks if missing from testData
+      const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
+      document.getElementById('topbar-marks').textContent = calculatedMarks;
 
       buildSectionTabs(); buildPaletteGrid(); renderQuestion(Quiz.currentIndex); startTimer();
       document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
@@ -1845,9 +1887,12 @@
         results.push({ questionIndex: i, questionId: getQId(q, i), userAnswer: uAns, correctAnswer: cAns, status: stat, score: qScore, marked: Quiz.marked.has(i) });
       });
 
+      // FIX: Dynamically calculate marks if missing from testData on submission too
+      const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
+
       const resObj = {
         testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
-        score: Math.max(0, Math.round(score * 100) / 100), totalMarks: Quiz.testData.totalMarks || Quiz.questions.length,
+        score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
         correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
         timeTaken: Math.round((Quiz.submitTime - Quiz.startTime) / 1000), submittedAt: Quiz.submitTime, questionResults: results,
         testData: { title: Quiz.testData.title, title_i18n: Quiz.testData.title_i18n, exam: Quiz.testData.exam, sections: Quiz.testData.sections, questions: Quiz.questions }
