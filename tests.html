@@ -6,10 +6,12 @@
   <title>All Mock Tests — ApnaMock</title>
   <meta name="description" content="Practice exam-wise, topic-wise, and previous year mock tests for SSC, Railway, Banking and more." />
   
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   
   <style>
@@ -347,6 +349,7 @@
       color: var(--text-secondary);
       transition: all 0.15s;
       white-space: nowrap;
+      position: relative;
     }
  
     .ctrl-btn:hover {
@@ -899,13 +902,19 @@
       font-weight: 500;
     }
  
-    .filter-option:hover, .filter-option.selected {
+    .filter-option:hover {
       border-color: var(--primary);
       background: var(--primary-light);
       color: var(--primary);
     }
  
-    .filter-option.selected { font-weight: 600; }
+    .filter-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+ 
     .filter-option i { font-size: 12px; }
  
     .filter-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -954,13 +963,18 @@
       font-weight: 500;
     }
  
-    .sort-option:hover, .sort-option.selected {
+    .sort-option:hover {
       border-color: var(--primary);
       background: var(--primary-light);
       color: var(--primary);
     }
  
-    .sort-option.selected { font-weight: 600; }
+    .sort-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
  
     .sort-option .sort-icon {
       width: 28px;
@@ -1024,7 +1038,7 @@
        FOOTER
     ============================================================ */
     .site-footer {
-      background: #1e293b;
+      background: var(--text-primary);
       color: #fff;
       padding: 40px 20px 24px;
       margin-top: 60px;
@@ -1102,18 +1116,29 @@
         border-bottom: 1px solid var(--border);
         box-shadow: var(--shadow-md);
       }
-
       .site-nav.mobile-open {
         display: flex;
       }
-
       .mobile-menu-btn { display: flex; }
       .page-title { font-size: 22px; }
       .tests-grid { grid-template-columns: 1fr; }
-      .controls-bar { gap: 8px; }
-      .ctrl-btn span { display: none; }
+      
+      /* Updated Mobile Controls Bar to stay inline */
+      .controls-bar { 
+        gap: 8px; 
+        flex-wrap: nowrap; 
+      }
+      .search-wrap { 
+        min-width: 0; 
+      }
+      .ctrl-btn { 
+        padding: 0 12px; 
+      }
+      .ctrl-btn span:not(.badge) { 
+        display: none; 
+      }
  
-      /* FIX: Tagline now displays on mobile */
+      /* Tagline display on mobile */
       .brand-tagline { 
         display: block; 
         font-size: 9px;
@@ -1130,6 +1155,9 @@
  
 <body>
  
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
   <header class="site-header">
     <div class="header-inner">
  
@@ -1148,7 +1176,7 @@
         </a>
         <a href="/custom-tests.html" class="nav-link">
           <i class="fa-solid fa-sliders"></i>
-          <span>Custom</span>
+          <span>Custom Tests</span>
         </a>
         <a href="/favorites.html" class="nav-link">
           <i class="fa-solid fa-bookmark"></i>
@@ -1172,8 +1200,12 @@
     </div>
   </header>
  
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
   <main class="page-wrapper">
  
+    <!-- Page Header -->
     <div class="page-header">
       <h1 class="page-title">All Mock Tests</h1>
       <p class="page-subtitle">
@@ -1181,15 +1213,17 @@
       </p>
     </div>
  
+    <!-- Controls Bar -->
     <div class="controls-bar">
  
+      <!-- Search -->
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input
           type="text"
           class="search-input"
           id="searchInput"
-          placeholder="Search by exam, title, subject, topic..."
+          placeholder="Search by exam, title, subject..."
           autocomplete="off"
         />
         <button class="search-clear" id="searchClear">
@@ -1197,12 +1231,14 @@
         </button>
       </div>
  
+      <!-- Filter Button -->
       <button class="ctrl-btn" id="filterBtn">
         <i class="fa-solid fa-filter"></i>
         <span>Filter Tests</span>
         <span class="badge" id="filterBadge" style="display:none">0</span>
       </button>
  
+      <!-- Sort Button -->
       <button class="ctrl-btn" id="sortBtn">
         <i class="fa-solid fa-arrow-up-wide-short"></i>
         <span>Sort By</span>
@@ -1210,17 +1246,22 @@
  
     </div>
  
+    <!-- Active Filters Row -->
     <div class="active-filters" id="activeFilters"></div>
  
+    <!-- Results Meta -->
     <div class="results-meta">
       <span class="results-count" id="resultsCount">
         Showing <strong>0</strong> of <strong>0</strong> tests
       </span>
     </div>
  
+    <!-- Tests Grid -->
     <div class="tests-grid" id="testsGrid">
-      </div>
+      <!-- Cards rendered by JS -->
+    </div>
  
+    <!-- Load More -->
     <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
       <span class="load-more-text" id="loadMoreText"></span>
       <button class="btn btn-outline" id="loadMoreBtn">
@@ -1231,6 +1272,9 @@
  
   </main>
  
+  <!-- ============================================================
+       FILTER POPUP
+  ============================================================ -->
   <div class="overlay" id="filterOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1241,31 +1285,37 @@
       </div>
       <div class="popup-body">
  
+        <!-- By Exam -->
         <div class="filter-section">
           <div class="filter-section-title">By Exam Group</div>
           <div class="filter-chips-wrap" id="filterExams"></div>
         </div>
  
+        <!-- By Year -->
         <div class="filter-section">
           <div class="filter-section-title">By Year</div>
           <div class="filter-chips-wrap" id="filterYears"></div>
         </div>
  
+        <!-- By Subject -->
         <div class="filter-section">
           <div class="filter-section-title">By Subject</div>
           <div class="filter-chips-wrap" id="filterSubjects"></div>
         </div>
  
+        <!-- By Paper Type -->
         <div class="filter-section">
           <div class="filter-section-title">By Paper Type</div>
           <div class="filter-chips-wrap" id="filterPaperTypes"></div>
         </div>
  
+        <!-- By Difficulty -->
         <div class="filter-section">
           <div class="filter-section-title">By Difficulty</div>
           <div class="filter-chips-wrap" id="filterDifficulty"></div>
         </div>
  
+        <!-- By Attempt History -->
         <div class="filter-section">
           <div class="filter-section-title">By Attempt History</div>
           <div class="filter-chips-wrap" id="filterAttempt">
@@ -1290,6 +1340,9 @@
     </div>
   </div>
  
+  <!-- ============================================================
+       SORT POPUP
+  ============================================================ -->
   <div class="overlay" id="sortOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1378,8 +1431,14 @@
     </div>
   </div>
  
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
  
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
   <footer class="site-footer">
     <div class="footer-inner">
  
@@ -1425,6 +1484,9 @@
     </div>
   </footer>
  
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
     /* ============================================================
        XSS UTILITY (FIX)
@@ -1733,9 +1795,13 @@
       const duration = test.duration
         ? (test.duration >= 60 ? `${Math.floor(test.duration/60)}h ${test.duration % 60 > 0 ? (test.duration % 60) + 'm' : ''}`.trim() : `${test.duration}m`)
         : '—';
+
+      // FIX: Dynamically calculate marks if missing
+      const calculatedMarks = test.marks || test.totalMarks || test.questions || '—';
  
       return `
         <div class="test-card" data-test-id="${testId}">
+          <!-- Tags -->
           <div class="card-tags">
             <span class="tag tag-exam">${examTag}</span>
             <span class="tag tag-type">${typeTag}</span>
@@ -1743,15 +1809,19 @@
             ${attempt ? '<span class="tag tag-attempted"><i class="fa-solid fa-check" style="font-size:9px"></i> Attempted</span>' : ''}
           </div>
  
+          <!-- Title -->
           <div class="card-title">${escapeHTML(test.title || test.title_i18n?.en || 'Untitled Test')}</div>
  
+          <!-- Attempt Badge -->
           ${attemptBadgeHtml}
  
+          <!-- Meta -->
           <div class="card-meta">
             ${metaItems}
             <div class="lang-badges" style="margin-left:auto">${langBadges}</div>
           </div>
  
+          <!-- Stats -->
           <div class="card-stats">
             <div class="stat-box">
               <span class="stat-box-value">${escapeHTML(test.questions || '—')}</span>
@@ -1762,11 +1832,12 @@
               <span class="stat-box-label">Duration</span>
             </div>
             <div class="stat-box">
-              <span class="stat-box-value">${escapeHTML(test.marks || '—')}</span>
+              <span class="stat-box-value">${escapeHTML(calculatedMarks)}</span>
               <span class="stat-box-label">Marks</span>
             </div>
           </div>
  
+          <!-- Footer -->
           <div class="card-footer">
             <a href="/quiz.html?test=${testId}" class="btn btn-primary btn-sm btn-full">
               <i class="fa-solid fa-play"></i>
@@ -1831,7 +1902,7 @@
     }
  
     /* ============================================================
-       ACTIVE FILTERS RENDER (FIXED)
+       ACTIVE FILTERS RENDER
     ============================================================ */
     function renderActiveFilters() {
       const container = document.getElementById('activeFilters');
@@ -1876,7 +1947,6 @@
  
       container.innerHTML = chips.join('');
  
-      // Update filter badge
       const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
       const badge = document.getElementById('filterBadge');
       const filterBtn = document.getElementById('filterBtn');
@@ -1891,7 +1961,6 @@
       }
     }
  
-    // FIXED: Syncs removal with the popup modal chips
     function removeFilter(type, value) {
       if (type === 'attempt') {
         State.filters.attempt = null;
@@ -1899,7 +1968,6 @@
       } else if (State.filters[type]) {
         State.filters[type] = State.filters[type].filter(v => String(v) !== String(value));
         
-        // Deselect in the popup UI
         const containerId = type === 'exam' ? 'filterExams' :
                             type === 'year' ? 'filterYears' :
                             type === 'subject' ? 'filterSubjects' :
@@ -1920,10 +1988,8 @@
       renderActiveFilters();
       applyFiltersAndSort();
       
-      // Reset popup chips
       buildFilterOptions();
       
-      // Reset attempt chips
       document.querySelectorAll('#filterAttempt .filter-chip-select').forEach(btn => {
         btn.classList.remove('selected');
       });
@@ -2049,7 +2115,7 @@
     });
  
     /* ============================================================
-       SEARCH (FIXED DEBOUNCE BUG)
+       SEARCH
     ============================================================ */
     let searchDebounce;
  
@@ -2065,7 +2131,7 @@
     });
  
     document.getElementById('searchClear').addEventListener('click', () => {
-      clearTimeout(searchDebounce); // FIX: Stop pending search events
+      clearTimeout(searchDebounce);
       document.getElementById('searchInput').value = '';
       State.search = '';
       document.getElementById('searchClear').style.display = 'none';
@@ -2080,16 +2146,14 @@
     });
 
     /* ============================================================
-       DARK MODE & MOBILE MENU (NEW FIXES)
+       DARK MODE & MOBILE MENU
     ============================================================ */
-    // Initialize Theme
     const savedTheme = storageGet('theme');
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
       document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
     }
 
-    // Toggle Theme
     document.getElementById('themeToggleBtn').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
@@ -2100,7 +2164,6 @@
       storageSet('theme', isDark ? 'dark' : 'light');
     });
 
-    // Toggle Mobile Menu
     document.getElementById('mobileMenuBtn').addEventListener('click', () => {
       const nav = document.querySelector('.site-nav');
       nav.classList.toggle('mobile-open');
