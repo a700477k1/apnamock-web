@@ -103,6 +103,7 @@
     ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
 
     .align-wrapper { max-width: 1100px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+    .bg-muted { background-color: var(--bg-muted); }
  
     /* ============================================================
        HEADER
@@ -171,15 +172,15 @@
     /* ============================================================
        SECTION TITLES
     ============================================================ */
-    .section-wrap { padding: 32px 20px; }
-    .section-header { text-align: center; margin-bottom: 24px; }
+    .section-wrap { padding: 48px 0; }
+    .section-header { text-align: center; margin-bottom: 24px; padding: 0 20px; }
     .section-title { font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
     .section-subtitle { font-size: 15px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
 
     /* ============================================================
        DYNAMIC EXAMS GRID
     ============================================================ */
-    .exams-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
+    .exams-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; width: 100%; }
     .exam-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-xl); padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-sm); text-decoration: none; color: inherit; }
     .exam-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
     .exam-icon { width: 56px; height: 56px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 24px; }
@@ -209,9 +210,8 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-auto-rows: minmax(200px, auto);
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
+      gap: 16px;
+      width: 100%;
     }
 
     .bento-card {
@@ -294,8 +294,8 @@
     @media (max-width: 1024px) {
       .bento-card.col-span-2 { grid-column: span 1; }
       .bento-grid { grid-template-columns: repeat(2, 1fr); }
-      .card-custom { grid-column: span 2; flex-direction: column; text-align: center; gap: 24px; padding: 40px 24px; }
-      .card-custom .bento-desc { max-width: 100%; margin-bottom: 20px; }
+      .card-custom { grid-column: span 2; flex-direction: column; text-align: center; gap: 20px; padding: 32px 24px; }
+      .card-custom .bento-desc { max-width: 100%; margin-bottom: 16px; }
     }
 
     @media (max-width: 768px) {
@@ -304,18 +304,29 @@
       .mobile-menu-btn { display: flex; }
       .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
 
-      .hero-section { padding: 40px 20px 20px; }
+      /* Maximize Mobile Width */
+      .align-wrapper { padding-left: 12px; padding-right: 12px; }
+
+      /* Reduced Hero Spacing */
+      .hero-section { padding: 40px 12px 20px; }
       .hero-title { font-size: 36px; }
       .hero-subtitle { font-size: 15px; margin-bottom: 24px; }
       .hero-actions { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
       .hero-actions .btn { width: 100%; }
+      
       .trust-bar { gap: 16px; flex-direction: column; align-items: flex-start; max-width: 250px; margin: 24px auto 0; padding-top: 16px; }
 
-      .section-wrap { padding: 24px 20px; }
+      /* Reduced Section Wrap Spacing */
+      .section-wrap { padding: 32px 0; }
+      .section-header { margin-bottom: 20px; padding: 0 12px; }
       .section-title { font-size: 24px; }
       
-      .bento-grid { grid-template-columns: 1fr; }
-      .card-custom { grid-column: span 1; }
+      .exams-grid { grid-template-columns: 1fr; gap: 12px; }
+      .exam-card { padding: 16px; flex-direction: row; text-align: left; }
+      
+      .bento-grid { grid-template-columns: 1fr; gap: 12px; }
+      .bento-card { padding: 20px; gap: 12px; }
+      .card-custom { grid-column: span 1; padding: 24px 16px; }
     }
   </style>
 </head>
@@ -369,7 +380,7 @@
        HERO SECTION
   ============================================================ -->
   <main>
-    <section class="hero-section">
+    <section class="hero-section align-wrapper">
       <div class="hero-bg-blob"></div>
       
       <div class="hero-badge">
