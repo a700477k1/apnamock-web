@@ -6,12 +6,10 @@
   <title>My Favorite Questions — ApnaMock</title>
   <meta name="description" content="Review your saved questions anytime for quick revision." />
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   
   <style>
@@ -149,7 +147,7 @@
     .mobile-menu-btn { display: none; }
  
     /* ============================================================
-       PAGE LAYOUT
+       PAGE LAYOUT & TITLE
     ============================================================ */
     .page-wrapper {
       padding-top: 28px;
@@ -158,13 +156,14 @@
     }
  
     .page-header { margin-bottom: 24px; }
+    
     .page-title {
       font-family: var(--font-heading);
-      font-size: 26px;
+      font-size: 26px; /* Matched Result Analysis Page */
       font-weight: 700;
       color: var(--text-primary);
       line-height: 1.2;
-      margin-bottom: 6px;
+      margin-bottom: 4px; /* Matched Result Analysis Page */
       display: flex;
       align-items: center;
       gap: 10px;
@@ -555,8 +554,19 @@
        FOOTER
     ============================================================ */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    
+    /* Dark Mode Footer Fix */
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
+
     .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
-    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
     .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
     .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
     .footer-links { display: flex; flex-direction: column; gap: 8px; }
@@ -585,6 +595,8 @@
       .mobile-menu-btn { display: flex; }
       .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
 
+      .page-title { font-size: 22px; }
+
       .controls-bar { flex-wrap: nowrap; gap: 8px; }
       .search-wrap { min-width: 0; }
       .ctrl-btn span:not(.badge) { display: none; }
@@ -599,9 +611,6 @@
 
 <body>
 
-  <!-- ============================================================
-       HEADER
-  ============================================================ -->
   <header class="site-header">
     <div class="header-inner align-wrapper">
       <a href="/index.html" class="brand">
@@ -642,9 +651,6 @@
     </div>
   </header>
 
-  <!-- ============================================================
-       MAIN
-  ============================================================ -->
   <main class="page-wrapper align-wrapper">
  
     <div class="page-header">
@@ -652,7 +658,6 @@
       <p class="page-subtitle">Review your saved questions anytime for quick revision.</p>
     </div>
 
-    <!-- Controls Bar -->
     <div class="controls-bar" id="controlsBar" style="display:none;">
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -660,14 +665,12 @@
         <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="controls-right">
-        <!-- Filter Menu Button -->
         <button class="ctrl-btn" id="filterBtn">
           <i class="fa-solid fa-filter"></i>
           <span>Filter</span>
           <span class="badge" id="filterBadge" style="display:none">0</span>
         </button>
   
-        <!-- Sort Button -->
         <button class="ctrl-btn" id="sortBtn">
           <i class="fa-solid fa-arrow-up-wide-short"></i>
           <span>Sort By</span>
@@ -675,19 +678,15 @@
       </div>
     </div>
 
-    <!-- Active Filters Row -->
     <div class="active-filters" id="activeFilters"></div>
 
-    <!-- Favorites Grid -->
     <div class="fav-grid" id="favoritesGrid">
-      <!-- Loader -->
       <div style="text-align:center;padding:40px;color:var(--text-muted)">
         <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
         <div>Loading your favorites...</div>
       </div>
     </div>
 
-    <!-- Load More -->
     <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
       <span class="load-more-text" id="loadMoreText"></span>
       <button class="btn btn-outline" id="loadMoreBtn">
@@ -698,9 +697,6 @@
  
   </main>
 
-  <!-- ============================================================
-       FILTER MENU POPUP (POPUP 1)
-  ============================================================ -->
   <div class="overlay" id="filterMenuOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -765,9 +761,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       FILTER DETAIL POPUP (POPUP 2)
-  ============================================================ -->
   <div class="overlay" id="filterDetailOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -818,9 +811,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       SORT POPUP
-  ============================================================ -->
   <div class="overlay" id="sortOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
@@ -874,9 +864,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       REMOVE CONFIRM POPUP
-  ============================================================ -->
   <div class="overlay" id="removeOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
@@ -897,14 +884,8 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       TOAST CONTAINER
-  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
@@ -936,9 +917,6 @@
     </div>
   </footer>
 
-  <!-- ============================================================
-       JAVASCRIPT
-  ============================================================ -->
   <script>
     /* ============================================================
        XSS UTILITY 
