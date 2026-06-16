@@ -1,190 +1,1534 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>History - ApnaMock</title>
-  <meta name="description" content="View your test attempt history and track your progress.">
-  <meta name="theme-color" content="#4F46E5">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Attempt History — ApnaMock</title>
+  <meta name="description" content="Track your mock test attempts and performance over time." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <style>
-    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
-    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
-    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
-    .stats-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10); }
-    .stat-card { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; border: 1px solid var(--border-light); }
-    .stat-value { font-size: var(--text-3xl); font-weight: 800; color: var(--primary); font-family: var(--font-display); }
-    .stat-label { color: var(--text-secondary); font-size: var(--text-sm); margin-top: var(--space-2); }
-    .history-list { display: flex; flex-direction: column; gap: var(--space-4); }
-    .history-item { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-6); border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); transition: all var(--transition-base); }
-    .history-item:hover { box-shadow: var(--shadow-md); }
-    .history-info { flex: 1; min-width: 250px; }
-    .history-title { font-weight: 700; font-size: var(--text-lg); margin-bottom: var(--space-2); }
-    .history-meta { display: flex; gap: var(--space-4); color: var(--text-secondary); font-size: var(--text-sm); flex-wrap: wrap; }
-    .history-score { text-align: right; }
-    .history-score-value { font-size: var(--text-2xl); font-weight: 700; color: var(--primary); }
-    .history-score-label { font-size: var(--text-sm); color: var(--text-secondary); }
-    .history-actions { display: flex; gap: var(--space-3); }
-    .history-btn { padding: var(--space-2) var(--space-4); border-radius: var(--radius-lg); font-size: var(--text-sm); text-decoration: none; border: none; cursor: pointer; }
-    .history-btn-primary { background: var(--primary); color: white; }
-    .history-btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-light); }
-    .history-btn-danger { color: var(--danger); background: none; }
-    .history-btn-danger:hover { background: var(--danger-50); }
-    .empty-state { text-align: center; padding: var(--space-16); }
-    .empty-state-icon { font-size: var(--text-6xl); margin-bottom: var(--space-6); }
-    .empty-state-title { font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-3); }
-    .empty-state-desc { color: var(--text-secondary); margin-bottom: var(--space-8); }
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --primary-light: #e8f0fe;
+      --accent: #f97316;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --error: #dc2626;
+      --error-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+ 
+      --bg-base: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-muted: #f1f5f9;
+ 
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+ 
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+ 
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+ 
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+ 
+      --header-height: 64px;
+ 
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    /* DARK MODE VARIABLES */
+    body.dark-mode {
+      --bg-base: #0f172a;
+      --bg-card: #1e293b;
+      --bg-muted: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --border-strong: #475569;
+      --primary-light: rgba(26, 86, 219, 0.2);
+      --success-light: rgba(22, 163, 74, 0.2);
+      --warning-light: rgba(245, 158, 11, 0.2);
+      --error-light: rgba(220, 38, 38, 0.2);
+      --purple-light: rgba(124, 58, 237, 0.2);
+    }
+ 
+    /* ============================================================
+       RESET AND BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border-strong) var(--bg-muted); }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { max-width: 100%; display: block; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-muted); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+
+    .align-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+ 
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(var(--bg-card), 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: var(--header-height);
+    }
+    body:not(.dark-mode) .site-header { background: rgba(255, 255, 255, 0.95); }
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
+ 
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
+    .brand-tagline { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.3px; }
+ 
+    .site-nav { display: flex; align-items: center; gap: 4px; }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .nav-link i { font-size: 13px; }
+ 
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; background: transparent; }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .mobile-menu-btn { display: none; }
+ 
+    /* ============================================================
+       PAGE LAYOUT & TYPOGRAPHY
+    ============================================================ */
+    .page-wrapper {
+      padding-top: 28px;
+      padding-bottom: 60px;
+      flex: 1;
+    }
+ 
+    .page-header { margin-bottom: 24px; }
+    .page-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .page-title i { color: var(--primary); }
+    .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+ 
+    /* ============================================================
+       SUMMARY CARDS & CHART
+    ============================================================ */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .summary-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+    }
+    .summary-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .summary-card-value {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .summary-card-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+    .chart-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .chart-container {
+      flex: 1;
+      position: relative;
+      min-height: 120px;
+      width: 100%;
+    }
+
+    /* ============================================================
+       CONTROLS BAR
+    ============================================================ */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+ 
+    .search-wrap { flex: 1; min-width: 220px; position: relative; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 0 38px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); background: var(--bg-card); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.10); }
+    .search-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; padding: 4px; border-radius: 50%; transition: color 0.15s, background 0.15s; display: none; }
+    .search-clear:hover { color: var(--text-primary); background: var(--bg-muted); }
+ 
+    .controls-right { display: flex; gap: 8px; flex-wrap: wrap; }
+    
+    .ctrl-btn { height: 42px; padding: 0 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; font-family: var(--font-body); display: flex; align-items: center; gap: 7px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); transition: all 0.15s; white-space: nowrap; position: relative; }
+    .ctrl-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .ctrl-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .ctrl-btn i { font-size: 13px; }
+    .ctrl-btn .badge { background: var(--primary); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 600; min-width: 20px; text-align: center; }
+    .ctrl-btn.btn-danger-outline { color: var(--error); border-color: var(--border); }
+    .ctrl-btn.btn-danger-outline:hover { border-color: var(--error); background: var(--error-light); }
+
+    /* ============================================================
+       ACTIVE FILTERS ROW
+    ============================================================ */
+    .active-filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .active-filters:empty { display: none; }
+    .filter-chip { display: flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); border: 1px solid rgba(26,86,219,0.2); border-radius: 99px; padding: 4px 10px 4px 12px; font-size: 12px; font-weight: 600; }
+    .filter-chip-remove { width: 16px; height: 16px; border-radius: 50%; background: rgba(26,86,219,0.15); color: var(--primary); font-size: 10px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; cursor: pointer; }
+    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); }
+    .clear-all-btn { font-size: 12px; color: var(--error); font-weight: 600; padding: 4px 8px; border-radius: 99px; transition: background 0.15s; cursor: pointer; }
+    .clear-all-btn:hover { background: var(--error-light); }
+
+    /* ============================================================
+       HISTORY CARDS
+    ============================================================ */
+    .history-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+
+    .history-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .history-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .card-meta-main { display: flex; flex-direction: column; gap: 6px; }
+
+    .card-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .badge-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-status.completed { background: var(--success-light); color: var(--success); }
+    .badge-status.abandoned { background: var(--error-light); color: var(--error); }
+
+    .badge-feature { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px; border: 1px solid currentColor; }
+    .badge-feature.best { color: var(--warning); background: var(--warning-light); }
+    .badge-feature.latest { color: var(--primary); background: var(--primary-light); }
+    
+    .improvement-tag { font-size: 12px; font-weight: 600; color: var(--success); display: flex; align-items: center; gap: 4px; }
+    .improvement-tag.negative { color: var(--error); }
+
+    .card-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+    .card-subtitle { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+
+    .card-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+
+    .stat-mini { display: flex; flex-direction: column; gap: 2px; }
+    .stat-mini-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+    .stat-mini-value { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .stat-mini-value.score { color: var(--primary); }
+    .stat-mini-value.accuracy { color: var(--purple); }
+
+    .card-sections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .section-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+    .section-indicator strong { font-weight: 600; color: var(--text-primary); }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 20px; height: 38px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap; cursor: pointer; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .btn-danger { background: var(--error); color: #fff; border-color: var(--error); }
+    .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+
+    /* ============================================================
+       EMPTY STATE
+    ============================================================ */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; text-align: center; background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); }
+    .empty-icon { width: 64px; height: 64px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); margin-bottom: 16px; }
+    .empty-title { font-family: var(--font-heading); font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+    .empty-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; max-width: 320px; line-height: 1.6; }
+
+    /* ============================================================
+       LOAD MORE
+    ============================================================ */
+    .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
+    .load-more-text { font-size: 13px; color: var(--text-muted); }
+
+    /* ============================================================
+       POPUPS & OVERLAYS
+    ============================================================ */
+    .overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .popup { background: var(--bg-card); border-radius: var(--radius-xl); width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); transform: scale(0.95) translateY(12px); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); overflow: hidden; display: flex; flex-direction: column;}
+    .overlay.open .popup { transform: scale(1) translateY(0); }
+    .popup-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;}
+    .popup-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .popup-close { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); transition: all 0.15s; }
+    .popup-close:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .popup-body { padding: 20px; overflow-y: auto; max-height: 65vh; }
+    .popup-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0;}
+
+    /* Menu Items */
+    .filter-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-md); margin-bottom: 10px; font-size: 14.5px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
+    .filter-menu-item:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .filter-menu-left { display: flex; align-items: center; gap: 10px; }
+    .filter-menu-left i { font-size: 16px; width: 20px; text-align: center; color: var(--text-muted); transition: color 0.15s; }
+    .filter-menu-item:hover .filter-menu-left i { color: var(--primary); }
+    .filter-menu-badge { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 99px; margin-left: auto; margin-right: 8px; display: none; }
+    .filter-menu-badge.active { display: inline-block; }
+
+    /* Chips */
+    .filter-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-chip-select { padding: 6px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
+    .filter-chip-select:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .filter-chip-select.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+
+    /* Sort Options */
+    .sort-options { display: flex; flex-direction: column; gap: 4px; }
+    .sort-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); cursor: pointer; transition: all 0.15s; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .sort-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .sort-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .sort-option .sort-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); }
+    .sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); }
+
+    /* Confirm Overlays */
+    .confirm-icon-wrap { text-align: center; margin-bottom: 16px; }
+    .confirm-icon { width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px; background: var(--error-light); color: var(--error); }
+    .confirm-title { font-family: var(--font-heading); font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .confirm-message { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; text-align: center; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); }
+    .toast.warning { background: var(--warning); }
+    .toast.error { background: var(--error); }
+    .toast.info { background: var(--primary); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
+
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .site-nav {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+      }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+
+      .dashboard-grid { grid-template-columns: 1fr; gap: 16px; }
+      .summary-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .controls-bar { flex-wrap: wrap; gap: 8px; }
+      .controls-right { width: 100%; justify-content: space-between; }
+      .ctrl-btn { flex: 1; justify-content: center; }
+      
+      .card-actions { flex-direction: column; align-items: stretch; }
+      .card-actions .btn { width: 100%; }
+    }
   </style>
 </head>
+
 <body>
-  <!-- Header -->
-  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
-        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
-        <nav style="display: flex; gap: var(--space-6); align-items: center;">
-          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
-          <a href="tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Tests</a>
-          <a href="custom-tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Custom</a>
-          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
-          <a href="history.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">History</a>
-          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
-            <i class="fas fa-moon"></i>
-          </button>
-        </nav>
+
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
+      </a>
+ 
+      <nav class="site-nav">
+        <a href="/tests.html" class="nav-link">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Tests</span>
+        </a>
+        <a href="/custom-tests.html" class="nav-link">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Custom Tests</span>
+        </a>
+        <a href="/favorites.html" class="nav-link">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Favorites</span>
+        </a>
+        <a href="/history.html" class="nav-link active">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History</span>
+        </a>
+      </nav>
+ 
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Page Header -->
-  <section class="page-header">
-    <div class="container">
-      <h1>Test History</h1>
-      <p>Track your progress and review past attempts</p>
+  <main class="page-wrapper align-wrapper">
+ 
+    <div class="page-header">
+      <h1 class="page-title"><i class="fa-solid fa-chart-line"></i> My Attempt History</h1>
+      <p class="page-subtitle">Track your mock test attempts and review your performance over time.</p>
     </div>
-  </section>
 
-  <!-- Main Content -->
-  <main class="page-container">
-    <div class="container">
-      <!-- Stats Overview -->
-      <div id="stats-overview" class="stats-overview" style="display: none;"></div>
+    <div class="dashboard-grid" id="dashboardGrid" style="display:none;">
+      
+      <div class="summary-cards-grid">
+        <div class="summary-card">
+          <div class="summary-card-header"><i class="fa-solid fa-rotate-left"></i> Total Attempts</div>
+          <div class="summary-card-value" id="statAttempts">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header"><i class="fa-solid fa-circle-check"></i> Completed</div>
+          <div class="summary-card-value" id="statCompleted" style="color:var(--success)">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header"><i class="fa-solid fa-trophy"></i> Highest Score</div>
+          <div class="summary-card-value" id="statBestScore" style="color:var(--primary)">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header"><i class="fa-solid fa-bullseye"></i> Avg Accuracy</div>
+          <div class="summary-card-value" id="statAccuracy" style="color:var(--purple)">0%</div>
+        </div>
+        <div class="summary-card" style="grid-column: span 2;">
+          <div class="summary-card-header"><i class="fa-solid fa-stopwatch"></i> Average Time / Test</div>
+          <div class="summary-card-value" id="statAvgTime">0m 0s</div>
+        </div>
+      </div>
 
-      <!-- History List -->
-      <div id="history-container"></div>
+      <div class="chart-card">
+        <div class="chart-header"><i class="fa-solid fa-arrow-trend-up"></i> Recent Accuracy Trend</div>
+        <div class="chart-container">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
     </div>
+
+    <div class="controls-bar" id="controlsBar" style="display:none;">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search tests, exams, subjects..." autocomplete="off" />
+        <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="controls-right">
+        <button class="ctrl-btn" id="filterBtn">
+          <i class="fa-solid fa-filter"></i>
+          <span>Filter</span>
+          <span class="badge" id="filterBadge" style="display:none">0</span>
+        </button>
+        <button class="ctrl-btn" id="sortBtn">
+          <i class="fa-solid fa-arrow-up-wide-short"></i>
+          <span>Sort By</span>
+        </button>
+        <button class="ctrl-btn btn-danger-outline" id="clearHistoryBtn">
+          <i class="fa-solid fa-trash-can"></i>
+          <span>Clear All</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="active-filters" id="activeFilters"></div>
+
+    <div class="history-list" id="historyList">
+      <div style="text-align:center;padding:40px;color:var(--text-muted)">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
+        <div>Loading history...</div>
+      </div>
+    </div>
+
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+      <span class="load-more-text" id="loadMoreText"></span>
+      <button class="btn btn-outline" id="loadMoreBtn">
+        <i class="fa-solid fa-arrow-down"></i>
+        Load More Attempts
+      </button>
+    </div>
+ 
   </main>
 
-  <!-- Footer -->
-  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
-        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
-          © 2024 ApnaMock. Practice. Improve. Succeed.
+  <div class="overlay" id="filterMenuOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Filter History</span>
+        <button class="popup-close" onclick="closeOverlay('filterMenuOverlay')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="filter-menu-item" onclick="openFilterDetail('status', 'By Status')">
+          <div class="filter-menu-left"><i class="fa-solid fa-spinner"></i> Status</div>
+          <span class="filter-menu-badge" id="badge-status">0</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
         </div>
-        <div style="display: flex; gap: var(--space-4);">
-          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
-          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
-          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
+        <div class="filter-menu-item" onclick="openFilterDetail('exam', 'By Exam Group')">
+          <div class="filter-menu-left"><i class="fa-solid fa-graduation-cap"></i> Exam Group</div>
+          <span class="filter-menu-badge" id="badge-exam">0</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
+        </div>
+        <div class="filter-menu-item" onclick="openFilterDetail('date', 'Attempt Date')">
+          <div class="filter-menu-left"><i class="fa-solid fa-calendar-day"></i> Date Range</div>
+          <span class="filter-menu-badge" id="badge-date">0</span>
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost btn-sm" id="filterClearAll"><i class="fa-solid fa-rotate-left"></i> Clear All</button>
+        <button class="btn btn-primary btn-sm" id="filterApply" style="flex:1"><i class="fa-solid fa-check"></i> Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="filterDetailOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <button class="popup-close" onclick="closeFilterDetail()"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="popup-title" id="filterDetailTitle">Select Options</span>
+        <button class="popup-close" style="opacity:0;pointer-events:none"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        
+        <div class="filter-section detail-section" id="detail-status" style="display:none;">
+          <div class="filter-chips-wrap" id="filterStatus">
+            <button class="filter-chip-select" data-type="status" data-value="Completed">Completed</button>
+            <button class="filter-chip-select" data-type="status" data-value="Abandoned">Abandoned / Incomplete</button>
+          </div>
+        </div>
+
+        <div class="filter-section detail-section" id="detail-exam" style="display:none;">
+          <div class="filter-chips-wrap" id="filterExams"></div>
+        </div>
+
+        <div class="filter-section detail-section" id="detail-date" style="display:none;">
+          <div class="filter-chips-wrap" id="filterDate">
+            <button class="filter-chip-select" data-type="date" data-value="today">Today</button>
+            <button class="filter-chip-select" data-type="date" data-value="week">Last 7 Days</button>
+            <button class="filter-chip-select" data-type="date" data-value="month">Last 30 Days</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-primary btn-full" onclick="closeFilterDetail()"><i class="fa-solid fa-check"></i> Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="sortOverlay">
+    <div class="popup" style="max-height: auto;">
+      <div class="popup-header">
+        <span class="popup-title">Sort History</span>
+        <button class="popup-close" id="sortClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="sort-options" id="sortOptions">
+          <div class="sort-option selected" data-sort="date-desc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><span>Latest Attempt First</span></div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i>
+          </div>
+          <div class="sort-option" data-sort="date-asc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-regular fa-clock"></i></div><span>Oldest Attempt First</span></div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+          <div class="sort-option" data-sort="score-desc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-trophy"></i></div><span>Highest Score</span></div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+          <div class="sort-option" data-sort="accuracy-desc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-bullseye"></i></div><span>Highest Accuracy</span></div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-primary btn-full" id="sortApply"><i class="fa-solid fa-check"></i> Apply Sort</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="deleteOverlay">
+    <div class="popup" style="max-height: auto;">
+      <div class="popup-header">
+        <span class="popup-title">Delete Attempt</span>
+        <button class="popup-close" onclick="closeOverlay('deleteOverlay')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="confirm-icon-wrap">
+          <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+          <div class="confirm-title">Delete this attempt?</div>
+          <div class="confirm-message">This will permanently remove this test attempt from your history. This action cannot be undone.</div>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('deleteOverlay')">Cancel</button>
+        <button class="btn btn-danger" style="flex:1" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="clearAllOverlay">
+    <div class="popup" style="max-height: auto;">
+      <div class="popup-header">
+        <span class="popup-title">Clear All History</span>
+        <button class="popup-close" onclick="closeOverlay('clearAllOverlay')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="confirm-icon-wrap">
+          <div class="confirm-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="confirm-title">Clear entire history?</div>
+          <div class="confirm-message">You are about to delete <strong>ALL</strong> your saved mock test attempts. Your progress data will be lost forever.</div>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('clearAllOverlay')">Cancel</button>
+        <button class="btn btn-danger" style="flex:1" id="confirmClearAllBtn">Yes, Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">SSC CGL</a>
+          <a href="#" class="footer-link">IBPS PO</a>
+          <a href="#" class="footer-link">Railway NTPC</a>
+          <a href="#" class="footer-link">CTET</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Use</a>
+          <a href="#" class="footer-link">Disclaimer</a>
+          <a href="#" class="footer-link">Contact</a>
         </div>
       </div>
     </div>
+    <div class="footer-bottom align-wrapper">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
+    </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
   <script>
-    (function() {
-      function renderHistory() {
-        const container = document.getElementById('history-container');
-        const statsContainer = document.getElementById('stats-overview');
-        const history = ApnaMock.history.getAll();
+    /* ============================================================
+       XSS UTILITY 
+    ============================================================ */
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
 
-        if (!history.length) {
-          statsContainer.style.display = 'none';
-          container.innerHTML = `
-            <div class="empty-state">
-              <div class="empty-state-icon">📊</div>
-              <div class="empty-state-title">No History Yet</div>
-              <div class="empty-state-desc">Take your first test to start tracking your progress.</div>
-              <a href="tests.html" class="btn btn-primary">Browse Tests</a>
-            </div>
-          `;
-          return;
+    /* ============================================================
+       STATE & CONFIG
+    ============================================================ */
+    const CONFIG = {
+      STORAGE_PREFIX: 'apnamock_',
+      ITEMS_PER_PAGE: 10
+    };
+
+    const State = {
+      allHistory: [],
+      filteredHistory: [],
+      displayedCount: 0,
+      searchQuery: '',
+      pendingDeleteId: null,
+      filters: { status: [], exam: [], date: null },
+      sort: 'date-desc',
+      chartInstance: null
+    };
+
+    /* ============================================================
+       INDEXED DB WRAPPER FOR HISTORY
+    ============================================================ */
+    const DB_NAME = 'ApnaMockDB';
+    const DB_VERSION = 1;
+    const STORE_HISTORY = 'history';
+
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('favorites')) {
+            db.createObjectStore('favorites', { keyPath: 'qId' });
+          }
+          if (!db.objectStoreNames.contains(STORE_HISTORY)) {
+            db.createObjectStore(STORE_HISTORY, { keyPath: 'attemptId' });
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getAllHistory() {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HISTORY, 'readonly');
+          const store = tx.objectStore(STORE_HISTORY);
+          const request = store.getAll();
+          request.onsuccess = () => resolve(request.result || []);
+          request.onerror = () => reject(request.error);
+        });
+      } catch (err) {
+        console.error("IndexedDB error:", err);
+        return [];
+      }
+    }
+
+    async function saveToHistoryDB(attemptData) {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HISTORY, 'readwrite');
+          const store = tx.objectStore(STORE_HISTORY);
+          store.put(attemptData);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (err) { console.error(err); }
+    }
+
+    async function removeHistoryFromDB(attemptId) {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HISTORY, 'readwrite');
+          const store = tx.objectStore(STORE_HISTORY);
+          store.delete(attemptId);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (err) { console.error(err); }
+    }
+
+    async function clearAllHistoryDB() {
+      try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HISTORY, 'readwrite');
+          const store = tx.objectStore(STORE_HISTORY);
+          store.clear();
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (err) { console.error(err); }
+    }
+
+    /* ============================================================
+       LOCAL STORAGE MIGRATION (Crucial for linking result.html data)
+    ============================================================ */
+    // If a user took a test before this IndexedDB implementation, migrate it.
+    async function migrateLocalStorageHistory() {
+      let migrationOccurred = false;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(CONFIG.STORAGE_PREFIX + 'result_')) {
+          try {
+            const raw = localStorage.getItem(key);
+            const data = JSON.parse(raw);
+            
+            // Build compatible object
+            const attemptId = `atm_${data.submittedAt}_${data.testId}`;
+            
+            const historyItem = {
+              attemptId: attemptId,
+              testId: data.testId,
+              testTitle: data.testTitle,
+              exam: data.testData?.exam || 'General',
+              language: data.language,
+              date: data.submittedAt,
+              score: data.score,
+              accuracy: data.accuracy,
+              totalQuestions: data.totalQuestions,
+              attempted: data.correct + data.wrong,
+              correct: data.correct,
+              wrong: data.wrong,
+              skipped: data.skipped,
+              timeTaken: data.timeTaken,
+              totalMarks: data.totalMarks,
+              status: 'Completed'
+            };
+
+            await saveToHistoryDB(historyItem);
+            // Optionally remove from localStorage after migration to save space:
+            // localStorage.removeItem(key); 
+            migrationOccurred = true;
+          } catch(e) {}
         }
+      }
 
-        // Render stats
-        const stats = ApnaMock.history.getStats();
-        statsContainer.style.display = 'grid';
-        statsContainer.innerHTML = `
-          <div class="stat-card">
-            <div class="stat-value">${stats.totalAttempts}</div>
-            <div class="stat-label">Total Attempts</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.totalTests}</div>
-            <div class="stat-label">Unique Tests</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.averageScore}%</div>
-            <div class="stat-label">Avg Score</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.averageAccuracy}%</div>
-            <div class="stat-label">Avg Accuracy</div>
-          </div>
-        `;
-
-        // Render history list
-        container.innerHTML = `
-          <div class="history-list">
-            ${history.map((attempt, index) => `
-              <div class="history-item" data-index="${index}">
-                <div class="history-info">
-                  <div class="history-title">${attempt.test_title || 'Untitled Test'}</div>
-                  <div class="history-meta">
-                    <span>📅 ${ApnaMock.utils.formatDate(attempt.submitted_at || attempt.attempted_at)}</span>
-                    <span>⏱️ ${ApnaMock.utils.formatDuration(attempt.timeTaken || 0)}</span>
-                    <span>✅ ${attempt.correct || 0}/${attempt.totalMarks || 0} correct</span>
-                  </div>
-                </div>
-                <div class="history-score">
-                  <div class="history-score-value">${attempt.percentage || 0}%</div>
-                  <div class="history-score-label">Accuracy</div>
-                </div>
-                <div class="history-actions">
-                  <a href="quiz.html?test=${attempt.test_id}" class="history-btn history-btn-primary">Retake</a>
-                  <button class="history-btn history-btn-danger" data-index="${index}" title="Delete">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-
-        // Add delete event listeners
-        container.querySelectorAll('.history-btn-danger').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const index = parseInt(btn.dataset.index);
-            const history = ApnaMock.history.getAll();
-            const attemptId = history[index]?.attempt_id;
-            if (attemptId && confirm('Delete this attempt?')) {
-              ApnaMock.history.delete(attemptId);
-              renderHistory();
+      // Also migrate abandoned/in-progress attempts
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(CONFIG.STORAGE_PREFIX + 'quiz_progress_')) {
+          try {
+            const raw = localStorage.getItem(key);
+            const data = JSON.parse(raw);
+            const answeredCount = Object.keys(data.answers || {}).length;
+            
+            if (answeredCount > 0) {
+              const attemptId = `atm_prog_${data.savedAt}_${data.testId}`;
+              const historyItem = {
+                attemptId: attemptId,
+                testId: data.testId,
+                testTitle: `Incomplete Test (${data.testId})`, // Usually fetched from index in real app
+                exam: 'General',
+                language: data.language,
+                date: data.savedAt,
+                score: 0, accuracy: 0, totalQuestions: 0,
+                attempted: answeredCount, correct: 0, wrong: 0, skipped: 0, timeTaken: 0, totalMarks: 0,
+                status: 'Abandoned'
+              };
+              await saveToHistoryDB(historyItem);
+              migrationOccurred = true;
             }
-          });
+          } catch(e) {}
+        }
+      }
+      return migrationOccurred;
+    }
+
+    function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+    function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
+
+    /* ============================================================
+       TOAST & POPUPS
+    ============================================================ */
+    function showToast(message, type = 'info', duration = 2500) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
+
+    function openOverlay(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    
+    document.querySelectorAll('.overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay.id); });
+    });
+
+    /* ============================================================
+       FILTER DRILL-DOWN LOGIC (POPUP 1 & 2)
+    ============================================================ */
+    document.getElementById('filterBtn').addEventListener('click', () => { openOverlay('filterMenuOverlay'); });
+
+    function openFilterDetail(type, titleText) {
+      closeOverlay('filterMenuOverlay');
+      document.querySelectorAll('.detail-section').forEach(el => el.style.display = 'none');
+      document.getElementById(`detail-${type}`).style.display = 'block';
+      document.getElementById('filterDetailTitle').textContent = titleText;
+      openOverlay('filterDetailOverlay');
+    }
+
+    function closeFilterDetail() { closeOverlay('filterDetailOverlay'); openOverlay('filterMenuOverlay'); }
+
+    function updateFilterBadges() {
+      const counts = {
+        status: document.querySelectorAll('#filterStatus .selected').length,
+        exam: document.querySelectorAll('#filterExams .selected').length,
+        date: document.querySelectorAll('#filterDate .selected').length
+      };
+      for (const [key, count] of Object.entries(counts)) {
+        const badge = document.getElementById(`badge-${key}`);
+        if (badge) { badge.textContent = count; badge.classList.toggle('active', count > 0); }
+      }
+    }
+
+    document.querySelectorAll('#filterDate .filter-chip-select, #filterStatus .filter-chip-select').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parentId = btn.closest('.filter-chips-wrap').id;
+        if(parentId === 'filterDate') {
+           document.querySelectorAll(`#${parentId} .filter-chip-select`).forEach(b => b.classList.remove('selected'));
+        }
+        btn.classList.toggle('selected');
+        updateFilterBadges();
+      });
+    });
+
+    document.getElementById('filterClearAll').addEventListener('click', () => {
+      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected'));
+      updateFilterBadges();
+    });
+
+    document.getElementById('filterApply').addEventListener('click', () => {
+      const newFilters = { status: [], exam: [], date: null };
+      document.querySelectorAll('#filterStatus .filter-chip-select.selected').forEach(btn => newFilters.status.push(btn.dataset.value));
+      document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => newFilters.exam.push(btn.dataset.value));
+      const dateSelected = document.querySelector('#filterDate .filter-chip-select.selected');
+      if (dateSelected) newFilters.date = dateSelected.dataset.value;
+ 
+      State.filters = newFilters;
+      closeOverlay('filterMenuOverlay');
+      renderActiveFilters();
+      applyFiltersAndSort();
+    });
+
+    /* ============================================================
+       INITIALIZATION
+    ============================================================ */
+    async function initHistory() {
+      // Setup Theme
+      const savedTheme = storageGet('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
+      }
+
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        storageSet('theme', isDark ? 'dark' : 'light');
+      });
+
+      document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+        document.querySelector('.site-nav').classList.toggle('mobile-open');
+      });
+
+      // Migrate any missing localStorage data first
+      await migrateLocalStorageHistory();
+
+      // Load Data
+      const rawData = await getAllHistory();
+      
+      // Compute Best/Latest logic flags
+      const testGroups = {};
+      rawData.forEach(item => {
+        if (!testGroups[item.testId]) testGroups[item.testId] = [];
+        testGroups[item.testId].push(item);
+      });
+
+      State.allHistory = rawData.map(item => {
+        const siblings = testGroups[item.testId];
+        
+        // Find latest
+        const latestTime = Math.max(...siblings.map(s => s.date || 0));
+        item.isLatest = (item.date === latestTime);
+
+        // Find best
+        if (item.status === 'Completed') {
+            const bestScore = Math.max(...siblings.filter(s => s.status==='Completed').map(s => s.score || 0));
+            item.isBest = (item.score === bestScore && item.score > 0);
+            
+            // Find improvement vs previous chronologically
+            const completedSiblings = siblings.filter(s => s.status === 'Completed').sort((a,b) => (a.date||0) - (b.date||0));
+            const myIndex = completedSiblings.findIndex(s => s.attemptId === item.attemptId);
+            if (myIndex > 0) {
+               item.improvement = (item.score || 0) - (completedSiblings[myIndex - 1].score || 0);
+               item.accImprovement = (item.accuracy || 0) - (completedSiblings[myIndex - 1].accuracy || 0);
+            }
+        }
+        return item;
+      }).sort((a, b) => (b.date || 0) - (a.date || 0));
+      
+      buildFilterOptions();
+      updateDashboardStats();
+      applySearchAndRender();
+    }
+
+    /* ============================================================
+       DASHBOARD SUMMARY & CHART
+    ============================================================ */
+    function updateDashboardStats() {
+      const data = State.allHistory;
+      if(data.length === 0) return;
+
+      const completed = data.filter(d => d.status === 'Completed');
+      
+      document.getElementById('statAttempts').textContent = data.length;
+      document.getElementById('statCompleted').textContent = completed.length;
+      
+      if(completed.length > 0) {
+        document.getElementById('dashboardGrid').style.display = 'grid';
+        
+        const bestScore = Math.max(...completed.map(d => d.score || 0));
+        document.getElementById('statBestScore').textContent = bestScore;
+
+        const sumAcc = completed.reduce((sum, d) => sum + (d.accuracy || 0), 0);
+        document.getElementById('statAccuracy').textContent = Math.round(sumAcc / completed.length) + '%';
+
+        const sumTime = completed.reduce((sum, d) => sum + (d.timeTaken || 0), 0);
+        const avgTime = Math.round(sumTime / completed.length);
+        document.getElementById('statAvgTime').textContent = `${Math.floor(avgTime/60)}m ${avgTime%60}s`;
+
+        renderChart(completed);
+      }
+    }
+
+    function renderChart(completedData) {
+      const ctx = document.getElementById('trendChart').getContext('2d');
+      if (State.chartInstance) State.chartInstance.destroy();
+
+      // Take last 10 attempts chronologically
+      const chartData = [...completedData].sort((a,b) => (a.date||0) - (b.date||0)).slice(-10);
+
+      const labels = chartData.map((d, i) => `Test ${i+1}`);
+      const accuracies = chartData.map(d => d.accuracy || 0);
+
+      State.chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Accuracy (%)',
+            data: accuracies,
+            borderColor: '#1a56db',
+            backgroundColor: 'rgba(26, 86, 219, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#1a56db',
+            pointRadius: 4,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 100, ticks: { font: {size: 10} } },
+            x: { ticks: { font: {size: 10} } }
+          }
+        }
+      });
+    }
+
+    /* ============================================================
+       FILTER OPTIONS BUILDER
+    ============================================================ */
+    function buildFilterOptions() {
+      const exams = [...new Set(State.allHistory.map(f => f.exam).filter(Boolean))];
+      renderChipGroup('filterExams', exams, 'exam');
+    }
+
+    function renderChipGroup(containerId, values, type) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = values.map(value => `<button class="filter-chip-select" data-type="${type}" data-value="${escapeHTML(value)}">${escapeHTML(value)}</button>`).join('');
+      container.querySelectorAll('.filter-chip-select').forEach(btn => {
+        btn.addEventListener('click', () => { btn.classList.toggle('selected'); updateFilterBadges(); });
+      });
+    }
+
+    /* ============================================================
+       SEARCH & FILTER LOGIC
+    ============================================================ */
+    function applySearchAndRender() { applyFiltersAndSort(); }
+
+    function applyFiltersAndSort() {
+      let filtered = [...State.allHistory];
+
+      if (State.searchQuery) {
+        const q = State.searchQuery.toLowerCase();
+        filtered = filtered.filter(item => {
+          const tTitle = (item.testTitle || '').toLowerCase();
+          const tExam = (item.exam || '').toLowerCase();
+          return tTitle.includes(q) || tExam.includes(q);
         });
       }
 
-      renderHistory();
-    })();
+      if (State.filters.status.length) filtered = filtered.filter(f => State.filters.status.includes(f.status));
+      if (State.filters.exam.length) filtered = filtered.filter(f => State.filters.exam.includes(f.exam));
+      
+      if (State.filters.date) {
+        const now = Date.now();
+        const oneDay = 24 * 60 * 60 * 1000;
+        let limit = 0;
+        if (State.filters.date === 'today') limit = now - oneDay;
+        if (State.filters.date === 'week') limit = now - (7 * oneDay);
+        if (State.filters.date === 'month') limit = now - (30 * oneDay);
+        filtered = filtered.filter(f => (f.date || 0) >= limit);
+      }
+
+      filtered.sort((a, b) => {
+        switch (State.sort) {
+          case 'date-desc': return (b.date || 0) - (a.date || 0);
+          case 'date-asc': return (a.date || 0) - (b.date || 0);
+          case 'score-desc': return (b.score || 0) - (a.score || 0);
+          case 'accuracy-desc': return (b.accuracy || 0) - (a.accuracy || 0);
+          default: return 0;
+        }
+      });
+
+      State.filteredHistory = filtered;
+      State.displayedCount = 0;
+
+      if (State.allHistory.length > 0) document.getElementById('controlsBar').style.display = 'flex';
+      else document.getElementById('controlsBar').style.display = 'none';
+
+      const list = document.getElementById('historyList');
+      list.innerHTML = '';
+
+      if (State.filteredHistory.length === 0) {
+        renderEmptyState();
+        document.getElementById('loadMoreWrap').style.display = 'none';
+        return;
+      }
+
+      loadMoreHistory();
+    }
+
+    let searchDebounce;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const val = e.target.value;
+      State.searchQuery = val;
+      document.getElementById('searchClear').style.display = val ? 'block' : 'none';
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => { applyFiltersAndSort(); }, 300);
+    });
+
+    document.getElementById('searchClear').addEventListener('click', () => {
+      clearTimeout(searchDebounce);
+      document.getElementById('searchInput').value = '';
+      State.searchQuery = '';
+      document.getElementById('searchClear').style.display = 'none';
+      applyFiltersAndSort();
+    });
+
+    /* ============================================================
+       ACTIVE FILTERS RENDER
+    ============================================================ */
+    function renderActiveFilters() {
+      const container = document.getElementById('activeFilters');
+      const chips = [];
+      const typeLabels = { status: 'Status', exam: 'Exam' };
+ 
+      ['status', 'exam'].forEach(type => {
+        (State.filters[type] || []).forEach(value => {
+          chips.push(`<div class="filter-chip"><span>${typeLabels[type]}: ${escapeHTML(value)}</span><button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHTML(value)}')"><i class="fa-solid fa-xmark"></i></button></div>`);
+        });
+      });
+ 
+      if (State.filters.date) {
+        const dateLabels = { today: 'Today', week: 'Last 7 Days', month: 'Last 30 Days' };
+        chips.push(`<div class="filter-chip"><span>Date: ${dateLabels[State.filters.date]}</span><button class="filter-chip-remove" onclick="removeFilter('date',null)"><i class="fa-solid fa-xmark"></i></button></div>`);
+      }
+ 
+      if (chips.length) chips.push(`<button class="clear-all-btn" onclick="clearAllFilters()">Clear All</button>`);
+ 
+      container.innerHTML = chips.join('');
+      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
+      const badge = document.getElementById('filterBadge');
+      const filterBtn = document.getElementById('filterBtn');
+ 
+      if (totalFilters > 0) { badge.textContent = totalFilters; badge.style.display = 'inline-flex'; filterBtn.classList.add('active'); } 
+      else { badge.style.display = 'none'; filterBtn.classList.remove('active'); }
+    }
+
+    function removeFilter(type, value) {
+      if (type === 'date') { State.filters.date = null; document.querySelectorAll('#filterDate .filter-chip-select').forEach(b => b.classList.remove('selected')); } 
+      else if (State.filters[type]) {
+        State.filters[type] = State.filters[type].filter(v => String(v) !== String(value));
+        const containerId = type === 'exam' ? 'filterExams' : 'filterStatus';
+        const chipToDeselect = document.querySelector(`#${containerId} .filter-chip-select[data-value="${value}"]`);
+        if (chipToDeselect) chipToDeselect.classList.remove('selected');
+      }
+      updateFilterBadges(); renderActiveFilters(); applyFiltersAndSort();
+    }
+
+    function clearAllFilters() {
+      State.filters = { status: [], exam: [], date: null }; State.searchQuery = '';
+      document.getElementById('searchInput').value = ''; document.getElementById('searchClear').style.display = 'none';
+      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected'));
+      updateFilterBadges(); renderActiveFilters(); applyFiltersAndSort();
+    }
+
+    /* ============================================================
+       SORT POPUP LOGIC
+    ============================================================ */
+    document.getElementById('sortBtn').addEventListener('click', () => openOverlay('sortOverlay'));
+    document.getElementById('sortClose').addEventListener('click', () => closeOverlay('sortOverlay'));
+    document.querySelectorAll('.sort-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.sort-option').forEach(o => { o.classList.remove('selected'); o.querySelector('i.fa-check').style.display = 'none'; });
+        opt.classList.add('selected'); opt.querySelector('i.fa-check').style.display = 'block';
+      });
+    });
+    document.getElementById('sortApply').addEventListener('click', () => {
+      const selected = document.querySelector('.sort-option.selected');
+      State.sort = selected ? selected.dataset.sort : 'date-desc';
+      closeOverlay('sortOverlay'); applyFiltersAndSort();
+    });
+
+    /* ============================================================
+       RENDERING LOGIC
+    ============================================================ */
+    function renderEmptyState() {
+      const list = document.getElementById('historyList');
+      if (State.allHistory.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div class="empty-title">No Attempts Found</div>
+            <div class="empty-subtitle">Start your first mock test to build your performance history.</div>
+            <a href="/tests.html" class="btn btn-primary" style="margin-top:10px"><i class="fa-solid fa-play"></i> Start Practicing</a>
+          </div>
+        `;
+      } else {
+        list.innerHTML = `
+          <div class="empty-state" style="padding:40px 20px;">
+            <div class="empty-icon" style="width:48px;height:48px;font-size:18px;background:var(--bg-muted);color:var(--text-muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="empty-title">No matches found</div>
+            <div class="empty-subtitle">We couldn't find any attempts matching your search or filters.</div>
+            <button class="btn btn-outline" style="margin-top:10px" onclick="clearAllFilters()">Clear Filters</button>
+          </div>
+        `;
+      }
+    }
+
+    function loadMoreHistory() {
+      const start = State.displayedCount;
+      const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredHistory.length);
+      const batch = State.filteredHistory.slice(start, end);
+
+      const list = document.getElementById('historyList');
+      batch.forEach(item => { list.insertAdjacentHTML('beforeend', buildHistoryCard(item)); });
+
+      State.displayedCount = end;
+      updateLoadMore();
+    }
+
+    function updateLoadMore() {
+      const wrap = document.getElementById('loadMoreWrap');
+      const text = document.getElementById('loadMoreText');
+      const remaining = State.filteredHistory.length - State.displayedCount;
+      if (remaining > 0) { wrap.style.display = 'flex'; text.textContent = `${remaining} more attempt${remaining !== 1 ? 's' : ''}`; } 
+      else { wrap.style.display = 'none'; }
+    }
+    document.getElementById('loadMoreBtn').addEventListener('click', loadMoreHistory);
+
+    /* ============================================================
+       CARD BUILDER
+    ============================================================ */
+    function buildHistoryCard(item) {
+      const dateSaved = new Date(item.date || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      const timeSaved = new Date(item.date || Date.now()).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+      let statusHtml = '';
+      if (item.status === 'Completed') statusHtml = `<span class="badge-status completed"><i class="fa-solid fa-check"></i> Completed</span>`;
+      else statusHtml = `<span class="badge-status abandoned"><i class="fa-solid fa-xmark"></i> Incomplete</span>`;
+
+      let badgesHtml = '';
+      if (item.isLatest && item.status === 'Completed') badgesHtml += `<span class="badge-feature latest"><i class="fa-solid fa-clock"></i> Latest Attempt</span>`;
+      if (item.isBest) badgesHtml += `<span class="badge-feature best"><i class="fa-solid fa-trophy"></i> Best Attempt</span>`;
+      
+      let improvementHtml = '';
+      if (item.improvement !== undefined) {
+          if (item.improvement > 0) improvementHtml = `<span class="improvement-tag"><i class="fa-solid fa-arrow-trend-up"></i> +${item.improvement} Marks</span>`;
+          else if (item.improvement < 0) improvementHtml = `<span class="improvement-tag negative"><i class="fa-solid fa-arrow-trend-down"></i> ${item.improvement} Marks</span>`;
+      }
+
+      const timeTakenFormatted = item.timeTaken ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s` : '—';
+
+      const isCompleted = item.status === 'Completed';
+
+      return `
+        <div class="history-card" id="card-${item.attemptId}">
+          
+          <div class="card-top">
+            <div class="card-meta-main">
+              <div class="card-title">${escapeHTML(item.testTitle)}</div>
+              <div class="card-subtitle">
+                <i class="fa-solid fa-graduation-cap"></i> ${escapeHTML(item.exam)}
+                <span style="color:var(--border-strong)">|</span>
+                <i class="fa-regular fa-calendar"></i> ${dateSaved} at ${timeSaved}
+              </div>
+            </div>
+            <div class="card-tags">
+              ${improvementHtml}
+              ${badgesHtml}
+              ${statusHtml}
+            </div>
+          </div>
+
+          <div class="card-stats-grid">
+            <div class="stat-mini">
+              <span class="stat-mini-label">Score</span>
+              <span class="stat-mini-value score">${isCompleted ? item.score : '—'}</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-label">Accuracy</span>
+              <span class="stat-mini-value accuracy">${isCompleted ? item.accuracy + '%' : '—'}</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-label">Correct</span>
+              <span class="stat-mini-value" style="color:var(--success)">${isCompleted ? item.correct : '—'}</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-label">Wrong</span>
+              <span class="stat-mini-value" style="color:var(--error)">${isCompleted ? item.wrong : '—'}</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-label">Time Taken</span>
+              <span class="stat-mini-value" style="font-family:monospace">${isCompleted ? timeTakenFormatted : '—'}</span>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            ${isCompleted ? `<a href="/result.html?test=${item.testId}&t=${item.date}" class="btn btn-ghost"><i class="fa-solid fa-chart-simple"></i> View Result</a>` : ''}
+            <a href="/quiz.html?test=${item.testId}" class="btn btn-outline"><i class="fa-solid fa-rotate-right"></i> Reattempt</a>
+            <button class="btn btn-ghost" style="color:var(--error);border-color:transparent" onclick="promptDelete('${item.attemptId}')"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       DELETE LOGIC
+    ============================================================ */
+    function promptDelete(attemptId) {
+      State.pendingDeleteId = attemptId;
+      openOverlay('deleteOverlay');
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+      const id = State.pendingDeleteId;
+      if (!id) return;
+
+      await removeHistoryFromDB(id);
+
+      State.allHistory = State.allHistory.filter(f => f.attemptId !== id);
+      State.filteredHistory = State.filteredHistory.filter(f => f.attemptId !== id);
+
+      const card = document.getElementById(`card-${id}`);
+      if (card) {
+        card.style.transition = 'all 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          card.remove();
+          updateDashboardStats();
+          if (State.allHistory.length === 0 || State.filteredHistory.length === 0) applyFiltersAndSort();
+        }, 300);
+      }
+
+      closeOverlay('deleteOverlay');
+      showToast('Attempt deleted', 'info');
+      State.pendingDeleteId = null;
+    });
+
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+      openOverlay('clearAllOverlay');
+    });
+
+    document.getElementById('confirmClearAllBtn').addEventListener('click', async () => {
+      await clearAllHistoryDB();
+      State.allHistory = [];
+      State.filteredHistory = [];
+      closeOverlay('clearAllOverlay');
+      document.getElementById('dashboardGrid').style.display = 'none';
+      applyFiltersAndSort();
+      showToast('All history cleared', 'success');
+    });
+
+    /* ============================================================
+       BOOTSTRAP
+    ============================================================ */
+    initHistory();
   </script>
 </body>
 </html>
