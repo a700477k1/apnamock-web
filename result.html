@@ -617,18 +617,17 @@
        TOAST
     ============================================================ */
     .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
-    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; }
+    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; text-align: center; }
     @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     .toast.success { background: var(--success); }
     .toast.warning { background: var(--warning); }
     .toast.error { background: var(--error); }
+    .toast.info { background: var(--primary); }
 
     /* ============================================================
        FOOTER
     ============================================================ */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
-    
-    /* Dark Mode Footer Fix */
     body.dark-mode .site-footer { color: #0f172a; }
     body.dark-mode .footer-brand-name { color: #0f172a; }
     body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
@@ -858,7 +857,7 @@
        INDEXED DB WRAPPER FOR FAVORITES
     ============================================================ */
     const DB_NAME = 'ApnaMockDB';
-    const DB_VERSION = 1;
+    const DB_VERSION = 2;
     const STORE_NAME = 'favorites';
 
     function initDB() {
@@ -868,6 +867,9 @@
           const db = e.target.result;
           if (!db.objectStoreNames.contains(STORE_NAME)) {
             db.createObjectStore(STORE_NAME, { keyPath: 'qId' });
+          }
+          if (!db.objectStoreNames.contains('history')) {
+            db.createObjectStore('history', { keyPath: 'attemptId' });
           }
         };
         request.onsuccess = (e) => resolve(e.target.result);
@@ -1089,13 +1091,15 @@
       const similarTest = R.testData?.similarTests?.[0];
 
       // Fix Time Calculation to handle massive resumed times securely
-      let validTimeTaken = R.timeTaken || 0;
-      const maxTimeSecs = (R.testData?.duration || 0) * 60;
+      let validTimeTaken = parseInt(R.timeTaken) || 0;
+      const maxTimeSecs = (parseFloat(R.testData?.duration) || parseInt(R.totalQuestions) || 60) * 60;
       
-      if (maxTimeSecs > 0 && validTimeTaken > maxTimeSecs) {
-          const attemptedRatio = (R.correct + R.wrong) / (R.totalQuestions || 1);
-          validTimeTaken = Math.round(maxTimeSecs * attemptedRatio);
-          if (validTimeTaken === 0 && (R.correct + R.wrong) > 0) validTimeTaken = 1;
+      if (validTimeTaken > maxTimeSecs) {
+          const attempted = (parseInt(R.correct) || 0) + (parseInt(R.wrong) || 0);
+          const totalQs = parseInt(R.totalQuestions) || 1;
+          validTimeTaken = Math.round(maxTimeSecs * (attempted / totalQs));
+          if (validTimeTaken < (attempted * 15)) validTimeTaken = attempted * 15;
+          if (validTimeTaken > maxTimeSecs) validTimeTaken = maxTimeSecs;
       }
 
       const timeTakenFormatted = validTimeTaken > 0
@@ -1556,9 +1560,6 @@
         btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
         showToast('Question saved to favorites!', 'success');
       }
-
-      // Update local storage reference index
-      storageSet('favorites_ids', [...Result.favorites]);
     }
 
     /* ============================================================
