@@ -345,8 +345,8 @@
     ============================================================ */
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 46px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap; cursor: pointer; border: 1.5px solid transparent; }
     .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); border-color: var(--primary); }
-    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,86,219,0.35); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); border-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,86,219,0.35); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 
     /* ============================================================
        TOAST
@@ -519,15 +519,11 @@
         <div class="builder-row">
           <div class="builder-row-label">
             Target Exam
-            <span class="builder-row-desc">Filter questions by exam type (Optional).</span>
+            <span class="builder-row-desc">Filter questions by exam type.</span>
           </div>
           <div class="builder-controls">
             <div class="chip-group" id="filter-exam">
-              <div class="chip selected" data-val="all">All Exams</div>
-              <div class="chip" data-val="SSC">SSC</div>
-              <div class="chip" data-val="Banking">Banking</div>
-              <div class="chip" data-val="Railway">Railway</div>
-              <div class="chip" data-val="State">State Exams</div>
+              <div style="font-size:13px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading exams...</div>
             </div>
           </div>
         </div>
@@ -535,15 +531,12 @@
         <!-- Subjects -->
         <div class="builder-row">
           <div class="builder-row-label">
-            Subjects
+            Subjects / Sections
             <span class="builder-row-desc">Select one or more subjects to focus on.</span>
           </div>
           <div class="builder-controls">
             <div class="chip-group" id="filter-subject">
-              <div class="chip selected" data-val="General Intelligence">General Intelligence</div>
-              <div class="chip selected" data-val="Quantitative Aptitude">Quantitative Aptitude</div>
-              <div class="chip selected" data-val="English Language">English Language</div>
-              <div class="chip selected" data-val="General Awareness">General Awareness</div>
+              <div style="font-size:13px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading subjects...</div>
             </div>
           </div>
         </div>
@@ -556,7 +549,7 @@
           </div>
           <div class="builder-controls">
             <div class="chip-group" id="filter-difficulty">
-              <div class="chip diff-mixed selected" data-val="mixed">Mixed</div>
+              <div class="chip diff-mixed" data-val="mixed">Mixed</div>
               <div class="chip diff-easy" data-val="Easy">Easy</div>
               <div class="chip diff-med" data-val="Moderate">Moderate</div>
               <div class="chip diff-hard" data-val="Hard">Hard</div>
@@ -611,13 +604,13 @@
       
       <div class="builder-footer">
         <div class="availability-status" id="availabilityStatus">
-          <div class="avail-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="avail-icon warning"><i class="fa-solid fa-circle-exclamation"></i></div>
           <div class="avail-text">
-            <span class="avail-title" id="availTitle">Ready to Generate</span>
-            <span class="avail-desc" id="availDesc">Sufficient questions available in the pool.</span>
+            <span class="avail-title" id="availTitle">Incomplete Selection</span>
+            <span class="avail-desc" id="availDesc">Select Exam, Subject(s), and Difficulty to proceed.</span>
           </div>
         </div>
-        <button class="btn btn-primary" id="generateBtn" onclick="generateTest()">
+        <button class="btn btn-primary" id="generateBtn" onclick="generateTest()" disabled>
           <i class="fa-solid fa-bolt"></i> Generate & Start
         </button>
       </div>
@@ -678,14 +671,25 @@
   ============================================================ -->
   <script>
     /* ============================================================
+       XSS UTILITY
+    ============================================================ */
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    /* ============================================================
        STATE & CONFIG
     ============================================================ */
-    const CONFIG = { STORAGE_PREFIX: 'apnamock_' };
+    const CONFIG = { 
+      STORAGE_PREFIX: 'apnamock_',
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
+    };
 
     const State = {
-      exam: 'all',
-      subjects: ['General Intelligence', 'Quantitative Aptitude', 'English Language', 'General Awareness'],
-      difficulty: 'mixed',
+      exam: null, // Initially blank
+      subjects: [], // Initially blank
+      difficulty: null, // Initially blank
       qCount: 20,
       timeStrategy: 'auto', // auto | custom
       customTime: 20
@@ -704,6 +708,84 @@
       toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i> ${message}`;
       container.appendChild(toast);
       setTimeout(() => toast.remove(), duration);
+    }
+
+    /* ============================================================
+       DATA FETCHING & DYNAMIC FILTER BUILDING
+    ============================================================ */
+    async function loadGlobalData() {
+      try {
+        const url = `${CONFIG.CDN_BASE}data/tests-index.json?t=${Date.now()}`;
+        const res = await fetch(url, { cache: 'force-cache' });
+        if (!res.ok) throw new Error('Network error');
+        
+        const data = await res.json();
+        const tests = Array.isArray(data.tests) ? data.tests : (Array.isArray(data) ? data : []);
+        
+        buildDynamicFilters(tests);
+
+      } catch (err) {
+        console.error("Failed to fetch dynamic filters", err);
+        // Fallback options in case repo data fails to load
+        const fbContainerExam = document.getElementById('filter-exam');
+        fbContainerExam.innerHTML = `
+          <div class="chip" data-val="all">All Exams</div>
+          <div class="chip" data-val="SSC">SSC</div>
+          <div class="chip" data-val="Banking">Banking</div>
+        `;
+        const fbContainerSubject = document.getElementById('filter-subject');
+        fbContainerSubject.innerHTML = `
+          <div class="chip" data-val="General Intelligence">General Intelligence</div>
+          <div class="chip" data-val="Quantitative Aptitude">Quantitative Aptitude</div>
+          <div class="chip" data-val="English Language">English Language</div>
+          <div class="chip" data-val="General Awareness">General Awareness</div>
+        `;
+        bindDynamicListeners();
+      }
+    }
+
+    function buildDynamicFilters(tests) {
+      const examSet = new Set();
+      const subjectSet = new Set();
+
+      tests.forEach(t => {
+        // Collect Unique Exams
+        if (t.exam_group) examSet.add(t.exam_group);
+        else if (t.exam) examSet.add(t.exam);
+
+        // Collect Unique Subjects/Sections
+        if (t.subject) subjectSet.add(t.subject);
+        if (t.sections && Array.isArray(t.sections)) {
+          t.sections.forEach(sec => {
+            const secName = sec.title?.en || sec.title || sec.section_id;
+            if (secName) subjectSet.add(secName);
+          });
+        }
+      });
+
+      const examContainer = document.getElementById('filter-exam');
+      examContainer.innerHTML = '<div class="chip" data-val="all">All Exams</div>' + 
+          [...examSet].map(e => `<div class="chip" data-val="${escapeHTML(e)}">${escapeHTML(e)}</div>`).join('');
+
+      const subjectContainer = document.getElementById('filter-subject');
+      subjectContainer.innerHTML = [...subjectSet].map(s => `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`).join('');
+
+      bindDynamicListeners();
+    }
+
+    function bindDynamicListeners() {
+      // Re-bind Exam single select
+      setupSingleSelect('filter-exam', (val) => { State.exam = val; checkAvailability(); });
+
+      // Re-bind Subject multi select
+      const subjChips = document.querySelectorAll('#filter-subject .chip');
+      subjChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('selected');
+          State.subjects = Array.from(document.querySelectorAll('#filter-subject .chip.selected')).map(c => c.dataset.val);
+          checkAvailability();
+        });
+      });
     }
 
     /* ============================================================
@@ -729,25 +811,8 @@
         document.querySelector('.site-nav').classList.toggle('mobile-open');
       });
 
-      // Chip Selection Logic (Single Select)
-      setupSingleSelect('filter-exam', (val) => { State.exam = val; checkAvailability(); });
+      // Difficulty single select (Static HTML chips, but NO default selection)
       setupSingleSelect('filter-difficulty', (val) => { State.difficulty = val; checkAvailability(); });
-
-      // Chip Selection Logic (Multi Select for Subjects)
-      const subjChips = document.querySelectorAll('#filter-subject .chip');
-      subjChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          chip.classList.toggle('selected');
-          State.subjects = Array.from(document.querySelectorAll('#filter-subject .chip.selected')).map(c => c.dataset.val);
-          if (State.subjects.length === 0) {
-             // Force at least one selection
-             chip.classList.add('selected');
-             State.subjects = [chip.dataset.val];
-             showToast('Select at least one subject', 'warning');
-          }
-          checkAvailability();
-        });
-      });
 
       // Question Count Slider
       const qSlider = document.getElementById('qCountSlider');
@@ -812,7 +877,7 @@
     }
 
     /* ============================================================
-       PRESET APPLY LOGIC
+       PRESET APPLY LOGIC (WITH FUZZY MATCH FOR DYNAMIC SUBJECTS)
     ============================================================ */
     function applyPreset(type) {
       const qSlider = document.getElementById('qCountSlider');
@@ -821,17 +886,21 @@
 
       if (type === 'mix') {
         selectSingleChip('filter-exam', 'all');
-        selectAllSubjects();
+        selectAllSubjects(); // Selects all available subjects dynamically
         selectSingleChip('filter-difficulty', 'mixed');
         State.qCount = 20;
       } else if (type === 'sprint') {
         selectSingleChip('filter-exam', 'all');
-        selectOnlySubjects(['General Awareness']);
+        // Fuzzy match for GK/Current Affairs
+        const matched = selectOnlySubjectsMatch(['Awareness', 'Current', 'GK', 'General']);
+        if(!matched) selectAllSubjects(); // fallback
         selectSingleChip('filter-difficulty', 'mixed');
         State.qCount = 15;
       } else if (type === 'challenge') {
         selectSingleChip('filter-exam', 'all');
-        selectOnlySubjects(['General Intelligence', 'Quantitative Aptitude']);
+        // Fuzzy match for Hard subjects
+        const matched = selectOnlySubjectsMatch(['Intelligence', 'Reasoning', 'Math', 'Quantitative']);
+        if(!matched) selectAllSubjects(); // fallback
         selectSingleChip('filter-difficulty', 'Hard');
         State.qCount = 25;
       }
@@ -843,7 +912,6 @@
       // Auto Time
       document.querySelector('[data-type="auto"]').click();
       if (type === 'sprint') {
-        // Sprint is faster, override to custom time
         document.querySelector('[data-type="custom"]').click();
         const tSlider = document.getElementById('timeSlider');
         State.customTime = 5;
@@ -876,32 +944,51 @@
       State.subjects = Array.from(chips).map(c => c.dataset.val);
     }
 
-    function selectOnlySubjects(subjArr) {
+    function selectOnlySubjectsMatch(keywords) {
       const chips = document.querySelectorAll('#filter-subject .chip');
+      let foundAny = false;
       chips.forEach(c => {
-        if(subjArr.includes(c.dataset.val)) c.classList.add('selected');
-        else c.classList.remove('selected');
+        const val = c.dataset.val.toLowerCase();
+        const matches = keywords.some(k => val.includes(k.toLowerCase()));
+        if(matches) {
+            c.classList.add('selected');
+            foundAny = true;
+        } else {
+            c.classList.remove('selected');
+        }
       });
-      State.subjects = [...subjArr];
+      State.subjects = Array.from(document.querySelectorAll('#filter-subject .chip.selected')).map(c => c.dataset.val);
+      return foundAny;
     }
 
     /* ============================================================
-       AVAILABILITY CHECK (MOCK)
+       AVAILABILITY CHECK (VALIDATION & MOCK RESPONSE)
     ============================================================ */
     function checkAvailability() {
-      // In a real app, this would query your indexedDB or fetch a meta JSON to see how many questions exist.
-      // For now, we simulate a large pool so it always works.
-      
-      let mockAvailable = 150; 
-      
-      // Artificial constraints for realism
-      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
-      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
-
+      const generateBtn = document.getElementById('generateBtn');
       const statusIcon = document.querySelector('.avail-icon');
       const statusTitle = document.getElementById('availTitle');
       const statusDesc = document.getElementById('availDesc');
-      const generateBtn = document.getElementById('generateBtn');
+
+      // 1. Strict Validation: Prevent generating until user selects all 3 parameters
+      if (!State.exam || State.subjects.length === 0 || !State.difficulty) {
+        statusIcon.className = 'avail-icon warning';
+        statusIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+        statusTitle.textContent = 'Incomplete Selection';
+        statusDesc.textContent = 'Select Exam, Subject(s), and Difficulty to proceed.';
+        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+        generateBtn.disabled = true;
+        return;
+      }
+
+      // If valid, enable button
+      generateBtn.disabled = false;
+
+      // 2. Mock Availability calculation based on selections
+      // (In a real scenario, this would filter against actual questions in memory)
+      let mockAvailable = 150; 
+      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
+      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
 
       if (State.qCount > mockAvailable) {
         statusIcon.className = 'avail-icon warning';
@@ -926,10 +1013,8 @@
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Compiling...`;
       btn.disabled = true;
 
-      // Calculate final duration
       let finalDuration = State.timeStrategy === 'auto' ? State.qCount : State.customTime;
       
-      // Determine final question count based on mock availability logic
       let finalQCount = State.qCount;
       let mockAvailable = 150; 
       if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
@@ -937,7 +1022,7 @@
       if (finalQCount > mockAvailable) finalQCount = mockAvailable;
 
       // -------------------------------------------------------------
-      // MOCK DATA GENERATOR (REPLACE WITH REAL FETCH LATER)
+      // MOCK DATA GENERATOR (REPLACE WITH REAL FETCH IN FUTURE)
       // -------------------------------------------------------------
       setTimeout(() => {
         
@@ -997,7 +1082,7 @@
        BOOTSTRAP
     ============================================================ */
     initUI();
-    checkAvailability();
+    loadGlobalData(); // Fetches dynamic exams/subjects
 
   </script>
 </body>
