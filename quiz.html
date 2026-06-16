@@ -91,9 +91,9 @@
       min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
     }
-
-    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    
     a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-muted); }
@@ -740,7 +740,7 @@
 
     .quiz-bottombar-inner {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(6, 1fr); /* 6 perfectly uniform columns */
       gap: 12px;
       padding-top: 12px;
       padding-bottom: 12px;
@@ -957,11 +957,40 @@
     .resume-icon { font-size: 36px; margin-bottom: 12px; }
 
     /* ============================================================
-       TOAST (FIXED BACKGROUND COLOR BUG)
+       BUTTON STYLES (GENERAL)
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 20px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: all 0.15s;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+    }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
+    .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.35); }
+    .btn-success { background: var(--success); color: #fff; box-shadow: 0 2px 8px rgba(22,163,74,0.2); }
+    .btn-success:hover { background: #15803d; }
+    .btn-danger { background: var(--error); color: #fff; box-shadow: 0 2px 8px rgba(220,38,38,0.2); }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .btn-full { width: 100%; }
+
+    /* ============================================================
+       TOAST
     ============================================================ */
     .toast-container {
       position: fixed;
-      bottom: 80px; 
+      bottom: 160px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 999;
@@ -971,13 +1000,11 @@
       align-items: center;
       pointer-events: none;
     }
-    
-    /* Fixed Toast Background for Dark Mode visibility */
     .toast {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #1e293b;
+      background: var(--text-primary);
       color: #fff;
       padding: 11px 18px;
       border-radius: var(--radius-lg);
@@ -987,18 +1014,18 @@
       animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
       max-width: 320px;
     }
-    body.dark-mode .toast { background: #cbd5e1; color: #0f172a; }
-
     @keyframes toast-in {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Important: explicitly setting colors for typed toasts */
-    .toast.success { background: var(--success); color: #fff; }
-    .toast.warning { background: var(--warning); color: #fff; }
-    .toast.error { background: var(--error); color: #fff; }
-    .toast.info { background: var(--primary); color: #fff; }
+    .toast.success { background: var(--success); }
+    .toast.warning { background: var(--warning); }
+    .toast.error { background: var(--error); }
+    
+    /* Dark Mode Text Color Fix for Default (Info) Toasts */
+    body.dark-mode .toast:not(.success):not(.warning):not(.error) {
+      color: #0f172a;
+    }
 
     /* ============================================================
        RESPONSIVE
@@ -1006,8 +1033,10 @@
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
 
+      /* Tighter spacing for headers */
       .site-header-inner { padding-top: 4px; padding-bottom: 4px; }
       
+      /* Keep Timer on the Right Side */
       .quiz-topbar-inner { 
         padding-top: 4px; 
         padding-bottom: 4px; 
@@ -1021,16 +1050,21 @@
         text-align: left;
       }
 
-      .quiz-timer { padding: 4px 8px; }
-      .timer-value { font-size: 14px; }
+      .quiz-timer {
+        padding: 4px 8px;
+      }
+      .timer-value {
+        font-size: 14px;
+      }
       
       .quiz-body {
         grid-template-columns: 1fr;
         padding-top: 16px;
-        padding-bottom: 220px;
+        padding-bottom: 220px; /* Increased padding to clear 3-row bottom bar */
       }
       .palette-panel { position: static; }
 
+      /* Mobile 2x3 Grid for Navigation Buttons */
       .quiz-bottombar-inner {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
@@ -1042,7 +1076,7 @@
         font-size: 13px;
         padding: 0 8px;
       }
-      .qbtn span { display: block !important; }
+      .qbtn span { display: block !important; } /* Force text visible */
     }
 
     @media (max-width: 480px) {
@@ -1487,6 +1521,20 @@
 
       Quiz.testId = getParam('test');
       if (!Quiz.testId) return showScreen1Error('No test ID specified. Please go back and select a test.');
+
+      // --- CUSTOM TEST INTERCEPTOR ---
+      if (Quiz.testId === 'custom') {
+        const customDataRaw = localStorage.getItem('apnamock_active_custom_test');
+        if (!customDataRaw) return showScreen1Error('Custom test data not found or expired.');
+        
+        Quiz.testData = JSON.parse(customDataRaw);
+        Quiz.testId = Quiz.testData.testId; 
+        Quiz.questions = Quiz.testData.questions || [];
+        populateScreen1();
+        checkResumeState();
+        return; 
+      }
+      // -------------------------------
 
       try {
         const indexRes = await fetch(`${CONFIG.CDN_BASE}data/tests-index.json`, { cache: 'force-cache' });
