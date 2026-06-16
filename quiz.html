@@ -91,9 +91,9 @@
       min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
     }
-    
-    a { text-decoration: none; color: inherit; }
+
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    a { text-decoration: none; color: inherit; }
 
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-muted); }
@@ -740,7 +740,7 @@
 
     .quiz-bottombar-inner {
       display: grid;
-      grid-template-columns: repeat(6, 1fr); /* 6 perfectly uniform columns */
+      grid-template-columns: repeat(6, 1fr);
       gap: 12px;
       padding-top: 12px;
       padding-bottom: 12px;
@@ -957,40 +957,11 @@
     .resume-icon { font-size: 36px; margin-bottom: 12px; }
 
     /* ============================================================
-       BUTTON STYLES (GENERAL)
-    ============================================================ */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 0 20px;
-      height: 42px;
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 600;
-      font-family: var(--font-body);
-      transition: all 0.15s;
-      white-space: nowrap;
-      cursor: pointer;
-      border: 1.5px solid transparent;
-    }
-    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
-    .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.35); }
-    .btn-success { background: var(--success); color: #fff; box-shadow: 0 2px 8px rgba(22,163,74,0.2); }
-    .btn-success:hover { background: #15803d; }
-    .btn-danger { background: var(--error); color: #fff; box-shadow: 0 2px 8px rgba(220,38,38,0.2); }
-    .btn-danger:hover { background: #b91c1c; }
-    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
-    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
-    .btn-full { width: 100%; }
-
-    /* ============================================================
-       TOAST
+       TOAST (FIXED BACKGROUND COLOR BUG)
     ============================================================ */
     .toast-container {
       position: fixed;
-      bottom: 160px;
+      bottom: 80px; 
       left: 50%;
       transform: translateX(-50%);
       z-index: 999;
@@ -1000,11 +971,13 @@
       align-items: center;
       pointer-events: none;
     }
+    
+    /* Fixed Toast Background for Dark Mode visibility */
     .toast {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: var(--text-primary);
+      background: #1e293b;
       color: #fff;
       padding: 11px 18px;
       border-radius: var(--radius-lg);
@@ -1014,13 +987,18 @@
       animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
       max-width: 320px;
     }
+    body.dark-mode .toast { background: #cbd5e1; color: #0f172a; }
+
     @keyframes toast-in {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .toast.success { background: var(--success); }
-    .toast.warning { background: var(--warning); }
-    .toast.error { background: var(--error); }
+
+    /* Important: explicitly setting colors for typed toasts */
+    .toast.success { background: var(--success); color: #fff; }
+    .toast.warning { background: var(--warning); color: #fff; }
+    .toast.error { background: var(--error); color: #fff; }
+    .toast.info { background: var(--primary); color: #fff; }
 
     /* ============================================================
        RESPONSIVE
@@ -1028,10 +1006,8 @@
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
 
-      /* Tighter spacing for headers */
       .site-header-inner { padding-top: 4px; padding-bottom: 4px; }
       
-      /* Keep Timer on the Right Side */
       .quiz-topbar-inner { 
         padding-top: 4px; 
         padding-bottom: 4px; 
@@ -1045,21 +1021,16 @@
         text-align: left;
       }
 
-      .quiz-timer {
-        padding: 4px 8px;
-      }
-      .timer-value {
-        font-size: 14px;
-      }
+      .quiz-timer { padding: 4px 8px; }
+      .timer-value { font-size: 14px; }
       
       .quiz-body {
         grid-template-columns: 1fr;
         padding-top: 16px;
-        padding-bottom: 220px; /* Increased padding to clear 3-row bottom bar */
+        padding-bottom: 220px;
       }
       .palette-panel { position: static; }
 
-      /* Mobile 2x3 Grid for Navigation Buttons */
       .quiz-bottombar-inner {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
@@ -1071,7 +1042,7 @@
         font-size: 13px;
         padding: 0 8px;
       }
-      .qbtn span { display: block !important; } /* Force text visible */
+      .qbtn span { display: block !important; }
     }
 
     @media (max-width: 480px) {
@@ -1084,9 +1055,6 @@
 
 <body>
 
-  <!-- ============================================================
-       SCREEN 1 — PRE-QUIZ INFO
-  ============================================================ -->
   <div class="screen active" id="screen1">
     <div class="preq-wrapper">
 
@@ -1124,7 +1092,6 @@
               <i class="fa-solid fa-language" style="color:var(--primary)"></i>
               Select Test Language
             </span>
-            <!-- Removed the selected state initially so user must choose -->
             <button class="lang-trigger" id="langTrigger" onclick="openOverlay('langOverlay')">
               <div class="lang-trigger-left">
                 <i class="fa-solid fa-globe"></i>
@@ -1207,7 +1174,6 @@
             </span>
           </label>
 
-          <!-- Button is no longer disabled so we can catch clicks and show an error -->
           <button class="btn btn-primary btn-full" id="startTestBtn" onclick="handleStartTest()">
             <i class="fa-solid fa-play"></i>
             Start Test
@@ -1217,12 +1183,8 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       SCREEN 2 — LIVE QUIZ
-  ============================================================ -->
   <div class="screen" id="screen2">
 
-    <!-- Independent Brand Header -->
     <header class="site-header">
       <div class="site-header-inner align-wrapper">
         <a href="/tests.html" class="brand">
@@ -1235,7 +1197,6 @@
       </div>
     </header>
 
-    <!-- Sticky Quiz Info Bar -->
     <div class="quiz-topbar">
       <div class="quiz-topbar-inner align-wrapper">
         <div class="quiz-title-wrap">
@@ -1243,7 +1204,6 @@
           <div class="quiz-topbar-meta">
             <span class="topbar-meta-item"><i class="fa-solid fa-list-ol"></i><span id="topbar-questions">—</span> Qs</span>
             <span class="topbar-meta-item"><i class="fa-solid fa-clock"></i><span id="topbar-duration">—</span> min</span>
-            <!-- Fixed Bug: Correct Total Marks calculation here -->
             <span class="topbar-meta-item"><i class="fa-solid fa-star"></i><span id="topbar-marks">—</span> Marks</span>
           </div>
         </div>
@@ -1258,17 +1218,13 @@
       </div>
     </div>
 
-    <!-- Section Tabs -->
     <div class="section-tabs-wrap">
       <div class="section-tabs align-wrapper" id="sectionTabs">
-        <!-- Tabs injected by JS -->
-      </div>
+        </div>
     </div>
 
-    <!-- Quiz Body -->
     <div class="quiz-body align-wrapper">
 
-      <!-- Left: Question Area -->
       <div class="question-area">
         <div class="question-card" id="questionCard">
           <div class="question-card-header">
@@ -1289,7 +1245,6 @@
         </div>
       </div>
 
-      <!-- Right: Palette Panel -->
       <div class="palette-panel" id="palettePanel">
         <div class="palette-card">
           <div class="palette-card-header"><div class="palette-card-title">Question Palette</div></div>
@@ -1324,7 +1279,6 @@
 
     </div>
 
-    <!-- Sticky Bottom Bar -->
     <div class="quiz-bottombar">
       <div class="quiz-bottombar-inner align-wrapper">
         <button class="qbtn qbtn-prev" id="btnPrev" onclick="goToPrev()">
@@ -1356,9 +1310,6 @@
 
   </div>
 
-  <!-- ============================================================
-       LANGUAGE POPUP
-  ============================================================ -->
   <div class="overlay" id="langOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1396,9 +1347,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       RESUME POPUP
-  ============================================================ -->
   <div class="overlay" id="resumeOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1424,9 +1372,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       SUBMIT POPUP
-  ============================================================ -->
   <div class="overlay" id="submitOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1452,9 +1397,6 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       QUIT POPUP
-  ============================================================ -->
   <div class="overlay" id="quitOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1475,17 +1417,11 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       TOAST CONTAINER
-  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- ============================================================
-       JAVASCRIPT
-  ============================================================ -->
   <script>
     /* ============================================================
-       XSS UTILITY (Security Fix)
+       XSS UTILITY 
     ============================================================ */
     function escapeHTML(str) {
       if (!str) return '';
@@ -1506,7 +1442,7 @@
     ============================================================ */
     const Quiz = {
       testId: null, testData: null, 
-      language: null, // Fixed: Force language selection initially
+      language: null, 
       selectedLanguagePending: null,
       questions: [], currentIndex: 0, currentSection: 0, answers: {}, marked: new Set(),
       visited: new Set(), timeLeft: 0, timerInterval: null, autoSaveTimeout: null,
@@ -1538,10 +1474,6 @@
 
     function getParam(key) { return new URLSearchParams(window.location.search).get(key); }
 
-    /* ============================================================
-       QUESTION ID HELPER (Fix for State Bleeding)
-    ============================================================ */
-    // Standardizes ID retrieval to prevent 'undefined' keys from overwriting everything globally
     function getQId(q, index) {
       return String(q.id || q.question_id || 'q_' + index);
     }
@@ -1579,7 +1511,7 @@
 
     function populateScreen1() {
       const t = Quiz.testData; 
-      const lang = Quiz.language || 'en'; // fallback for initial title
+      const lang = Quiz.language || 'en';
       const title = t.title_i18n?.[lang] || t.title || 'Untitled Test';
       
       document.getElementById('preq-title').textContent = title;
@@ -1587,7 +1519,6 @@
       document.getElementById('preq-questions').textContent = t.totalQuestions || Quiz.questions.length || '—';
       document.getElementById('preq-duration').textContent = t.duration || '—';
       
-      // FIX: Dynamically calculate marks if missing from testData
       const calculatedMarks = t.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
       document.getElementById('preq-marks').textContent = calculatedMarks;
 
@@ -1679,7 +1610,6 @@
       document.getElementById('topbar-questions').textContent = Quiz.testData.totalQuestions || Quiz.questions.length;
       document.getElementById('topbar-duration').textContent = Quiz.testData.duration || '—';
       
-      // FIX: Dynamically calculate marks if missing from testData
       const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
       document.getElementById('topbar-marks').textContent = calculatedMarks;
 
@@ -1722,21 +1652,19 @@
 
     function updateSectionTabCounts() {
       (Quiz.testData.sections || []).forEach((sec, i) => {
-        // Fix: Use getQId to accurately count answers
         const count = Quiz.questions.filter((q, qIndex) => q.sectionId === sec.section_id && Quiz.answers[getQId(q, qIndex)] !== undefined).length;
         const el = document.getElementById(`tab-count-${i}`); if (el) el.textContent = count;
       });
     }
 
     /* ============================================================
-       QUESTION RENDERING (With Bilingual Fix)
+       QUESTION RENDERING
     ============================================================ */
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
       Quiz.currentIndex = index; Quiz.visited.add(index);
       const q = Quiz.questions[index]; const lang = Quiz.language;
 
-      // Handle Bilingual text correctly
       let questionHtml = '';
       if (lang === 'bilingual') {
           const enText = q.question?.en || q.question || '';
@@ -1887,7 +1815,6 @@
         results.push({ questionIndex: i, questionId: getQId(q, i), userAnswer: uAns, correctAnswer: cAns, status: stat, score: qScore, marked: Quiz.marked.has(i) });
       });
 
-      // FIX: Dynamically calculate marks if missing from testData on submission too
       const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
 
       const resObj = {
