@@ -1,411 +1,1004 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom Test Builder - ApnaMock</title>
-  <meta name="description" content="Create custom mock tests tailored to your needs. Choose subjects, topics, difficulty levels and number of questions.">
-  <meta name="theme-color" content="#4F46E5">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/css/apnamock.css"></noscript>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Custom Test — ApnaMock</title>
+  <meta name="description" content="Generate personalized mock tests tailored to your weak areas, subjects, and difficulty." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
   <style>
-    .page-header { background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: var(--space-8) 0; }
-    .page-header h1 { font-size: var(--text-3xl); font-weight: 700; margin-bottom: var(--space-2); }
-    .page-header p { color: var(--text-secondary); font-size: var(--text-lg); }
-    .builder-container { max-width: 900px; margin: 0 auto; }
-    .builder-section { background: var(--bg-card); border-radius: var(--radius-xl); padding: var(--space-8); margin-bottom: var(--space-6); border: 1px solid var(--border-light); }
-    .builder-section-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3); }
-    .builder-section-title i { color: var(--primary); }
-    .preset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-8); }
-    .preset-card { background: var(--bg-card); border: 2px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-6); cursor: pointer; transition: all var(--transition-fast); text-align: center; }
-    .preset-card:hover { border-color: var(--primary-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-    .preset-card.active { border-color: var(--primary); background: var(--primary-50); }
-    .preset-icon { font-size: var(--text-3xl); margin-bottom: var(--space-3); }
-    .preset-name { font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-1); }
-    .preset-desc { font-size: var(--text-sm); color: var(--text-secondary); }
-    .builder-form { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
-    .form-group { margin-bottom: var(--space-6); }
-    .form-group.full-width { grid-column: 1 / -1; }
-    .form-label { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2); }
-    .form-input, .form-select { width: 100%; padding: var(--space-3) var(--space-4); font-size: var(--text-base); font-family: var(--font-sans); color: var(--text-primary); background: var(--bg-primary); border: 2px solid var(--border-light); border-radius: var(--radius-lg); transition: all var(--transition-fast); }
-    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
-    .chip-group { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-    .chip { padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; cursor: pointer; transition: all var(--transition-fast); }
-    .chip:hover { border-color: var(--primary-light); color: var(--primary); }
-    .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-    .preview-box { background: var(--bg-tertiary); border-radius: var(--radius-xl); padding: var(--space-6); border: 2px dashed var(--border-medium); }
-    .preview-title { font-weight: 700; margin-bottom: var(--space-4); }
-    .preview-item { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-light); font-size: var(--text-sm); }
-    .preview-item:last-child { border-bottom: none; }
-    .preview-label { color: var(--text-secondary); }
-    .preview-value { font-weight: 600; color: var(--text-primary); }
-    .preview-warning { background: var(--warning-50); color: var(--warning-dark); padding: var(--space-4); border-radius: var(--radius-lg); margin-top: var(--space-4); font-size: var(--text-sm); }
-    .preview-success { background: var(--success-50); color: var(--success-dark); padding: var(--space-4); border-radius: var(--radius-lg); margin-top: var(--space-4); font-size: var(--text-sm); }
-    .range-input { width: 100%; margin-top: var(--space-2); }
-    .range-value { text-align: center; font-weight: 600; color: var(--primary); margin-top: var(--space-2); }
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --primary-light: #e8f0fe;
+      --accent: #f97316;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --error: #dc2626;
+      --error-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+ 
+      --bg-base: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-muted: #f1f5f9;
+ 
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+ 
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+ 
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+ 
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+ 
+      --header-height: 64px;
+ 
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+    }
+
+    /* DARK MODE VARIABLES */
+    body.dark-mode {
+      --bg-base: #0f172a;
+      --bg-card: #1e293b;
+      --bg-muted: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --border-strong: #475569;
+      --primary-light: rgba(26, 86, 219, 0.2);
+      --success-light: rgba(22, 163, 74, 0.2);
+      --warning-light: rgba(245, 158, 11, 0.2);
+      --error-light: rgba(220, 38, 38, 0.2);
+      --purple-light: rgba(124, 58, 237, 0.2);
+    }
+ 
+    /* ============================================================
+       RESET AND BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border-strong) var(--bg-muted); }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { max-width: 100%; display: block; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-muted); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+
+    .align-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+ 
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(var(--bg-card), 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: var(--header-height);
+    }
+    body:not(.dark-mode) .site-header { background: rgba(255, 255, 255, 0.95); }
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
+ 
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
+    .brand-tagline { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.3px; }
+ 
+    .site-nav { display: flex; align-items: center; gap: 4px; }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .nav-link i { font-size: 13px; }
+ 
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; background: transparent; }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .mobile-menu-btn { display: none; }
+ 
+    /* ============================================================
+       PAGE LAYOUT & TYPOGRAPHY
+    ============================================================ */
+    .page-wrapper {
+      padding-top: 28px;
+      padding-bottom: 60px;
+      flex: 1;
+    }
+ 
+    .page-header { margin-bottom: 32px; }
+    .page-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .page-title i { color: var(--primary); }
+    .page-subtitle { font-size: 14.5px; color: var(--text-muted); font-weight: 400; max-width: 600px; line-height: 1.5; }
+
+    /* ============================================================
+       PRESETS SECTION
+    ============================================================ */
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 16px; }
+    
+    .presets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    
+    .preset-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .preset-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: transparent; transition: background 0.2s; }
+    .preset-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+    .preset-card:hover::before { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+    
+    .preset-header { display: flex; align-items: center; gap: 12px; }
+    .preset-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .preset-icon.mix { background: var(--purple-light); color: var(--purple); }
+    .preset-icon.sprint { background: var(--success-light); color: var(--success); }
+    .preset-icon.challenge { background: var(--error-light); color: var(--error); }
+    
+    .preset-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+    .preset-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+    
+    .preset-meta { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: auto; }
+    .preset-meta-item { font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 4px; }
+
+    /* ============================================================
+       BUILDER CARD
+    ============================================================ */
+    .builder-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .builder-body { display: flex; flex-direction: column; }
+    
+    .builder-row {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    
+    .builder-row-label {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .builder-row-desc { font-size: 12px; color: var(--text-muted); font-weight: 400; line-height: 1.4; }
+
+    .builder-controls { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Chips */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      padding: 8px 16px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-base);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; box-shadow: 0 2px 6px rgba(26,86,219,0.25); }
+    
+    .chip.diff-easy.selected { background: var(--success); border-color: var(--success); box-shadow: 0 2px 6px rgba(22,163,74,0.25); }
+    .chip.diff-med.selected { background: var(--warning); border-color: var(--warning); box-shadow: 0 2px 6px rgba(245,158,11,0.25); }
+    .chip.diff-hard.selected { background: var(--error); border-color: var(--error); box-shadow: 0 2px 6px rgba(220,38,38,0.25); }
+    .chip.diff-mixed.selected { background: var(--purple); border-color: var(--purple); box-shadow: 0 2px 6px rgba(124,58,237,0.25); }
+
+    /* Slider specific */
+    .slider-wrap { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 400px; }
+    .custom-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--border-strong);
+      border-radius: 99px;
+      outline: none;
+    }
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(26,86,219,0.3);
+      border: 2px solid #fff;
+    }
+    body.dark-mode .custom-slider::-webkit-slider-thumb { border-color: var(--bg-card); }
+    .slider-value-display {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      width: 45px;
+      text-align: right;
+    }
+
+    /* Range Toggle */
+    .toggle-wrap { display: flex; background: var(--bg-muted); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
+    .toggle-btn {
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .toggle-btn.active { background: var(--bg-card); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+    /* Builder Footer */
+    .builder-footer {
+      background: var(--bg-muted);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .availability-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avail-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--success-light);
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .avail-icon.warning { background: var(--warning-light); color: #92400e; }
+    body.dark-mode .avail-icon.warning { color: var(--warning); }
+
+    .avail-text { display: flex; flex-direction: column; }
+    .avail-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .avail-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 46px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap; cursor: pointer; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,86,219,0.35); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; background: #1e293b; color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; text-align: center; }
+    body.dark-mode .toast { background: #cbd5e1; color: #0f172a; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); color: #fff; }
+    .toast.warning { background: var(--warning); color: #fff; }
+    .toast.error { background: var(--error); color: #fff; }
+    .toast.info { background: var(--primary); color: #fff; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
+
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
     @media (max-width: 768px) {
-      .builder-form { grid-template-columns: 1fr; }
-      .preset-grid { grid-template-columns: 1fr; }
+      .site-nav {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+      }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+
+      .page-title { font-size: 22px; }
+      
+      .builder-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
+      
+      .builder-footer { flex-direction: column; align-items: stretch; text-align: center; }
+      .availability-status { justify-content: center; }
     }
   </style>
 </head>
+
 <body>
-  <!-- Header -->
-  <header style="background: var(--bg-card); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: var(--z-sticky);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; height: var(--header-height);">
-        <a href="index.html" style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--primary); text-decoration: none;">ApnaMock</a>
-        <nav style="display: flex; gap: var(--space-6); align-items: center;">
-          <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Home</a>
-          <a href="tests.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Tests</a>
-          <a href="custom-tests.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Custom</a>
-          <a href="favorites.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Favorites</a>
-          <a href="history.html" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">History</a>
-          <button data-theme-toggle style="background: none; border: none; cursor: pointer; font-size: var(--text-lg); color: var(--text-secondary); padding: var(--space-2); border-radius: var(--radius-lg);">
-            <i class="fas fa-moon"></i>
-          </button>
-        </nav>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
+      </a>
+ 
+      <nav class="site-nav">
+        <a href="/tests.html" class="nav-link">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Tests</span>
+        </a>
+        <a href="/custom-tests.html" class="nav-link active">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Custom Tests</span>
+        </a>
+        <a href="/favorites.html" class="nav-link">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Favorites</span>
+        </a>
+        <a href="/history.html" class="nav-link">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History</span>
+        </a>
+      </nav>
+ 
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Page Header -->
-  <section class="page-header">
-    <div class="container">
-      <h1>Custom Test Builder</h1>
-      <p>Create a personalized mock test tailored to your preparation needs</p>
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
+  <main class="page-wrapper align-wrapper">
+ 
+    <div class="page-header">
+      <h1 class="page-title"><i class="fa-solid fa-screwdriver-wrench"></i> Create Custom Test</h1>
+      <p class="page-subtitle">Build a personalized mock test focused on your weak areas. Choose subjects, set difficulty, and start practicing instantly.</p>
     </div>
-  </section>
 
-  <!-- Main Content -->
-  <main class="page-container">
-    <div class="container">
-      <div class="builder-container">
-        <!-- Presets -->
-        <div class="builder-section">
-          <div class="builder-section-title">
-            <i class="fas fa-bolt"></i>
-            Quick Presets
+    <!-- Presets Section -->
+    <div class="section-title">Quick Start Presets</div>
+    <div class="presets-grid">
+      
+      <div class="preset-card" onclick="applyPreset('mix')">
+        <div class="preset-header">
+          <div class="preset-icon mix"><i class="fa-solid fa-shuffle"></i></div>
+          <div class="preset-title">The Daily Mix</div>
+        </div>
+        <div class="preset-desc">A quick balance of mixed questions across all subjects to keep your brain active.</div>
+        <div class="preset-meta">
+          <span class="preset-meta-item"><i class="fa-solid fa-list-ol"></i> 20 Qs</span>
+          <span class="preset-meta-item"><i class="fa-solid fa-stopwatch"></i> 15 Mins</span>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="applyPreset('sprint')">
+        <div class="preset-header">
+          <div class="preset-icon sprint"><i class="fa-solid fa-bolt"></i></div>
+          <div class="preset-title">The GK Sprint</div>
+        </div>
+        <div class="preset-desc">Rapid fire General Awareness & Current Affairs. Pure knowledge, no calculations.</div>
+        <div class="preset-meta">
+          <span class="preset-meta-item"><i class="fa-solid fa-list-ol"></i> 15 Qs</span>
+          <span class="preset-meta-item"><i class="fa-solid fa-stopwatch"></i> 5 Mins</span>
+        </div>
+      </div>
+
+      <div class="preset-card" onclick="applyPreset('challenge')">
+        <div class="preset-header">
+          <div class="preset-icon challenge"><i class="fa-solid fa-fire"></i></div>
+          <div class="preset-title">The Challenger</div>
+        </div>
+        <div class="preset-desc">Hard difficulty questions focusing entirely on Math and Reasoning.</div>
+        <div class="preset-meta">
+          <span class="preset-meta-item"><i class="fa-solid fa-list-ol"></i> 25 Qs</span>
+          <span class="preset-meta-item"><i class="fa-solid fa-stopwatch"></i> 30 Mins</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Custom Builder Section -->
+    <div class="section-title">Deep Customization</div>
+    <div class="builder-card">
+      <div class="builder-body">
+        
+        <!-- Exam Group -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Target Exam
+            <span class="builder-row-desc">Filter questions by exam type (Optional).</span>
           </div>
-          <div class="preset-grid">
-            <div class="preset-card" data-preset="full-length">
-              <div class="preset-icon">📋</div>
-              <div class="preset-name">Full Length</div>
-              <div class="preset-desc">100 questions, 60 minutes</div>
-            </div>
-            <div class="preset-card" data-preset="sectional">
-              <div class="preset-icon">🎯</div>
-              <div class="preset-name">Sectional</div>
-              <div class="preset-desc">25 questions per section</div>
-            </div>
-            <div class="preset-card" data-preset="topic-wise">
-              <div class="preset-icon">🔍</div>
-              <div class="preset-name">Topic Wise</div>
-              <div class="preset-desc">Focus on specific topics</div>
-            </div>
-            <div class="preset-card" data-preset="quick">
-              <div class="preset-icon">⚡</div>
-              <div class="preset-name">Quick Practice</div>
-              <div class="preset-desc">20 questions, 15 minutes</div>
+          <div class="builder-controls">
+            <div class="chip-group" id="filter-exam">
+              <div class="chip selected" data-val="all">All Exams</div>
+              <div class="chip" data-val="SSC">SSC</div>
+              <div class="chip" data-val="Banking">Banking</div>
+              <div class="chip" data-val="Railway">Railway</div>
+              <div class="chip" data-val="State">State Exams</div>
             </div>
           </div>
         </div>
 
-        <!-- Test Configuration -->
-        <div class="builder-section">
-          <div class="builder-section-title">
-            <i class="fas fa-sliders"></i>
-            Test Configuration
+        <!-- Subjects -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Subjects
+            <span class="builder-row-desc">Select one or more subjects to focus on.</span>
           </div>
-          <form id="custom-test-form" class="builder-form">
-            <div class="form-group">
-              <label class="form-label">Exam Type</label>
-              <select class="form-select" id="exam-type" required>
-                <option value="">Select Exam</option>
-                <option value="ssc">SSC (CGL/CHSL/CPO)</option>
-                <option value="banking">Banking (IBPS/SBI/RBI)</option>
-                <option value="railway">Railway (RRB NTPC/Group D)</option>
-                <option value="teaching">Teaching (CTET/TET)</option>
-                <option value="defence">Defence (CDS/AFCAT)</option>
-                <option value="upsc">UPSC (CSAT)</option>
-              </select>
+          <div class="builder-controls">
+            <div class="chip-group" id="filter-subject">
+              <div class="chip selected" data-val="General Intelligence">General Intelligence</div>
+              <div class="chip selected" data-val="Quantitative Aptitude">Quantitative Aptitude</div>
+              <div class="chip selected" data-val="English Language">English Language</div>
+              <div class="chip selected" data-val="General Awareness">General Awareness</div>
             </div>
+          </div>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Subjects (Select multiple)</label>
-              <div class="chip-group" id="subjects">
-                <button type="button" class="chip" data-value="quant">Quantitative Aptitude</button>
-                <button type="button" class="chip" data-value="reasoning">Reasoning</button>
-                <button type="button" class="chip" data-value="english">English</button>
-                <button type="button" class="chip" data-value="gk">General Knowledge</button>
-                <button type="button" class="chip" data-value="computer">Computer Awareness</button>
+        <!-- Difficulty -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Difficulty Level
+            <span class="builder-row-desc">Set the challenge level.</span>
+          </div>
+          <div class="builder-controls">
+            <div class="chip-group" id="filter-difficulty">
+              <div class="chip diff-mixed selected" data-val="mixed">Mixed</div>
+              <div class="chip diff-easy" data-val="Easy">Easy</div>
+              <div class="chip diff-med" data-val="Moderate">Moderate</div>
+              <div class="chip diff-hard" data-val="Hard">Hard</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Count -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Number of Questions
+            <span class="builder-row-desc">How many questions do you want to attempt?</span>
+          </div>
+          <div class="builder-controls">
+            <div class="slider-wrap">
+              <input type="range" class="custom-slider" id="qCountSlider" min="5" max="100" step="5" value="20">
+              <span class="slider-value-display" id="qCountDisplay">20</span>
+            </div>
+            <div class="chip-group" style="margin-top:4px" id="filter-qpresets">
+              <div class="chip" data-val="10">10 Qs</div>
+              <div class="chip" data-val="20">20 Qs</div>
+              <div class="chip" data-val="50">50 Qs</div>
+              <div class="chip" data-val="100">100 Qs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Strategy -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Time Limit
+            <span class="builder-row-desc">Set the duration for this test.</span>
+          </div>
+          <div class="builder-controls">
+            <div class="toggle-wrap" id="timeToggleWrap">
+              <button class="toggle-btn active" data-type="auto">Auto (1 min/Q)</button>
+              <button class="toggle-btn" data-type="custom">Custom Time</button>
+            </div>
+            <div id="customTimeControls" style="display:none; margin-top:16px;">
+              <div class="slider-wrap">
+                <input type="range" class="custom-slider" id="timeSlider" min="5" max="120" step="5" value="20">
+                <span class="slider-value-display" id="timeDisplay">20m</span>
               </div>
             </div>
-
-            <div class="form-group full-width">
-              <label class="form-label">Number of Questions: <span id="question-count">50</span></label>
-              <input type="range" class="range-input" id="num-questions" min="10" max="200" value="50" step="10">
-              <div class="range-value">10 <span style="float:right;">200</span></div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Difficulty Level</label>
-              <select class="form-select" id="difficulty">
-                <option value="mixed">Mixed (Easy + Moderate + Hard)</option>
-                <option value="easy">Easy Only</option>
-                <option value="moderate">Moderate Only</option>
-                <option value="hard">Hard Only</option>
-                <option value="easy-moderate">Easy + Moderate</option>
-                <option value="moderate-hard">Moderate + Hard</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Question Type</label>
-              <select class="form-select" id="question-type">
-                <option value="mixed">Mixed (MCQ + True/False + Fill in blanks)</option>
-                <option value="mcq">Multiple Choice Only</option>
-                <option value="previous-year">Previous Year Questions Only</option>
-              </select>
-            </div>
-
-            <div class="form-group full-width">
-              <label class="form-label">Time Limit (minutes): <span id="time-display">30</span></label>
-              <input type="range" class="range-input" id="time-limit" min="5" max="180" value="30" step="5">
-              <div class="range-value">5 min <span style="float:right;">180 min</span></div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Language</label>
-              <select class="form-select" id="language">
-                <option value="bilingual">Bilingual (Hindi + English)</option>
-                <option value="english">English Only</option>
-                <option value="hindi">Hindi Only</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Negative Marking</label>
-              <select class="form-select" id="negative-marking">
-                <option value="0">No Negative Marking</option>
-                <option value="0.25">-0.25 per wrong answer</option>
-                <option value="0.33">-0.33 per wrong answer</option>
-                <option value="0.5">-0.5 per wrong answer</option>
-              </select>
-            </div>
-          </form>
-        </div>
-
-        <!-- Preview -->
-        <div class="builder-section">
-          <div class="builder-section-title">
-            <i class="fas fa-eye"></i>
-            Test Preview
-          </div>
-          <div class="preview-box" id="preview-box">
-            <div class="preview-title">Your Custom Test</div>
-            <div class="preview-item">
-              <span class="preview-label">Exam Type:</span>
-              <span class="preview-value" id="preview-exam">Not selected</span>
-            </div>
-            <div class="preview-item">
-              <span class="preview-label">Subjects:</span>
-              <span class="preview-value" id="preview-subjects">None selected</span>
-            </div>
-            <div class="preview-item">
-              <span class="preview-label">Questions:</span>
-              <span class="preview-value" id="preview-questions">50</span>
-            </div>
-            <div class="preview-item">
-              <span class="preview-label">Time Limit:</span>
-              <span class="preview-value" id="preview-time">30 minutes</span>
-            </div>
-            <div class="preview-item">
-              <span class="preview-label">Difficulty:</span>
-              <span class="preview-value" id="preview-difficulty">Mixed</span>
-            </div>
-            <div class="preview-item">
-              <span class="preview-label">Negative Marking:</span>
-              <span class="preview-value" id="preview-negative">None</span>
-            </div>
-            <div class="preview-success" id="preview-status">
-              ✅ Ready to generate! Click "Generate Test" to start.
+            <div id="autoTimeDisplay" style="margin-top:8px; font-size:13px; color:var(--text-secondary); font-weight:500;">
+              <i class="fa-solid fa-clock" style="color:var(--primary); margin-right:4px;"></i> Estimated Duration: <strong id="estTime">20 Minutes</strong>
             </div>
           </div>
         </div>
 
-        <!-- Actions -->
-        <div style="display: flex; gap: var(--space-4); justify-content: center; margin-top: var(--space-8);">
-          <button type="button" class="btn btn-primary btn-lg" id="generate-btn">
-            <i class="fas fa-wand-magic-sparkles"></i> Generate Test
-          </button>
-          <button type="button" class="btn btn-outline btn-lg" id="reset-btn">
-            <i class="fas fa-rotate-left"></i> Reset
-          </button>
+      </div>
+      
+      <div class="builder-footer">
+        <div class="availability-status" id="availabilityStatus">
+          <div class="avail-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="avail-text">
+            <span class="avail-title" id="availTitle">Ready to Generate</span>
+            <span class="avail-desc" id="availDesc">Sufficient questions available in the pool.</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="generateBtn" onclick="generateTest()">
+          <i class="fa-solid fa-bolt"></i> Generate & Start
+        </button>
+      </div>
+    </div>
+ 
+  </main>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">SSC CGL</a>
+          <a href="#" class="footer-link">IBPS PO</a>
+          <a href="#" class="footer-link">Railway NTPC</a>
+          <a href="#" class="footer-link">CTET</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Use</a>
+          <a href="#" class="footer-link">Disclaimer</a>
+          <a href="#" class="footer-link">Contact</a>
         </div>
       </div>
     </div>
-  </main>
-
-  <!-- Footer -->
-  <footer style="background: var(--bg-card); border-top: 1px solid var(--border-light); padding: var(--space-8) 0; margin-top: var(--space-16);">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
-        <div style="color: var(--text-secondary); font-size: var(--text-sm);">
-          © 2024 ApnaMock. Practice. Improve. Succeed.
-        </div>
-        <div style="display: flex; gap: var(--space-4);">
-          <a href="about.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">About</a>
-          <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Privacy</a>
-          <a href="contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);">Contact</a>
-        </div>
-      </div>
+    <div class="footer-bottom align-wrapper">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-core.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/js/apnamock-ui.js"></script>
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
-    (function() {
-      const presets = {
-        'full-length': { questions: 100, time: 60 },
-        'sectional': { questions: 25, time: 20 },
-        'topic-wise': { questions: 30, time: 25 },
-        'quick': { questions: 20, time: 15 }
-      };
+    /* ============================================================
+       STATE & CONFIG
+    ============================================================ */
+    const CONFIG = { STORAGE_PREFIX: 'apnamock_' };
 
-      let selectedSubjects = new Set();
+    const State = {
+      exam: 'all',
+      subjects: ['General Intelligence', 'Quantitative Aptitude', 'English Language', 'General Awareness'],
+      difficulty: 'mixed',
+      qCount: 20,
+      timeStrategy: 'auto', // auto | custom
+      customTime: 20
+    };
 
-      // Preset selection
-      document.querySelectorAll('.preset-card').forEach(card => {
-        card.addEventListener('click', () => {
-          document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          
-          const preset = presets[card.dataset.preset];
-          if (preset) {
-            document.getElementById('num-questions').value = preset.questions;
-            document.getElementById('question-count').textContent = preset.questions;
-            document.getElementById('time-limit').value = preset.time;
-            document.getElementById('time-display').textContent = preset.time;
-            updatePreview();
-          }
-        });
-      });
+    /* ============================================================
+       HELPERS
+    ============================================================ */
+    function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+    function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
 
-      // Subject chips
-      document.querySelectorAll('#subjects .chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          const value = chip.dataset.value;
-          if (selectedSubjects.has(value)) {
-            selectedSubjects.delete(value);
-            chip.classList.remove('active');
-          } else {
-            selectedSubjects.add(value);
-            chip.classList.add('active');
-          }
-          updatePreview();
-        });
-      });
+    function showToast(message, type = 'info', duration = 2500) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
 
-      // Range inputs
-      document.getElementById('num-questions').addEventListener('input', (e) => {
-        document.getElementById('question-count').textContent = e.target.value;
-        updatePreview();
-      });
-
-      document.getElementById('time-limit').addEventListener('input', (e) => {
-        document.getElementById('time-display').textContent = e.target.value;
-        updatePreview();
-      });
-
-      // Form changes
-      ['exam-type', 'difficulty', 'question-type', 'language', 'negative-marking'].forEach(id => {
-        document.getElementById(id).addEventListener('change', updatePreview);
-      });
-
-      function updatePreview() {
-        const exam = document.getElementById('exam-type');
-        const examText = exam.options[exam.selectedIndex]?.text || 'Not selected';
-        
-        const subjects = selectedSubjects.size > 0 
-          ? Array.from(selectedSubjects).map(s => {
-              const map = { quant: 'Quant', reasoning: 'Reasoning', english: 'English', gk: 'GK', computer: 'Computer' };
-              return map[s] || s;
-            }).join(', ')
-          : 'None selected';
-        
-        const questions = document.getElementById('num-questions').value;
-        const time = document.getElementById('time-limit').value;
-        
-        const difficulty = document.getElementById('difficulty');
-        const difficultyText = difficulty.options[difficulty.selectedIndex]?.text || 'Mixed';
-        
-        const negative = document.getElementById('negative-marking');
-        const negativeText = negative.options[negative.selectedIndex]?.text || 'None';
-
-        document.getElementById('preview-exam').textContent = examText;
-        document.getElementById('preview-subjects').textContent = subjects;
-        document.getElementById('preview-questions').textContent = questions;
-        document.getElementById('preview-time').textContent = time + ' minutes';
-        document.getElementById('preview-difficulty').textContent = difficultyText;
-        document.getElementById('preview-negative').textContent = negativeText;
-
-        // Validation
-        const statusEl = document.getElementById('preview-status');
-        if (!exam.value || selectedSubjects.size === 0) {
-          statusEl.className = 'preview-warning';
-          statusEl.innerHTML = '⚠️ Please select an exam type and at least one subject.';
-        } else {
-          statusEl.className = 'preview-success';
-          statusEl.innerHTML = '✅ Ready to generate! Click "Generate Test" to start.';
-        }
+    /* ============================================================
+       UI INITIALIZATION & EVENT LISTENERS
+    ============================================================ */
+    function initUI() {
+      // Theme Toggle
+      const savedTheme = storageGet('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
       }
 
-      // Generate test
-      document.getElementById('generate-btn').addEventListener('click', () => {
-        const exam = document.getElementById('exam-type').value;
-        if (!exam || selectedSubjects.size === 0) {
-          ApnaMock.toast.warning('Please select an exam type and at least one subject.');
-          return;
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        storageSet('theme', isDark ? 'dark' : 'light');
+      });
+
+      // Mobile Menu
+      document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+        document.querySelector('.site-nav').classList.toggle('mobile-open');
+      });
+
+      // Chip Selection Logic (Single Select)
+      setupSingleSelect('filter-exam', (val) => { State.exam = val; checkAvailability(); });
+      setupSingleSelect('filter-difficulty', (val) => { State.difficulty = val; checkAvailability(); });
+
+      // Chip Selection Logic (Multi Select for Subjects)
+      const subjChips = document.querySelectorAll('#filter-subject .chip');
+      subjChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('selected');
+          State.subjects = Array.from(document.querySelectorAll('#filter-subject .chip.selected')).map(c => c.dataset.val);
+          if (State.subjects.length === 0) {
+             // Force at least one selection
+             chip.classList.add('selected');
+             State.subjects = [chip.dataset.val];
+             showToast('Select at least one subject', 'warning');
+          }
+          checkAvailability();
+        });
+      });
+
+      // Question Count Slider
+      const qSlider = document.getElementById('qCountSlider');
+      const qDisplay = document.getElementById('qCountDisplay');
+      const timeEst = document.getElementById('estTime');
+      
+      qSlider.addEventListener('input', (e) => {
+        State.qCount = parseInt(e.target.value);
+        qDisplay.textContent = State.qCount;
+        if(State.timeStrategy === 'auto') timeEst.textContent = `${State.qCount} Minutes`;
+        checkAvailability();
+      });
+
+      // Quick Q-Count Chips
+      document.querySelectorAll('#filter-qpresets .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          State.qCount = parseInt(chip.dataset.val);
+          qSlider.value = State.qCount;
+          qDisplay.textContent = State.qCount;
+          if(State.timeStrategy === 'auto') timeEst.textContent = `${State.qCount} Minutes`;
+          checkAvailability();
+        });
+      });
+
+      // Time Strategy Toggle
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          State.timeStrategy = btn.dataset.type;
+          
+          if(State.timeStrategy === 'custom') {
+            document.getElementById('customTimeControls').style.display = 'block';
+            document.getElementById('autoTimeDisplay').style.display = 'none';
+          } else {
+            document.getElementById('customTimeControls').style.display = 'none';
+            document.getElementById('autoTimeDisplay').style.display = 'block';
+            timeEst.textContent = `${State.qCount} Minutes`;
+          }
+        });
+      });
+
+      // Custom Time Slider
+      const tSlider = document.getElementById('timeSlider');
+      const tDisplay = document.getElementById('timeDisplay');
+      tSlider.addEventListener('input', (e) => {
+        State.customTime = parseInt(e.target.value);
+        tDisplay.textContent = `${State.customTime}m`;
+      });
+    }
+
+    function setupSingleSelect(containerId, callback) {
+      const container = document.getElementById(containerId);
+      const chips = container.querySelectorAll('.chip');
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          callback(chip.dataset.val);
+        });
+      });
+    }
+
+    /* ============================================================
+       PRESET APPLY LOGIC
+    ============================================================ */
+    function applyPreset(type) {
+      const qSlider = document.getElementById('qCountSlider');
+      const qDisplay = document.getElementById('qCountDisplay');
+      const timeEst = document.getElementById('estTime');
+
+      if (type === 'mix') {
+        selectSingleChip('filter-exam', 'all');
+        selectAllSubjects();
+        selectSingleChip('filter-difficulty', 'mixed');
+        State.qCount = 20;
+      } else if (type === 'sprint') {
+        selectSingleChip('filter-exam', 'all');
+        selectOnlySubjects(['General Awareness']);
+        selectSingleChip('filter-difficulty', 'mixed');
+        State.qCount = 15;
+      } else if (type === 'challenge') {
+        selectSingleChip('filter-exam', 'all');
+        selectOnlySubjects(['General Intelligence', 'Quantitative Aptitude']);
+        selectSingleChip('filter-difficulty', 'Hard');
+        State.qCount = 25;
+      }
+
+      // Update Sliders and UI
+      qSlider.value = State.qCount;
+      qDisplay.textContent = State.qCount;
+      
+      // Auto Time
+      document.querySelector('[data-type="auto"]').click();
+      if (type === 'sprint') {
+        // Sprint is faster, override to custom time
+        document.querySelector('[data-type="custom"]').click();
+        const tSlider = document.getElementById('timeSlider');
+        State.customTime = 5;
+        tSlider.value = 5;
+        document.getElementById('timeDisplay').textContent = '5m';
+      } else if (type === 'challenge') {
+        document.querySelector('[data-type="custom"]').click();
+        const tSlider = document.getElementById('timeSlider');
+        State.customTime = 30;
+        tSlider.value = 30;
+        document.getElementById('timeDisplay').textContent = '30m';
+      }
+
+      window.scrollTo({ top: document.querySelector('.builder-card').offsetTop - 100, behavior: 'smooth' });
+      checkAvailability();
+    }
+
+    function selectSingleChip(containerId, val) {
+      const container = document.getElementById(containerId);
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      const target = container.querySelector(`.chip[data-val="${val}"]`);
+      if(target) target.classList.add('selected');
+      if (containerId === 'filter-exam') State.exam = val;
+      if (containerId === 'filter-difficulty') State.difficulty = val;
+    }
+
+    function selectAllSubjects() {
+      const chips = document.querySelectorAll('#filter-subject .chip');
+      chips.forEach(c => c.classList.add('selected'));
+      State.subjects = Array.from(chips).map(c => c.dataset.val);
+    }
+
+    function selectOnlySubjects(subjArr) {
+      const chips = document.querySelectorAll('#filter-subject .chip');
+      chips.forEach(c => {
+        if(subjArr.includes(c.dataset.val)) c.classList.add('selected');
+        else c.classList.remove('selected');
+      });
+      State.subjects = [...subjArr];
+    }
+
+    /* ============================================================
+       AVAILABILITY CHECK (MOCK)
+    ============================================================ */
+    function checkAvailability() {
+      // In a real app, this would query your indexedDB or fetch a meta JSON to see how many questions exist.
+      // For now, we simulate a large pool so it always works.
+      
+      let mockAvailable = 150; 
+      
+      // Artificial constraints for realism
+      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
+      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
+
+      const statusIcon = document.querySelector('.avail-icon');
+      const statusTitle = document.getElementById('availTitle');
+      const statusDesc = document.getElementById('availDesc');
+      const generateBtn = document.getElementById('generateBtn');
+
+      if (State.qCount > mockAvailable) {
+        statusIcon.className = 'avail-icon warning';
+        statusIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        statusTitle.textContent = 'Limited Questions';
+        statusDesc.textContent = `Only ${mockAvailable} questions match. Test will be shorter.`;
+        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate (${mockAvailable} Qs)`;
+      } else {
+        statusIcon.className = 'avail-icon';
+        statusIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        statusTitle.textContent = 'Ready to Generate';
+        statusDesc.textContent = 'Sufficient questions available in the pool.';
+        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+      }
+    }
+
+    /* ============================================================
+       GENERATE & DISPATCH LOGIC (DUMMY DATA FOR NOW)
+    ============================================================ */
+    function generateTest() {
+      const btn = document.getElementById('generateBtn');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Compiling...`;
+      btn.disabled = true;
+
+      // Calculate final duration
+      let finalDuration = State.timeStrategy === 'auto' ? State.qCount : State.customTime;
+      
+      // Determine final question count based on mock availability logic
+      let finalQCount = State.qCount;
+      let mockAvailable = 150; 
+      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
+      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
+      if (finalQCount > mockAvailable) finalQCount = mockAvailable;
+
+      // -------------------------------------------------------------
+      // MOCK DATA GENERATOR (REPLACE WITH REAL FETCH LATER)
+      // -------------------------------------------------------------
+      setTimeout(() => {
+        
+        const generatedQuestions = [];
+        for (let i = 0; i < finalQCount; i++) {
+          const sub = State.subjects[i % State.subjects.length];
+          generatedQuestions.push({
+            id: `cq_${Date.now()}_${i}`,
+            sectionId: sub,
+            question: { en: `(Custom Generated) What is a sample ${State.difficulty} question for ${sub}?`, hi: `(कस्टम) ${sub} के लिए ${State.difficulty} प्रश्न क्या है?` },
+            options: [
+              { en: "Option A", hi: "विकल्प A" },
+              { en: "Option B", hi: "विकल्प B" },
+              { en: "Option C", hi: "विकल्प C" },
+              { en: "Option D", hi: "विकल्प D" }
+            ],
+            correct: Math.floor(Math.random() * 4),
+            explanation: { en: `This is the generated explanation for ${sub}.`, hi: `यह ${sub} के लिए उत्पन्न स्पष्टीकरण है।` },
+            marks: 1,
+            negativeMarks: 0.25
+          });
         }
 
-        const config = {
-          exam,
-          subjects: Array.from(selectedSubjects),
-          questions: parseInt(document.getElementById('num-questions').value),
-          time: parseInt(document.getElementById('time-limit').value),
-          difficulty: document.getElementById('difficulty').value,
-          questionType: document.getElementById('question-type').value,
-          language: document.getElementById('language').value,
-          negativeMarking: parseFloat(document.getElementById('negative-marking').value),
-          generated_at: new Date().toISOString()
+        const customTestObject = {
+          testId: `custom_${Date.now()}`,
+          title: `Custom Test: ${State.subjects.length > 2 ? 'Mixed Subjects' : State.subjects.join(' & ')}`,
+          title_i18n: { 
+            en: `Custom Test: ${State.subjects.length > 2 ? 'Mixed Subjects' : State.subjects.join(' & ')}`, 
+            hi: `कस्टम टेस्ट: मिश्रित` 
+          },
+          exam: State.exam === 'all' ? 'Mixed Exams' : State.exam,
+          duration: finalDuration,
+          totalQuestions: finalQCount,
+          totalMarks: finalQCount,
+          negativeMarking: 0.25,
+          language_mode: 'bilingual',
+          sections: State.subjects.map(s => ({ section_id: s, title: { en: s, hi: s } })),
+          questions: generatedQuestions
         };
 
-        // Store config and redirect to quiz
-        const configData = encodeURIComponent(JSON.stringify(config));
-        window.location.href = `quiz.html?custom=${configData}`;
-      });
+        // Save object locally for quiz.html to intercept
+        try {
+          localStorage.setItem('apnamock_active_custom_test', JSON.stringify(customTestObject));
+          // Redirect with the 'custom' flag
+          window.location.href = `/quiz.html?test=custom`;
+        } catch(e) {
+          console.error(e);
+          showToast('Failed to compile test. Device storage might be full.', 'error');
+          btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+          btn.disabled = false;
+        }
 
-      // Reset
-      document.getElementById('reset-btn').addEventListener('click', () => {
-        document.getElementById('custom-test-form').reset();
-        selectedSubjects.clear();
-        document.querySelectorAll('#subjects .chip').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
-        document.getElementById('question-count').textContent = '50';
-        document.getElementById('time-display').textContent = '30';
-        updatePreview();
-      });
+      }, 800); // Artificial delay to feel like it's "compiling"
+    }
 
-      // Initialize preview
-      updatePreview();
-    })();
+    /* ============================================================
+       BOOTSTRAP
+    ============================================================ */
+    initUI();
+    checkAvailability();
+
   </script>
 </body>
 </html>
