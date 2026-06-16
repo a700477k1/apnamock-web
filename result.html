@@ -81,6 +81,8 @@
       line-height: 1.6;
       min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
     }
 
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
@@ -114,7 +116,7 @@
       border-bottom: 1px solid var(--border);
       height: var(--header-height);
     }
-    body:not(.dark-mode) .site-header { background: rgba(255,255,255,0.95); }
+    body:not(.dark-mode) .site-header { background: rgba(255, 255, 255, 0.95); }
     body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
 
     .header-inner {
@@ -213,6 +215,7 @@
     .page-wrapper {
       padding-top: 28px;
       padding-bottom: 60px;
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -594,7 +597,7 @@
       background: var(--warning); 
     }
     .favorite-btn.favorited:hover {
-      background: #d97706;
+      background: #d97706; /* slightly darker warning */
       border-color: #d97706;
       color: #fff;
     }
@@ -623,8 +626,26 @@
     /* ============================================================
        FOOTER
     ============================================================ */
-    .site-footer { background: var(--text-primary); color: #fff; padding: 32px 20px 20px; margin-top: 40px; }
-    .footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    
+    /* Dark Mode Footer Fix */
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
+
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
     /* ============================================================
@@ -704,10 +725,14 @@
   </header>
 
   <main class="page-wrapper align-wrapper" id="mainContent">
+
+    <h1 class="page-title">Result Analysis</h1>
+
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
       <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px"></i>
       <div style="font-size:15px;font-weight:500">Loading your result...</div>
     </div>
+
   </main>
 
   <div class="overlay" id="reviewFilterOverlay">
@@ -753,6 +778,39 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">SSC CGL</a>
+          <a href="#" class="footer-link">IBPS PO</a>
+          <a href="#" class="footer-link">Railway NTPC</a>
+          <a href="#" class="footer-link">CTET</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Use</a>
+          <a href="#" class="footer-link">Disclaimer</a>
+          <a href="#" class="footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
     <div class="footer-bottom align-wrapper">
       <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
       <span class="footer-copy">Practice. Improve. Succeed.</span>
@@ -1030,8 +1088,18 @@
 
       const similarTest = R.testData?.similarTests?.[0];
 
-      const timeTakenFormatted = R.timeTaken
-        ? `${Math.floor(R.timeTaken / 60)}m ${R.timeTaken % 60}s`
+      // Fix Time Calculation to handle massive resumed times securely
+      let validTimeTaken = R.timeTaken || 0;
+      const maxTimeSecs = (R.testData?.duration || 0) * 60;
+      
+      if (maxTimeSecs > 0 && validTimeTaken > maxTimeSecs) {
+          const attemptedRatio = (R.correct + R.wrong) / (R.totalQuestions || 1);
+          validTimeTaken = Math.round(maxTimeSecs * attemptedRatio);
+          if (validTimeTaken === 0 && (R.correct + R.wrong) > 0) validTimeTaken = 1;
+      }
+
+      const timeTakenFormatted = validTimeTaken > 0
+        ? `${Math.floor(validTimeTaken / 60)}m ${validTimeTaken % 60}s`
         : '—';
 
       const negativeMarks = Math.abs(
@@ -1231,34 +1299,42 @@
     ============================================================ */
     function computeSectionPerformance() {
       const sections = Result.data.testData?.sections || [];
-      const questions = Result.questions;
-      const questionResults = Result.questionResults;
-      const lang = Result.language;
+      const questions = Result.questions || [];
+      const questionResults = Result.questionResults || [];
+      const lang = Result.language || 'en';
 
-      if (sections.length === 0) return [];
+      if (sections.length <= 1) return [];
 
-      return sections.map(section => {
+      return sections.map((section, sIdx) => {
         const sectionQuestions = questions
           .map((q, i) => ({ q, i }))
-          .filter(({ q }) => q.sectionId === section.section_id);
+          .filter(({ q }) => {
+              if (q.sectionId !== undefined && section.section_id !== undefined) {
+                  return String(q.sectionId) === String(section.section_id);
+              }
+              return false;
+          });
 
         const sectionResults = sectionQuestions.map(({ i }) =>
-          questionResults.find(qr => qr.questionIndex === i)
+          questionResults.find(qr => String(qr.questionIndex) === String(i))
         ).filter(Boolean);
 
         const correct = sectionResults.filter(qr => qr.status === 'correct').length;
         const wrong = sectionResults.filter(qr => qr.status === 'wrong').length;
         const skipped = sectionResults.filter(qr => qr.status === 'skipped' || qr.status === 'marked').length;
         const total = sectionResults.length;
+        
+        if (total === 0) return null;
+
         const accuracy = correct + wrong > 0
           ? Math.round((correct / (correct + wrong)) * 100)
           : 0;
 
         return {
-          name: section.title?.[lang] || section.title?.en || section.section_id,
+          name: section.title?.[lang] || section.title?.en || section.section_id || `Section ${sIdx + 1}`,
           correct, wrong, skipped, total, accuracy
         };
-      });
+      }).filter(Boolean);
     }
 
     /* ============================================================
@@ -1333,7 +1409,7 @@
 
       const sectionName = getSectionName(q.sectionId);
       
-      // Bilingual fallback for question text and explanation
+      // Bilingual Handling
       let questionTextHtml = '';
       if (lang === 'bilingual') {
           const enText = escapeHTML(q.question?.en || q.question || '');
@@ -1480,6 +1556,9 @@
         btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
         showToast('Question saved to favorites!', 'success');
       }
+
+      // Update local storage reference index
+      storageSet('favorites_ids', [...Result.favorites]);
     }
 
     /* ============================================================
@@ -1488,7 +1567,7 @@
     function getSectionName(sectionId) {
       if (!sectionId || !Result.data.testData?.sections?.length) return 'General';
       const lang = Result.language;
-      const section = Result.data.testData.sections.find(s => s.section_id === sectionId);
+      const section = Result.data.testData.sections.find(s => String(s.section_id) === String(sectionId));
       return section?.title?.[lang] || section?.title?.en || sectionId;
     }
 
