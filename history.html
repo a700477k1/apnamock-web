@@ -6,12 +6,15 @@
   <title>My Attempt History — ApnaMock</title>
   <meta name="description" content="Track your mock test attempts and performance over time." />
   
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <!-- Chart.js for Performance Trends -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
@@ -504,6 +507,9 @@
 
 <body>
 
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
   <header class="site-header">
     <div class="header-inner align-wrapper">
       <a href="/index.html" class="brand">
@@ -544,6 +550,9 @@
     </div>
   </header>
 
+  <!-- ============================================================
+       MAIN
+  ============================================================ -->
   <main class="page-wrapper align-wrapper">
  
     <div class="page-header">
@@ -551,6 +560,7 @@
       <p class="page-subtitle">Track your mock test attempts and review your performance over time.</p>
     </div>
 
+    <!-- Dashboard Summary -->
     <div class="dashboard-grid" id="dashboardGrid" style="display:none;">
       
       <div class="summary-cards-grid">
@@ -585,6 +595,7 @@
 
     </div>
 
+    <!-- Controls Bar -->
     <div class="controls-bar" id="controlsBar" style="display:none;">
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -608,8 +619,10 @@
       </div>
     </div>
 
+    <!-- Active Filters Row -->
     <div class="active-filters" id="activeFilters"></div>
 
+    <!-- History List -->
     <div class="history-list" id="historyList">
       <div style="text-align:center;padding:40px;color:var(--text-muted)">
         <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
@@ -617,6 +630,7 @@
       </div>
     </div>
 
+    <!-- Load More -->
     <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
       <span class="load-more-text" id="loadMoreText"></span>
       <button class="btn btn-outline" id="loadMoreBtn">
@@ -627,6 +641,9 @@
  
   </main>
 
+  <!-- ============================================================
+       FILTER MENU POPUP (POPUP 1)
+  ============================================================ -->
   <div class="overlay" id="filterMenuOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -657,6 +674,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       FILTER DETAIL POPUP (POPUP 2)
+  ============================================================ -->
   <div class="overlay" id="filterDetailOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -692,6 +712,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       SORT POPUP
+  ============================================================ -->
   <div class="overlay" id="sortOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
@@ -724,6 +747,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       DELETE SINGLE CONFIRM POPUP
+  ============================================================ -->
   <div class="overlay" id="deleteOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
@@ -744,6 +770,9 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       CLEAR ALL CONFIRM POPUP
+  ============================================================ -->
   <div class="overlay" id="clearAllOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
@@ -764,8 +793,14 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
   <footer class="site-footer">
     <div class="footer-inner align-wrapper">
       <div>
@@ -806,6 +841,9 @@
     </div>
   </footer>
 
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
   <script>
     /* ============================================================
        XSS UTILITY 
@@ -838,7 +876,7 @@
        INDEXED DB WRAPPER FOR HISTORY
     ============================================================ */
     const DB_NAME = 'ApnaMockDB';
-    const DB_VERSION = 1;
+    const DB_VERSION = 2; // FIX: Incremented to force schema upgrade
     const STORE_HISTORY = 'history';
 
     function initDB() {
