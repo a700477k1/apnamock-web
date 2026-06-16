@@ -6,12 +6,10 @@
   <title>All Mock Tests — ApnaMock</title>
   <meta name="description" content="Practice exam-wise, topic-wise, and previous year mock tests for SSC, Railway, Banking and more." />
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   
   <style>
@@ -1043,6 +1041,16 @@
       padding: 40px 20px 24px;
       margin-top: 60px;
     }
+
+    /* Dark Mode Footer Fix */
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
  
     .footer-inner {
       max-width: 1200px;
@@ -1057,13 +1065,11 @@
       font-family: var(--font-heading);
       font-size: 18px;
       font-weight: 700;
-      color: #fff;
       margin-bottom: 8px;
     }
  
     .footer-brand-desc {
       font-size: 13px;
-      color: rgba(255,255,255,0.5);
       line-height: 1.6;
     }
  
@@ -1072,19 +1078,11 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: rgba(255,255,255,0.5);
       margin-bottom: 12px;
     }
  
     .footer-links { display: flex; flex-direction: column; gap: 8px; }
- 
-    .footer-link {
-      font-size: 13px;
-      color: rgba(255,255,255,0.7);
-      transition: color 0.15s;
-    }
- 
-    .footer-link:hover { color: #fff; }
+    .footer-link { font-size: 13px; transition: color 0.15s; }
  
     .footer-bottom {
       max-width: 1200px;
@@ -1098,7 +1096,7 @@
       gap: 8px;
     }
  
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .footer-copy { font-size: 13px; }
  
     /* ============================================================
        RESPONSIVE
@@ -1155,9 +1153,6 @@
  
 <body>
  
-  <!-- ============================================================
-       HEADER
-  ============================================================ -->
   <header class="site-header">
     <div class="header-inner">
  
@@ -1200,12 +1195,8 @@
     </div>
   </header>
  
-  <!-- ============================================================
-       MAIN
-  ============================================================ -->
   <main class="page-wrapper">
  
-    <!-- Page Header -->
     <div class="page-header">
       <h1 class="page-title">All Mock Tests</h1>
       <p class="page-subtitle">
@@ -1213,10 +1204,8 @@
       </p>
     </div>
  
-    <!-- Controls Bar -->
     <div class="controls-bar">
  
-      <!-- Search -->
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input
@@ -1231,14 +1220,12 @@
         </button>
       </div>
  
-      <!-- Filter Button -->
       <button class="ctrl-btn" id="filterBtn">
         <i class="fa-solid fa-filter"></i>
         <span>Filter Tests</span>
         <span class="badge" id="filterBadge" style="display:none">0</span>
       </button>
  
-      <!-- Sort Button -->
       <button class="ctrl-btn" id="sortBtn">
         <i class="fa-solid fa-arrow-up-wide-short"></i>
         <span>Sort By</span>
@@ -1246,22 +1233,17 @@
  
     </div>
  
-    <!-- Active Filters Row -->
     <div class="active-filters" id="activeFilters"></div>
  
-    <!-- Results Meta -->
     <div class="results-meta">
       <span class="results-count" id="resultsCount">
         Showing <strong>0</strong> of <strong>0</strong> tests
       </span>
     </div>
  
-    <!-- Tests Grid -->
     <div class="tests-grid" id="testsGrid">
-      <!-- Cards rendered by JS -->
-    </div>
+      </div>
  
-    <!-- Load More -->
     <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
       <span class="load-more-text" id="loadMoreText"></span>
       <button class="btn btn-outline" id="loadMoreBtn">
@@ -1272,9 +1254,6 @@
  
   </main>
  
-  <!-- ============================================================
-       FILTER POPUP
-  ============================================================ -->
   <div class="overlay" id="filterOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1285,37 +1264,31 @@
       </div>
       <div class="popup-body">
  
-        <!-- By Exam -->
         <div class="filter-section">
           <div class="filter-section-title">By Exam Group</div>
           <div class="filter-chips-wrap" id="filterExams"></div>
         </div>
  
-        <!-- By Year -->
         <div class="filter-section">
           <div class="filter-section-title">By Year</div>
           <div class="filter-chips-wrap" id="filterYears"></div>
         </div>
  
-        <!-- By Subject -->
         <div class="filter-section">
           <div class="filter-section-title">By Subject</div>
           <div class="filter-chips-wrap" id="filterSubjects"></div>
         </div>
  
-        <!-- By Paper Type -->
         <div class="filter-section">
           <div class="filter-section-title">By Paper Type</div>
           <div class="filter-chips-wrap" id="filterPaperTypes"></div>
         </div>
  
-        <!-- By Difficulty -->
         <div class="filter-section">
           <div class="filter-section-title">By Difficulty</div>
           <div class="filter-chips-wrap" id="filterDifficulty"></div>
         </div>
  
-        <!-- By Attempt History -->
         <div class="filter-section">
           <div class="filter-section-title">By Attempt History</div>
           <div class="filter-chips-wrap" id="filterAttempt">
@@ -1340,9 +1313,6 @@
     </div>
   </div>
  
-  <!-- ============================================================
-       SORT POPUP
-  ============================================================ -->
   <div class="overlay" id="sortOverlay">
     <div class="popup">
       <div class="popup-header">
@@ -1431,14 +1401,8 @@
     </div>
   </div>
  
-  <!-- ============================================================
-       TOAST CONTAINER
-  ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
  
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
   <footer class="site-footer">
     <div class="footer-inner">
  
@@ -1484,12 +1448,9 @@
     </div>
   </footer>
  
-  <!-- ============================================================
-       JAVASCRIPT
-  ============================================================ -->
   <script>
     /* ============================================================
-       XSS UTILITY (FIX)
+       XSS UTILITY 
     ============================================================ */
     function escapeHTML(str) {
       if (!str) return '';
@@ -1796,12 +1757,11 @@
         ? (test.duration >= 60 ? `${Math.floor(test.duration/60)}h ${test.duration % 60 > 0 ? (test.duration % 60) + 'm' : ''}`.trim() : `${test.duration}m`)
         : '—';
 
-      // FIX: Dynamically calculate marks if missing
+      // FIX: Dynamically calculate marks if explicitly missing
       const calculatedMarks = test.marks || test.totalMarks || test.questions || '—';
  
       return `
         <div class="test-card" data-test-id="${testId}">
-          <!-- Tags -->
           <div class="card-tags">
             <span class="tag tag-exam">${examTag}</span>
             <span class="tag tag-type">${typeTag}</span>
@@ -1809,19 +1769,15 @@
             ${attempt ? '<span class="tag tag-attempted"><i class="fa-solid fa-check" style="font-size:9px"></i> Attempted</span>' : ''}
           </div>
  
-          <!-- Title -->
           <div class="card-title">${escapeHTML(test.title || test.title_i18n?.en || 'Untitled Test')}</div>
  
-          <!-- Attempt Badge -->
           ${attemptBadgeHtml}
  
-          <!-- Meta -->
           <div class="card-meta">
             ${metaItems}
             <div class="lang-badges" style="margin-left:auto">${langBadges}</div>
           </div>
  
-          <!-- Stats -->
           <div class="card-stats">
             <div class="stat-box">
               <span class="stat-box-value">${escapeHTML(test.questions || '—')}</span>
@@ -1837,7 +1793,6 @@
             </div>
           </div>
  
-          <!-- Footer -->
           <div class="card-footer">
             <a href="/quiz.html?test=${testId}" class="btn btn-primary btn-sm btn-full">
               <i class="fa-solid fa-play"></i>
