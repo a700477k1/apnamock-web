@@ -844,6 +844,7 @@
     ============================================================ */
     const Result = {
       data: null,
+      latestTestData: null,
       questions: [],
       questionResults: [],
       filteredResults: [],
@@ -1012,6 +1013,61 @@
       renderMoreReviews();
     }
 
+    async function loadLatestTestData(testId) {
+
+  const versionUrl =
+    `${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`;
+
+  let buildId = "main";
+
+  try {
+
+    const versionRes =
+      await fetch(versionUrl);
+
+    const version =
+      await versionRes.json();
+
+    buildId =
+      version.build_id || "main";
+
+  } catch(err) {}
+
+  const indexUrl =
+    `${CONFIG.CDN_BASE}data/tests-index.json?v=${buildId}`;
+
+  const indexRes =
+    await fetch(indexUrl);
+
+  const indexData =
+    await indexRes.json();
+
+  const tests =
+    indexData.tests || [];
+
+  const meta =
+    tests.find(
+      t =>
+        t.test_id === testId ||
+        t.id === testId
+    );
+
+  if(!meta){
+
+    throw new Error(
+      "Test not found"
+    );
+  }
+
+  const testUrl =
+    `${CONFIG.CDN_BASE}${meta.file}?v=${buildId}`;
+
+  const testRes =
+    await fetch(testUrl);
+
+  return await testRes.json();
+}
+    
     /* ============================================================
        INIT
     ============================================================ */
@@ -1051,7 +1107,29 @@
       }
 
       Result.data = resultData;
-      Result.questions = resultData.testData?.questions || [];
+      try {
+
+  const latestTestData =
+    await loadLatestTestData(
+      resultData.testId
+    );
+
+  Result.latestTestData =
+    latestTestData;
+
+  Result.questions =
+    latestTestData.questions || [];
+
+} catch(err) {
+
+  console.error(err);
+
+  Result.questions =
+    resultData.testData?.questions || [];
+
+  Result.latestTestData =
+    resultData.testData || {};
+}
       Result.questionResults = resultData.questionResults || [];
       Result.language = resultData.language || 'bilingual';
       
@@ -1568,7 +1646,7 @@
     function getSectionName(sectionId) {
       if (!sectionId || !Result.data.testData?.sections?.length) return 'General';
       const lang = Result.language;
-      const section = Result.data.testData.sections.find(s => String(s.section_id) === String(sectionId));
+      const section = Result.latestTestData.sections.find(s => String(s.section_id) === String(sectionId));
       return section?.title?.[lang] || section?.title?.en || sectionId;
     }
 
