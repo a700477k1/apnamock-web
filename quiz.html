@@ -1870,7 +1870,14 @@
         score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
         correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
         timeTaken: Math.round((Quiz.submitTime - Quiz.startTime) / 1000), submittedAt: Quiz.submitTime, questionResults: results,
-        testData: { title: Quiz.testData.title, title_i18n: Quiz.testData.title_i18n, exam: Quiz.testData.exam, sections: Quiz.testData.sections, questions: Quiz.questions }
+        testData: {
+  title: Quiz.testData.title,
+  title_i18n: Quiz.testData.title_i18n,
+  exam: Quiz.testData.exam
+},
+
+testFile:
+  Quiz.testData.file || null
       };
 
       storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
