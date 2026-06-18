@@ -1537,12 +1537,42 @@
       // -------------------------------
 
       try {
-        const indexRes = await fetch(`${CONFIG.CDN_BASE}data/tests-index.json`, { cache: 'force-cache' });
+        let buildId = "main";
+
+try {
+
+  const versionRes = await fetch(
+    `${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`,
+    {
+      cache: "no-store"
+    }
+  );
+
+  if(versionRes.ok){
+
+    const versionData =
+      await versionRes.json();
+
+    buildId =
+      versionData.build_id || "main";
+  }
+
+} catch(err){}
+
+const indexRes = await fetch(
+  `${CONFIG.CDN_BASE}data/tests-index.json?v=${encodeURIComponent(buildId)}`,
+  {
+    cache: "no-store"
+  }
+);
         const indexData = await indexRes.json();
         const tests = Array.isArray(indexData.tests) ? indexData.tests : (Array.isArray(indexData) ? indexData : []);
         const testMeta = tests.find(t => getQId(t, '') === Quiz.testId || t.test_id === Quiz.testId);
 
-        const dataUrl = testMeta?.file ? `${CONFIG.CDN_BASE}${testMeta.file}` : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json`;
+        const dataUrl =
+  testMeta?.file
+    ? `${CONFIG.CDN_BASE}${testMeta.file}?v=${encodeURIComponent(buildId)}`
+    : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json?v=${encodeURIComponent(buildId)}`;
         const testRes = await fetch(dataUrl, { cache: 'force-cache' });
         if (!testRes.ok) throw new Error(`HTTP ${testRes.status}`);
 
