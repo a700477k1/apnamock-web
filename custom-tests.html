@@ -906,10 +906,28 @@ async function loadRealSections(tests) {
     ).join('');
 
   // Build Subject Container
-  const sections =
-  await loadRealSections(
-    tests
-  );
+  // Build Subject Container
+const subjectContainer =
+ document.getElementById(
+   'filter-subject'
+ );
+
+subjectContainer.innerHTML =
+ [...subjectSet]
+ .map(
+   s =>
+     `<div class="chip"
+        data-val="${escapeHTML(s)}">
+        ${escapeHTML(s)}
+      </div>`
+ )
+ .join('');
+
+// Load Sections
+const sections =
+ await loadRealSections(
+   tests
+ );
 
 const sectionContainer =
   document.getElementById(
