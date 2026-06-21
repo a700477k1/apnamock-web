@@ -729,6 +729,8 @@
     let TestsIndexCache = [];
 let AvailableQuestionCount = 0;
 
+let SectionMapCache = new Map();
+
     /* ============================================================
        HELPERS
     ============================================================ */
@@ -770,7 +772,9 @@ let AvailableQuestionCount = 0;
       : (Array.isArray(data) ? data : []);
     TestsIndexCache = tests;
 
-    buildDynamicFilters(tests);
+    await buildDynamicFilters(
+  tests
+);
 
   } catch (err) {
 
@@ -804,11 +808,76 @@ let AvailableQuestionCount = 0;
 
   }
 }
-function buildDynamicFilters(tests) {
+
+/* ============================================================
+ LOAD REAL SECTIONS
+ ============================================================ */
+async function loadRealSections(tests) {
+
+  const sectionSet =
+    new Set();
+
+  SectionMapCache.clear();
+
+  for (const test of tests) {
+
+    try {
+
+      if (!test.file)
+        continue;
+
+      const res =
+        await fetch(
+          `${CONFIG.CDN_BASE}${test.file}`,
+          {
+            cache: 'no-store'
+          }
+        );
+
+      const data =
+        await res.json();
+
+      const sections =
+        data.sections || [];
+
+      sections.forEach(sec => {
+
+        const sectionName =
+          sec.title?.en ||
+          sec.section_id;
+
+        if (!sectionName)
+          return;
+
+        sectionSet.add(
+          sectionName
+        );
+
+        SectionMapCache.set(
+          sec.section_id,
+          sectionName
+        );
+
+      });
+
+    } catch(err) {
+
+      console.error(
+        'Section load failed:',
+        test.file,
+        err
+      );
+
+    }
+
+  }
+
+  return [...sectionSet];
+}    
+    async function buildDynamicFilters(tests) {
 
   const examSet = new Set();
   const subjectSet = new Set();
-  const sectionSet = new Set();
 
   tests.forEach(t => {
 
@@ -824,24 +893,6 @@ function buildDynamicFilters(tests) {
       subjectSet.add(t.subject);
     }
 
-    if (
-  Array.isArray(t.sections)
-) {
-
-  t.sections.forEach(sec => {
-
-    const name =
-      sec.title?.en ||
-      sec.section_id;
-
-    if (name) {
-      sectionSet.add(name);
-    }
-
-  });
-
-}
-
   });
 
   // Build Exam Container
@@ -855,28 +906,24 @@ function buildDynamicFilters(tests) {
     ).join('');
 
   // Build Subject Container
-  const subjectContainer =
-    document.getElementById('filter-subject');
+  const sections =
+  await loadRealSections(
+    tests
+  );
 
-  subjectContainer.innerHTML =
-    [...subjectSet].map(s =>
-      `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`
-    ).join('');
-  const sectionContainer =
+const sectionContainer =
   document.getElementById(
     'filter-section'
   );
 
 sectionContainer.innerHTML =
-  [...sectionSet]
-  .map(
+  sections.map(
     s =>
       `<div class="chip"
          data-val="${escapeHTML(s)}">
          ${escapeHTML(s)}
        </div>`
-  )
-  .join('');
+  ).join('');
 
   bindDynamicListeners();
 }
@@ -1183,19 +1230,17 @@ async function fetchRealQuestionPool() {
 
       questions.forEach(q => {
 
-        const sectionMatch =
+       const sectionName =
+  SectionMapCache.get(
+    q.sectionId
+  ) || '';
+
+const sectionMatch =
 
   State.sections.length === 0 ||
 
-  State.sections.some(
-    s =>
-      String(
-        q.sectionId
-      )
-      .toLowerCase()
-      .includes(
-        s.toLowerCase()
-      )
+  State.sections.includes(
+    sectionName
   );
         const difficultyMatch =
           State.difficulty === 'mixed' ||
