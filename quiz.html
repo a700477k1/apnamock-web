@@ -1900,11 +1900,7 @@ const indexRes = await fetch(
         score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
         correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
         timeTaken: Math.round((Quiz.submitTime - Quiz.startTime) / 1000), submittedAt: Quiz.submitTime, questionResults: results,
-        testData: {
-  title: Quiz.testData.title,
-  title_i18n: Quiz.testData.title_i18n,
-  exam: Quiz.testData.exam
-},
+       testData: Quiz.testData,
       };
 
       storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
