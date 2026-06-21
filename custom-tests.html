@@ -1259,11 +1259,15 @@ async function calculateAvailability() {
   TestsIndexCache.forEach(test => {
 
     const examMatch =
+
       State.exam === 'all' ||
+
       test.exam_group === State.exam ||
+
       test.exam === State.exam;
 
     const subjectMatch =
+
       State.subjects.includes(
         test.subject
       );
@@ -1275,24 +1279,88 @@ async function calculateAvailability() {
       return;
     }
 
-    const difficultyCounts =
-      test.difficulty_counts || {};
-
+    // No section selected
     if (
-      State.difficulty === 'mixed'
+      State.sections.length === 0
     ) {
 
-      count +=
-        test.question_count || 0;
+      if (
+        State.difficulty ===
+        'mixed'
+      ) {
 
-    } else {
+        count +=
+          test.question_count || 0;
 
-      count +=
-        difficultyCounts[
-          State.difficulty
-        ] || 0;
+      } else {
 
+        count +=
+          (
+            test
+              .difficulty_counts?.[
+                State.difficulty
+              ]
+          ) || 0;
+
+      }
+
+      return;
     }
+
+    // Section selected
+
+    const sectionCounts =
+      test.section_difficulty_counts ||
+      {};
+
+    Object.entries(
+      sectionCounts
+    ).forEach(
+      ([sectionId, diffs]) => {
+
+        const sectionName =
+          SectionMapCache.get(
+            sectionId
+          );
+
+        if (
+          !sectionName
+        ) {
+          return;
+        }
+
+        const sectionMatch =
+          State.sections.includes(
+            sectionName
+          );
+
+        if (
+          !sectionMatch
+        ) {
+          return;
+        }
+
+        if (
+          State.difficulty ===
+          'mixed'
+        ) {
+
+          count +=
+            (diffs.Easy || 0) +
+            (diffs.Moderate || 0) +
+            (diffs.Hard || 0);
+
+        } else {
+
+          count +=
+            diffs[
+              State.difficulty
+            ] || 0;
+
+        }
+
+      }
+    );
 
   });
 
@@ -1300,7 +1368,7 @@ async function calculateAvailability() {
     count;
 
   return count;
-}    
+}   
     /* ============================================================
        AVAILABILITY CHECK (VALIDATION & MOCK RESPONSE)
     ============================================================ */
@@ -1316,7 +1384,8 @@ async function calculateAvailability() {
         statusIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
         statusTitle.textContent = 'Incomplete Selection';
         statusDesc.textContent = 'Select Exam, Subject(s), and Difficulty to proceed.';
-        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+        generateBtn.innerHTML =
+ `<i class="fa-solid fa-bolt"></i> Generate (${Math.min(State.qCount, available)} Qs)`;
         generateBtn.disabled = true;
         return;
       }
@@ -1342,8 +1411,9 @@ async function calculateAvailability() {
   'Ready to Generate';
 
 statusDesc.textContent =
-  `${available} matching question${available !== 1 ? 's' : ''} available.`;
-        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+ `${available} matching question${available !== 1 ? 's' : ''} available based on your current filters.`;
+        generateBtn.innerHTML =
+ `<i class="fa-solid fa-bolt"></i> Generate (${Math.min(State.qCount, available)} Qs)`;
       }
     }
 
