@@ -812,136 +812,83 @@ let SectionMapCache = new Map();
 /* ============================================================
  LOAD REAL SECTIONS
  ============================================================ */
-async function loadRealSections(tests) {
 
-  const sectionSet =
-    new Set();
-
-  SectionMapCache.clear();
-
-  for (const test of tests) {
-
-    try {
-
-      if (!test.file)
-        continue;
-
-      const res =
-        await fetch(
-          `${CONFIG.CDN_BASE}${test.file}`,
-          {
-            cache: 'no-store'
-          }
-        );
-
-      const data =
-        await res.json();
-
-      const sections =
-        data.sections || [];
-
-      sections.forEach(sec => {
-
-        const sectionName =
-          sec.title?.en ||
-          sec.section_id;
-
-        if (!sectionName)
-          return;
-
-        sectionSet.add(
-          sectionName
-        );
-
-        SectionMapCache.set(
-          sec.section_id,
-          sectionName
-        );
-
-      });
-
-    } catch(err) {
-
-      console.error(
-        'Section load failed:',
-        test.file,
-        err
-      );
-
-    }
-
-  }
-
-  return [...sectionSet];
-}    
-    async function buildDynamicFilters(tests) {
+async function buildDynamicFilters(tests) {
 
   const examSet = new Set();
+
   const subjectSet = new Set();
+
+  const sectionMap = new Map();
 
   tests.forEach(t => {
 
-    // Collect Unique Exams
     if (t.exam_group) {
       examSet.add(t.exam_group);
     } else if (t.exam) {
       examSet.add(t.exam);
     }
 
-    // Collect Unique Subjects
     if (t.subject) {
       subjectSet.add(t.subject);
     }
 
+    (t.sections || []).forEach(sec => {
+
+      const sectionName =
+        sec.title?.en ||
+        sec.section_id;
+
+      if (!sectionName)
+        return;
+
+      sectionMap.set(
+        sectionName,
+        sec.section_id
+      );
+
+      SectionMapCache.set(
+        sec.section_id,
+        sectionName
+      );
+
+    });
+
   });
 
-  // Build Exam Container
-  const examContainer =
-    document.getElementById('filter-exam');
-
-  examContainer.innerHTML =
+  // Exams
+  document.getElementById(
+    'filter-exam'
+  ).innerHTML =
     '<div class="chip" data-val="all">All Exams</div>' +
-    [...examSet].map(e =>
-      `<div class="chip" data-val="${escapeHTML(e)}">${escapeHTML(e)}</div>`
-    ).join('');
+    [...examSet]
+      .map(
+        e =>
+          `<div class="chip" data-val="${escapeHTML(e)}">${escapeHTML(e)}</div>`
+      )
+      .join('');
 
-  // Build Subject Container
-  // Build Subject Container
-const subjectContainer =
- document.getElementById(
-   'filter-subject'
- );
+  // Subjects
+  document.getElementById(
+    'filter-subject'
+  ).innerHTML =
+    [...subjectSet]
+      .map(
+        s =>
+          `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`
+      )
+      .join('');
 
-subjectContainer.innerHTML =
- [...subjectSet]
- .map(
-   s =>
-     `<div class="chip"
-        data-val="${escapeHTML(s)}">
-        ${escapeHTML(s)}
-      </div>`
- )
- .join('');
-
-// Load Sections
-const sections =
- await loadRealSections(
-   tests
- );
-
-const sectionContainer =
+  // Sections
   document.getElementById(
     'filter-section'
-  );
-
-sectionContainer.innerHTML =
-  sections.map(
-    s =>
-      `<div class="chip"
-         data-val="${escapeHTML(s)}">
-         ${escapeHTML(s)}
-       </div>`
-  ).join('');
+  ).innerHTML =
+    [...sectionMap.keys()]
+      .map(
+        s =>
+          `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`
+      )
+      .join('');
 
   bindDynamicListeners();
 }
@@ -1309,68 +1256,48 @@ async function calculateAvailability() {
 
   let count = 0;
 
-  const matchingTests =
-    TestsIndexCache.filter(test => {
+  TestsIndexCache.forEach(test => {
 
-      const examMatch =
-        State.exam === 'all' ||
-        test.exam_group === State.exam ||
-        test.exam === State.exam;
+    const examMatch =
+      State.exam === 'all' ||
+      test.exam_group === State.exam ||
+      test.exam === State.exam;
 
-      const subjectMatch =
-        State.subjects.includes(
-          test.subject
-        );
-
-      return (
-        examMatch &&
-        subjectMatch
+    const subjectMatch =
+      State.subjects.includes(
+        test.subject
       );
 
-    });
+    if (
+      !examMatch ||
+      !subjectMatch
+    ) {
+      return;
+    }
 
-  for (const test of matchingTests) {
+    const difficultyCounts =
+      test.difficulty_counts || {};
 
-    try {
+    if (
+      State.difficulty === 'mixed'
+    ) {
 
-      const res =
-        await fetch(
-          `${CONFIG.CDN_BASE}${test.file}`,
-          {
-            cache: 'no-store'
-          }
-        );
+      count +=
+        test.question_count || 0;
 
-      const data =
-        await res.json();
+    } else {
 
-      const questions =
-        data.questions || [];
-
-      questions.forEach(q => {
-
-        const difficultyMatch =
-          State.difficulty === 'mixed' ||
-          q.difficulty === State.difficulty;
-
-        if (difficultyMatch) {
-          count++;
-        }
-
-      });
-
-    } catch(err) {
-
-      console.error(
-        'Availability error:',
-        err
-      );
+      count +=
+        difficultyCounts[
+          State.difficulty
+        ] || 0;
 
     }
 
-  }
+  });
 
-  AvailableQuestionCount = count;
+  AvailableQuestionCount =
+    count;
 
   return count;
 }    
