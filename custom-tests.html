@@ -694,6 +694,8 @@
       timeStrategy: 'auto', // auto | custom
       customTime: 20
     };
+    let TestsIndexCache = [];
+let AvailableQuestionCount = 0;
 
     /* ============================================================
        HELPERS
@@ -734,6 +736,7 @@
       Array.isArray(data.tests)
       ? data.tests
       : (Array.isArray(data) ? data : []);
+    TestsIndexCache = tests;
 
     buildDynamicFilters(tests);
 
@@ -1112,10 +1115,93 @@ async function fetchRealQuestionPool() {
 
   return questionPool;
 }
+  
+/* ============================================================
+ REAL QUESTION AVAILABILITY
+ ============================================================ */
+async function calculateAvailability() {
+
+  if (
+    !State.exam ||
+    State.subjects.length === 0 ||
+    !State.difficulty
+  ) {
+
+    AvailableQuestionCount = 0;
+    return 0;
+  }
+
+  let count = 0;
+
+  const matchingTests =
+    TestsIndexCache.filter(test => {
+
+      const examMatch =
+        State.exam === 'all' ||
+        test.exam_group === State.exam ||
+        test.exam === State.exam;
+
+      const subjectMatch =
+        State.subjects.includes(
+          test.subject
+        );
+
+      return (
+        examMatch &&
+        subjectMatch
+      );
+
+    });
+
+  for (const test of matchingTests) {
+
+    try {
+
+      const res =
+        await fetch(
+          `${CONFIG.CDN_BASE}${test.file}`,
+          {
+            cache: 'no-store'
+          }
+        );
+
+      const data =
+        await res.json();
+
+      const questions =
+        data.questions || [];
+
+      questions.forEach(q => {
+
+        const difficultyMatch =
+          State.difficulty === 'mixed' ||
+          q.difficulty === State.difficulty;
+
+        if (difficultyMatch) {
+          count++;
+        }
+
+      });
+
+    } catch(err) {
+
+      console.error(
+        'Availability error:',
+        err
+      );
+
+    }
+
+  }
+
+  AvailableQuestionCount = count;
+
+  return count;
+}    
     /* ============================================================
        AVAILABILITY CHECK (VALIDATION & MOCK RESPONSE)
     ============================================================ */
-    function checkAvailability() {
+    async function checkAvailability() {
       const generateBtn = document.getElementById('generateBtn');
       const statusIcon = document.querySelector('.avail-icon');
       const statusTitle = document.getElementById('availTitle');
@@ -1137,21 +1223,23 @@ async function fetchRealQuestionPool() {
 
       // 2. Mock Availability calculation based on selections
       // (In a real scenario, this would filter against actual questions in memory)
-      let mockAvailable = 150; 
-      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
-      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
+     const available =
+  await calculateAvailability();
 
-      if (State.qCount > mockAvailable) {
+      if (State.qCount > available) {
         statusIcon.className = 'avail-icon warning';
         statusIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
         statusTitle.textContent = 'Limited Questions';
-        statusDesc.textContent = `Only ${mockAvailable} questions match. Test will be shorter.`;
-        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate (${mockAvailable} Qs)`;
+        statusDesc.textContent = `Only ${available} questions match. Test will be shorter.`;
+        generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate (${available} Qs)`;
       } else {
         statusIcon.className = 'avail-icon';
         statusIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-        statusTitle.textContent = 'Ready to Generate';
-        statusDesc.textContent = 'Sufficient questions available in the pool.';
+       statusTitle.textContent =
+  'Ready to Generate';
+
+statusDesc.textContent =
+  `${available} matching question${available !== 1 ? 's' : ''} available.`;
         generateBtn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
       }
     }
