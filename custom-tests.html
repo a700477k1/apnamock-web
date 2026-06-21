@@ -541,6 +541,37 @@
           </div>
         </div>
 
+        <!-- Sections -->
+<div class="builder-row">
+  <div class="builder-row-label">
+    Sections
+    <span class="builder-row-desc">
+      Focus on specific sections.
+    </span>
+  </div>
+
+  <div class="builder-controls">
+
+    <div
+      class="chip-group"
+      id="filter-section"
+    >
+
+      <div
+        style="
+          font-size:13px;
+          color:var(--text-muted);
+        "
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Loading sections...
+      </div>
+
+    </div>
+
+  </div>
+</div>
+        
         <!-- Difficulty -->
         <div class="builder-row">
           <div class="builder-row-label">
@@ -689,6 +720,7 @@
     const State = {
       exam: null, // Initially blank
       subjects: [], // Initially blank
+      sections: [], // Initially blank
       difficulty: null, // Initially blank
       qCount: 20,
       timeStrategy: 'auto', // auto | custom
@@ -770,12 +802,44 @@ let AvailableQuestionCount = 0;
 
     bindDynamicListeners();
 
+    const sectionChips =
+  document.querySelectorAll(
+    '#filter-section .chip'
+  );
+
+sectionChips.forEach(chip => {
+
+  chip.addEventListener(
+    'click',
+    () => {
+
+      chip.classList.toggle(
+        'selected'
+      );
+
+      State.sections =
+        Array.from(
+          document.querySelectorAll(
+            '#filter-section .chip.selected'
+          )
+        ).map(
+          c => c.dataset.val
+        );
+
+      checkAvailability();
+
+    }
+  );
+
+});
+
   }
 }
 function buildDynamicFilters(tests) {
 
   const examSet = new Set();
   const subjectSet = new Set();
+  const sectionSet = new Set();
 
   tests.forEach(t => {
 
@@ -790,6 +854,24 @@ function buildDynamicFilters(tests) {
     if (t.subject) {
       subjectSet.add(t.subject);
     }
+
+    if (
+  Array.isArray(t.sections)
+) {
+
+  t.sections.forEach(sec => {
+
+    const name =
+      sec.title?.en ||
+      sec.section_id;
+
+    if (name) {
+      sectionSet.add(name);
+    }
+
+  });
+
+}
 
   });
 
@@ -811,6 +893,21 @@ function buildDynamicFilters(tests) {
     [...subjectSet].map(s =>
       `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`
     ).join('');
+  const sectionContainer =
+  document.getElementById(
+    'filter-section'
+  );
+
+sectionContainer.innerHTML =
+  [...sectionSet]
+  .map(
+    s =>
+      `<div class="chip"
+         data-val="${escapeHTML(s)}">
+         ${escapeHTML(s)}
+       </div>`
+  )
+  .join('');
 
   bindDynamicListeners();
 }
@@ -1087,15 +1184,28 @@ async function fetchRealQuestionPool() {
 
       questions.forEach(q => {
 
+        const sectionMatch =
+
+  State.sections.length === 0 ||
+
+  State.sections.some(
+    s =>
+      String(
+        q.sectionId
+      )
+      .toLowerCase()
+      .includes(
+        s.toLowerCase()
+      )
+  );
         const difficultyMatch =
           State.difficulty === 'mixed' ||
           q.difficulty === State.difficulty;
 
-        if (difficultyMatch) {
-
-          questionPool.push({
-            ...q
-          });
+       if (
+  difficultyMatch &&
+  sectionMatch
+)
 
         }
 
