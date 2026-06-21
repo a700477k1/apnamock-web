@@ -1387,8 +1387,40 @@ async function generateTest() {
       return;
     }
 
-    const shuffled =
-      shuffleArray(pool);
+    const usageMap =
+  await getUsageMap();
+
+pool.sort(
+  (a, b) => {
+
+    const countA =
+      usageMap.get(
+        String(
+          a.id ||
+          a.question_id
+        )
+      ) || 0;
+
+    const countB =
+      usageMap.get(
+        String(
+          b.id ||
+          b.question_id
+        )
+      ) || 0;
+
+    return (
+      countA -
+      countB
+    );
+
+  }
+);
+
+const shuffled =
+  shuffleArray(
+    pool.slice(0, 300)
+  );
 
     const generatedQuestions =
       shuffled.slice(
@@ -1487,6 +1519,10 @@ async function generateTest() {
 
     };
 
+    await incrementUsage(
+  generatedQuestions
+);
+    
     localStorage.setItem(
       'apnamock_active_custom_test',
       JSON.stringify(
@@ -1511,6 +1547,167 @@ async function generateTest() {
 
     btn.disabled = false;
   }
+}
+    /* ============================================================
+ QUESTION USAGE DATABASE
+ ============================================================ */
+
+const DB_NAME =
+  'ApnaMockDB';
+
+const DB_VERSION =
+  2;
+
+function openDB() {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const request =
+        indexedDB.open(
+          DB_NAME,
+          DB_VERSION
+        );
+
+      request.onupgradeneeded =
+        (e) => {
+
+          const db =
+            e.target.result;
+
+          if (
+            !db.objectStoreNames.contains(
+              'questionUsage'
+            )
+          ) {
+
+            db.createObjectStore(
+              'questionUsage',
+              {
+                keyPath: 'qId'
+              }
+            );
+
+          }
+
+        };
+
+      request.onsuccess =
+        () => resolve(
+          request.result
+        );
+
+      request.onerror =
+        () => reject(
+          request.error
+        );
+
+    }
+  );
+}
+    async function getUsageMap() {
+
+  const db =
+    await openDB();
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const tx =
+        db.transaction(
+          'questionUsage',
+          'readonly'
+        );
+
+      const store =
+        tx.objectStore(
+          'questionUsage'
+        );
+
+      const req =
+        store.getAll();
+
+      req.onsuccess =
+        () => {
+
+          const map =
+            new Map();
+
+          req.result.forEach(
+            item => {
+
+              map.set(
+                item.qId,
+                item.count || 0
+              );
+
+            }
+          );
+
+          resolve(map);
+
+        };
+
+      req.onerror =
+        () => reject(
+          req.error
+        );
+
+    }
+  );
+}
+    async function incrementUsage(
+  questions
+) {
+
+  const db =
+    await openDB();
+
+  const tx =
+    db.transaction(
+      'questionUsage',
+      'readwrite'
+    );
+
+  const store =
+    tx.objectStore(
+      'questionUsage'
+    );
+
+  questions.forEach(q => {
+
+    const qId =
+      String(
+        q.id ||
+        q.question_id
+      );
+
+    const req =
+      store.get(qId);
+
+    req.onsuccess =
+      () => {
+
+        const current =
+          req.result;
+
+        store.put({
+
+          qId,
+
+          count:
+            (current?.count || 0)
+            + 1,
+
+          lastUsed:
+            Date.now()
+
+        });
+
+      };
+
+  });
+
 }
     /* ============================================================
        BOOTSTRAP
