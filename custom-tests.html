@@ -802,37 +802,6 @@ let AvailableQuestionCount = 0;
 
     bindDynamicListeners();
 
-    const sectionChips =
-  document.querySelectorAll(
-    '#filter-section .chip'
-  );
-
-sectionChips.forEach(chip => {
-
-  chip.addEventListener(
-    'click',
-    () => {
-
-      chip.classList.toggle(
-        'selected'
-      );
-
-      State.sections =
-        Array.from(
-          document.querySelectorAll(
-            '#filter-section .chip.selected'
-          )
-        ).map(
-          c => c.dataset.val
-        );
-
-      checkAvailability();
-
-    }
-  );
-
-});
-
   }
 }
 function buildDynamicFilters(tests) {
@@ -924,6 +893,36 @@ sectionContainer.innerHTML =
           checkAvailability();
         });
       });
+      const sectionChips =
+ document.querySelectorAll(
+   '#filter-section .chip'
+ );
+
+sectionChips.forEach(chip => {
+
+  chip.addEventListener(
+    'click',
+    () => {
+
+      chip.classList.toggle(
+        'selected'
+      );
+
+      State.sections =
+        Array.from(
+          document.querySelectorAll(
+            '#filter-section .chip.selected'
+          )
+        ).map(
+          c => c.dataset.val
+        );
+
+      checkAvailability();
+
+    }
+  );
+
+});
     }
 
     /* ============================================================
@@ -1203,13 +1202,17 @@ async function fetchRealQuestionPool() {
           q.difficulty === State.difficulty;
 
        if (
-  difficultyMatch &&
-  sectionMatch
-)
+ difficultyMatch &&
+ sectionMatch
+) {
 
-        }
+ questionPool.push({
+   ...q
+ });
 
-      });
+}
+
+});
 
     } catch (err) {
 
