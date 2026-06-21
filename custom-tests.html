@@ -683,7 +683,7 @@
     ============================================================ */
     const CONFIG = { 
       STORAGE_PREFIX: 'apnamock_',
-      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data/'
     };
 
     const State = {
@@ -714,65 +714,103 @@
        DATA FETCHING & DYNAMIC FILTER BUILDING
     ============================================================ */
     async function loadGlobalData() {
-      try {
-        const url = `${CONFIG.CDN_BASE}data/tests-index.json?t=${Date.now()}`;
-        const res = await fetch(url, { cache: 'force-cache' });
-        if (!res.ok) throw new Error('Network error');
-        
-        const data = await res.json();
-        const tests = Array.isArray(data.tests) ? data.tests : (Array.isArray(data) ? data : []);
-        
-        buildDynamicFilters(tests);
 
-      } catch (err) {
-        console.error("Failed to fetch dynamic filters", err);
-        // Fallback options in case repo data fails to load
-        const fbContainerExam = document.getElementById('filter-exam');
-        fbContainerExam.innerHTML = `
-          <div class="chip" data-val="all">All Exams</div>
-          <div class="chip" data-val="SSC">SSC</div>
-          <div class="chip" data-val="Banking">Banking</div>
-        `;
-        const fbContainerSubject = document.getElementById('filter-subject');
-        fbContainerSubject.innerHTML = `
-          <div class="chip" data-val="General Intelligence">General Intelligence</div>
-          <div class="chip" data-val="Quantitative Aptitude">Quantitative Aptitude</div>
-          <div class="chip" data-val="English Language">English Language</div>
-          <div class="chip" data-val="General Awareness">General Awareness</div>
-        `;
-        bindDynamicListeners();
-      }
+  try {
+
+    const url =
+      `${CONFIG.CDN_BASE}data/tests-index.json?t=${Date.now()}`;
+
+    const res = await fetch(url, {
+      cache: 'no-store'
+    });
+
+    if (!res.ok) {
+      throw new Error('Network error');
     }
 
-    function buildDynamicFilters(tests) {
-      const examSet = new Set();
-      const subjectSet = new Set();
+    const data = await res.json();
 
-      tests.forEach(t => {
-        // Collect Unique Exams
-        if (t.exam_group) examSet.add(t.exam_group);
-        else if (t.exam) examSet.add(t.exam);
+    const tests =
+      Array.isArray(data.tests)
+      ? data.tests
+      : (Array.isArray(data) ? data : []);
 
-        // Collect Unique Subjects/Sections
-        if (t.subject) subjectSet.add(t.subject);
-        if (t.sections && Array.isArray(t.sections)) {
-          t.sections.forEach(sec => {
-            const secName = sec.title?.en || sec.title || sec.section_id;
-            if (secName) subjectSet.add(secName);
-          });
-        }
-      });
+    buildDynamicFilters(tests);
 
-      const examContainer = document.getElementById('filter-exam');
-      examContainer.innerHTML = '<div class="chip" data-val="all">All Exams</div>' + 
-          [...examSet].map(e => `<div class="chip" data-val="${escapeHTML(e)}">${escapeHTML(e)}</div>`).join('');
+  } catch (err) {
 
-      const subjectContainer = document.getElementById('filter-subject');
-      subjectContainer.innerHTML = [...subjectSet].map(s => `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`).join('');
+    console.error(
+      "Failed to fetch dynamic filters",
+      err
+    );
 
-      bindDynamicListeners();
+    // Fallback options
+    const fbContainerExam =
+      document.getElementById('filter-exam');
+
+    fbContainerExam.innerHTML = `
+      <div class="chip" data-val="all">All Exams</div>
+      <div class="chip" data-val="SSC">SSC</div>
+      <div class="chip" data-val="Banking">Banking</div>
+      <div class="chip" data-val="Railway">Railway</div>
+    `;
+
+    const fbContainerSubject =
+      document.getElementById('filter-subject');
+
+    fbContainerSubject.innerHTML = `
+      <div class="chip" data-val="General Intelligence">General Intelligence</div>
+      <div class="chip" data-val="Quantitative Aptitude">Quantitative Aptitude</div>
+      <div class="chip" data-val="English Language">English Language</div>
+      <div class="chip" data-val="General Awareness">General Awareness</div>
+    `;
+
+    bindDynamicListeners();
+
+  }
+}
+function buildDynamicFilters(tests) {
+
+  const examSet = new Set();
+  const subjectSet = new Set();
+
+  tests.forEach(t => {
+
+    // Collect Unique Exams
+    if (t.exam_group) {
+      examSet.add(t.exam_group);
+    } else if (t.exam) {
+      examSet.add(t.exam);
     }
 
+    // Collect Unique Subjects
+    if (t.subject) {
+      subjectSet.add(t.subject);
+    }
+
+  });
+
+  // Build Exam Container
+  const examContainer =
+    document.getElementById('filter-exam');
+
+  examContainer.innerHTML =
+    '<div class="chip" data-val="all">All Exams</div>' +
+    [...examSet].map(e =>
+      `<div class="chip" data-val="${escapeHTML(e)}">${escapeHTML(e)}</div>`
+    ).join('');
+
+  // Build Subject Container
+  const subjectContainer =
+    document.getElementById('filter-subject');
+
+  subjectContainer.innerHTML =
+    [...subjectSet].map(s =>
+      `<div class="chip" data-val="${escapeHTML(s)}">${escapeHTML(s)}</div>`
+    ).join('');
+
+  bindDynamicListeners();
+}
     function bindDynamicListeners() {
       // Re-bind Exam single select
       setupSingleSelect('filter-exam', (val) => { State.exam = val; checkAvailability(); });
@@ -960,7 +998,120 @@
       State.subjects = Array.from(document.querySelectorAll('#filter-subject .chip.selected')).map(c => c.dataset.val);
       return foundAny;
     }
+/* ============================================================
+ SHUFFLE HELPER
+ ============================================================ */
+function shuffleArray(array) {
 
+  const arr = [...array];
+
+  for (
+    let i = arr.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        Math.random() * (i + 1)
+      );
+
+    [arr[i], arr[j]] =
+      [arr[j], arr[i]];
+  }
+
+  return arr;
+}
+/* ============================================================
+ REAL QUESTION POOL LOADER
+ ============================================================ */
+async function fetchRealQuestionPool() {
+
+  const indexUrl =
+    `${CONFIG.CDN_BASE}data/tests-index.json?t=${Date.now()}`;
+
+  const indexRes =
+    await fetch(indexUrl, {
+      cache: 'no-store'
+    });
+
+  const indexData =
+    await indexRes.json();
+
+  const tests =
+    indexData.tests || [];
+
+  const matchingTests =
+    tests.filter(test => {
+
+      const examMatch =
+        State.exam === 'all' ||
+        test.exam_group === State.exam ||
+        test.exam === State.exam;
+
+      const subjectMatch =
+        State.subjects.length === 0 ||
+        State.subjects.includes(
+          test.subject
+        );
+
+      return (
+        examMatch &&
+        subjectMatch
+      );
+
+    });
+
+  const questionPool = [];
+
+  for (const test of matchingTests) {
+
+    try {
+
+      const fileUrl =
+        `${CONFIG.CDN_BASE}${test.file}`;
+
+      const testRes =
+        await fetch(fileUrl, {
+          cache: 'no-store'
+        });
+
+      const testData =
+        await testRes.json();
+
+      const questions =
+        testData.questions || [];
+
+      questions.forEach(q => {
+
+        const difficultyMatch =
+          State.difficulty === 'mixed' ||
+          q.difficulty === State.difficulty;
+
+        if (difficultyMatch) {
+
+          questionPool.push({
+            ...q
+          });
+
+        }
+
+      });
+
+    } catch (err) {
+
+      console.error(
+        'Failed loading test file:',
+        test.file,
+        err
+      );
+
+    }
+
+  }
+
+  return questionPool;
+}
     /* ============================================================
        AVAILABILITY CHECK (VALIDATION & MOCK RESPONSE)
     ============================================================ */
@@ -1008,73 +1159,168 @@
     /* ============================================================
        GENERATE & DISPATCH LOGIC (DUMMY DATA FOR NOW)
     ============================================================ */
-    function generateTest() {
-      const btn = document.getElementById('generateBtn');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Compiling...`;
-      btn.disabled = true;
+async function generateTest() {
 
-      let finalDuration = State.timeStrategy === 'auto' ? State.qCount : State.customTime;
-      
-      let finalQCount = State.qCount;
-      let mockAvailable = 150; 
-      if (State.difficulty === 'Hard' && State.subjects.length === 1) mockAvailable = 35;
-      if (State.exam !== 'all') mockAvailable = Math.floor(mockAvailable * 0.8);
-      if (finalQCount > mockAvailable) finalQCount = mockAvailable;
+  const btn =
+    document.getElementById(
+      'generateBtn'
+    );
 
-      // -------------------------------------------------------------
-      // MOCK DATA GENERATOR (REPLACE WITH REAL FETCH IN FUTURE)
-      // -------------------------------------------------------------
-      setTimeout(() => {
-        
-        const generatedQuestions = [];
-        for (let i = 0; i < finalQCount; i++) {
-          const sub = State.subjects[i % State.subjects.length];
-          generatedQuestions.push({
-            id: `cq_${Date.now()}_${i}`,
-            sectionId: sub,
-            question: { en: `(Custom Generated) What is a sample ${State.difficulty} question for ${sub}?`, hi: `(कस्टम) ${sub} के लिए ${State.difficulty} प्रश्न क्या है?` },
-            options: [
-              { en: "Option A", hi: "विकल्प A" },
-              { en: "Option B", hi: "विकल्प B" },
-              { en: "Option C", hi: "विकल्प C" },
-              { en: "Option D", hi: "विकल्प D" }
-            ],
-            correct: Math.floor(Math.random() * 4),
-            explanation: { en: `This is the generated explanation for ${sub}.`, hi: `यह ${sub} के लिए उत्पन्न स्पष्टीकरण है।` },
-            marks: 1,
-            negativeMarks: 0.25
-          });
-        }
+  btn.innerHTML =
+    `<i class="fa-solid fa-spinner fa-spin"></i> Loading Questions...`;
 
-        const customTestObject = {
-          testId: `custom_${Date.now()}`,
-          title: `Custom Test: ${State.subjects.length > 2 ? 'Mixed Subjects' : State.subjects.join(' & ')}`,
-          title_i18n: { 
-            en: `Custom Test: ${State.subjects.length > 2 ? 'Mixed Subjects' : State.subjects.join(' & ')}`, 
-            hi: `कस्टम टेस्ट: मिश्रित` 
-          },
-          exam: State.exam === 'all' ? 'Mixed Exams' : State.exam,
-          duration: finalDuration,
-          totalQuestions: finalQCount,
-          totalMarks: finalQCount,
-          negativeMarking: 0.25,
-          language_mode: 'bilingual',
-          sections: State.subjects.map(s => ({ section_id: s, title: { en: s, hi: s } })),
-          questions: generatedQuestions
-        };
+  btn.disabled = true;
 
-        // Save object locally for quiz.html to intercept
-        try {
-          localStorage.setItem('apnamock_active_custom_test', JSON.stringify(customTestObject));
-          // Redirect with the 'custom' flag
-          window.location.href = `/quiz.html?test=custom`;
-        } catch(e) {
-          console.error(e);
-          showToast('Failed to compile test. Device storage might be full.', 'error');
-          btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Generate & Start`;
-          btn.disabled = false;
-        }
+  try {
 
+    let finalDuration =
+      State.timeStrategy === 'auto'
+      ? State.qCount
+      : State.customTime;
+
+    const pool =
+      await fetchRealQuestionPool();
+
+    if (pool.length === 0) {
+
+      showToast(
+        'No matching questions found.',
+        'error'
+      );
+
+      btn.innerHTML =
+        `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+
+      btn.disabled = false;
+
+      return;
+    }
+
+    const shuffled =
+      shuffleArray(pool);
+
+    const generatedQuestions =
+      shuffled.slice(
+        0,
+        State.qCount
+      );
+
+    const sectionsMap =
+      new Map();
+
+    generatedQuestions.forEach(q => {
+
+      if (
+        !sectionsMap.has(
+          q.sectionId
+        )
+      ) {
+
+        sectionsMap.set(
+          q.sectionId,
+          {
+            section_id:
+              q.sectionId,
+
+            title: {
+              en:
+                q.topic ||
+                q.sectionId ||
+                'Section',
+
+              hi:
+                q.topic ||
+                q.sectionId ||
+                'Section'
+            }
+          }
+        );
+
+      }
+
+    });
+
+    const totalMarks =
+      generatedQuestions.reduce(
+        (sum, q) =>
+          sum + (q.marks || 1),
+        0
+      );
+
+    const customTestObject = {
+
+      testId:
+        `custom_${Date.now()}`,
+
+      test_id:
+        `custom_${Date.now()}`,
+
+      title:
+        `Custom Test`,
+
+      title_i18n: {
+        en: 'Custom Test',
+        hi: 'कस्टम टेस्ट'
+      },
+
+      exam:
+        State.exam === 'all'
+        ? 'Mixed Exams'
+        : State.exam,
+
+      exam_group:
+        State.exam === 'all'
+        ? 'Mixed'
+        : State.exam,
+
+      duration:
+        finalDuration,
+
+      totalQuestions:
+        generatedQuestions.length,
+
+      totalMarks:
+        totalMarks,
+
+      negativeMarking:
+        0.25,
+
+      language_mode:
+        'bilingual',
+
+      sections:
+        [...sectionsMap.values()],
+
+      questions:
+        generatedQuestions
+
+    };
+
+    localStorage.setItem(
+      'apnamock_active_custom_test',
+      JSON.stringify(
+        customTestObject
+      )
+    );
+
+    window.location.href =
+      '/quiz.html?test=custom';
+
+  } catch (err) {
+
+    console.error(err);
+
+    showToast(
+      'Failed to generate test.',
+      'error'
+    );
+
+    btn.innerHTML =
+      `<i class="fa-solid fa-bolt"></i> Generate & Start`;
+
+    btn.disabled = false;
+  }
+}
       }, 800); // Artificial delay to feel like it's "compiling"
     }
 
