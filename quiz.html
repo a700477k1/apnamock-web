@@ -660,6 +660,24 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
     }
+    /* Section-wise palette grouping */
+
+.palette-section {
+  margin-bottom: 16px;
+}
+
+.palette-section:last-child {
+  margin-bottom: 0;
+}
+
+.palette-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
     .palette-btn {
       width: 100%;
       aspect-ratio: 1;
@@ -1910,9 +1928,83 @@ function updateActiveSectionFromQuestion(index) {
        PALETTE GRID
     ============================================================ */
     function buildPaletteGrid() {
-      document.getElementById('paletteGrid').innerHTML = Quiz.questions.map((q, i) => `<button class="palette-btn" id="palette-${i}" onclick="renderQuestion(${i})">${i + 1}</button>`).join('');
-      updatePaletteGrid();
-    }
+
+  const container =
+    document.getElementById('paletteGrid');
+
+  const sections =
+    Quiz.testData.sections || [];
+
+  if (!sections.length) {
+
+    container.innerHTML =
+      Quiz.questions.map((q, i) => `
+        <button
+          class="palette-btn"
+          id="palette-${i}"
+          onclick="renderQuestion(${i})">
+          ${i + 1}
+        </button>
+      `).join('');
+
+    updatePaletteGrid();
+    return;
+  }
+
+  let html = '';
+
+  sections.forEach(section => {
+
+    const sectionQuestions =
+      Quiz.questions
+        .map((q, i) => ({ q, i }))
+        .filter(
+          item =>
+            String(item.q.sectionId) ===
+            String(section.section_id)
+        );
+
+    if (!sectionQuestions.length) return;
+
+    html += `
+      <div class="palette-section">
+
+        <div class="palette-section-title">
+          ${
+            escapeHTML(
+              section.title?.[Quiz.language] ||
+              section.title?.en ||
+              section.section_id
+            )
+          }
+        </div>
+
+        <div class="palette-grid">
+
+          ${
+            sectionQuestions.map(item => `
+              <button
+                class="palette-btn"
+                id="palette-${item.i}"
+                onclick="renderQuestion(${item.i})">
+
+                ${item.i + 1}
+
+              </button>
+            `).join('')
+          }
+
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  container.innerHTML = html;
+
+  updatePaletteGrid();
+}
 
     function updatePaletteGrid() {
       Quiz.questions.forEach((q, i) => {
