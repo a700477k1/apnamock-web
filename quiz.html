@@ -1786,12 +1786,46 @@ function orderQuestionsBySection() {
       });
     }
 
+function updateActiveSectionFromQuestion(index) {
+
+  const q = Quiz.questions[index];
+
+  if (!q) return;
+
+  const sectionIndex =
+    (Quiz.testData.sections || [])
+      .findIndex(
+        s =>
+          String(s.section_id) ===
+          String(q.sectionId)
+      );
+
+  if (sectionIndex === -1) return;
+
+  Quiz.currentSection =
+    sectionIndex;
+
+  document
+    .querySelectorAll('.section-tab')
+    .forEach(tab => {
+
+      tab.classList.toggle(
+        'active',
+        Number(tab.dataset.section) ===
+        sectionIndex
+      );
+
+    });
+
+}
+    
     /* ============================================================
        QUESTION RENDERING
     ============================================================ */
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
       Quiz.currentIndex = index; Quiz.visited.add(index);
+      updateActiveSectionFromQuestion(index);
       const q = Quiz.questions[index]; const lang = Quiz.language;
 
       let questionHtml = '';
