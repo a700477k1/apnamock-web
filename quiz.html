@@ -2102,7 +2102,10 @@ function buildPaletteGrid() {
 )
 -
 Quiz.timeLeft, submittedAt: Quiz.submitTime, questionResults: results,
-       testData: Quiz.testData,
+       testData: {
+  ...Quiz.testData,
+  questions: Quiz.questions
+}
       };
 
       storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
