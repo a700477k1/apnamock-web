@@ -761,6 +761,20 @@
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
           <div class="review-filter-option" data-filter="marked" onclick="selectReviewFilter('marked')">
+            <div
+class="review-filter-option"
+onclick="openSectionFilterPopup()">
+
+<span>
+<i class="fa-solid fa-layer-group"
+style="color:var(--primary);margin-right:8px"></i>
+
+Filter by Section
+</span>
+
+<i class="fa-solid fa-chevron-right"></i>
+
+</div>
             <span><i class="fa-solid fa-bookmark" style="color:var(--warning);margin-right:8px"></i> Marked for Review</span>
             <i class="fa-solid fa-check" style="color:var(--primary);font-size:12px;display:none"></i>
           </div>
@@ -774,6 +788,36 @@
     </div>
   </div>
 
+<div class="overlay" id="sectionFilterOverlay">
+
+<div class="popup">
+
+<div class="popup-header">
+
+<span class="popup-title">
+Select Section
+</span>
+
+<button
+class="popup-close"
+onclick="closeOverlay('sectionFilterOverlay')">
+
+<i class="fa-solid fa-xmark"></i>
+
+</button>
+
+</div>
+
+<div
+class="popup-body"
+id="sectionFilterOptions">
+
+</div>
+
+</div>
+
+</div>
+  
   <div class="toast-container" id="toastContainer"></div>
 
   <footer class="site-footer">
@@ -850,6 +894,10 @@
       filteredResults: [],
       displayedReviews: 0,
       reviewFilter: 'all',
+
+      selectedSectionFilter: null,
+selectedSectionName: null,
+      
       favorites: new Set(),
       language: 'bilingual'
     };
@@ -995,23 +1043,143 @@
       applyAndRenderReview();
     }
 
+    function openSectionFilterPopup() {
+
+  closeOverlay('reviewFilterOverlay');
+
+  const container =
+    document.getElementById(
+      'sectionFilterOptions'
+    );
+
+  const sections =
+    Result.data.testData?.sections || [];
+
+  const lang =
+    Result.language || 'en';
+
+  container.innerHTML =
+    sections.map(section => `
+
+      <div
+      class="review-filter-option"
+      onclick="selectSectionFilter('${section.section_id}')">
+
+        <span>
+
+          ${
+            escapeHTML(
+              section.title?.[lang] ||
+              section.title?.en ||
+              section.section_id
+            )
+          }
+
+        </span>
+
+      </div>
+
+    `).join('');
+
+  openOverlay(
+    'sectionFilterOverlay'
+  );
+
+}
+
+    function selectSectionFilter(
+  sectionId
+) {
+
+  Result.reviewFilter =
+    'section';
+
+  Result.selectedSectionFilter =
+    sectionId;
+
+  const section =
+    Result.data.testData.sections.find(
+      s =>
+        String(s.section_id) ===
+        String(sectionId)
+    );
+
+  Result.selectedSectionName =
+    section?.title?.[
+      Result.language
+    ] ||
+    section?.title?.en ||
+    sectionId;
+
+  closeOverlay(
+    'sectionFilterOverlay'
+  );
+
+  applyAndRenderReview();
+
+}
+
     function applyAndRenderReview() {
-      const filter = Result.reviewFilter;
-      const qrs = Result.questionResults;
 
-      if (filter === 'all') {
-        Result.filteredResults = qrs;
-      } else {
-        Result.filteredResults = qrs.filter(qr => qr.status === filter);
-      }
+ const filter =
+   Result.reviewFilter;
 
-      Result.displayedReviews = 0;
+ const qrs =
+   Result.questionResults;
 
-      const reviewList = document.getElementById('reviewList');
-      if (reviewList) reviewList.innerHTML = '';
+ if (filter === 'all') {
 
-      renderMoreReviews();
-    }
+   Result.filteredResults =
+     qrs;
+
+ }
+
+ else if (
+   filter === 'section'
+ ) {
+
+   Result.filteredResults =
+     qrs.filter(qr => {
+
+       const q =
+         Result.questions[
+           qr.questionIndex
+         ];
+
+       return (
+         String(q?.sectionId) ===
+         String(
+           Result.selectedSectionFilter
+         )
+       );
+
+     });
+
+ }
+
+ else {
+
+   Result.filteredResults =
+     qrs.filter(
+       qr =>
+         qr.status === filter
+     );
+
+ }
+
+ Result.displayedReviews = 0;
+
+ const reviewList =
+   document.getElementById(
+     'reviewList'
+   );
+
+ if (reviewList)
+   reviewList.innerHTML = '';
+
+ renderMoreReviews();
+
+}
 
     async function loadLatestTestData(testId) {
 
@@ -1357,7 +1525,7 @@
               <i class="fa-solid fa-magnifying-glass" style="color:var(--primary)"></i>
               Answer Review
             </div>
-            <button class="btn btn-ghost" style="height:36px;padding:0 14px;font-size:13px" onclick="openOverlay('reviewFilterOverlay')">
+            <button class="btn btn-outline" style="height:36px;padding:0 14px;font-size:13px" onclick="openOverlay('reviewFilterOverlay')">
               <i class="fa-solid fa-filter"></i>
               Filter: ${getFilterLabel(Result.reviewFilter)}
             </button>
@@ -1652,13 +1820,30 @@
       return section?.title?.[lang] || section?.title?.en || sectionId;
     }
 
-    function getFilterLabel(filter) {
-      const labels = {
-        all: 'All', correct: 'Correct', wrong: 'Wrong',
-        skipped: 'Skipped', marked: 'Marked'
-      };
-      return labels[filter] || 'All';
-    }
+  function getFilterLabel(filter) {
+
+ if (
+   filter === 'section'
+ ) {
+
+   return (
+     Result.selectedSectionName ||
+     'Section'
+   );
+
+ }
+
+ const labels = {
+   all: 'All',
+   correct: 'Correct',
+   wrong: 'Wrong',
+   skipped: 'Skipped',
+   marked: 'Marked'
+ };
+
+ return labels[filter] || 'All';
+
+}
 
     /* ============================================================
        ERROR HANDLING
