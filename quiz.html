@@ -1691,6 +1691,8 @@ const indexRes = await fetch(
       const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
       document.getElementById('topbar-marks').textContent = calculatedMarks;
 
+      orderQuestionsBySection();
+
       buildSectionTabs(); buildPaletteGrid(); renderQuestion(Quiz.currentIndex); startTimer();
       document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
       autoSave();
@@ -1703,6 +1705,55 @@ const indexRes = await fetch(
       }
     });
 
+/* ============================================================
+ SECTION QUESTION ORDERING
+ ============================================================ */
+function orderQuestionsBySection() {
+
+  const sections =
+    Quiz.testData.sections || [];
+
+  if (
+    !sections.length ||
+    !Quiz.questions.length
+  ) {
+    return;
+  }
+
+  const ordered = [];
+
+  sections.forEach(section => {
+
+    Quiz.questions
+      .filter(
+        q =>
+          String(q.sectionId) ===
+          String(section.section_id)
+      )
+      .forEach(q => {
+
+        ordered.push(q);
+
+      });
+
+  });
+
+  const remaining =
+    Quiz.questions.filter(q =>
+
+      !sections.some(
+        s =>
+          String(s.section_id) ===
+          String(q.sectionId)
+      )
+
+    );
+
+  ordered.push(...remaining);
+
+  Quiz.questions = ordered;
+}
+    
     /* ============================================================
        SECTION TABS
     ============================================================ */
