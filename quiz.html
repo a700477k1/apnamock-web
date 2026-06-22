@@ -1899,7 +1899,15 @@ const indexRes = await fetch(
         testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
         score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
         correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
-        timeTaken: Math.round((Quiz.submitTime - Quiz.startTime) / 1000), submittedAt: Quiz.submitTime, questionResults: results,
+        timeTaken:
+
+(
+  (
+    Quiz.testData.duration || 60
+  ) * 60
+)
+-
+Quiz.timeLeft, submittedAt: Quiz.submitTime, questionResults: results,
        testData: Quiz.testData,
       };
 
