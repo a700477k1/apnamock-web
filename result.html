@@ -810,8 +810,28 @@ onclick="closeOverlay('sectionFilterOverlay')">
 </div>
 
 <div
-class="popup-body"
+class="popup-body">
+
+<div
+class="review-filter-options"
 id="sectionFilterOptions">
+
+</div>
+
+</div>
+
+<div class="popup-footer">
+
+<button
+class="btn btn-primary"
+style="flex:1"
+onclick="closeOverlay('sectionFilterOverlay')">
+
+<i class="fa-solid fa-check"></i>
+
+Done
+
+</button>
 
 </div>
 
@@ -1044,9 +1064,11 @@ selectedSectionName: null,
       applyAndRenderReview();
     }
 
-    function openSectionFilterPopup() {
+function openSectionFilterPopup() {
 
-  closeOverlay('reviewFilterOverlay');
+  closeOverlay(
+    'reviewFilterOverlay'
+  );
 
   const container =
     document.getElementById(
@@ -1060,27 +1082,61 @@ selectedSectionName: null,
     Result.language || 'en';
 
   container.innerHTML =
-    sections.map(section => `
+    sections.map(section => {
 
-      <div
-      class="review-filter-option"
-      onclick="selectSectionFilter('${section.section_id}')">
+      const sectionId =
+        String(section.section_id);
 
-        <span>
+      const isSelected =
+        String(
+          Result.selectedSectionFilter
+        ) === sectionId;
 
-          ${
-            escapeHTML(
-              section.title?.[lang] ||
-              section.title?.en ||
-              section.section_id
-            )
-          }
+      return `
 
-        </span>
+        <div
+        class="review-filter-option ${
+          isSelected
+            ? 'selected'
+            : ''
+        }"
 
-      </div>
+        onclick="
+          selectSectionFilter(
+            '${sectionId}'
+          )
+        ">
 
-    `).join('');
+          <span>
+
+            ${
+              escapeHTML(
+                section.title?.[lang] ||
+                section.title?.en ||
+                sectionId
+              )
+            }
+
+          </span>
+
+          <i
+          class="fa-solid fa-check"
+          style="
+            color:var(--primary);
+            font-size:12px;
+            display:${
+              isSelected
+                ? 'block'
+                : 'none'
+            };
+          ">
+          </i>
+
+        </div>
+
+      `;
+
+    }).join('');
 
   openOverlay(
     'sectionFilterOverlay'
@@ -1088,7 +1144,7 @@ selectedSectionName: null,
 
 }
 
-    function selectSectionFilter(
+function selectSectionFilter(
   sectionId
 ) {
 
