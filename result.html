@@ -1118,7 +1118,9 @@
     latestTestData;
 
   Result.questions =
-    latestTestData.questions || [];
+ resultData.testData?.questions ||
+ latestTestData.questions ||
+ [];
 
 } catch(err) {
 
