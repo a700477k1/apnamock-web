@@ -660,6 +660,17 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
     }
+    .palette-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.palette-section-label:first-child {
+  margin-top: 0;
+}
     /* Section-wise palette grouping */
 
 .palette-section {
@@ -1300,7 +1311,7 @@
       <div class="palette-panel" id="palettePanel">
         <div class="palette-card">
           <div class="palette-card-header"><div class="palette-card-title">Question Palette</div></div>
-          <div class="palette-card-body"><div class="palette-grid" id="paletteGrid"></div></div>
+          <div class="palette-card-body"><div id="paletteGrid"></div></div>
         </div>
 
         <div class="palette-card">
@@ -1927,7 +1938,7 @@ function updateActiveSectionFromQuestion(index) {
     /* ============================================================
        PALETTE GRID
     ============================================================ */
-    function buildPaletteGrid() {
+function buildPaletteGrid() {
 
   const container =
     document.getElementById('paletteGrid');
@@ -1938,14 +1949,20 @@ function updateActiveSectionFromQuestion(index) {
   if (!sections.length) {
 
     container.innerHTML =
-      Quiz.questions.map((q, i) => `
-        <button
-          class="palette-btn"
-          id="palette-${i}"
-          onclick="renderQuestion(${i})">
-          ${i + 1}
-        </button>
-      `).join('');
+      `<div class="palette-grid">
+        ${
+          Quiz.questions.map((q, i) => `
+            <button
+              class="palette-btn"
+              id="palette-${i}"
+              onclick="renderQuestion(${i})">
+
+              ${i + 1}
+
+            </button>
+          `).join('')
+        }
+      </div>`;
 
     updatePaletteGrid();
     return;
@@ -1967,36 +1984,36 @@ function updateActiveSectionFromQuestion(index) {
     if (!sectionQuestions.length) return;
 
     html += `
-      <div class="palette-section">
 
-        <div class="palette-section-title">
-          ${
-            escapeHTML(
-              section.title?.[Quiz.language] ||
-              section.title?.en ||
-              section.section_id
-            )
-          }
-        </div>
+      <div class="palette-section-label">
 
-        <div class="palette-grid">
-
-          ${
-            sectionQuestions.map(item => `
-              <button
-                class="palette-btn"
-                id="palette-${item.i}"
-                onclick="renderQuestion(${item.i})">
-
-                ${item.i + 1}
-
-              </button>
-            `).join('')
-          }
-
-        </div>
+        ${
+          escapeHTML(
+            section.title?.[Quiz.language] ||
+            section.title?.en ||
+            section.section_id
+          )
+        }
 
       </div>
+
+      <div class="palette-grid">
+
+        ${
+          sectionQuestions.map(item => `
+            <button
+              class="palette-btn"
+              id="palette-${item.i}"
+              onclick="renderQuestion(${item.i})">
+
+              ${item.i + 1}
+
+            </button>
+          `).join('')
+        }
+
+      </div>
+
     `;
 
   });
