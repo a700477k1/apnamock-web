@@ -1002,7 +1002,7 @@ undone.</div>
  language: [],
  testTitle: [],
  date: null
-}
+},
       sort: 'date-desc' 
     }; 
  
@@ -1125,15 +1125,14 @@ undone.</div>
     } 
  
     function updateFilterBadges() { 
-      const counts = { 
-        exam: document.querySelectorAll('#filterExams .selected').length, 
-        subject: document.querySelectorAll('#filterSubjects .selected').length, 
-        topic: document.querySelectorAll('#filterTopics .selected').length, 
-        section: document.querySelectorAll('#filterSections .selected').length, 
-        language: document.querySelectorAll('#filterLanguages .selected').length, 
-        testTitle: document.querySelectorAll('#filterTestTitles .selected').length, 
-        date: document.querySelectorAll('#filterDate .selected').length 
-      }; 
+     const counts = {
+ exam: document.querySelectorAll('#filterExams .selected').length,
+ actualExam: document.querySelectorAll('#filterActualExams .selected').length,
+ section: document.querySelectorAll('#filterSections .selected').length,
+ language: document.querySelectorAll('#filterLanguages .selected').length,
+ testTitle: document.querySelectorAll('#filterTestTitles .selected').length,
+ date: document.querySelectorAll('#filterDate .selected').length
+};
  
       for (const [key, count] of Object.entries(counts)) { 
         const badge = document.getElementById(`badge-${key}`); 
@@ -1263,8 +1262,6 @@ const actualExams =
    )
    .filter(Boolean)
  )];
-      const subjects = [...new Set(State.allFavorites.map(f => f.question?.subject).filter(Boolean))]; 
-      const topics = [...new Set(State.allFavorites.map(f => f.question?.topic).filter(Boolean))]; 
       const sections = [...new Set(State.allFavorites.map(f => f.question?.sectionId).filter(Boolean))]; 
       const languages = [...new Set(State.allFavorites.map(f => f.question?.language).filter(Boolean))]; 
       const testTitles = [...new Set(State.allFavorites.map(f => f.testTitle).filter(Boolean))]; 
@@ -1280,8 +1277,6 @@ renderChipGroup(
  actualExams,
  'actualExam'
 ); 
-      renderChipGroup('filterSubjects', subjects, 'subject'); 
-      renderChipGroup('filterTopics', topics, 'topic'); 
       renderChipGroup('filterSections', sections, 'section'); 
       renderChipGroup('filterLanguages', languages, 'language'); 
       renderChipGroup('filterTestTitles', testTitles, 'testTitle'); 
