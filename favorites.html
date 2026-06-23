@@ -1,1732 +1,1704 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Favorite Questions — ApnaMock</title>
-  <meta name="description" content="Review your saved questions anytime for quick revision." />
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <title>My Favorite Questions — ApnaMock</title> 
+  <meta name="description" content="Review your saved questions anytime for quick revision." /> 
+   
+  <link rel="preconnect" href="https://fonts.googleapis.com" /> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> 
+  <link 
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swa
+p" rel="stylesheet" /> 
+   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" /> 
+   
+  <style> 
+    /* ============================================================ 
+       DESIGN TOKENS 
+    ============================================================ */ 
+    :root { 
+      --primary: #1a56db; 
+      --primary-dark: #1e429f; 
+      --primary-light: #e8f0fe; 
+      --accent: #f97316; 
+      --success: #16a34a; 
+      --success-light: #dcfce7; 
+      --error: #dc2626; 
+      --error-light: #fee2e2; 
+      --warning: #f59e0b; 
+      --warning-light: #fef3c7; 
+      --purple: #7c3aed; 
+      --purple-light: #ede9fe; 
   
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+      --bg-base: #f8fafc; 
+      --bg-card: #ffffff; 
+      --bg-muted: #f1f5f9; 
   
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+      --text-primary: #1e293b; 
+      --text-secondary: #475569; 
+      --text-muted: #94a3b8; 
   
-  <style>
-    /* ============================================================
-       DESIGN TOKENS
-    ============================================================ */
-    :root {
-      --primary: #1a56db;
-      --primary-dark: #1e429f;
-      --primary-light: #e8f0fe;
-      --accent: #f97316;
-      --success: #16a34a;
-      --success-light: #dcfce7;
-      --error: #dc2626;
-      --error-light: #fee2e2;
-      --warning: #f59e0b;
-      --warning-light: #fef3c7;
-      --purple: #7c3aed;
-      --purple-light: #ede9fe;
- 
-      --bg-base: #f8fafc;
-      --bg-card: #ffffff;
-      --bg-muted: #f1f5f9;
- 
-      --text-primary: #1e293b;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
- 
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
- 
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
- 
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 20px;
- 
-      --header-height: 64px;
- 
-      --font-body: 'Inter', sans-serif;
-      --font-heading: 'Poppins', sans-serif;
-    }
-
-    /* DARK MODE VARIABLES */
-    body.dark-mode {
-      --bg-base: #0f172a;
-      --bg-card: #1e293b;
-      --bg-muted: #334155;
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --border: #334155;
-      --border-strong: #475569;
-      --primary-light: rgba(26, 86, 219, 0.2);
-      --success-light: rgba(22, 163, 74, 0.2);
-      --warning-light: rgba(245, 158, 11, 0.2);
-      --error-light: rgba(220, 38, 38, 0.2);
-      --purple-light: rgba(124, 58, 237, 0.2);
-    }
- 
-    /* ============================================================
-       RESET AND BASE
-    ============================================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border-strong) var(--bg-muted); }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg-base);
-      color: var(--text-primary);
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-      display: flex;
-      flex-direction: column;
-    }
-    a { text-decoration: none; color: inherit; }
-    button { cursor: pointer; border: none; background: none; font-family: inherit; }
-    img { max-width: 100%; display: block; }
-
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-muted); }
-    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
-
-    .align-wrapper {
-      max-width: 1000px;
-      margin: 0 auto;
-      width: 100%;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
- 
-    /* ============================================================
-       HEADER
-    ============================================================ */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(var(--bg-card), 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      height: var(--header-height);
-    }
-    body:not(.dark-mode) .site-header { background: rgba(255, 255, 255, 0.95); }
-    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
- 
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 100%;
-      gap: 16px;
-    }
- 
-    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
-    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
-    .brand-tagline { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.3px; }
- 
-    .site-nav { display: flex; align-items: center; gap: 4px; }
-    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
-    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
-    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
- 
-    .header-actions { display: flex; align-items: center; gap: 8px; }
-    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; background: transparent; }
-    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
- 
-    .mobile-menu-btn { display: none; }
- 
-    /* ============================================================
-       PAGE LAYOUT & TITLE
-    ============================================================ */
-    .page-wrapper {
-      padding-top: 28px;
-      padding-bottom: 60px;
-      flex: 1;
-    }
- 
-    .page-header { margin-bottom: 24px; }
-    
-    .page-title {
-      font-family: var(--font-heading);
-      font-size: 26px; /* Matched Result Analysis Page */
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1.2;
-      margin-bottom: 4px; /* Matched Result Analysis Page */
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .page-title i {
- color: var(--primary);
-}
-    .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 400; }
- 
-    /* ============================================================
-       CONTROLS BAR
-    ============================================================ */
-    .controls-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
- 
-    .search-wrap { flex: 1; min-width: 220px; position: relative; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
-    .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 0 38px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); background: var(--bg-card); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.10); }
-    .search-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; padding: 4px; border-radius: 50%; transition: color 0.15s, background 0.15s; display: none; }
-    .search-clear:hover { color: var(--text-primary); background: var(--bg-muted); }
- 
-    .controls-right { display: flex; gap: 8px; }
-    
-    .ctrl-btn { height: 42px; padding: 0 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; font-family: var(--font-body); display: flex; align-items: center; gap: 7px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); transition: all 0.15s; white-space: nowrap; position: relative; }
-    .ctrl-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .ctrl-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
-    .ctrl-btn i { font-size: 13px; }
-    .ctrl-btn .badge { background: var(--primary); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 600; min-width: 20px; text-align: center; }
-
-    /* ============================================================
-       ACTIVE FILTERS ROW
-    ============================================================ */
-    .active-filters {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-    .active-filters:empty { display: none; }
-    .filter-chip { display: flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); border: 1px solid rgba(26,86,219,0.2); border-radius: 99px; padding: 4px 10px 4px 12px; font-size: 12px; font-weight: 600; }
-    .filter-chip-remove { width: 16px; height: 16px; border-radius: 50%; background: rgba(26,86,219,0.15); color: var(--primary); font-size: 10px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
-    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); }
-    .clear-all-btn { font-size: 12px; color: var(--error); font-weight: 600; padding: 4px 8px; border-radius: 99px; transition: background 0.15s; }
-    .clear-all-btn:hover { background: var(--error-light); }
-
-    /* ============================================================
-       BUTTONS
-    ============================================================ */
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 20px; height: 40px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap; cursor: pointer; border: 1.5px solid transparent; }
-    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
-    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,86,219,0.35); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
-    .btn-outline:hover { background: var(--primary-light); }
-    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); }
-    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
-    .btn-danger { background: var(--error); color: #fff; border-color: var(--error); }
-    .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
-    .btn-sm { height: 34px; padding: 0 14px; font-size: 13px; }
-    .btn-full { width: 100%; }
-
-    /* ============================================================
-       FAVORITES GRID & CARDS
-    ============================================================ */
-    .fav-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .fav-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.2s;
-    }
-    .fav-card:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .fav-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 12px 16px;
-      background: var(--bg-muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .fav-meta-left {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .fav-q-badge {
-      background: var(--primary);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 99px;
-    }
-
-    .fav-section-badge {
-      font-size: 11px;
-      color: var(--text-secondary);
-      font-weight: 600;
-      background: var(--border);
-      padding: 3px 9px;
-      border-radius: 99px;
-    }
-
-    .fav-test-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .fav-date {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .fav-card-body {
-      padding: 20px 16px;
-    }
-
-    .fav-question-text {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
-    .bilingual-hi-text {
-      color: var(--text-secondary);
-      font-size: 0.95em;
-      display: block;
-      margin-top: 6px;
-    }
-
-    /* Expandable Details Section */
-    .fav-details {
-      display: none;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--border);
-      animation: fadeIn 0.3s ease;
-    }
-    .fav-details.open {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fav-options {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-
-    .fav-option {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    .fav-option.correct {
-      border-color: var(--success);
-      background: var(--success-light);
-      color: #14532d;
-      font-weight: 600;
-    }
-    body.dark-mode .fav-option.correct { color: var(--success); }
-
-    .fav-option-letter {
-      width: 22px;
-      height: 22px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      background: var(--bg-muted);
-      color: var(--text-muted);
-      flex-shrink: 0;
-    }
-    .fav-option.correct .fav-option-letter {
-      background: var(--success);
-      color: #fff;
-    }
-
-    .fav-explanation {
-      background: var(--primary-light);
-      border: 1px solid rgba(26,86,219,0.15);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-    }
-    .fav-explanation-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--primary);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .fav-explanation-text {
-      font-size: 13.5px;
-      color: var(--primary-dark);
-      line-height: 1.6;
-    }
-    body.dark-mode .fav-explanation-text { color: var(--primary); }
-
-    .fav-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px 16px;
-      background: var(--bg-base);
-      border-top: 1px solid var(--border);
-    }
-
-    .fav-actions-left { display: flex; gap: 8px; }
-    .fav-actions-right { display: flex; }
-
-    /* ============================================================
-       EMPTY STATE
-    ============================================================ */
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 64px 24px;
-      text-align: center;
-      background: var(--bg-card);
-      border: 1.5px dashed var(--border-strong);
-      border-radius: var(--radius-lg);
-    }
-    .empty-icon {
-      width: 64px;
-      height: 64px;
-      background: var(--warning-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: var(--warning);
-      margin-bottom: 16px;
-    }
-    .empty-title {
-      font-family: var(--font-heading);
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-    .empty-subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      max-width: 320px;
-      line-height: 1.6;
-    }
-
-    /* ============================================================
-       LOAD MORE
-    ============================================================ */
-    .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
-    .load-more-text { font-size: 13px; color: var(--text-muted); }
-
-    /* ============================================================
-       POPUPS & OVERLAYS
-    ============================================================ */
-    .overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-    .overlay.open { opacity: 1; pointer-events: all; }
-    .popup { background: var(--bg-card); border-radius: var(--radius-xl); width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); transform: scale(0.95) translateY(12px); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); overflow: hidden; display: flex; flex-direction: column;}
-    .overlay.open .popup { transform: scale(1) translateY(0); }
-    .popup-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;}
-    .popup-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); }
-    .popup-close { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); transition: all 0.15s; }
-    .popup-close:hover { background: var(--bg-muted); color: var(--text-primary); }
-    .popup-body { padding: 20px; overflow-y: auto; max-height: 65vh; }
-    .popup-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0;}
-
-    /* Remove Confirm Specifics */
-    .confirm-icon-wrap { text-align: center; margin-bottom: 16px; }
-    .confirm-icon { width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px; background: var(--error-light); color: var(--error); }
-    .confirm-title { font-family: var(--font-heading); font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
-    .confirm-message { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
-
-    /* ============================================================
-       FILTER MENU SPECIFICS (DUAL POPUP)
-    ============================================================ */
-    .filter-menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      margin-bottom: 10px;
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all 0.15s;
-      background: var(--bg-card);
-    }
-    .filter-menu-item:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-    .filter-menu-left { display: flex; align-items: center; gap: 10px; }
-    .filter-menu-left i { font-size: 16px; width: 20px; text-align: center; color: var(--text-muted); transition: color 0.15s; }
-    .filter-menu-item:hover .filter-menu-left i { color: var(--primary); }
-    
-    .filter-menu-badge {
-      background: var(--primary);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 99px;
-      margin-left: auto;
-      margin-right: 8px;
-      display: none;
-    }
-    .filter-menu-badge.active { display: inline-block; }
-
-    /* Filter Detail Items */
-    .filter-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-    .filter-chip-select { padding: 6px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
-    .filter-chip-select:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .filter-chip-select.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
-
-    /* Sort Option Items */
-    .sort-options { display: flex; flex-direction: column; gap: 4px; }
-    .sort-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); cursor: pointer; transition: all 0.15s; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-    .sort-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-    .sort-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
-    .sort-option .sort-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); }
-    .sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); }
-
-    /* ============================================================
-       TOAST
-    ============================================================ */
-    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
-    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border-radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .toast.success { background: var(--success); }
-    .toast.warning { background: var(--warning); }
-    .toast.error { background: var(--error); }
-    .toast.info { background: var(--primary); }
-
-    /* ============================================================
-       FOOTER
-    ============================================================ */
-    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
-    
-    /* Dark Mode Footer Fix */
-    body.dark-mode .site-footer { color: #0f172a; }
-    body.dark-mode .footer-brand-name { color: #0f172a; }
-    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
-    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
-    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
-    body.dark-mode .footer-link:hover { color: #0f172a; }
-    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
-    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
-
-    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
-    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
-    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
-    .footer-links { display: flex; flex-direction: column; gap: 8px; }
-    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
-    .footer-link:hover { color: #fff; }
-    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
-
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
-    @media (max-width: 768px) {
-      .site-nav {
-        display: none; 
-        flex-direction: column;
-        position: absolute;
-        top: var(--header-height);
-        left: 0;
-        width: 100%;
-        background: var(--bg-card);
-        padding: 16px;
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow-md);
-      }
-      .site-nav.mobile-open { display: flex; }
-      .mobile-menu-btn { display: flex; }
-      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
-
-      .page-title { font-size: 22px; }
-
-      .controls-bar { flex-wrap: nowrap; gap: 8px; }
-      .search-wrap { min-width: 0; }
-      .ctrl-btn span:not(.badge) { display: none; }
-      
-      .fav-card-footer { flex-direction: column; align-items: stretch; }
-      .fav-actions-left { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
-      .fav-actions-right { width: 100%; }
-      .fav-actions-right .btn { width: 100%; }
-    }
-  </style>
-</head>
-
-<body>
-
-  <header class="site-header">
-    <div class="header-inner align-wrapper">
-      <a href="/index.html" class="brand">
-        <div class="brand-icon">A</div>
-        <div class="brand-text">
-          <span class="brand-name">ApnaMock</span>
-          <span class="brand-tagline">Practice. Improve. Succeed.</span>
-        </div>
-      </a>
- 
-      <nav class="site-nav">
-        <a href="/tests.html" class="nav-link">
-          <i class="fa-solid fa-list-check"></i>
-          <span>Tests</span>
-        </a>
-        <a href="/custom-tests.html" class="nav-link">
-          <i class="fa-solid fa-sliders"></i>
-          <span>Custom Tests</span>
-        </a>
-        <a href="/favorites.html" class="nav-link active">
-          <i class="fa-solid fa-bookmark"></i>
-          <span>Favorites</span>
-        </a>
-        <a href="/history.html" class="nav-link">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <span>History</span>
-        </a>
-      </nav>
- 
-      <div class="header-actions">
-        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="page-wrapper align-wrapper">
- 
-    <div class="page-header">
-      <h1 class="page-title"><i class="fa-solid fa-bookmark"></i> My Favorite Questions</h1>
-      <p class="page-subtitle">Review your saved questions anytime for quick revision.</p>
-    </div>
-
-    <div class="controls-bar" id="controlsBar" style="display:none;">
-      <div class="search-wrap">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search saved questions, topics, exams..." autocomplete="off" />
-        <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="controls-right">
-        <button class="ctrl-btn" id="filterBtn">
-          <i class="fa-solid fa-filter"></i>
-          <span>Filter</span>
-          <span class="badge" id="filterBadge" style="display:none">0</span>
-        </button>
+      --border: #e2e8f0; 
+      --border-strong: #cbd5e1; 
   
-        <button class="ctrl-btn" id="sortBtn">
-          <i class="fa-solid fa-arrow-up-wide-short"></i>
-          <span>Sort By</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="active-filters" id="activeFilters"></div>
-
-    <div class="fav-grid" id="favoritesGrid">
-      <div style="text-align:center;padding:40px;color:var(--text-muted)">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
-        <div>Loading your favorites...</div>
-      </div>
-    </div>
-
-    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
-      <span class="load-more-text" id="loadMoreText"></span>
-      <button class="btn btn-outline" id="loadMoreBtn">
-        <i class="fa-solid fa-arrow-down"></i>
-        Load More Favorites
-      </button>
-    </div>
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); 
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.10); 
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12); 
+  
+      --radius-sm: 6px; 
+      --radius-md: 10px; 
+      --radius-lg: 14px; 
+      --radius-xl: 20px; 
+  
+      --header-height: 64px; 
+  
+      --font-body: 'Inter', sans-serif; 
+      --font-heading: 'Poppins', sans-serif; 
+    } 
  
-  </main>
-
-  <div class="overlay" id="filterMenuOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <span class="popup-title">Filter Favorites</span>
-        <button class="popup-close" onclick="closeOverlay('filterMenuOverlay')">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="popup-body">
-        
-        <div class="filter-menu-item" onclick="openFilterDetail('exam', 'By Exam Group')">
-          <div class="filter-menu-left"><i class="fa-solid fa-graduation-cap"></i> Exam Group</div>
-          <span class="filter-menu-badge" id="badge-exam">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-       <div class="filter-menu-item" onclick="openFilterDetail('actualExam', 'By Exam')">
- <div class="filter-menu-left">
-   <i class="fa-solid fa-file-lines"></i>
-   Exam
- </div>
- <span class="filter-menu-badge" id="badge-actualExam">0</span>
- <i class="fa-solid fa-chevron-right"
- style="color:var(--text-muted);font-size:12px"></i>
-</div>
-
-        <div class="filter-menu-item" onclick="openFilterDetail('section', 'By Section')">
-          <div class="filter-menu-left"><i class="fa-solid fa-layer-group"></i> Section</div>
-          <span class="filter-menu-badge" id="badge-section">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-        <div class="filter-menu-item" onclick="openFilterDetail('language', 'By Language')">
-          <div class="filter-menu-left"><i class="fa-solid fa-language"></i> Language</div>
-          <span class="filter-menu-badge" id="badge-language">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-        <div class="filter-menu-item" onclick="openFilterDetail('testTitle', 'By Source Test')">
-          <div class="filter-menu-left"><i class="fa-solid fa-file-lines"></i> Source Test</div>
-          <span class="filter-menu-badge" id="badge-testTitle">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-        <div class="filter-menu-item" onclick="openFilterDetail('date', 'Saved Date')">
-          <div class="filter-menu-left"><i class="fa-solid fa-calendar-day"></i> Saved Date</div>
-          <span class="filter-menu-badge" id="badge-date">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-ghost btn-sm" id="filterClearAll">
-          <i class="fa-solid fa-rotate-left"></i> Clear All
-        </button>
-        <button class="btn btn-primary btn-sm" id="filterApply" style="flex:1">
-          <i class="fa-solid fa-check"></i> Apply Filters
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay" id="filterDetailOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <button class="popup-close" onclick="closeFilterDetail()"><i class="fa-solid fa-arrow-left"></i></button>
-        <span class="popup-title" id="filterDetailTitle">Select Options</span>
-        <button class="popup-close" style="opacity:0;pointer-events:none"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body" id="filterDetailBody">
-        
-        <div class="filter-section detail-section" id="detail-exam" style="display:none;">
-          <div class="filter-chips-wrap" id="filterExams"></div>
-        </div>
-
-        <div class="filter-section detail-section"
-id="detail-actualExam"
-style="display:none;">
-
- <div class="filter-chips-wrap"
- id="filterActualExams"></div>
-
-</div>
-
-        <div class="filter-section detail-section" id="detail-section" style="display:none;">
-          <div class="filter-chips-wrap" id="filterSections"></div>
-        </div>
-
-        <div class="filter-section detail-section" id="detail-language" style="display:none;">
-          <div class="filter-chips-wrap" id="filterLanguages"></div>
-        </div>
-
-        <div class="filter-section detail-section" id="detail-testTitle" style="display:none;">
-          <div class="filter-chips-wrap" id="filterTestTitles"></div>
-        </div>
-
-        <div class="filter-section detail-section" id="detail-date" style="display:none;">
-          <div class="filter-chips-wrap" id="filterDate">
-            <button class="filter-chip-select" data-type="date" data-value="today">Today</button>
-            <button class="filter-chip-select" data-type="date" data-value="week">Last 7 Days</button>
-            <button class="filter-chip-select" data-type="date" data-value="month">Last 30 Days</button>
-          </div>
-        </div>
-
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-primary btn-full" onclick="closeFilterDetail()">
-          <i class="fa-solid fa-check"></i> Done
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay" id="sortOverlay">
-    <div class="popup" style="max-height: auto;">
-      <div class="popup-header">
-        <span class="popup-title">Sort Favorites</span>
-        <button class="popup-close" id="sortClose">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="popup-body">
-        <div class="sort-options" id="sortOptions">
+    /* DARK MODE VARIABLES */ 
+    body.dark-mode { 
+      --bg-base: #0f172a; 
+      --bg-card: #1e293b; 
+      --bg-muted: #334155; 
+      --text-primary: #f8fafc; 
+      --text-secondary: #cbd5e1; 
+      --text-muted: #94a3b8; 
+      --border: #334155; 
+      --border-strong: #475569; 
+      --primary-light: rgba(26, 86, 219, 0.2); 
+      --success-light: rgba(22, 163, 74, 0.2); 
+      --warning-light: rgba(245, 158, 11, 0.2); 
+      --error-light: rgba(220, 38, 38, 0.2); 
+      --purple-light: rgba(124, 58, 237, 0.2); 
+    } 
+  
+    /* ============================================================ 
+       RESET AND BASE 
+    ============================================================ */ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } 
+    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border-strong) var(--bg-muted); } 
+    body { 
+      font-family: var(--font-body); 
+      background: var(--bg-base); 
+      color: var(--text-primary); 
+      font-size: 15px; 
+      line-height: 1.6; 
+      min-height: 100vh; 
+      transition: background-color 0.3s, color 0.3s; 
+      display: flex; 
+      flex-direction: column; 
+    } 
+    a { text-decoration: none; color: inherit; } 
+    button { cursor: pointer; border: none; background: none; font-family: inherit; } 
+    img { max-width: 100%; display: block; } 
  
-          <div class="sort-option selected" data-sort="date-desc">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="sort-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
-              <span>Latest Saved First</span>
-            </div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i>
-          </div>
+    ::-webkit-scrollbar { width: 6px; height: 6px; } 
+    ::-webkit-scrollbar-track { background: var(--bg-muted); } 
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; } 
  
-          <div class="sort-option" data-sort="date-asc">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="sort-icon"><i class="fa-regular fa-clock"></i></div>
-              <span>Oldest Saved First</span>
-            </div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
+    .align-wrapper { 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      width: 100%; 
+      padding-left: 20px; 
+      padding-right: 20px; 
+    } 
+  
+    /* ============================================================ 
+       HEADER 
+    ============================================================ */ 
+    .site-header { 
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      background: rgba(var(--bg-card), 0.95); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px); 
+      border-bottom: 1px solid var(--border); 
+      height: var(--header-height); 
+    } 
+    body:not(.dark-mode) .site-header { background: rgba(255, 255, 255, 0.95); } 
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); } 
+  
+    .header-inner { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      height: 100%; 
+      gap: 16px; 
+    } 
+  
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; } 
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 
+var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font
+family: var(--font-heading); } 
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; } 
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); } 
+    .brand-tagline { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.3px; } 
+  
+    .site-nav { display: flex; align-items: center; gap: 4px; } 
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); 
+transition: all 0.15s; display: flex; align-items: center; gap: 6px; } 
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); } 
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; } 
+  
+    .header-actions { display: flex; align-items: center; gap: 8px; } 
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: 
+center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; background: transparent; } 
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); } 
+  
+    .mobile-menu-btn { display: none; } 
+  
+    /* ============================================================ 
+       PAGE LAYOUT & TITLE 
+    ============================================================ */ 
+    .page-wrapper { 
+      padding-top: 28px; 
+      padding-bottom: 60px; 
+      flex: 1; 
+    } 
+  
+    .page-header { margin-bottom: 24px; } 
+     
+    .page-title { 
+      font-family: var(--font-heading); 
+      font-size: 26px; /* Matched Result Analysis Page */ 
+      font-weight: 700; 
+      color: var(--text-primary); 
+      line-height: 1.2; 
+      margin-bottom: 4px; /* Matched Result Analysis Page */ 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    } 
+    .page-title i { 
+ color: var(--primary); 
+} 
+    .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 400; } 
+  
+    /* ============================================================ 
+       CONTROLS BAR 
+    ============================================================ */ 
+    .controls-bar { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 10px; 
+      margin-bottom: 16px; 
+      flex-wrap: wrap; 
+    } 
+  
+    .search-wrap { flex: 1; min-width: 220px; position: relative; } 
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; 
+pointer-events: none; } 
+    .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 
+0 38px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); background: var(--bg-card); transition: border
+color 0.15s, box-shadow 0.15s; outline: none; } 
+    .search-input::placeholder { color: var(--text-muted); } 
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.10); } 
+    .search-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 
+13px; padding: 4px; border-radius: 50%; transition: color 0.15s, background 0.15s; display: none; } 
+    .search-clear:hover { color: var(--text-primary); background: var(--bg-muted); } 
+  
+    .controls-right { display: flex; gap: 8px; } 
+     
+    .ctrl-btn { height: 42px; padding: 0 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; font-family: var(--font-body); display: flex; align-items: center; gap: 7px; border: 1.5px solid var(--border); background: var(--bg-card); color: 
+var(--text-secondary); transition: all 0.15s; white-space: nowrap; position: relative; } 
+    .ctrl-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); } 
+    .ctrl-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; } 
+    .ctrl-btn i { font-size: 13px; } 
+    .ctrl-btn .badge { background: var(--primary); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 
+600; min-width: 20px; text-align: center; } 
  
-          <div class="sort-option" data-sort="exam-asc">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="sort-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-              <span>Exam Name (A-Z)</span>
-            </div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-
-          <div class="sort-option" data-sort="section-asc">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="sort-icon"><i class="fa-solid fa-layer-group"></i></div>
-              <span>Section Name (A-Z)</span>
-            </div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
+    /* ============================================================ 
+       ACTIVE FILTERS ROW 
+    ============================================================ */ 
+    .active-filters { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      flex-wrap: wrap; 
+      margin-bottom: 24px; 
+    } 
+    .active-filters:empty { display: none; } 
+    .filter-chip { display: flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); border: 1px 
+solid rgba(26,86,219,0.2); border-radius: 99px; padding: 4px 10px 4px 12px; font-size: 12px; font-weight: 600; } 
+    .filter-chip-remove { width: 16px; height: 16px; border-radius: 50%; background: rgba(26,86,219,0.15); color: var(--primary); 
+font-size: 10px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; } 
+    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); } 
+    .clear-all-btn { font-size: 12px; color: var(--error); font-weight: 600; padding: 4px 8px; border-radius: 99px; transition: 
+background 0.15s; } 
+    .clear-all-btn:hover { background: var(--error-light); } 
  
-        </div>
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-primary btn-full" id="sortApply">
-          <i class="fa-solid fa-check"></i> Apply Sort
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="overlay" id="removeOverlay">
-    <div class="popup" style="max-height: auto;">
-      <div class="popup-header">
-        <span class="popup-title">Remove Favorite</span>
-        <button class="popup-close" onclick="closeOverlay('removeOverlay')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body">
-        <div class="confirm-icon-wrap">
-          <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
-          <div class="confirm-title">Remove this question?</div>
-          <div class="confirm-message">This question will be permanently removed from your favorites list. This action cannot be undone.</div>
-        </div>
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('removeOverlay')">Cancel</button>
-        <button class="btn btn-danger" style="flex:1" id="confirmRemoveBtn">Remove</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast-container" id="toastContainer"></div>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div>
-        <div class="footer-brand-name">ApnaMock</div>
-        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
-      </div>
-      <div>
-        <div class="footer-col-title">Quick Links</div>
-        <div class="footer-links">
-          <a href="/tests.html" class="footer-link">All Tests</a>
-          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
-          <a href="/favorites.html" class="footer-link">Favorites</a>
-          <a href="/history.html" class="footer-link">History</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-title">Legal</div>
-        <div class="footer-links">
-          <a href="#" class="footer-link">Privacy Policy</a>
-          <a href="#" class="footer-link">Terms of Use</a>
-          <a href="#" class="footer-link">Disclaimer</a>
-          <a href="#" class="footer-link">Contact</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom align-wrapper">
-      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
-      <span class="footer-copy">Practice. Improve. Succeed.</span>
-    </div>
-  </footer>
-
-  <script>
-    /* ============================================================
-       XSS UTILITY 
-    ============================================================ */
-    function escapeHTML(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    /* ============================================================
-       STATE & CONFIG
-    ============================================================ */
-    const CONFIG = {
-      STORAGE_PREFIX: 'apnamock_',
-      ITEMS_PER_PAGE: 10
-    };
-
-    const State = {
-      allFavorites: [],
-      testMetaMap: {},
-      filteredFavorites: [],
-      displayedCount: 0,
-      searchQuery: '',
-      pendingRemoveId: null,
-      filters: {
- exam: [],
- actualExam: [],
- section: [],
- language: [],
- testTitle: [],
- date: null
-},
-      sort: 'date-desc'
-    };
-
-    /* ============================================================
-       INDEXED DB WRAPPER
-    ============================================================ */
-    const DB_NAME = 'ApnaMockDB';
-    const DB_VERSION = 2;
-    const STORE_NAME = 'favorites';
-
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains(STORE_NAME)) {
-            db.createObjectStore(STORE_NAME, { keyPath: 'qId' });
-          }
-        };
-        request.onsuccess = (e) => resolve(e.target.result);
-        request.onerror = (e) => reject(e.target.error);
-      });
-    }
-
-    async function getAllFavorites() {
-      try {
-        const db = await initDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readonly');
-          const store = tx.objectStore(STORE_NAME);
-          const request = store.getAll();
-          request.onsuccess = () => resolve(request.result || []);
-          request.onerror = () => reject(request.error);
-        });
-      } catch (err) {
-        console.error("IndexedDB error:", err);
-        return [];
-      }
-    }
-
-    async function removeFavoriteFromDB(qId) {
-      try {
-        const db = await initDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          store.delete(qId);
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
-        });
-      } catch (err) {
-        console.error("IndexedDB error:", err);
-      }
-    }
-
-    /* ============================================================
-       LOCAL STORAGE HELPERS
-    ============================================================ */
-    function storageGet(key) {
-      try {
-        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key);
-        return raw ? JSON.parse(raw) : null;
-      } catch { return null; }
-    }
-    function storageSet(key, value) {
-      try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {}
-    }
-
-    /* ============================================================
-       TOAST & POPUPS
-    ============================================================ */
-    function showToast(message, type = 'info', duration = 2500) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `<i class="fa-solid ${
-        type === 'success' ? 'fa-circle-check' :
-        type === 'error' ? 'fa-circle-xmark' :
-        type === 'warning' ? 'fa-triangle-exclamation' :
-        'fa-circle-info'
-      }"></i> ${message}`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), duration);
-    }
-
-    function openOverlay(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
-    
-    document.querySelectorAll('.overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeOverlay(overlay.id);
-      });
-    });
-
-    /* ============================================================
-       FILTER DRILL-DOWN LOGIC (POPUP 1 & 2)
-    ============================================================ */
-    document.getElementById('filterBtn').addEventListener('click', () => {
-      openOverlay('filterMenuOverlay');
-    });
-
-    function openFilterDetail(type, titleText) {
-      closeOverlay('filterMenuOverlay');
-      
-      // Hide all detail sections
-      document.querySelectorAll('.detail-section').forEach(el => el.style.display = 'none');
-      
-      // Show targeted detail section
-      document.getElementById(`detail-${type}`).style.display = 'block';
-      
-      // Set Title
-      document.getElementById('filterDetailTitle').textContent = titleText;
-      
-      openOverlay('filterDetailOverlay');
-    }
-
-    function closeFilterDetail() {
-      closeOverlay('filterDetailOverlay');
-      openOverlay('filterMenuOverlay');
-    }
-
-    function updateFilterBadges() {
-      const counts = {
-        exam: document.querySelectorAll('#filterExams .selected').length,
-        subject: document.querySelectorAll('#filterSubjects .selected').length,
-        topic: document.querySelectorAll('#filterTopics .selected').length,
-        section: document.querySelectorAll('#filterSections .selected').length,
-        language: document.querySelectorAll('#filterLanguages .selected').length,
-        testTitle: document.querySelectorAll('#filterTestTitles .selected').length,
-        date: document.querySelectorAll('#filterDate .selected').length
-      };
-
-      for (const [key, count] of Object.entries(counts)) {
-        const badge = document.getElementById(`badge-${key}`);
-        if (badge) {
-          badge.textContent = count;
-          badge.classList.toggle('active', count > 0);
-        }
-      }
-    }
-
-    // Bind Badge Updates to Date Chips
-    document.querySelectorAll('#filterDate .filter-chip-select').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#filterDate .filter-chip-select').forEach(b => b.classList.remove('selected'));
-        btn.classList.toggle('selected');
-        updateFilterBadges();
-      });
-    });
-
-    // Handle Clear All inside the Filter Menu
-    document.getElementById('filterClearAll').addEventListener('click', () => {
-      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      updateFilterBadges();
-    });
-
-    // Handle Apply inside Filter Menu
-    document.getElementById('filterApply').addEventListener('click', () => {
-      const newFilters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null };
+    /* ============================================================ 
+       BUTTONS 
+    ============================================================ */ 
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 20px; height: 40px; border-radius: 
+var(--radius-md); font-size: 14px; font-weight: 600; font-family: var(--font-body); transition: all 0.15s; white-space: nowrap; 
+cursor: pointer; border: 1.5px solid transparent; } 
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 8px 
+rgba(26,86,219,0.25); } 
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); box-shadow: 0 4px 12px 
+rgba(26,86,219,0.35); } 
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); } 
+    .btn-outline:hover { background: var(--primary-light); } 
+    .btn-ghost { background: transparent; color: var(--text-secondary); border-color: var(--border); } 
+    .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); } 
+    .btn-danger { background: var(--error); color: #fff; border-color: var(--error); } 
+    .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; } 
+    .btn-sm { height: 34px; padding: 0 14px; font-size: 13px; } 
+    .btn-full { width: 100%; } 
  
-      document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => newFilters.exam.push(btn.dataset.value));
-      document.querySelectorAll('#filterSubjects .filter-chip-select.selected').forEach(btn => newFilters.subject.push(btn.dataset.value));
-      document.querySelectorAll('#filterTopics .filter-chip-select.selected').forEach(btn => newFilters.topic.push(btn.dataset.value));
-      document.querySelectorAll('#filterSections .filter-chip-select.selected').forEach(btn => newFilters.section.push(btn.dataset.value));
-      document.querySelectorAll('#filterLanguages .filter-chip-select.selected').forEach(btn => newFilters.language.push(btn.dataset.value));
-      document.querySelectorAll('#filterTestTitles .filter-chip-select.selected').forEach(btn => newFilters.testTitle.push(btn.dataset.value));
+    /* ============================================================ 
+       FAVORITES GRID & CARDS 
+    ============================================================ */ 
+    .fav-grid { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 16px; 
+      margin-bottom: 28px; 
+    } 
  
-      const dateSelected = document.querySelector('#filterDate .filter-chip-select.selected');
-      if (dateSelected) newFilters.date = dateSelected.dataset.value;
+    .fav-card { 
+      background: var(--bg-card); 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-lg); 
+      overflow: hidden; 
+      box-shadow: var(--shadow-sm); 
+      transition: box-shadow 0.2s; 
+    } 
+    .fav-card:hover { 
+      box-shadow: var(--shadow-md); 
+    } 
  
-      State.filters = newFilters;
-      closeOverlay('filterMenuOverlay');
-      renderActiveFilters();
-      applyFiltersAndSort();
-    });
-
-    /* ============================================================
-       INITIALIZATION
-    ============================================================ */
-   async function loadTestMetadata() {
-  try {
-    const response = await fetch('/data/tests-index.json');
-
-    if (!response.ok) {
-      throw new Error('Failed to load tests-index.json');
-    }
-
-    const data = await response.json();
-
-    State.testMetaMap = {};
-
-    (data.tests || []).forEach(test => {
-
-      const id = test.id || test.test_id;
-
-      State.testMetaMap[id] = {
-        exam_group: test.exam_group || '',
-        exam: test.exam || ''
-      };
-
-    });
-
-  } catch (err) {
-    console.error('Test metadata load failed:', err);
-  }
-}
-    
-    async function initFavorites() {
-      // Setup Theme
-      const savedTheme = storageGet('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
-      }
-
-      document.getElementById('themeToggleBtn').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-        storageSet('theme', isDark ? 'dark' : 'light');
-      });
-
-      document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-        document.querySelector('.site-nav').classList.toggle('mobile-open');
-      });
-
-      // Load Data
-      const rawData = await getAllFavorites();
-
-      await loadTestMetadata();
-      
-      // Sort by newest first
-      State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
-      
-      buildFilterOptions();
-      applySearchAndRender();
-    }
-
-    /* ============================================================
-       FILTER OPTIONS BUILDER (For dynamic details)
-    ============================================================ */
-    function buildFilterOptions() {
-
-  const examGroups = [
-    ...new Set(
-      State.allFavorites
-        .map(f => State.testMetaMap[f.testId]?.exam_group)
-        .filter(Boolean)
-    )
-  ];
-
-  const actualExams = [
-    ...new Set(
-      State.allFavorites
-        .map(f => State.testMetaMap[f.testId]?.exam)
-        .filter(Boolean)
-    )
-  ];
-
-  const sections = [
-    ...new Set(
-      State.allFavorites
-        .map(f => f.question?.sectionId)
-        .filter(Boolean)
-    )
-  ];
-
-  const testTitles = [
-    ...new Set(
-      State.allFavorites
-        .map(f => f.testTitle)
-        .filter(Boolean)
-    )
-  ];
-
-  renderChipGroup(
-    'filterExams',
-    examGroups,
-    'exam'
-  );
-
-  renderChipGroup(
-    'filterActualExams',
-    actualExams,
-    'actualExam'
-  );
-
-  renderChipGroup(
-    'filterSections',
-    sections,
-    'section'
-  );
-
-  renderChipGroup(
-    'filterTestTitles',
-    testTitles,
-    'testTitle'
-  );
-}
-
-    function renderChipGroup(containerId, values, type) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
+    .fav-card-header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      flex-wrap: wrap; 
+      gap: 12px; 
+      padding: 12px 16px; 
+      background: var(--bg-muted); 
+      border-bottom: 1px solid var(--border); 
+    } 
  
-      container.innerHTML = values.map(value => `
-        <button class="filter-chip-select ${State.filters[type]?.includes(String(value)) ? 'selected' : ''}" data-type="${type}" data-value="${escapeHTML(value)}">
-          ${escapeHTML(value)}
-        </button>
-      `).join('');
+    .fav-meta-left { 
+      display: flex; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+    } 
  
-      container.querySelectorAll('.filter-chip-select').forEach(btn => {
-        btn.addEventListener('click', () => {
-          btn.classList.toggle('selected');
-          updateFilterBadges();
-        });
-      });
-    }
-
-    /* ============================================================
-       SEARCH & FILTER LOGIC
-    ============================================================ */
-    function applySearchAndRender() {
-      applyFiltersAndSort(); // Reusing the unified logic
-    }
-
-    function applyFiltersAndSort() {
-      let filtered = [...State.allFavorites];
-
-      // 1. Text Search
-      if (State.searchQuery) {
-        const q = State.searchQuery.toLowerCase();
-        filtered = filtered.filter(item => {
-          const testTitle = (item.testTitle || '').toLowerCase();
-          const qTextEn = (item.question?.question?.en || item.question?.question || '').toLowerCase();
-          const qTextHi = (item.question?.question?.hi || '').toLowerCase();
-          const exam = (item.question?.exam || '').toLowerCase();
-          const subject = (item.question?.subject || '').toLowerCase();
-          
-          return testTitle.includes(q) || qTextEn.includes(q) || qTextHi.includes(q) || exam.includes(q) || subject.includes(q);
-        });
-      }
-
-      // 2. Exact Filters
-      if (State.filters.exam.length) {
-        filtered = filtered.filter(f => State.filters.exam.includes(f.question?.exam_group || f.question?.exam));
-      }
-      if (State.filters.subject.length) {
-        filtered = filtered.filter(f => State.filters.subject.includes(f.question?.subject));
-      }
-      if (State.filters.topic.length) {
-        filtered = filtered.filter(f => State.filters.topic.includes(f.question?.topic));
-      }
-      if (State.filters.section.length) {
-        filtered = filtered.filter(f => State.filters.section.includes(f.question?.sectionId));
-      }
-      if (State.filters.language.length) {
-        filtered = filtered.filter(f => State.filters.language.includes(f.question?.language));
-      }
-      if (State.filters.testTitle.length) {
-        filtered = filtered.filter(f => State.filters.testTitle.includes(f.testTitle));
-      }
-      
-      // 3. Date Filter
-      if (State.filters.date) {
-        const now = Date.now();
-        const oneDay = 24 * 60 * 60 * 1000;
-        let limit = 0;
-
-        if (State.filters.date === 'today') limit = now - oneDay;
-        if (State.filters.date === 'week') limit = now - (7 * oneDay);
-        if (State.filters.date === 'month') limit = now - (30 * oneDay);
-
-        filtered = filtered.filter(f => (f.savedAt || 0) >= limit);
-      }
-
-      // 4. Sort
-      filtered.sort((a, b) => {
-        switch (State.sort) {
-          case 'date-desc': return (b.savedAt || 0) - (a.savedAt || 0);
-          case 'date-asc': return (a.savedAt || 0) - (b.savedAt || 0);
-          case 'exam-asc': return String(a.question?.exam || '').localeCompare(String(b.question?.exam || ''));
-          case 'section-asc': return String(a.question?.sectionId || '').localeCompare(String(b.question?.sectionId || ''));
-          default: return 0;
-        }
-      });
-
-      State.filteredFavorites = filtered;
-      State.displayedCount = 0;
-
-      // Update UI visibility
-      if (State.allFavorites.length > 0) {
-        document.getElementById('controlsBar').style.display = 'flex';
-      } else {
-        document.getElementById('controlsBar').style.display = 'none';
-      }
-
-      const grid = document.getElementById('favoritesGrid');
-      grid.innerHTML = '';
-
-      if (State.filteredFavorites.length === 0) {
-        renderEmptyState();
-        document.getElementById('loadMoreWrap').style.display = 'none';
-        return;
-      }
-
-      loadMoreFavorites();
-    }
-
-    /* ============================================================
-       SEARCH DEBOUNCE
-    ============================================================ */
-    let searchDebounce;
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const val = e.target.value;
-      State.searchQuery = val;
-      document.getElementById('searchClear').style.display = val ? 'block' : 'none';
-
-      clearTimeout(searchDebounce);
-      searchDebounce = setTimeout(() => { applyFiltersAndSort(); }, 300);
-    });
-
-    document.getElementById('searchClear').addEventListener('click', () => {
-      clearTimeout(searchDebounce);
-      document.getElementById('searchInput').value = '';
-      State.searchQuery = '';
-      document.getElementById('searchClear').style.display = 'none';
-      applyFiltersAndSort();
-    });
-
-    /* ============================================================
-       ACTIVE FILTERS RENDER
-    ============================================================ */
-    function renderActiveFilters() {
-      const container = document.getElementById('activeFilters');
-      const chips = [];
+    .fav-q-badge { 
+      background: var(--primary); 
+      color: #fff; 
+      font-size: 11px; 
+      font-weight: 700; 
+      padding: 3px 9px; 
+      border-radius: 99px; 
+    } 
  
-      const typeLabels = {
-        exam: 'Exam', subject: 'Subject', topic: 'Topic',
-        section: 'Section', language: 'Language', testTitle: 'Test'
-      };
+    .fav-section-badge { 
+      font-size: 11px; 
+      color: var(--text-secondary); 
+      font-weight: 600; 
+      background: var(--border); 
+      padding: 3px 9px; 
+      border-radius: 99px; 
+    } 
  
-      ['exam', 'subject', 'topic', 'section', 'language', 'testTitle'].forEach(type => {
-        (State.filters[type] || []).forEach(value => {
-          chips.push(`
-            <div class="filter-chip">
-              <span>${typeLabels[type]}: ${escapeHTML(value)}</span>
-              <button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHTML(value)}')">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-          `);
-        });
-      });
+    .fav-test-title { 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--text-primary); 
+    } 
  
-      if (State.filters.date) {
-        const dateLabels = { today: 'Today', week: 'Last 7 Days', month: 'Last 30 Days' };
-        chips.push(`
-          <div class="filter-chip">
-            <span>Date: ${dateLabels[State.filters.date]}</span>
-            <button class="filter-chip-remove" onclick="removeFilter('date',null)">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        `);
-      }
+    .fav-date { 
+      font-size: 11px; 
+      color: var(--text-muted); 
+      font-weight: 500; 
+    } 
  
-      if (chips.length) {
-        chips.push(`
-          <button class="clear-all-btn" onclick="clearAllFilters()">
-            Clear All
-          </button>
-        `);
-      }
+    .fav-card-body { 
+      padding: 20px 16px; 
+    } 
  
-      container.innerHTML = chips.join('');
+    .fav-question-text { 
+      font-size: 15px; 
+      font-weight: 500; 
+      color: var(--text-primary); 
+      line-height: 1.6; 
+    } 
+    .bilingual-hi-text { 
+      color: var(--text-secondary); 
+      font-size: 0.95em; 
+      display: block; 
+      margin-top: 6px; 
+    } 
  
-      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
-      const badge = document.getElementById('filterBadge');
-      const filterBtn = document.getElementById('filterBtn');
+    /* Expandable Details Section */ 
+    .fav-details { 
+      display: none; 
+      margin-top: 16px; 
+      padding-top: 16px; 
+      border-top: 1px dashed var(--border); 
+      animation: fadeIn 0.3s ease; 
+    } 
+    .fav-details.open { 
+      display: block; 
+    } 
  
-      if (totalFilters > 0) {
-        badge.textContent = totalFilters;
-        badge.style.display = 'inline-flex';
-        filterBtn.classList.add('active');
-      } else {
-        badge.style.display = 'none';
-        filterBtn.classList.remove('active');
-      }
-    }
-
-    function removeFilter(type, value) {
-      if (type === 'date') {
-        State.filters.date = null;
-        document.querySelectorAll('#filterDate .filter-chip-select').forEach(b => b.classList.remove('selected'));
-      } else if (State.filters[type]) {
-        State.filters[type] = State.filters[type].filter(v => String(v) !== String(value));
-        
-        const containerId = type === 'exam' ? 'filterExams' :
-                            type === 'subject' ? 'filterSubjects' :
-                            type === 'topic' ? 'filterTopics' :
-                            type === 'section' ? 'filterSections' :
-                            type === 'language' ? 'filterLanguages' : 'filterTestTitles';
-        
-        const chipToDeselect = document.querySelector(`#${containerId} .filter-chip-select[data-value="${value}"]`);
-        if (chipToDeselect) chipToDeselect.classList.remove('selected');
-      }
-      
-      updateFilterBadges();
-      renderActiveFilters();
-      applyFiltersAndSort();
-    }
-
-    function clearAllFilters() {
-      State.filters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null };
-      State.searchQuery = '';
-      document.getElementById('searchInput').value = '';
-      document.getElementById('searchClear').style.display = 'none';
-      
-      // Reset popup chips
-      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      
-      updateFilterBadges();
-      renderActiveFilters();
-      applyFiltersAndSort();
-    }
-
-    /* ============================================================
-       SORT POPUP LOGIC
-    ============================================================ */
-    document.getElementById('sortBtn').addEventListener('click', () => openOverlay('sortOverlay'));
-    document.getElementById('sortClose').addEventListener('click', () => closeOverlay('sortOverlay'));
-
-    document.querySelectorAll('.sort-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.sort-option').forEach(o => {
-          o.classList.remove('selected');
-          o.querySelector('i.fa-check').style.display = 'none';
-        });
-        opt.classList.add('selected');
-        opt.querySelector('i.fa-check').style.display = 'block';
-      });
-    });
-
-    document.getElementById('sortApply').addEventListener('click', () => {
-      const selected = document.querySelector('.sort-option.selected');
-      State.sort = selected ? selected.dataset.sort : 'date-desc';
-      closeOverlay('sortOverlay');
-      applyFiltersAndSort();
-    });
-
-    /* ============================================================
-       RENDERING LOGIC
-    ============================================================ */
-    function renderEmptyState() {
-      const grid = document.getElementById('favoritesGrid');
-      
-      if (State.allFavorites.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon"><i class="fa-regular fa-bookmark"></i></div>
-            <div class="empty-title">No Favorites Yet</div>
-            <div class="empty-subtitle">You haven't saved any questions to your favorites. Start practicing and bookmark important questions to see them here.</div>
-            <a href="/tests.html" class="btn btn-primary" style="margin-top:10px">
-              <i class="fa-solid fa-play"></i> Start Practicing
-            </a>
-          </div>
-        `;
-      } else {
-        grid.innerHTML = `
-          <div class="empty-state" style="padding:40px 20px;">
-            <div class="empty-icon" style="width:48px;height:48px;font-size:18px;background:var(--bg-muted);color:var(--text-muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <div class="empty-title">No matches found</div>
-            <div class="empty-subtitle">We couldn't find any saved questions matching your search or filters.</div>
-            <button class="btn btn-outline" style="margin-top:10px" onclick="clearAllFilters()">Clear Filters</button>
-          </div>
-        `;
-      }
-    }
-
-    function loadMoreFavorites() {
-      const start = State.displayedCount;
-      const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredFavorites.length);
-      const batch = State.filteredFavorites.slice(start, end);
-
-      const grid = document.getElementById('favoritesGrid');
-      
-      batch.forEach(fav => {
-        grid.insertAdjacentHTML('beforeend', buildFavCard(fav));
-      });
-
-      State.displayedCount = end;
-      updateLoadMore();
-    }
-
-    function updateLoadMore() {
-      const wrap = document.getElementById('loadMoreWrap');
-      const text = document.getElementById('loadMoreText');
-      const remaining = State.filteredFavorites.length - State.displayedCount;
-
-      if (remaining > 0) {
-        wrap.style.display = 'flex';
-        text.textContent = `${remaining} more saved question${remaining !== 1 ? 's' : ''}`;
-      } else {
-        wrap.style.display = 'none';
-      }
-    }
-
-    document.getElementById('loadMoreBtn').addEventListener('click', loadMoreFavorites);
-
-    /* ============================================================
-       BILINGUAL RENDER HELPER
-    ============================================================ */
-    function renderBilingualHtml(dataObj) {
-      if (!dataObj) return '';
-      if (typeof dataObj === 'string') return escapeHTML(dataObj);
-      
-      // If it's an object with language keys, always render bilingual natively for safety in the revision center
-      const en = dataObj.en ? escapeHTML(dataObj.en) : escapeHTML(dataObj.question || '');
-      const hi = dataObj.hi ? `<span class="bilingual-hi-text">${escapeHTML(dataObj.hi)}</span>` : '';
-      
-      return en + hi;
-    }
-
-    /* ============================================================
-       CARD BUILDER
-    ============================================================ */
-    function buildFavCard(fav) {
-      const q = fav.question;
-      const qId = fav.qId;
-      
-      const dateSaved = new Date(fav.savedAt || Date.now()).toLocaleDateString('en-IN', {
-        day: 'numeric', month: 'short', year: 'numeric'
-      });
-
-      const sectionName = escapeHTML(q.sectionId || 'General');
-      const testTitle = escapeHTML(fav.testTitle || 'Unknown Test');
-
-      const questionHtml = renderBilingualHtml(q.question);
-      
-      const letters = ['A', 'B', 'C', 'D', 'E'];
-      const correctAnswerIndex = q.correct !== undefined ? q.correct : -1;
-
-      const optionsHtml = (q.options || []).map((opt, i) => {
-        const isCorrect = i === correctAnswerIndex;
-        const optHtml = renderBilingualHtml(opt);
-        const cls = isCorrect ? 'fav-option correct' : 'fav-option';
-        const indicator = isCorrect ? `<i class="fa-solid fa-check" style="color:var(--success);margin-left:auto"></i>` : '';
-
-        return `
-          <div class="${cls}">
-            <span class="fav-option-letter">${letters[i]}</span>
-            <span style="flex:1">${optHtml}</span>
-            ${indicator}
-          </div>
-        `;
-      }).join('');
-
-      let explanationHtml = '';
-      if (q.explanation) {
-        explanationHtml = `
-          <div class="fav-explanation" style="margin-top:12px">
-            <div class="fav-explanation-label">
-              <i class="fa-solid fa-lightbulb"></i> Explanation
-            </div>
-            <div class="fav-explanation-text">${renderBilingualHtml(q.explanation)}</div>
-          </div>
-        `;
-      }
-
-      return `
-        <div class="fav-card" id="card-${qId}">
-          
-          <div class="fav-card-header">
-            <div class="fav-meta-left">
-              <span class="fav-q-badge">Q${fav.questionIndex + 1}</span>
-              <span class="fav-section-badge">${sectionName}</span>
-              <span class="fav-test-title">${testTitle}</span>
-            </div>
-            <div class="fav-date"><i class="fa-regular fa-clock" style="margin-right:4px"></i> Saved ${dateSaved}</div>
-          </div>
-
-          <div class="fav-card-body">
-            <div class="fav-question-text">${questionHtml}</div>
-
-            <div class="fav-details" id="details-${qId}">
-              <div class="fav-options">${optionsHtml}</div>
-              ${explanationHtml}
-            </div>
-          </div>
-
-          <div class="fav-card-footer">
-            <div class="fav-actions-left">
-              <button class="btn btn-ghost btn-sm" id="toggle-btn-${qId}" onclick="toggleDetails('${qId}')">
-                <i class="fa-solid fa-eye"></i> View Answer
-              </button>
-              <a href="/result.html?test=${fav.testId}" class="btn btn-outline btn-sm">
-                <i class="fa-solid fa-chart-simple"></i> View Result
-              </a>
-            </div>
-            <div class="fav-actions-right">
-              <button class="btn btn-ghost btn-sm" style="color:var(--error);border-color:transparent" onclick="promptRemove('${qId}')">
-                <i class="fa-solid fa-trash-can"></i> Remove
-              </button>
-            </div>
-          </div>
-
-        </div>
-      `;
-    }
-
-    /* ============================================================
-       CARD INTERACTIONS
-    ============================================================ */
-    function toggleDetails(qId) {
-      const detailsContainer = document.getElementById(`details-${qId}`);
-      const btn = document.getElementById(`toggle-btn-${qId}`);
-      
-      if (detailsContainer.classList.contains('open')) {
-        detailsContainer.classList.remove('open');
-        btn.innerHTML = `<i class="fa-solid fa-eye"></i> View Answer`;
-      } else {
-        detailsContainer.classList.add('open');
-        btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Answer`;
-      }
-    }
-
-    function promptRemove(qId) {
-      State.pendingRemoveId = qId;
-      openOverlay('removeOverlay');
-    }
-
-    document.getElementById('confirmRemoveBtn').addEventListener('click', async () => {
-      const qId = State.pendingRemoveId;
-      if (!qId) return;
-
-      // Remove from DB
-      await removeFavoriteFromDB(qId);
-
-      // Update LocalStorage reference array (to keep result.html in sync)
-      const favIds = new Set(storageGet('favorites_ids') || []);
-      favIds.delete(qId);
-      storageSet('favorites_ids', [...favIds]);
-
-      // Update State
-      State.allFavorites = State.allFavorites.filter(f => f.qId !== qId);
-      State.filteredFavorites = State.filteredFavorites.filter(f => f.qId !== qId);
-
-      // Remove from DOM visually
-      const card = document.getElementById(`card-${qId}`);
-      if (card) {
-        card.style.transition = 'all 0.3s';
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          card.remove();
-          
-          // Re-render empty state if everything is deleted
-          if (State.allFavorites.length === 0 || State.filteredFavorites.length === 0) {
-            applyFiltersAndSort();
-          }
-        }, 300);
-      }
-
-      closeOverlay('removeOverlay');
-      showToast('Question removed from favorites', 'info');
-      State.pendingRemoveId = null;
-    });
-
-    /* ============================================================
-       BOOTSTRAP
-    ============================================================ */
-    initFavorites();
-  </script>
-</body>
-</html>
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(-4px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    } 
+ 
+    .fav-options { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+      margin-bottom: 16px; 
+    } 
+ 
+    .fav-option { 
+      display: flex; 
+      align-items: flex-start; 
+      gap: 10px; 
+      padding: 10px 12px; 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      font-size: 13.5px; 
+      color: var(--text-secondary); 
+      line-height: 1.5; 
+    } 
+ 
+    .fav-option.correct { 
+      border-color: var(--success); 
+      background: var(--success-light); 
+      color: #14532d; 
+      font-weight: 600; 
+    } 
+    body.dark-mode .fav-option.correct { color: var(--success); } 
+ 
+    .fav-option-letter { 
+      width: 22px; 
+      height: 22px; 
+      border-radius: 4px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 11px; 
+      font-weight: 700; 
+      background: var(--bg-muted); 
+      color: var(--text-muted); 
+      flex-shrink: 0; 
+    } 
+    .fav-option.correct .fav-option-letter { 
+      background: var(--success); 
+      color: #fff; 
+    } 
+ 
+    .fav-explanation { 
+      background: var(--primary-light); 
+      border: 1px solid rgba(26,86,219,0.15); 
+      border-radius: var(--radius-sm); 
+      padding: 12px 14px; 
+    } 
+    .fav-explanation-label { 
+      font-size: 11px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px; 
+      color: var(--primary); 
+      margin-bottom: 6px; 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+    } 
+    .fav-explanation-text { 
+      font-size: 13.5px; 
+      color: var(--primary-dark); 
+      line-height: 1.6; 
+    } 
+    body.dark-mode .fav-explanation-text { color: var(--primary); } 
+ 
+    .fav-card-footer { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      flex-wrap: wrap; 
+      gap: 10px; 
+      padding: 12px 16px; 
+      background: var(--bg-base); 
+      border-top: 1px solid var(--border); 
+    } 
+ 
+    .fav-actions-left { display: flex; gap: 8px; } 
+    .fav-actions-right { display: flex; } 
+ 
+    /* ============================================================ 
+       EMPTY STATE 
+    ============================================================ */ 
+    .empty-state { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 64px 24px; 
+      text-align: center; 
+      background: var(--bg-card); 
+      border: 1.5px dashed var(--border-strong); 
+      border-radius: var(--radius-lg); 
+    } 
+    .empty-icon { 
+      width: 64px; 
+      height: 64px; 
+      background: var(--warning-light); 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 24px; 
+      color: var(--warning); 
+      margin-bottom: 16px; 
+    } 
+    .empty-title { 
+      font-family: var(--font-heading); 
+      font-size: 18px; 
+      font-weight: 600; 
+      color: var(--text-primary); 
+      margin-bottom: 8px; 
+    } 
+    .empty-subtitle { 
+      font-size: 14px; 
+      color: var(--text-muted); 
+      margin-bottom: 20px; 
+      max-width: 320px; 
+      line-height: 1.6; 
+    } 
+ 
+    /* ============================================================ 
+       LOAD MORE 
+    ============================================================ */ 
+    .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; } 
+    .load-more-text { font-size: 13px; color: var(--text-muted); } 
+ 
+    /* ============================================================ 
+       POPUPS & OVERLAYS 
+    ============================================================ */ 
+    .overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: 
+blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: 
+none; transition: opacity 0.2s; } 
+    .overlay.open { opacity: 1; pointer-events: all; } 
+    .popup { background: var(--bg-card); border-radius: var(--radius-xl); width: 100%; max-width: 440px; box-shadow: var(-
+shadow-lg); transform: scale(0.95) translateY(12px); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); overflow: 
+hidden; display: flex; flex-direction: column;} 
+    .overlay.open .popup { transform: scale(1) translateY(0); } 
+    .popup-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 
+1px solid var(--border); flex-shrink: 0;} 
+    .popup-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); } 
+    .popup-close { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: 
+center; font-size: 14px; color: var(--text-muted); transition: all 0.15s; } 
+    .popup-close:hover { background: var(--bg-muted); color: var(--text-primary); } 
+    .popup-body { padding: 20px; overflow-y: auto; max-height: 65vh; } 
+    .popup-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0;} 
+ 
+    /* Remove Confirm Specifics */ 
+    .confirm-icon-wrap { text-align: center; margin-bottom: 16px; } 
+    .confirm-icon { width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; 
+font-size: 22px; margin-bottom: 12px; background: var(--error-light); color: var(--error); } 
+    .confirm-title { font-family: var(--font-heading); font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 
+6px; } 
+    .confirm-message { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; } 
+ 
+    /* ============================================================ 
+       FILTER MENU SPECIFICS (DUAL POPUP) 
+    ============================================================ */ 
+    .filter-menu-item { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 14px 16px; 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-md); 
+      margin-bottom: 10px; 
+      font-size: 14.5px; 
+      font-weight: 600; 
+      color: var(--text-primary); 
+      cursor: pointer; 
+      transition: all 0.15s; 
+      background: var(--bg-card); 
+    } 
+    .filter-menu-item:hover { 
+      border-color: var(--primary); 
+      background: var(--primary-light); 
+      color: var(--primary); 
+    } 
+    .filter-menu-left { display: flex; align-items: center; gap: 10px; } 
+    .filter-menu-left i { font-size: 16px; width: 20px; text-align: center; color: var(--text-muted); transition: color 0.15s; } 
+    .filter-menu-item:hover .filter-menu-left i { color: var(--primary); } 
+     
+    .filter-menu-badge { 
+      background: var(--primary); 
+      color: #fff; 
+      font-size: 11px; 
+      font-weight: 700; 
+      padding: 2px 7px; 
+      border-radius: 99px; 
+} 
+margin-left: auto; 
+margin-right: 8px; 
+display: none; 
+.filter-menu-badge.active { display: inline-block; } 
+/* Filter Detail Items */ 
+.filter-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; } 
+.filter-chip-select { padding: 6px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 
+500; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; background: var(--bg-card); } 
+.filter-chip-select:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); } 
+.filter-chip-select.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; } 
+/* Sort Option Items */ 
+.sort-options { display: flex; flex-direction: column; gap: 4px; } 
+.sort-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: var(-
+radius-sm); border: 1.5px solid var(--border); cursor: pointer; transition: all 0.15s; font-size: 14px; color: var(--text-secondary); 
+font-weight: 500; } 
+.sort-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); } 
+.sort-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; 
+} 
+.sort-option .sort-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-muted); display: flex; align
+items: center; justify-content: center; font-size: 12px; color: var(--text-muted); } 
+.sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); } 
+/* ============================================================ 
+TOAST 
+============================================================ */ 
+.toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex
+direction: column; gap: 8px; align-items: center; pointer-events: none; } 
+.toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 11px 18px; border
+radius: var(--radius-lg); font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic
+bezier(0.34,1.56,0.64,1); max-width: 320px; } 
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } } 
+.toast.success { background: var(--success); } 
+.toast.warning { background: var(--warning); } 
+.toast.error { background: var(--error); } 
+.toast.info { background: var(--primary); } 
+    /* ============================================================ 
+       FOOTER 
+    ============================================================ */ 
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; } 
+     
+    /* Dark Mode Footer Fix */ 
+    body.dark-mode .site-footer { color: #0f172a; } 
+    body.dark-mode .footer-brand-name { color: #0f172a; } 
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); } 
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); } 
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); } 
+    body.dark-mode .footer-link:hover { color: #0f172a; } 
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); } 
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); } 
+ 
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 
+1fr)); gap: 32px; margin-bottom: 32px; } 
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; } 
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; } 
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: 
+rgba(255,255,255,0.5); margin-bottom: 12px; } 
+    .footer-links { display: flex; flex-direction: column; gap: 8px; } 
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; } 
+    .footer-link:hover { color: #fff; } 
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; 
+display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; } 
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); } 
+ 
+    /* ============================================================ 
+       RESPONSIVE 
+    ============================================================ */ 
+    @media (max-width: 768px) { 
+      .site-nav { 
+        display: none;  
+        flex-direction: column; 
+        position: absolute; 
+        top: var(--header-height); 
+        left: 0; 
+        width: 100%; 
+        background: var(--bg-card); 
+        padding: 16px; 
+        border-bottom: 1px solid var(--border); 
+        box-shadow: var(--shadow-md); 
+      } 
+      .site-nav.mobile-open { display: flex; } 
+      .mobile-menu-btn { display: flex; } 
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; } 
+ 
+      .page-title { font-size: 22px; } 
+ 
+      .controls-bar { flex-wrap: nowrap; gap: 8px; } 
+      .search-wrap { min-width: 0; } 
+      .ctrl-btn span:not(.badge) { display: none; } 
+       
+      .fav-card-footer { flex-direction: column; align-items: stretch; } 
+      .fav-actions-left { width: 100%; display: grid; grid-template-columns: 1fr 1fr; } 
+      .fav-actions-right { width: 100%; } 
+      .fav-actions-right .btn { width: 100%; } 
+    } 
+  </style> 
+</head> 
+ 
+<body> 
+ 
+  <header class="site-header"> 
+    <div class="header-inner align-wrapper"> 
+      <a href="/index.html" class="brand"> 
+        <div class="brand-icon">A</div> 
+        <div class="brand-text"> 
+          <span class="brand-name">ApnaMock</span> 
+          <span class="brand-tagline">Practice. Improve. Succeed.</span> 
+        </div> 
+      </a> 
+  
+      <nav class="site-nav"> 
+        <a href="/tests.html" class="nav-link"> 
+          <i class="fa-solid fa-list-check"></i> 
+          <span>Tests</span> 
+        </a> 
+        <a href="/custom-tests.html" class="nav-link"> 
+          <i class="fa-solid fa-sliders"></i> 
+          <span>Custom Tests</span> 
+        </a> 
+        <a href="/favorites.html" class="nav-link active"> 
+          <i class="fa-solid fa-bookmark"></i> 
+          <span>Favorites</span> 
+        </a> 
+        <a href="/history.html" class="nav-link"> 
+          <i class="fa-solid fa-clock-rotate-left"></i> 
+          <span>History</span> 
+        </a> 
+      </nav> 
+  
+      <div class="header-actions"> 
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme"> 
+          <i class="fa-solid fa-moon"></i> 
+        </button> 
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn"> 
+          <i class="fa-solid fa-bars"></i> 
+        </button> 
+      </div> 
+    </div> 
+  </header> 
+ 
+  <main class="page-wrapper align-wrapper"> 
+  
+    <div class="page-header"> 
+      <h1 class="page-title"><i class="fa-solid fa-bookmark"></i> My Favorite Questions</h1> 
+      <p class="page-subtitle">Review your saved questions anytime for quick revision.</p> 
+    </div> 
+ 
+    <div class="controls-bar" id="controlsBar" style="display:none;"> 
+      <div class="search-wrap"> 
+        <i class="fa-solid fa-magnifying-glass search-icon"></i> 
+        <input type="text" class="search-input" id="searchInput" placeholder="Search saved questions, topics, exams..." 
+autocomplete="off" /> 
+        <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button> 
+      </div> 
+      <div class="controls-right"> 
+        <button class="ctrl-btn" id="filterBtn"> 
+          <i class="fa-solid fa-filter"></i> 
+          <span>Filter</span> 
+          <span class="badge" id="filterBadge" style="display:none">0</span> 
+        </button> 
+   
+        <button class="ctrl-btn" id="sortBtn"> 
+          <i class="fa-solid fa-arrow-up-wide-short"></i> 
+          <span>Sort By</span> 
+        </button> 
+      </div> 
+    </div> 
+ 
+    <div class="active-filters" id="activeFilters"></div> 
+ 
+    <div class="fav-grid" id="favoritesGrid"> 
+      <div style="text-align:center;padding:40px;color:var(--text-muted)"> 
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i> 
+        <div>Loading your favorites...</div> 
+      </div> 
+    </div> 
+ 
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none;"> 
+      <span class="load-more-text" id="loadMoreText"></span> 
+      <button class="btn btn-outline" id="loadMoreBtn"> 
+        <i class="fa-solid fa-arrow-down"></i> 
+        Load More Favorites 
+      </button> 
+    </div> 
+  
+  </main> 
+ 
+  <div class="overlay" id="filterMenuOverlay"> 
+    <div class="popup"> 
+      <div class="popup-header"> 
+        <span class="popup-title">Filter Favorites</span> 
+        <button class="popup-close" onclick="closeOverlay('filterMenuOverlay')"> 
+          <i class="fa-solid fa-xmark"></i> 
+        </button> 
+      </div> 
+      <div class="popup-body"> 
+         
+        <div class="filter-menu-item" onclick="openFilterDetail('exam', 'By Exam Group')"> 
+          <div class="filter-menu-left"><i class="fa-solid fa-graduation-cap"></i> Exam Group</div> 
+          <span class="filter-menu-badge" id="badge-exam">0</span> 
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
+        </div> 
+ 
+       <div class="filter-menu-item" onclick="openFilterDetail('actualExam', 'By Exam')"> 
+ <div class="filter-menu-left"> 
+   <i class="fa-solid fa-file-lines"></i> 
+   Exam 
+ </div> 
+ <span class="filter-menu-badge" id="badge-actualExam">0</span> 
+ <i class="fa-solid fa-chevron-right" 
+ style="color:var(--text-muted);font-size:12px"></i> 
+</div> 
+ 
+        <div class="filter-menu-item" onclick="openFilterDetail('section', 'By Section')"> 
+          <div class="filter-menu-left"><i class="fa-solid fa-layer-group"></i> Section</div> 
+          <span class="filter-menu-badge" id="badge-section">0</span> 
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
+        </div> 
+ 
+        <div class="filter-menu-item" onclick="openFilterDetail('language', 'By Language')"> 
+          <div class="filter-menu-left"><i class="fa-solid fa-language"></i> Language</div> 
+          <span class="filter-menu-badge" id="badge-language">0</span> 
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
+        </div> 
+ 
+        <div class="filter-menu-item" onclick="openFilterDetail('testTitle', 'By Source Test')"> 
+          <div class="filter-menu-left"><i class="fa-solid fa-file-lines"></i> Source Test</div> 
+          <span class="filter-menu-badge" id="badge-testTitle">0</span> 
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
+        </div> 
+ 
+        <div class="filter-menu-item" onclick="openFilterDetail('date', 'Saved Date')"> 
+          <div class="filter-menu-left"><i class="fa-solid fa-calendar-day"></i> Saved Date</div> 
+          <span class="filter-menu-badge" id="badge-date">0</span> 
+          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
+        </div> 
+ 
+      </div> 
+      <div class="popup-footer"> 
+        <button class="btn btn-ghost btn-sm" id="filterClearAll"> 
+          <i class="fa-solid fa-rotate-left"></i> Clear All 
+        </button> 
+        <button class="btn btn-primary btn-sm" id="filterApply" style="flex:1"> 
+          <i class="fa-solid fa-check"></i> Apply Filters 
+        </button> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <div class="overlay" id="filterDetailOverlay"> 
+    <div class="popup"> 
+      <div class="popup-header"> 
+        <button class="popup-close" onclick="closeFilterDetail()"><i class="fa-solid fa-arrow-left"></i></button> 
+        <span class="popup-title" id="filterDetailTitle">Select Options</span> 
+        <button class="popup-close" style="opacity:0;pointer-events:none"><i class="fa-solid fa-xmark"></i></button> 
+      </div> 
+      <div class="popup-body" id="filterDetailBody"> 
+         
+        <div class="filter-section detail-section" id="detail-exam" style="display:none;"> 
+          <div class="filter-chips-wrap" id="filterExams"></div> 
+        </div> 
+ 
+        <div class="filter-section detail-section" 
+id="detail-actualExam" 
+style="display:none;"> 
+ 
+ <div class="filter-chips-wrap" 
+ id="filterActualExams"></div> 
+ 
+</div> 
+ 
+        <div class="filter-section detail-section" id="detail-section" style="display:none;"> 
+          <div class="filter-chips-wrap" id="filterSections"></div> 
+        </div> 
+ 
+        <div class="filter-section detail-section" id="detail-language" style="display:none;"> 
+          <div class="filter-chips-wrap" id="filterLanguages"></div> 
+        </div> 
+ 
+        <div class="filter-section detail-section" id="detail-testTitle" style="display:none;"> 
+          <div class="filter-chips-wrap" id="filterTestTitles"></div> 
+        </div> 
+ 
+        <div class="filter-section detail-section" id="detail-date" style="display:none;"> 
+          <div class="filter-chips-wrap" id="filterDate"> 
+            <button class="filter-chip-select" data-type="date" data-value="today">Today</button> 
+            <button class="filter-chip-select" data-type="date" data-value="week">Last 7 Days</button> 
+            <button class="filter-chip-select" data-type="date" data-value="month">Last 30 Days</button> 
+          </div> 
+        </div> 
+ 
+      </div> 
+      <div class="popup-footer"> 
+        <button class="btn btn-primary btn-full" onclick="closeFilterDetail()"> 
+          <i class="fa-solid fa-check"></i> Done 
+        </button> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <div class="overlay" id="sortOverlay"> 
+    <div class="popup" style="max-height: auto;"> 
+      <div class="popup-header"> 
+        <span class="popup-title">Sort Favorites</span> 
+        <button class="popup-close" id="sortClose"> 
+          <i class="fa-solid fa-xmark"></i> 
+        </button> 
+      </div> 
+      <div class="popup-body"> 
+        <div class="sort-options" id="sortOptions"> 
+  
+          <div class="sort-option selected" data-sort="date-desc"> 
+            <div style="display:flex;align-items:center;gap:12px;"> 
+              <div class="sort-icon"><i class="fa-solid fa-clock-rotate-left"></i></div> 
+              <span>Latest Saved First</span> 
+            </div> 
+            <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i> 
+          </div> 
+  
+          <div class="sort-option" data-sort="date-asc"> 
+            <div style="display:flex;align-items:center;gap:12px;"> 
+              <div class="sort-icon"><i class="fa-regular fa-clock"></i></div> 
+              <span>Oldest Saved First</span> 
+            </div> 
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i> 
+          </div> 
+  
+          <div class="sort-option" data-sort="exam-asc"> 
+            <div style="display:flex;align-items:center;gap:12px;"> 
+              <div class="sort-icon"><i class="fa-solid fa-graduation-cap"></i></div> 
+              <span>Exam Name (A-Z)</span> 
+            </div> 
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i> 
+          </div> 
+ 
+          <div class="sort-option" data-sort="section-asc"> 
+            <div style="display:flex;align-items:center;gap:12px;"> 
+              <div class="sort-icon"><i class="fa-solid fa-layer-group"></i></div> 
+              <span>Section Name (A-Z)</span> 
+            </div> 
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i> 
+          </div> 
+  
+        </div> 
+      </div> 
+      <div class="popup-footer"> 
+        <button class="btn btn-primary btn-full" id="sortApply"> 
+          <i class="fa-solid fa-check"></i> Apply Sort 
+        </button> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <div class="overlay" id="removeOverlay"> 
+    <div class="popup" style="max-height: auto;"> 
+      <div class="popup-header"> 
+        <span class="popup-title">Remove Favorite</span> 
+        <button class="popup-close" onclick="closeOverlay('removeOverlay')"><i class="fa-solid fa-xmark"></i></button> 
+      </div> 
+      <div class="popup-body"> 
+        <div class="confirm-icon-wrap"> 
+          <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div> 
+          <div class="confirm-title">Remove this question?</div> 
+          <div class="confirm-message">This question will be permanently removed from your favorites list. This action cannot be 
+undone.</div> 
+        </div> 
+      </div> 
+      <div class="popup-footer"> 
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('removeOverlay')">Cancel</button> 
+        <button class="btn btn-danger" style="flex:1" id="confirmRemoveBtn">Remove</button> 
+      </div> 
+    </div> 
+  </div> 
+ 
+  <div class="toast-container" id="toastContainer"></div> 
+ 
+  <footer class="site-footer"> 
+    <div class="footer-inner"> 
+      <div> 
+        <div class="footer-brand-name">ApnaMock</div> 
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div> 
+      </div> 
+      <div> 
+        <div class="footer-col-title">Quick Links</div> 
+        <div class="footer-links"> 
+          <a href="/tests.html" class="footer-link">All Tests</a> 
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a> 
+          <a href="/favorites.html" class="footer-link">Favorites</a> 
+          <a href="/history.html" class="footer-link">History</a> 
+        </div> 
+      </div> 
+      <div> 
+        <div class="footer-col-title">Legal</div> 
+        <div class="footer-links"> 
+          <a href="#" class="footer-link">Privacy Policy</a> 
+          <a href="#" class="footer-link">Terms of Use</a> 
+          <a href="#" class="footer-link">Disclaimer</a> 
+          <a href="#" class="footer-link">Contact</a> 
+        </div> 
+      </div> 
+    </div> 
+    <div class="footer-bottom align-wrapper"> 
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span> 
+      <span class="footer-copy">Practice. Improve. Succeed.</span> 
+    </div> 
+  </footer> 
+ 
+  <script> 
+    /* ============================================================ 
+       XSS UTILITY  
+    ============================================================ */ 
+    function escapeHTML(str) { 
+      if (!str) return ''; 
+      return String(str) 
+        .replace(/&/g, '&amp;') 
+        .replace(/</g, '&lt;') 
+        .replace(/>/g, '&gt;') 
+        .replace(/"/g, '&quot;') 
+        .replace(/'/g, '&#39;'); 
+    } 
+ 
+    /* ============================================================ 
+       STATE & CONFIG 
+    ============================================================ */ 
+    const CONFIG = { 
+      STORAGE_PREFIX: 'apnamock_', 
+      ITEMS_PER_PAGE: 10 
+    }; 
+ 
+    const State = { 
+      allFavorites: [], 
+      filteredFavorites: [], 
+      displayedCount: 0, 
+      searchQuery: '', 
+      pendingRemoveId: null, 
+      filters: { 
+ exam: [], 
+ actualExam: [], 
+ section: [], 
+ language: [], 
+ testTitle: [], 
+ date: null 
+}, 
+      sort: 'date-desc' 
+    }; 
+ 
+    /* ============================================================ 
+       INDEXED DB WRAPPER 
+    ============================================================ */ 
+    const DB_NAME = 'ApnaMockDB'; 
+    const DB_VERSION = 2; 
+    const STORE_NAME = 'favorites'; 
+ 
+    function initDB() { 
+      return new Promise((resolve, reject) => { 
+        const request = indexedDB.open(DB_NAME, DB_VERSION); 
+        request.onupgradeneeded = (e) => { 
+          const db = e.target.result; 
+          if (!db.objectStoreNames.contains(STORE_NAME)) { 
+            db.createObjectStore(STORE_NAME, { keyPath: 'qId' }); 
+          } 
+        }; 
+        request.onsuccess = (e) => resolve(e.target.result); 
+        request.onerror = (e) => reject(e.target.error); 
+      }); 
+    } 
+ 
+    async function getAllFavorites() { 
+      try { 
+        const db = await initDB(); 
+        return new Promise((resolve, reject) => { 
+          const tx = db.transaction(STORE_NAME, 'readonly'); 
+          const store = tx.objectStore(STORE_NAME); 
+          const request = store.getAll(); 
+          request.onsuccess = () => resolve(request.result || []); 
+          request.onerror = () => reject(request.error); 
+        }); 
+      } catch (err) { 
+        console.error("IndexedDB error:", err); 
+        return []; 
+      } 
+    } 
+ 
+    async function removeFavoriteFromDB(qId) { 
+      try { 
+        const db = await initDB(); 
+        return new Promise((resolve, reject) => { 
+          const tx = db.transaction(STORE_NAME, 'readwrite'); 
+          const store = tx.objectStore(STORE_NAME); 
+          store.delete(qId); 
+          tx.oncomplete = () => resolve(); 
+          tx.onerror = () => reject(tx.error); 
+        }); 
+      } catch (err) { 
+        console.error("IndexedDB error:", err); 
+      } 
+    } 
+ 
+    /* ============================================================ 
+       LOCAL STORAGE HELPERS 
+    ============================================================ */ 
+    function storageGet(key) { 
+      try { 
+        const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); 
+        return raw ? JSON.parse(raw) : null; 
+      } catch { return null; } 
+    } 
+    function storageSet(key, value) { 
+      try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} 
+    } 
+ 
+    /* ============================================================ 
+       TOAST & POPUPS 
+    ============================================================ */ 
+    function showToast(message, type = 'info', duration = 2500) { 
+      const container = document.getElementById('toastContainer'); 
+      const toast = document.createElement('div'); 
+      toast.className = `toast ${type}`; 
+      toast.innerHTML = `<i class="fa-solid ${ 
+        type === 'success' ? 'fa-circle-check' : 
+        type === 'error' ? 'fa-circle-xmark' : 
+        type === 'warning' ? 'fa-triangle-exclamation' : 
+        'fa-circle-info' 
+      }"></i> ${message}`; 
+      container.appendChild(toast); 
+      setTimeout(() => toast.remove(), duration); 
+    } 
+ 
+    function openOverlay(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; } 
+    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; } 
+     
+    document.querySelectorAll('.overlay').forEach(overlay => { 
+      overlay.addEventListener('click', (e) => { 
+        if (e.target === overlay) closeOverlay(overlay.id); 
+      }); 
+    }); 
+ 
+    /* ============================================================ 
+       FILTER DRILL-DOWN LOGIC (POPUP 1 & 2) 
+    ============================================================ */ 
+    document.getElementById('filterBtn').addEventListener('click', () => { 
+      openOverlay('filterMenuOverlay'); 
+    }); 
+ 
+    function openFilterDetail(type, titleText) { 
+      closeOverlay('filterMenuOverlay'); 
+       
+      // Hide all detail sections 
+      document.querySelectorAll('.detail-section').forEach(el => el.style.display = 'none'); 
+       
+      // Show targeted detail section 
+      document.getElementById(`detail-${type}`).style.display = 'block'; 
+       
+      // Set Title 
+      document.getElementById('filterDetailTitle').textContent = titleText; 
+       
+      openOverlay('filterDetailOverlay'); 
+    } 
+ 
+    function closeFilterDetail() { 
+      closeOverlay('filterDetailOverlay'); 
+      openOverlay('filterMenuOverlay'); 
+    } 
+ 
+    function updateFilterBadges() { 
+      const counts = { 
+        exam: document.querySelectorAll('#filterExams .selected').length, 
+        subject: document.querySelectorAll('#filterSubjects .selected').length, 
+        topic: document.querySelectorAll('#filterTopics .selected').length, 
+        section: document.querySelectorAll('#filterSections .selected').length, 
+        language: document.querySelectorAll('#filterLanguages .selected').length, 
+        testTitle: document.querySelectorAll('#filterTestTitles .selected').length, 
+        date: document.querySelectorAll('#filterDate .selected').length 
+      }; 
+ 
+      for (const [key, count] of Object.entries(counts)) { 
+        const badge = document.getElementById(`badge-${key}`); 
+        if (badge) { 
+          badge.textContent = count; 
+          badge.classList.toggle('active', count > 0); 
+        } 
+      } 
+    } 
+ 
+    // Bind Badge Updates to Date Chips 
+    document.querySelectorAll('#filterDate .filter-chip-select').forEach(btn => { 
+      btn.addEventListener('click', () => { 
+        document.querySelectorAll('#filterDate .filter-chip-select').forEach(b => b.classList.remove('selected')); 
+        btn.classList.toggle('selected'); 
+        updateFilterBadges(); 
+      }); 
+    }); 
+ 
+    // Handle Clear All inside the Filter Menu 
+    document.getElementById('filterClearAll').addEventListener('click', () => { 
+      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected')); 
+      updateFilterBadges(); 
+    }); 
+ 
+    // Handle Apply inside Filter Menu 
+    document.getElementById('filterApply').addEventListener('click', () => { 
+      const newFilters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null }; 
+  
+      document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => 
+newFilters.exam.push(btn.dataset.value)); 
+      document.querySelectorAll('#filterSubjects .filter-chip-select.selected').forEach(btn => 
+newFilters.subject.push(btn.dataset.value)); 
+      document.querySelectorAll('#filterTopics .filter-chip-select.selected').forEach(btn => 
+newFilters.topic.push(btn.dataset.value)); 
+      document.querySelectorAll('#filterSections .filter-chip-select.selected').forEach(btn => 
+newFilters.section.push(btn.dataset.value)); 
+      document.querySelectorAll('#filterLanguages .filter-chip-select.selected').forEach(btn => 
+newFilters.language.push(btn.dataset.value)); 
+      document.querySelectorAll('#filterTestTitles .filter-chip-select.selected').forEach(btn => 
+newFilters.testTitle.push(btn.dataset.value)); 
+  
+      const dateSelected = document.querySelector('#filterDate .filter-chip-select.selected'); 
+      if (dateSelected) newFilters.date = dateSelected.dataset.value; 
+  
+      State.filters = newFilters; 
+      closeOverlay('filterMenuOverlay'); 
+      renderActiveFilters(); 
+      applyFiltersAndSort(); 
+    }); 
+ 
+    /* ============================================================ 
+       INITIALIZATION 
+    ============================================================ */ 
+    async function initFavorites() { 
+      // Setup Theme 
+      const savedTheme = storageGet('theme'); 
+      if (savedTheme === 'dark') { 
+        document.body.classList.add('dark-mode'); 
+        document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun'; 
+      } 
+ 
+      document.getElementById('themeToggleBtn').addEventListener('click', () => { 
+        document.body.classList.toggle('dark-mode'); 
+        const isDark = document.body.classList.contains('dark-mode'); 
+        document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; 
+        storageSet('theme', isDark ? 'dark' : 'light'); 
+      }); 
+ 
+      document.getElementById('mobileMenuBtn').addEventListener('click', () => { 
+        document.querySelector('.site-nav').classList.toggle('mobile-open'); 
+      }); 
+ 
+      // Load Data 
+      const rawData = await getAllFavorites(); 
+       
+      // Sort by newest first 
+      State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0)); 
+       
+      buildFilterOptions(); 
+      applySearchAndRender(); 
+    } 
+ 
+    /* ============================================================ 
+       FILTER OPTIONS BUILDER (For dynamic details) 
+    ============================================================ */ 
+    function buildFilterOptions() { 
+      const exams = [...new Set(State.allFavorites.map(f => f.question?.exam_group || f.question?.exam).filter(Boolean))]; 
+      const subjects = [...new Set(State.allFavorites.map(f => f.question?.subject).filter(Boolean))]; 
+      const topics = [...new Set(State.allFavorites.map(f => f.question?.topic).filter(Boolean))]; 
+      const sections = [...new Set(State.allFavorites.map(f => f.question?.sectionId).filter(Boolean))]; 
+      const languages = [...new Set(State.allFavorites.map(f => f.question?.language).filter(Boolean))]; 
+      const testTitles = [...new Set(State.allFavorites.map(f => f.testTitle).filter(Boolean))]; 
+ 
+      renderChipGroup('filterExams', exams, 'exam'); 
+      renderChipGroup('filterSubjects', subjects, 'subject'); 
+      renderChipGroup('filterTopics', topics, 'topic'); 
+      renderChipGroup('filterSections', sections, 'section'); 
+      renderChipGroup('filterLanguages', languages, 'language'); 
+      renderChipGroup('filterTestTitles', testTitles, 'testTitle'); 
+    } 
+ 
+    function renderChipGroup(containerId, values, type) { 
+      const container = document.getElementById(containerId); 
+      if (!container) return; 
+  
+      container.innerHTML = values.map(value => ` 
+        <button class="filter-chip-select ${State.filters[type]?.includes(String(value)) ? 'selected' : ''}" data-type="${type}" data
+value="${escapeHTML(value)}"> 
+          ${escapeHTML(value)} 
+        </button> 
+      `).join(''); 
+  
+      container.querySelectorAll('.filter-chip-select').forEach(btn => { 
+        btn.addEventListener('click', () => { 
+          btn.classList.toggle('selected'); 
+          updateFilterBadges(); 
+        }); 
+      }); 
+    } 
+ 
+    /* ============================================================ 
+       SEARCH & FILTER LOGIC 
+    ============================================================ */ 
+    function applySearchAndRender() { 
+      applyFiltersAndSort(); // Reusing the unified logic 
+    } 
+ 
+    function applyFiltersAndSort() { 
+      let filtered = [...State.allFavorites]; 
+ 
+      // 1. Text Search 
+      if (State.searchQuery) { 
+        const q = State.searchQuery.toLowerCase(); 
+        filtered = filtered.filter(item => { 
+          const testTitle = (item.testTitle || '').toLowerCase(); 
+          const qTextEn = (item.question?.question?.en || item.question?.question || '').toLowerCase(); 
+          const qTextHi = (item.question?.question?.hi || '').toLowerCase(); 
+          const exam = (item.question?.exam || '').toLowerCase(); 
+          const subject = (item.question?.subject || '').toLowerCase(); 
+           
+          return testTitle.includes(q) || qTextEn.includes(q) || qTextHi.includes(q) || exam.includes(q) || subject.includes(q); 
+        }); 
+      } 
+ 
+      // 2. Exact Filters 
+      if (State.filters.exam.length) { 
+        filtered = filtered.filter(f => State.filters.exam.includes(f.question?.exam_group || f.question?.exam)); 
+      } 
+      if (State.filters.subject.length) { 
+        filtered = filtered.filter(f => State.filters.subject.includes(f.question?.subject)); 
+      } 
+      if (State.filters.topic.length) { 
+        filtered = filtered.filter(f => State.filters.topic.includes(f.question?.topic)); 
+      } 
+      if (State.filters.section.length) { 
+        filtered = filtered.filter(f => State.filters.section.includes(f.question?.sectionId)); 
+      } 
+      if (State.filters.language.length) { 
+        filtered = filtered.filter(f => State.filters.language.includes(f.question?.language)); 
+      } 
+      if (State.filters.testTitle.length) { 
+        filtered = filtered.filter(f => State.filters.testTitle.includes(f.testTitle)); 
+      } 
+       
+      // 3. Date Filter 
+      if (State.filters.date) { 
+        const now = Date.now(); 
+        const oneDay = 24 * 60 * 60 * 1000; 
+        let limit = 0; 
+ 
+        if (State.filters.date === 'today') limit = now - oneDay; 
+        if (State.filters.date === 'week') limit = now - (7 * oneDay); 
+        if (State.filters.date === 'month') limit = now - (30 * oneDay); 
+ 
+        filtered = filtered.filter(f => (f.savedAt || 0) >= limit); 
+      } 
+ 
+      // 4. Sort 
+      filtered.sort((a, b) => { 
+        switch (State.sort) { 
+          case 'date-desc': return (b.savedAt || 0) - (a.savedAt || 0); 
+          case 'date-asc': return (a.savedAt || 0) - (b.savedAt || 0); 
+          case 'exam-asc': return String(a.question?.exam || '').localeCompare(String(b.question?.exam || '')); 
+          case 'section-asc': return String(a.question?.sectionId || '').localeCompare(String(b.question?.sectionId || '')); 
+          default: return 0; 
+        } 
+      }); 
+ 
+      State.filteredFavorites = filtered; 
+      State.displayedCount = 0; 
+ 
+      // Update UI visibility 
+      if (State.allFavorites.length > 0) { 
+        document.getElementById('controlsBar').style.display = 'flex'; 
+      } else { 
+        document.getElementById('controlsBar').style.display = 'none'; 
+      } 
+ 
+      const grid = document.getElementById('favoritesGrid'); 
+      grid.innerHTML = ''; 
+ 
+      if (State.filteredFavorites.length === 0) { 
+        renderEmptyState(); 
+        document.getElementById('loadMoreWrap').style.display = 'none'; 
+        return; 
+      } 
+ 
+      loadMoreFavorites(); 
+    } 
+ 
+    /* ============================================================ 
+       SEARCH DEBOUNCE 
+    ============================================================ */ 
+    let searchDebounce; 
+    document.getElementById('searchInput').addEventListener('input', (e) => { 
+      const val = e.target.value; 
+      State.searchQuery = val; 
+      document.getElementById('searchClear').style.display = val ? 'block' : 'none'; 
+ 
+      clearTimeout(searchDebounce); 
+      searchDebounce = setTimeout(() => { applyFiltersAndSort(); }, 300); 
+    }); 
+ 
+    document.getElementById('searchClear').addEventListener('click', () => { 
+      clearTimeout(searchDebounce); 
+      document.getElementById('searchInput').value = ''; 
+      State.searchQuery = ''; 
+      document.getElementById('searchClear').style.display = 'none'; 
+      applyFiltersAndSort(); 
+    }); 
+ 
+    /* ============================================================ 
+       ACTIVE FILTERS RENDER 
+    ============================================================ */ 
+    function renderActiveFilters() { 
+      const container = document.getElementById('activeFilters'); 
+      const chips = []; 
+  
+      const typeLabels = { 
+        exam: 'Exam', subject: 'Subject', topic: 'Topic', 
+        section: 'Section', language: 'Language', testTitle: 'Test' 
+      }; 
+  
+      ['exam', 'subject', 'topic', 'section', 'language', 'testTitle'].forEach(type => { 
+        (State.filters[type] || []).forEach(value => { 
+          chips.push(` 
+            <div class="filter-chip"> 
+              <span>${typeLabels[type]}: ${escapeHTML(value)}</span> 
+              <button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHTML(value)}')"> 
+                <i class="fa-solid fa-xmark"></i> 
+              </button> 
+            </div> 
+          `); 
+        }); 
+      }); 
+  
+      if (State.filters.date) { 
+        const dateLabels = { today: 'Today', week: 'Last 7 Days', month: 'Last 30 Days' }; 
+        chips.push(` 
+          <div class="filter-chip"> 
+            <span>Date: ${dateLabels[State.filters.date]}</span> 
+            <button class="filter-chip-remove" onclick="removeFilter('date',null)"> 
+              <i class="fa-solid fa-xmark"></i> 
+            </button> 
+          </div> 
+        `); 
+      } 
+  
+      if (chips.length) { 
+        chips.push(` 
+          <button class="clear-all-btn" onclick="clearAllFilters()"> 
+            Clear All 
+          </button> 
+        `); 
+      } 
+  
+      container.innerHTML = chips.join(''); 
+  
+      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0); 
+      const badge = document.getElementById('filterBadge'); 
+      const filterBtn = document.getElementById('filterBtn'); 
+  
+      if (totalFilters > 0) { 
+        badge.textContent = totalFilters; 
+        badge.style.display = 'inline-flex'; 
+        filterBtn.classList.add('active'); 
+      } else { 
+        badge.style.display = 'none'; 
+        filterBtn.classList.remove('active'); 
+      } 
+    } 
+ 
+    function removeFilter(type, value) { 
+      if (type === 'date') { 
+        State.filters.date = null; 
+        document.querySelectorAll('#filterDate .filter-chip-select').forEach(b => b.classList.remove('selected')); 
+      } else if (State.filters[type]) { 
+        State.filters[type] = State.filters[type].filter(v => String(v) !== String(value)); 
+         
+        const containerId = type === 'exam' ? 'filterExams' : 
+                            type === 'subject' ? 'filterSubjects' : 
+                            type === 'topic' ? 'filterTopics' : 
+                            type === 'section' ? 'filterSections' : 
+                            type === 'language' ? 'filterLanguages' : 'filterTestTitles'; 
+         
+        const chipToDeselect = document.querySelector(`#${containerId} .filter-chip-select[data-value="${value}"]`); 
+        if (chipToDeselect) chipToDeselect.classList.remove('selected'); 
+      } 
+       
+      updateFilterBadges(); 
+      renderActiveFilters(); 
+      applyFiltersAndSort(); 
+    } 
+ 
+    function clearAllFilters() { 
+      State.filters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null }; 
+      State.searchQuery = ''; 
+      document.getElementById('searchInput').value = ''; 
+      document.getElementById('searchClear').style.display = 'none'; 
+       
+      // Reset popup chips 
+      document.querySelectorAll('#filterDetailOverlay .filter-chip-select').forEach(btn => btn.classList.remove('selected')); 
+       
+      updateFilterBadges(); 
+      renderActiveFilters(); 
+      applyFiltersAndSort(); 
+    } 
+ 
+    /* ============================================================ 
+       SORT POPUP LOGIC 
+    ============================================================ */ 
+    document.getElementById('sortBtn').addEventListener('click', () => openOverlay('sortOverlay')); 
+    document.getElementById('sortClose').addEventListener('click', () => closeOverlay('sortOverlay')); 
+ 
+    document.querySelectorAll('.sort-option').forEach(opt => { 
+      opt.addEventListener('click', () => { 
+        document.querySelectorAll('.sort-option').forEach(o => { 
+          o.classList.remove('selected'); 
+          o.querySelector('i.fa-check').style.display = 'none'; 
+        }); 
+        opt.classList.add('selected'); 
+        opt.querySelector('i.fa-check').style.display = 'block'; 
+      }); 
+    }); 
+ 
+    document.getElementById('sortApply').addEventListener('click', () => { 
+      const selected = document.querySelector('.sort-option.selected'); 
+      State.sort = selected ? selected.dataset.sort : 'date-desc'; 
+      closeOverlay('sortOverlay'); 
+      applyFiltersAndSort(); 
+    }); 
+ 
+    /* ============================================================ 
+       RENDERING LOGIC 
+    ============================================================ */ 
+    function renderEmptyState() { 
+      const grid = document.getElementById('favoritesGrid'); 
+       
+      if (State.allFavorites.length === 0) { 
+        grid.innerHTML = ` 
+          <div class="empty-state"> 
+            <div class="empty-icon"><i class="fa-regular fa-bookmark"></i></div> 
+            <div class="empty-title">No Favorites Yet</div> 
+            <div class="empty-subtitle">You haven't saved any questions to your favorites. Start practicing and bookmark 
+important questions to see them here.</div> 
+            <a href="/tests.html" class="btn btn-primary" style="margin-top:10px"> 
+              <i class="fa-solid fa-play"></i> Start Practicing 
+            </a> 
+          </div> 
+        `; 
+      } else { 
+        grid.innerHTML = ` 
+          <div class="empty-state" style="padding:40px 20px;"> 
+            <div class="empty-icon" style="width:48px;height:48px;font-size:18px;background:var(--bg-muted);color:var(--text
+muted)"><i class="fa-solid fa-magnifying-glass"></i></div> 
+            <div class="empty-title">No matches found</div> 
+            <div class="empty-subtitle">We couldn't find any saved questions matching your search or filters.</div> 
+            <button class="btn btn-outline" style="margin-top:10px" onclick="clearAllFilters()">Clear Filters</button> 
+          </div> 
+        `; 
+      } 
+    } 
+ 
+    function loadMoreFavorites() { 
+      const start = State.displayedCount; 
+      const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredFavorites.length); 
+      const batch = State.filteredFavorites.slice(start, end); 
+ 
+      const grid = document.getElementById('favoritesGrid'); 
+       
+      batch.forEach(fav => { 
+        grid.insertAdjacentHTML('beforeend', buildFavCard(fav)); 
+      }); 
+ 
+      State.displayedCount = end; 
+      updateLoadMore(); 
+    } 
+ 
+    function updateLoadMore() { 
+      const wrap = document.getElementById('loadMoreWrap'); 
+      const text = document.getElementById('loadMoreText'); 
+      const remaining = State.filteredFavorites.length - State.displayedCount; 
+ 
+      if (remaining > 0) { 
+        wrap.style.display = 'flex'; 
+        text.textContent = `${remaining} more saved question${remaining !== 1 ? 's' : ''}`; 
+      } else { 
+        wrap.style.display = 'none'; 
+      } 
+    } 
+ 
+    document.getElementById('loadMoreBtn').addEventListener('click', loadMoreFavorites); 
+ 
+    /* ============================================================ 
+       BILINGUAL RENDER HELPER 
+    ============================================================ */ 
+    function renderBilingualHtml(dataObj) { 
+      if (!dataObj) return ''; 
+      if (typeof dataObj === 'string') return escapeHTML(dataObj); 
+       
+      // If it's an object with language keys, always render bilingual natively for safety in the revision center 
+      const en = dataObj.en ? escapeHTML(dataObj.en) : escapeHTML(dataObj.question || ''); 
+      const hi = dataObj.hi ? `<span class="bilingual-hi-text">${escapeHTML(dataObj.hi)}</span>` : ''; 
+       
+      return en + hi; 
+    } 
+ 
+    /* ============================================================ 
+       CARD BUILDER 
+    ============================================================ */ 
+    function buildFavCard(fav) { 
+      const q = fav.question; 
+      const qId = fav.qId; 
+       
+      const dateSaved = new Date(fav.savedAt || Date.now()).toLocaleDateString('en-IN', { 
+        day: 'numeric', month: 'short', year: 'numeric' 
+      }); 
+ 
+      const sectionName = escapeHTML(q.sectionId || 'General'); 
+      const testTitle = escapeHTML(fav.testTitle || 'Unknown Test'); 
+ 
+      const questionHtml = renderBilingualHtml(q.question); 
+       
+      const letters = ['A', 'B', 'C', 'D', 'E']; 
+      const correctAnswerIndex = q.correct !== undefined ? q.correct : -1; 
+ 
+      const optionsHtml = (q.options || []).map((opt, i) => { 
+        const isCorrect = i === correctAnswerIndex; 
+        const optHtml = renderBilingualHtml(opt); 
+        const cls = isCorrect ? 'fav-option correct' : 'fav-option'; 
+        const indicator = isCorrect ? `<i class="fa-solid fa-check" style="color:var(--success);margin-left:auto"></i>` : ''; 
+ 
+        return ` 
+          <div class="${cls}"> 
+            <span class="fav-option-letter">${letters[i]}</span> 
+            <span style="flex:1">${optHtml}</span> 
+            ${indicator} 
+          </div> 
+        `; 
+      }).join(''); 
+ 
+      let explanationHtml = ''; 
+      if (q.explanation) { 
+        explanationHtml = ` 
+          <div class="fav-explanation" style="margin-top:12px"> 
+            <div class="fav-explanation-label"> 
+              <i class="fa-solid fa-lightbulb"></i> Explanation 
+            </div> 
+            <div class="fav-explanation-text">${renderBilingualHtml(q.explanation)}</div> 
+          </div> 
+        `; 
+      } 
+ 
+      return ` 
+        <div class="fav-card" id="card-${qId}"> 
+           
+          <div class="fav-card-header"> 
+            <div class="fav-meta-left"> 
+              <span class="fav-q-badge">Q${fav.questionIndex + 1}</span> 
+              <span class="fav-section-badge">${sectionName}</span> 
+              <span class="fav-test-title">${testTitle}</span> 
+            </div> 
+            <div class="fav-date"><i class="fa-regular fa-clock" style="margin-right:4px"></i> Saved ${dateSaved}</div> 
+          </div> 
+ 
+          <div class="fav-card-body"> 
+            <div class="fav-question-text">${questionHtml}</div> 
+ 
+            <div class="fav-details" id="details-${qId}"> 
+              <div class="fav-options">${optionsHtml}</div> 
+              ${explanationHtml} 
+            </div> 
+          </div> 
+ 
+          <div class="fav-card-footer"> 
+            <div class="fav-actions-left"> 
+              <button class="btn btn-ghost btn-sm" id="toggle-btn-${qId}" onclick="toggleDetails('${qId}')"> 
+                <i class="fa-solid fa-eye"></i> View Answer 
+              </button> 
+              <a href="/result.html?test=${fav.testId}" class="btn btn-outline btn-sm"> 
+                <i class="fa-solid fa-chart-simple"></i> View Result 
+              </a> 
+            </div> 
+            <div class="fav-actions-right"> 
+              <button class="btn btn-ghost btn-sm" style="color:var(--error);border-color:transparent" 
+onclick="promptRemove('${qId}')"> 
+                <i class="fa-solid fa-trash-can"></i> Remove 
+              </button> 
+            </div> 
+          </div> 
+ 
+        </div> 
+      `; 
+    } 
+ 
+    /* ============================================================ 
+       CARD INTERACTIONS 
+    ============================================================ */ 
+    function toggleDetails(qId) { 
+      const detailsContainer = document.getElementById(`details-${qId}`); 
+      const btn = document.getElementById(`toggle-btn-${qId}`); 
+       
+      if (detailsContainer.classList.contains('open')) { 
+        detailsContainer.classList.remove('open'); 
+        btn.innerHTML = `<i class="fa-solid fa-eye"></i> View Answer`; 
+      } else { 
+        detailsContainer.classList.add('open'); 
+        btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Answer`; 
+      } 
+    } 
+ 
+    function promptRemove(qId) { 
+      State.pendingRemoveId = qId; 
+      openOverlay('removeOverlay'); 
+    } 
+ 
+    document.getElementById('confirmRemoveBtn').addEventListener('click', async () => { 
+      const qId = State.pendingRemoveId; 
+      if (!qId) return; 
+ 
+      // Remove from DB 
+      await removeFavoriteFromDB(qId); 
+ 
+      // Update LocalStorage reference array (to keep result.html in sync) 
+      const favIds = new Set(storageGet('favorites_ids') || []); 
+      favIds.delete(qId); 
+      storageSet('favorites_ids', [...favIds]); 
+ 
+      // Update State 
+      State.allFavorites = State.allFavorites.filter(f => f.qId !== qId); 
+      State.filteredFavorites = State.filteredFavorites.filter(f => f.qId !== qId); 
+ 
+      // Remove from DOM visually 
+      const card = document.getElementById(`card-${qId}`); 
+      if (card) { 
+        card.style.transition = 'all 0.3s'; 
+        card.style.opacity = '0'; 
+        card.style.transform = 'scale(0.95)'; 
+        setTimeout(() => { 
+          card.remove(); 
+           
+          // Re-render empty state if everything is deleted 
+          if (State.allFavorites.length === 0 || State.filteredFavorites.length === 0) { 
+            applyFiltersAndSort(); 
+          } 
+        }, 300); 
+      } 
+ 
+      closeOverlay('removeOverlay'); 
+      showToast('Question removed from favorites', 'info'); 
+      State.pendingRemoveId = null; 
+    }); 
+ 
+    /* ============================================================ 
+       BOOTSTRAP 
+    ============================================================ */ 
+    initFavorites(); 
+  </script> 
+</body> 
+</html> 
