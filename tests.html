@@ -253,13 +253,21 @@
     }
  
     .page-title {
-      font-family: var(--font-heading);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
+ font-family: var(--font-heading);
+ font-size: 26px;
+ font-weight: 700;
+ color: var(--text-primary);
+ line-height: 1.2;
+ margin-bottom: 6px;
+
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+.page-title i {
+ color: var(--primary);
+}
  
     .page-subtitle {
       font-size: 14px;
@@ -1198,7 +1206,10 @@
   <main class="page-wrapper">
  
     <div class="page-header">
-      <h1 class="page-title">All Mock Tests</h1>
+      <h1 class="page-title">
+  <i class="fa-solid fa-list-check"></i>
+  All Mock Tests
+</h1>
       <p class="page-subtitle">
         Practice exam-wise, topic-wise, and previous year mock tests for SSC, Railway, Banking and more
       </p>
