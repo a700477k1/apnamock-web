@@ -745,18 +745,30 @@ autocomplete="off" />
           <span class="filter-menu-badge" id="badge-exam">0</span> 
           <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
         </div> 
- 
-        <div class="filter-menu-item" onclick="openFilterDetail('subject', 'By Subject')"> 
-          <div class="filter-menu-left"><i class="fa-solid fa-book"></i> Subject</div> 
-          <span class="filter-menu-badge" id="badge-subject">0</span> 
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
-        </div> 
- 
-        <div class="filter-menu-item" onclick="openFilterDetail('topic', 'By Topic')"> 
-          <div class="filter-menu-left"><i class="fa-solid fa-tag"></i> Topic</div> 
-          <span class="filter-menu-badge" id="badge-topic">0</span> 
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
-        </div> 
+
+        <div class="filter-menu-item"
+onclick="openFilterDetail('actualExam', 'By Exam')">
+
+ <div class="filter-menu-left">
+  <i class="fa-solid fa-file-lines"></i>
+  Exam
+ </div>
+
+ <span
+  class="filter-menu-badge"
+  id="badge-actualExam">
+  0
+ </span>
+
+ <i
+  class="fa-solid fa-chevron-right"
+  style="
+   color:var(--text-muted);
+   font-size:12px
+  ">
+ </i>
+
+</div>
  
         <div class="filter-menu-item" onclick="openFilterDetail('section', 'By Section')"> 
           <div class="filter-menu-left"><i class="fa-solid fa-layer-group"></i> Section</div> 
@@ -805,15 +817,19 @@ autocomplete="off" />
          
         <div class="filter-section detail-section" id="detail-exam" style="display:none;"> 
           <div class="filter-chips-wrap" id="filterExams"></div> 
-        </div> 
- 
-        <div class="filter-section detail-section" id="detail-subject" style="display:none;"> 
-          <div class="filter-chips-wrap" id="filterSubjects"></div> 
-        </div> 
- 
-        <div class="filter-section detail-section" id="detail-topic" style="display:none;"> 
-          <div class="filter-chips-wrap" id="filterTopics"></div> 
-        </div> 
+        </div>  
+
+        <div
+ class="filter-section detail-section"
+ id="detail-actualExam"
+ style="display:none;">
+
+ <div
+  class="filter-chips-wrap"
+  id="filterActualExams">
+ </div>
+
+</div>
  
         <div class="filter-section detail-section" id="detail-section" style="display:none;"> 
           <div class="filter-chips-wrap" id="filterSections"></div> 
@@ -979,15 +995,14 @@ undone.</div>
       displayedCount: 0, 
       searchQuery: '', 
       pendingRemoveId: null, 
-      filters: { 
-        exam: [], 
-        subject: [], 
-        topic: [], 
-        section: [], 
-        language: [], 
-        testTitle: [], 
-        date: null 
-      }, 
+      filters: {
+ examGroup: [],
+ actualExam: [],
+ section: [],
+ language: [],
+ testTitle: [],
+ date: null
+}
       sort: 'date-desc' 
     }; 
  
@@ -1146,14 +1161,35 @@ undone.</div>
  
     // Handle Apply inside Filter Menu 
     document.getElementById('filterApply').addEventListener('click', () => { 
-      const newFilters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null }; 
+      const newFilters = {
+ examGroup: [],
+ actualExam: [],
+ section: [],
+ language: [],
+ testTitle: [],
+ date: null
+}; 
   
-      document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => 
-newFilters.exam.push(btn.dataset.value)); 
-      document.querySelectorAll('#filterSubjects .filter-chip-select.selected').forEach(btn => 
-newFilters.subject.push(btn.dataset.value)); 
-      document.querySelectorAll('#filterTopics .filter-chip-select.selected').forEach(btn => 
-newFilters.topic.push(btn.dataset.value)); 
+     document.querySelectorAll(
+ '#filterExams .filter-chip-select.selected'
+).forEach(btn => {
+
+ newFilters.examGroup.push(
+  btn.dataset.value
+ );
+
+});
+
+      document.querySelectorAll(
+ '#filterActualExams .filter-chip-select.selected'
+).forEach(btn => {
+
+ newFilters.actualExam.push(
+  btn.dataset.value
+ );
+
+});
+      
       document.querySelectorAll('#filterSections .filter-chip-select.selected').forEach(btn => 
 newFilters.section.push(btn.dataset.value)); 
       document.querySelectorAll('#filterLanguages .filter-chip-select.selected').forEach(btn => 
@@ -1206,14 +1242,44 @@ newFilters.testTitle.push(btn.dataset.value));
        FILTER OPTIONS BUILDER (For dynamic details) 
     ============================================================ */ 
     function buildFilterOptions() { 
-      const exams = [...new Set(State.allFavorites.map(f => f.question?.exam_group || f.question?.exam).filter(Boolean))]; 
+      const examGroups =
+ [...new Set(
+  State.allFavorites
+   .map(
+    f =>
+     f.examGroup ||
+     f.question?.exam_group
+   )
+   .filter(Boolean)
+ )];
+
+const actualExams =
+ [...new Set(
+  State.allFavorites
+   .map(
+    f =>
+     f.exam ||
+     f.question?.exam
+   )
+   .filter(Boolean)
+ )];
       const subjects = [...new Set(State.allFavorites.map(f => f.question?.subject).filter(Boolean))]; 
       const topics = [...new Set(State.allFavorites.map(f => f.question?.topic).filter(Boolean))]; 
       const sections = [...new Set(State.allFavorites.map(f => f.question?.sectionId).filter(Boolean))]; 
       const languages = [...new Set(State.allFavorites.map(f => f.question?.language).filter(Boolean))]; 
       const testTitles = [...new Set(State.allFavorites.map(f => f.testTitle).filter(Boolean))]; 
  
-      renderChipGroup('filterExams', exams, 'exam'); 
+      renderChipGroup(
+ 'filterExams',
+ examGroups,
+ 'examGroup'
+);
+
+renderChipGroup(
+ 'filterActualExams',
+ actualExams,
+ 'actualExam'
+); 
       renderChipGroup('filterSubjects', subjects, 'subject'); 
       renderChipGroup('filterTopics', topics, 'topic'); 
       renderChipGroup('filterSections', sections, 'section'); 
@@ -1265,15 +1331,36 @@ value="${escapeHTML(value)}">
       } 
  
       // 2. Exact Filters 
-      if (State.filters.exam.length) { 
-        filtered = filtered.filter(f => State.filters.exam.includes(f.question?.exam_group || f.question?.exam)); 
-      } 
-      if (State.filters.subject.length) { 
-        filtered = filtered.filter(f => State.filters.subject.includes(f.question?.subject)); 
-      } 
-      if (State.filters.topic.length) { 
-        filtered = filtered.filter(f => State.filters.topic.includes(f.question?.topic)); 
-      } 
+      if (
+ State.filters.examGroup.length
+) {
+
+ filtered =
+  filtered.filter(
+   f =>
+    State.filters.examGroup.includes(
+      f.examGroup ||
+      f.question?.exam_group
+    )
+  );
+
+}
+
+      if (
+ State.filters.actualExam.length
+) {
+
+ filtered =
+  filtered.filter(
+   f =>
+    State.filters.actualExam.includes(
+      f.exam ||
+      f.question?.exam
+    )
+  );
+
+}
+      
       if (State.filters.section.length) { 
         filtered = filtered.filter(f => State.filters.section.includes(f.question?.sectionId)); 
       } 
@@ -1285,17 +1372,58 @@ value="${escapeHTML(value)}">
       } 
        
       // 3. Date Filter 
-      if (State.filters.date) { 
-        const now = Date.now(); 
-        const oneDay = 24 * 60 * 60 * 1000; 
-        let limit = 0; 
- 
-        if (State.filters.date === 'today') limit = now - oneDay; 
-        if (State.filters.date === 'week') limit = now - (7 * oneDay); 
-        if (State.filters.date === 'month') limit = now - (30 * oneDay); 
- 
-        filtered = filtered.filter(f => (f.savedAt || 0) >= limit); 
-      } 
+      if (State.filters.date) {
+
+ let startDate;
+
+ if (
+  State.filters.date === 'today'
+ ) {
+
+  startDate =
+   new Date();
+
+  startDate.setHours(
+   0,0,0,0
+  );
+
+ }
+
+ if (
+  State.filters.date === 'week'
+ ) {
+
+  startDate =
+   new Date();
+
+  startDate.setDate(
+   startDate.getDate() - 7
+  );
+
+ }
+
+ if (
+  State.filters.date === 'month'
+ ) {
+
+  startDate =
+   new Date();
+
+  startDate.setDate(
+   startDate.getDate() - 30
+  );
+
+ }
+
+ filtered =
+  filtered.filter(
+   f =>
+    (f.savedAt || 0)
+    >=
+    startDate.getTime()
+  );
+
+}
  
       // 4. Sort 
       filtered.sort((a, b) => { 
@@ -1358,12 +1486,21 @@ value="${escapeHTML(value)}">
       const container = document.getElementById('activeFilters'); 
       const chips = []; 
   
-      const typeLabels = { 
-        exam: 'Exam', subject: 'Subject', topic: 'Topic', 
-        section: 'Section', language: 'Language', testTitle: 'Test' 
-      }; 
+      const typeLabels = {
+ examGroup: 'Exam Group',
+ actualExam: 'Exam',
+ section: 'Section',
+ language: 'Language',
+ testTitle: 'Source Test'
+}; 
   
-      ['exam', 'subject', 'topic', 'section', 'language', 'testTitle'].forEach(type => { 
+     [
+ 'examGroup',
+ 'actualExam',
+ 'section',
+ 'language',
+ 'testTitle'
+].forEach(type => { 
         (State.filters[type] || []).forEach(value => { 
           chips.push(` 
             <div class="filter-chip"> 
@@ -1419,11 +1556,29 @@ value="${escapeHTML(value)}">
       } else if (State.filters[type]) { 
         State.filters[type] = State.filters[type].filter(v => String(v) !== String(value)); 
          
-        const containerId = type === 'exam' ? 'filterExams' : 
-                            type === 'subject' ? 'filterSubjects' : 
-                            type === 'topic' ? 'filterTopics' : 
-                            type === 'section' ? 'filterSections' : 
-                            type === 'language' ? 'filterLanguages' : 'filterTestTitles'; 
+       const containerId =
+
+ type === 'examGroup'
+ ? 'filterExams'
+
+ :
+
+ type === 'actualExam'
+ ? 'filterActualExams'
+
+ :
+
+ type === 'section'
+ ? 'filterSections'
+
+ :
+
+ type === 'language'
+ ? 'filterLanguages'
+
+ :
+
+ 'filterTestTitles';
          
         const chipToDeselect = document.querySelector(`#${containerId} .filter-chip-select[data-value="${value}"]`); 
         if (chipToDeselect) chipToDeselect.classList.remove('selected'); 
@@ -1435,7 +1590,14 @@ value="${escapeHTML(value)}">
     } 
  
     function clearAllFilters() { 
-      State.filters = { exam: [], subject: [], topic: [], section: [], language: [], testTitle: [], date: null }; 
+      State.filters = {
+ examGroup: [],
+ actualExam: [],
+ section: [],
+ language: [],
+ testTitle: [],
+ date: null
+}; 
       State.searchQuery = ''; 
       document.getElementById('searchInput').value = ''; 
       document.getElementById('searchClear').style.display = 'none'; 
