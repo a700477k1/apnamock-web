@@ -222,13 +222,21 @@
     }
 
     .page-title {
-      font-family: var(--font-heading);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-      line-height: 1.2;
-    }
+ font-family: var(--font-heading);
+ font-size: 26px;
+ font-weight: 700;
+ color: var(--text-primary);
+ margin-bottom: 4px;
+ line-height: 1.2;
+
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+.page-title i {
+ color: var(--primary);
+}
 
     /* ============================================================
        BUTTONS
@@ -725,7 +733,10 @@
 
   <main class="page-wrapper align-wrapper" id="mainContent">
 
-    <h1 class="page-title">Result Analysis</h1>
+    <h1 class="page-title">
+ <i class="fa-solid fa-chart-simple"></i>
+ Result Analysis
+</h1>
 
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
       <i class="fa-solid fa-spinner fa-spin" style="font-size:28px;margin-bottom:12px"></i>
@@ -1416,8 +1427,10 @@ function selectSectionFilter(
       ).toFixed(2);
 
       main.innerHTML = `
-
-        <h1 class="page-title">Result Analysis</h1>
+ <h1 class="page-title">
+   <i class="fa-solid fa-chart-simple"></i>
+   Result Analysis
+ </h1>
 
         <div class="result-header-card">
           <div class="result-exam-tag">
