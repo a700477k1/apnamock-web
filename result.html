@@ -1866,13 +1866,30 @@ function selectSectionFilter(
         // Add Favorite
         Result.favorites.add(qId);
         await addFavoriteToDB({
-          qId,
-          questionIndex,
-          testId: Result.data.testId,
-          testTitle: Result.data.testTitle,
-          question: q,
-          savedAt: Date.now()
-        });
+ qId,
+ questionIndex,
+ testId: Result.data.testId,
+ testTitle: Result.data.testTitle,
+
+ examGroup:
+   Result.data.testData?.exam_group ||
+   Result.data.testData?.exam ||
+   '',
+
+ exam:
+   Result.data.testData?.exam ||
+   '',
+
+ language:
+   Result.language || 'bilingual',
+
+ section:
+   q.sectionId || '',
+
+ question: q,
+
+ savedAt: Date.now()
+});
         
         btn.className = 'favorite-btn favorited';
         btn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Favorited`;
