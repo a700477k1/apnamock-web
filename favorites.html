@@ -1317,24 +1317,62 @@ renderChipGroup(
       renderChipGroup('filterTestTitles', testTitles, 'testTitle'); 
     } 
  
-    function renderChipGroup(containerId, values, type) { 
-      const container = document.getElementById(containerId); 
-      if (!container) return; 
-  
-      container.innerHTML = values.map(value => ` 
-        <button class="filter-chip-select ${State.filters[type]?.includes(String(value)) ? 'selected' : ''}" data-type="${type}" data
-value="${escapeHTML(value)}"> 
-          ${escapeHTML(value)} 
-        </button> 
-      `).join(''); 
-  
-      container.querySelectorAll('.filter-chip-select').forEach(btn => { 
-        btn.addEventListener('click', () => { 
-          btn.classList.toggle('selected'); 
-          updateFilterBadges(); 
-        }); 
-      }); 
-    } 
+    function renderChipGroup(
+ containerId,
+ values,
+ type
+) {
+
+ const container =
+  document.getElementById(
+   containerId
+  );
+
+ if (!container) return;
+
+ container.innerHTML =
+  values.map(value => {
+
+   const selected =
+    State.filters[type]?.includes(
+      String(value)
+    )
+      ? 'selected'
+      : '';
+
+   return `
+    <button
+      class="filter-chip-select ${selected}"
+      data-type="${type}"
+      data-value="${escapeHTML(String(value))}">
+      ${escapeHTML(String(value))}
+    </button>
+   `;
+
+  }).join('');
+
+ container
+  .querySelectorAll(
+    '.filter-chip-select'
+  )
+  .forEach(btn => {
+
+   btn.addEventListener(
+    'click',
+    () => {
+
+     btn.classList.toggle(
+      'selected'
+     );
+
+     updateFilterBadges();
+
+    }
+   );
+
+  });
+
+} 
  
     /* ============================================================ 
        SEARCH & FILTER LOGIC 
