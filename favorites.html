@@ -740,9 +740,9 @@ autocomplete="off" />
       </div> 
       <div class="popup-body"> 
          
-        <div class="filter-menu-item" onclick="openFilterDetail('exam', 'By Exam Group')"> 
+        <div class="filter-menu-item" onclick="openFilterDetail('examGroup', 'By Exam Group')"> 
           <div class="filter-menu-left"><i class="fa-solid fa-graduation-cap"></i> Exam Group</div> 
-          <span class="filter-menu-badge" id="badge-exam">0</span> 
+          <span class="filter-menu-badge" id="badge-examGroup">0</span> 
           <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i> 
         </div> 
 
@@ -815,7 +815,7 @@ onclick="openFilterDetail('actualExam', 'By Exam')">
       </div> 
       <div class="popup-body" id="filterDetailBody"> 
          
-        <div class="filter-section detail-section" id="detail-exam" style="display:none;"> 
+        <div class="filter-section detail-section" id="detail-examGroup" style="display:none;"> 
           <div class="filter-chips-wrap" id="filterExams"></div> 
         </div>  
 
@@ -1126,12 +1126,29 @@ undone.</div>
  
     function updateFilterBadges() { 
      const counts = {
- exam: document.querySelectorAll('#filterExams .selected').length,
- actualExam: document.querySelectorAll('#filterActualExams .selected').length,
- section: document.querySelectorAll('#filterSections .selected').length,
- language: document.querySelectorAll('#filterLanguages .selected').length,
- testTitle: document.querySelectorAll('#filterTestTitles .selected').length,
- date: document.querySelectorAll('#filterDate .selected').length
+ examGroup: document.querySelectorAll(
+   '#filterExams .selected'
+ ).length,
+
+ actualExam: document.querySelectorAll(
+   '#filterActualExams .selected'
+ ).length,
+
+ section: document.querySelectorAll(
+   '#filterSections .selected'
+ ).length,
+
+ language: document.querySelectorAll(
+   '#filterLanguages .selected'
+ ).length,
+
+ testTitle: document.querySelectorAll(
+   '#filterTestTitles .selected'
+ ).length,
+
+ date: document.querySelectorAll(
+   '#filterDate .selected'
+ ).length
 };
  
       for (const [key, count] of Object.entries(counts)) { 
@@ -1262,8 +1279,26 @@ const actualExams =
    )
    .filter(Boolean)
  )];
-      const sections = [...new Set(State.allFavorites.map(f => f.question?.sectionId).filter(Boolean))]; 
-      const languages = [...new Set(State.allFavorites.map(f => f.question?.language).filter(Boolean))]; 
+      const sections =
+ [...new Set(
+   State.allFavorites
+    .map(
+      f =>
+        f.section ||
+        f.question?.sectionId
+    )
+    .filter(Boolean)
+ )]; 
+      const languages =
+ [...new Set(
+   State.allFavorites
+    .map(
+      f =>
+        f.language ||
+        f.question?.language
+    )
+    .filter(Boolean)
+ )]; 
       const testTitles = [...new Set(State.allFavorites.map(f => f.testTitle).filter(Boolean))]; 
  
       renderChipGroup(
@@ -1356,12 +1391,28 @@ value="${escapeHTML(value)}">
 
 }
       
-      if (State.filters.section.length) { 
-        filtered = filtered.filter(f => State.filters.section.includes(f.question?.sectionId)); 
-      } 
-      if (State.filters.language.length) { 
-        filtered = filtered.filter(f => State.filters.language.includes(f.question?.language)); 
-      } 
+      if (State.filters.section.length) {
+
+ filtered = filtered.filter(
+  f =>
+   State.filters.section.includes(
+    f.section ||
+    f.question?.sectionId
+   )
+ );
+
+}
+      if (State.filters.language.length) {
+
+ filtered = filtered.filter(
+  f =>
+   State.filters.language.includes(
+    f.language ||
+    f.question?.language
+   )
+ );
+
+}
       if (State.filters.testTitle.length) { 
         filtered = filtered.filter(f => State.filters.testTitle.includes(f.testTitle)); 
       } 
@@ -1425,7 +1476,19 @@ value="${escapeHTML(value)}">
         switch (State.sort) { 
           case 'date-desc': return (b.savedAt || 0) - (a.savedAt || 0); 
           case 'date-asc': return (a.savedAt || 0) - (b.savedAt || 0); 
-          case 'exam-asc': return String(a.question?.exam || '').localeCompare(String(b.question?.exam || '')); 
+          case 'exam-asc':
+
+ return String(
+  a.exam ||
+  a.question?.exam ||
+  ''
+ ).localeCompare(
+  String(
+   b.exam ||
+   b.question?.exam ||
+   ''
+  )
+ ); 
           case 'section-asc': return String(a.question?.sectionId || '').localeCompare(String(b.question?.sectionId || '')); 
           default: return 0; 
         } 
