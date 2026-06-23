@@ -168,7 +168,9 @@
       align-items: center;
       gap: 10px;
     }
-    .page-title i { color: var(--warning); }
+    .page-title i {
+ color: var(--primary);
+}
     .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 400; }
  
     /* ============================================================
@@ -713,17 +715,15 @@
           <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
         </div>
 
-        <div class="filter-menu-item" onclick="openFilterDetail('subject', 'By Subject')">
-          <div class="filter-menu-left"><i class="fa-solid fa-book"></i> Subject</div>
-          <span class="filter-menu-badge" id="badge-subject">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
-
-        <div class="filter-menu-item" onclick="openFilterDetail('topic', 'By Topic')">
-          <div class="filter-menu-left"><i class="fa-solid fa-tag"></i> Topic</div>
-          <span class="filter-menu-badge" id="badge-topic">0</span>
-          <i class="fa-solid fa-chevron-right" style="color:var(--text-muted);font-size:12px"></i>
-        </div>
+       <div class="filter-menu-item" onclick="openFilterDetail('actualExam', 'By Exam')">
+ <div class="filter-menu-left">
+   <i class="fa-solid fa-file-lines"></i>
+   Exam
+ </div>
+ <span class="filter-menu-badge" id="badge-actualExam">0</span>
+ <i class="fa-solid fa-chevron-right"
+ style="color:var(--text-muted);font-size:12px"></i>
+</div>
 
         <div class="filter-menu-item" onclick="openFilterDetail('section', 'By Section')">
           <div class="filter-menu-left"><i class="fa-solid fa-layer-group"></i> Section</div>
@@ -774,13 +774,14 @@
           <div class="filter-chips-wrap" id="filterExams"></div>
         </div>
 
-        <div class="filter-section detail-section" id="detail-subject" style="display:none;">
-          <div class="filter-chips-wrap" id="filterSubjects"></div>
-        </div>
+        <div class="filter-section detail-section"
+id="detail-actualExam"
+style="display:none;">
 
-        <div class="filter-section detail-section" id="detail-topic" style="display:none;">
-          <div class="filter-chips-wrap" id="filterTopics"></div>
-        </div>
+ <div class="filter-chips-wrap"
+ id="filterActualExams"></div>
+
+</div>
 
         <div class="filter-section detail-section" id="detail-section" style="display:none;">
           <div class="filter-chips-wrap" id="filterSections"></div>
@@ -941,19 +942,19 @@
 
     const State = {
       allFavorites: [],
+      testMetaMap: {},
       filteredFavorites: [],
       displayedCount: 0,
       searchQuery: '',
       pendingRemoveId: null,
       filters: {
-        exam: [],
-        subject: [],
-        topic: [],
-        section: [],
-        language: [],
-        testTitle: [],
-        date: null
-      },
+ exam: [],
+ actualExam: [],
+ section: [],
+ language: [],
+ testTitle: [],
+ date: null
+},
       sort: 'date-desc'
     };
 
@@ -1133,6 +1134,34 @@
     /* ============================================================
        INITIALIZATION
     ============================================================ */
+   async function loadTestMetadata() {
+  try {
+    const response = await fetch('/data/tests-index.json');
+
+    if (!response.ok) {
+      throw new Error('Failed to load tests-index.json');
+    }
+
+    const data = await response.json();
+
+    State.testMetaMap = {};
+
+    (data.tests || []).forEach(test => {
+
+      const id = test.id || test.test_id;
+
+      State.testMetaMap[id] = {
+        exam_group: test.exam_group || '',
+        exam: test.exam || ''
+      };
+
+    });
+
+  } catch (err) {
+    console.error('Test metadata load failed:', err);
+  }
+}
+    
     async function initFavorites() {
       // Setup Theme
       const savedTheme = storageGet('theme');
@@ -1154,6 +1183,8 @@
 
       // Load Data
       const rawData = await getAllFavorites();
+
+      await loadTestMetadata();
       
       // Sort by newest first
       State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
@@ -1166,20 +1197,63 @@
        FILTER OPTIONS BUILDER (For dynamic details)
     ============================================================ */
     function buildFilterOptions() {
-      const exams = [...new Set(State.allFavorites.map(f => f.question?.exam_group || f.question?.exam).filter(Boolean))];
-      const subjects = [...new Set(State.allFavorites.map(f => f.question?.subject).filter(Boolean))];
-      const topics = [...new Set(State.allFavorites.map(f => f.question?.topic).filter(Boolean))];
-      const sections = [...new Set(State.allFavorites.map(f => f.question?.sectionId).filter(Boolean))];
-      const languages = [...new Set(State.allFavorites.map(f => f.question?.language).filter(Boolean))];
-      const testTitles = [...new Set(State.allFavorites.map(f => f.testTitle).filter(Boolean))];
 
-      renderChipGroup('filterExams', exams, 'exam');
-      renderChipGroup('filterSubjects', subjects, 'subject');
-      renderChipGroup('filterTopics', topics, 'topic');
-      renderChipGroup('filterSections', sections, 'section');
-      renderChipGroup('filterLanguages', languages, 'language');
-      renderChipGroup('filterTestTitles', testTitles, 'testTitle');
-    }
+  const examGroups = [
+    ...new Set(
+      State.allFavorites
+        .map(f => State.testMetaMap[f.testId]?.exam_group)
+        .filter(Boolean)
+    )
+  ];
+
+  const actualExams = [
+    ...new Set(
+      State.allFavorites
+        .map(f => State.testMetaMap[f.testId]?.exam)
+        .filter(Boolean)
+    )
+  ];
+
+  const sections = [
+    ...new Set(
+      State.allFavorites
+        .map(f => f.question?.sectionId)
+        .filter(Boolean)
+    )
+  ];
+
+  const testTitles = [
+    ...new Set(
+      State.allFavorites
+        .map(f => f.testTitle)
+        .filter(Boolean)
+    )
+  ];
+
+  renderChipGroup(
+    'filterExams',
+    examGroups,
+    'exam'
+  );
+
+  renderChipGroup(
+    'filterActualExams',
+    actualExams,
+    'actualExam'
+  );
+
+  renderChipGroup(
+    'filterSections',
+    sections,
+    'section'
+  );
+
+  renderChipGroup(
+    'filterTestTitles',
+    testTitles,
+    'testTitle'
+  );
+}
 
     function renderChipGroup(containerId, values, type) {
       const container = document.getElementById(containerId);
