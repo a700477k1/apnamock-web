@@ -1268,7 +1268,12 @@
           <div class="filter-section-title">By Exam Group</div>
           <div class="filter-chips-wrap" id="filterExams"></div>
         </div>
- 
+
+<div class="filter-section">
+ <div class="filter-section-title">By Exam</div>
+ <div class="filter-chips-wrap" id="filterActualExams"></div>
+</div>
+        
         <div class="filter-section">
           <div class="filter-section-title">By Year</div>
           <div class="filter-chips-wrap" id="filterYears"></div>
@@ -1478,13 +1483,14 @@
       filteredTests: [],
       displayedCount: 0,
       filters: {
-        exam: [],
-        year: [],
-        subject: [],
-        paperType: [],
-        difficulty: [],
-        attempt: null
-      },
+ exam: [],
+ actualExam: [],
+ year: [],
+ subject: [],
+ paperType: [],
+ difficulty: [],
+ attempt: null
+},
       sort: null,
       search: '',
       attemptHistory: {}
@@ -1579,13 +1585,39 @@
        FILTER OPTIONS BUILDER
     ============================================================ */
     function buildFilterOptions() {
-      const exams = [...new Set(State.allTests.map(t => t.exam_group || t.exam).filter(Boolean))];
+      const exams =
+[
+ ...new Set(
+   State.allTests
+     .map(t => t.exam_group)
+     .filter(Boolean)
+ )
+];
+
+const actualExams =
+[
+ ...new Set(
+   State.allTests
+     .map(t => t.exam)
+     .filter(Boolean)
+ )
+];
       const years = [...new Set(State.allTests.map(t => t.year).filter(Boolean))].sort((a, b) => b - a);
       const subjects = [...new Set(State.allTests.map(t => t.subject).filter(Boolean))];
       const paperTypes = [...new Set(State.allTests.map(t => t.paper_type).filter(Boolean))];
       const difficulties = ['Easy', 'Moderate', 'Hard'];
  
-      renderChipGroup('filterExams', exams, 'exam');
+      renderChipGroup(
+ 'filterExams',
+ exams,
+ 'exam'
+);
+
+renderChipGroup(
+ 'filterActualExams',
+ actualExams,
+ 'actualExam'
+);
       renderChipGroup('filterYears', years, 'year');
       renderChipGroup('filterSubjects', subjects, 'subject');
       renderChipGroup('filterPaperTypes', paperTypes, 'paperType');
@@ -1631,8 +1663,22 @@
  
       // Filters
       if (State.filters.exam.length) {
-        tests = tests.filter(t => State.filters.exam.includes(t.exam_group || t.exam));
-      }
+ tests = tests.filter(
+   t =>
+   State.filters.exam.includes(
+     t.exam_group
+   )
+ );
+}
+
+if (State.filters.actualExam.length) {
+ tests = tests.filter(
+   t =>
+   State.filters.actualExam.includes(
+     t.exam
+   )
+ );
+}
       if (State.filters.year.length) {
         tests = tests.filter(t => State.filters.year.includes(String(t.year)));
       }
@@ -1862,12 +1908,24 @@
       const container = document.getElementById('activeFilters');
       const chips = [];
  
-      const typeLabels = {
-        exam: 'Exam', year: 'Year', subject: 'Subject',
-        paperType: 'Type', difficulty: 'Difficulty', attempt: 'Attempt'
-      };
+     const typeLabels = {
+ exam: 'Exam Group',
+ actualExam: 'Exam',
+ year: 'Year',
+ subject: 'Subject',
+ paperType: 'Type',
+ difficulty: 'Difficulty',
+ attempt: 'Attempt'
+};
  
-      ['exam', 'year', 'subject', 'paperType', 'difficulty'].forEach(type => {
+     [
+ 'exam',
+ 'actualExam',
+ 'year',
+ 'subject',
+ 'paperType',
+ 'difficulty'
+].forEach(type => {
         (State.filters[type] || []).forEach(value => {
           chips.push(`
             <div class="filter-chip">
@@ -1922,10 +1980,23 @@
       } else if (State.filters[type]) {
         State.filters[type] = State.filters[type].filter(v => String(v) !== String(value));
         
-        const containerId = type === 'exam' ? 'filterExams' :
-                            type === 'year' ? 'filterYears' :
-                            type === 'subject' ? 'filterSubjects' :
-                            type === 'paperType' ? 'filterPaperTypes' : 'filterDifficulty';
+        const containerId =
+ type === 'exam'
+ ? 'filterExams'
+ :
+ type === 'actualExam'
+ ? 'filterActualExams'
+ :
+ type === 'year'
+ ? 'filterYears'
+ :
+ type === 'subject'
+ ? 'filterSubjects'
+ :
+ type === 'paperType'
+ ? 'filterPaperTypes'
+ :
+ 'filterDifficulty';
         
         const chipToDeselect = document.querySelector(`#${containerId} .filter-chip-select[data-value="${value}"]`);
         if (chipToDeselect) chipToDeselect.classList.remove('selected');
@@ -1935,7 +2006,15 @@
     }
  
     function clearAllFilters() {
-      State.filters = { exam: [], year: [], subject: [], paperType: [], difficulty: [], attempt: null };
+     State.filters = {
+ exam: [],
+ actualExam: [],
+ year: [],
+ subject: [],
+ paperType: [],
+ difficulty: [],
+ attempt: null
+};
       State.search = '';
       document.getElementById('searchInput').value = '';
       document.getElementById('searchClear').style.display = 'none';
@@ -1986,11 +2065,26 @@
     });
  
     document.getElementById('filterApply').addEventListener('click', () => {
-      const newFilters = { exam: [], year: [], subject: [], paperType: [], difficulty: [], attempt: null };
+      const newFilters = {
+ exam: [],
+ actualExam: [],
+ year: [],
+ subject: [],
+ paperType: [],
+ difficulty: [],
+ attempt: null
+};
  
       document.querySelectorAll('#filterExams .filter-chip-select.selected').forEach(btn => {
         newFilters.exam.push(btn.dataset.value);
       });
+      document.querySelectorAll(
+ '#filterActualExams .filter-chip-select.selected'
+).forEach(btn => {
+ newFilters.actualExam.push(
+   btn.dataset.value
+ );
+});
       document.querySelectorAll('#filterYears .filter-chip-select.selected').forEach(btn => {
         newFilters.year.push(btn.dataset.value);
       });
