@@ -348,6 +348,116 @@
     .btn-primary:hover:not(:disabled) { background: var(--primary-dark); border-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,86,219,0.35); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 
+/* ============================================================
+PRESET POPUP
+============================================================ */
+
+.overlay{
+ position:fixed;
+ inset:0;
+ background:rgba(15,23,42,.55);
+ backdrop-filter:blur(4px);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ z-index:999;
+ opacity:0;
+ pointer-events:none;
+ transition:.2s;
+}
+
+.overlay.open{
+ opacity:1;
+ pointer-events:auto;
+}
+
+.popup{
+ width:100%;
+ max-width:460px;
+ background:var(--bg-card);
+ border-radius:var(--radius-xl);
+ overflow:hidden;
+ box-shadow:var(--shadow-lg);
+ transform:translateY(15px);
+ transition:.25s;
+}
+
+.overlay.open .popup{
+ transform:translateY(0);
+}
+
+.popup-header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:18px 22px;
+ border-bottom:1px solid var(--border);
+}
+
+.popup-title{
+ font-family:var(--font-heading);
+ font-size:18px;
+ font-weight:700;
+}
+
+.popup-close{
+ width:34px;
+ height:34px;
+ border-radius:8px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ cursor:pointer;
+}
+
+.popup-close:hover{
+ background:var(--bg-muted);
+}
+
+.popup-body{
+ padding:22px;
+}
+
+.popup-description{
+ color:var(--text-secondary);
+ line-height:1.7;
+ margin-bottom:18px;
+}
+
+.popup-meta{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+ margin-bottom:20px;
+}
+
+.popup-meta-card{
+ background:var(--bg-muted);
+ border-radius:10px;
+ padding:12px;
+ text-align:center;
+}
+
+.popup-meta-value{
+ font-size:18px;
+ font-weight:700;
+ color:var(--primary);
+}
+
+.popup-meta-label{
+ font-size:12px;
+ color:var(--text-muted);
+}
+
+.popup-footer{
+ padding:18px 22px;
+ border-top:1px solid var(--border);
+}
+
+#presetGenerateBtn{
+ width:100%;
+}
+    
     /* ============================================================
        TOAST
     ============================================================ */
@@ -476,7 +586,19 @@
     <div class="section-title">Quick Start Presets</div>
     <div class="presets-grid">
       
-      <div class="preset-card" onclick="applyPreset('mix')">
+      <div class="preset-card" onclick="openPresetPopup({
+
+ type:'daily',
+
+ title:'The Daily Mix',
+
+ description:'A balanced practice session covering every available exam, subject and section.',
+
+ questions:20,
+
+ time:20
+
+})">
         <div class="preset-header">
           <div class="preset-icon mix"><i class="fa-solid fa-shuffle"></i></div>
           <div class="preset-title">The Daily Mix</div>
@@ -488,7 +610,19 @@
         </div>
       </div>
 
-      <div class="preset-card" onclick="applyPreset('sprint')">
+      <div class="preset-card" onclick="openPresetPopup({
+
+ type:'gk',
+
+ title:'The GK Sprint',
+
+ description:'Fast General Awareness practice with mixed-difficulty questions.',
+
+ questions:15,
+
+ time:5
+
+})">
         <div class="preset-header">
           <div class="preset-icon sprint"><i class="fa-solid fa-bolt"></i></div>
           <div class="preset-title">The GK Sprint</div>
@@ -500,7 +634,19 @@
         </div>
       </div>
 
-      <div class="preset-card" onclick="applyPreset('challenge')">
+      <div class="preset-card" onclick="openPresetPopup({
+
+ type:'challenge',
+
+ title:'The Challenger',
+
+ description:'A challenging practice session focused on Quantitative Aptitude and General Intelligence.',
+
+ questions:25,
+
+ time:30
+
+})">
         <div class="preset-header">
           <div class="preset-icon challenge"><i class="fa-solid fa-fire"></i></div>
           <div class="preset-title">The Challenger</div>
@@ -658,6 +804,89 @@
   ============================================================ -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <div
+ class="overlay"
+ id="presetPopup">
+
+ <div class="popup">
+
+  <div class="popup-header">
+
+   <div
+    class="popup-title"
+    id="presetPopupTitle">
+    Preset
+   </div>
+
+   <button
+    class="popup-close"
+    onclick="closePresetPopup()">
+
+    <i class="fa-solid fa-xmark"></i>
+
+   </button>
+
+  </div>
+
+  <div class="popup-body">
+
+   <div
+    class="popup-description"
+    id="presetPopupDescription">
+   </div>
+
+   <div class="popup-meta">
+
+    <div class="popup-meta-card">
+
+     <div
+      class="popup-meta-value"
+      id="presetPopupQuestions">
+     </div>
+
+     <div
+      class="popup-meta-label">
+      Questions
+     </div>
+
+    </div>
+
+    <div class="popup-meta-card">
+
+     <div
+      class="popup-meta-value"
+      id="presetPopupTime">
+     </div>
+
+     <div
+      class="popup-meta-label">
+      Time
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="popup-footer">
+
+   <button
+    class="btn btn-primary"
+    id="presetGenerateBtn">
+
+    <i class="fa-solid fa-bolt"></i>
+
+    Generate Test
+
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+  
   <!-- ============================================================
        FOOTER
   ============================================================ -->
@@ -944,6 +1173,54 @@ sectionChips.forEach(chip => {
     /* ============================================================
        UI INITIALIZATION & EVENT LISTENERS
     ============================================================ */
+    let ActivePreset = null;
+
+function closePresetPopup(){
+
+ document
+ .getElementById(
+  'presetPopup'
+ )
+ .classList.remove(
+  'open'
+ );
+
+}
+
+function openPresetPopup(config){
+
+ ActivePreset = config;
+
+ document.getElementById(
+  'presetPopupTitle'
+ ).textContent =
+ config.title;
+
+ document.getElementById(
+  'presetPopupDescription'
+ ).textContent =
+ config.description;
+
+ document.getElementById(
+  'presetPopupQuestions'
+ ).textContent =
+ config.questions;
+
+ document.getElementById(
+  'presetPopupTime'
+ ).textContent =
+ config.time + 'm';
+
+ document
+ .getElementById(
+  'presetPopup'
+ )
+ .classList.add(
+  'open'
+ );
+
+}
+    
     function initUI() {
       // Theme Toggle
       const savedTheme = storageGet('theme');
