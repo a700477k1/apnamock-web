@@ -872,8 +872,9 @@ PRESET POPUP
   <div class="popup-footer">
 
    <button
-    class="btn btn-primary"
-    id="presetGenerateBtn">
+ class="btn btn-primary"
+ id="presetGenerateBtn"
+ onclick="generatePreset()">
 
     <i class="fa-solid fa-bolt"></i>
 
@@ -1174,6 +1175,7 @@ sectionChips.forEach(chip => {
        UI INITIALIZATION & EVENT LISTENERS
     ============================================================ */
     let ActivePreset = null;
+    let ActivePresetFilters = null;
 
 function closePresetPopup(){
 
@@ -1218,6 +1220,67 @@ function openPresetPopup(config){
  .classList.add(
   'open'
  );
+
+}
+
+    async function generatePreset(){
+
+ if(!ActivePreset){
+  return;
+ }
+
+ const btn =
+ document.getElementById(
+  'presetGenerateBtn'
+ );
+
+ btn.disabled = true;
+
+ btn.innerHTML = `
+ <i class="fa-solid fa-spinner fa-spin"></i>
+ Generating...
+ `;
+
+ try{
+
+  ActivePresetFilters =
+   await buildPresetFilters(
+    ActivePreset.type
+   );
+
+  if(!ActivePresetFilters){
+
+   btn.disabled = false;
+
+   btn.innerHTML =
+   `<i class="fa-solid fa-bolt"></i>
+   Generate Test`;
+
+   return;
+
+  }
+
+  await generatePresetTest(
+   ActivePresetFilters
+  );
+
+ }
+ catch(err){
+
+  console.error(err);
+
+  showToast(
+   'Failed to generate preset.',
+   'error'
+  );
+
+  btn.disabled = false;
+
+  btn.innerHTML =
+  `<i class="fa-solid fa-bolt"></i>
+   Generate Test`;
+
+ }
 
 }
     
@@ -2128,6 +2191,94 @@ function openDB() {
   });
 
 }
+
+   async function buildPresetFilters(type){
+
+ const exams =
+ [...new Set(
+  TestsIndexCache.map(
+   t => t.exam_group
+  )
+ )];
+
+ const subjects =
+ [...new Set(
+  TestsIndexCache.map(
+   t => t.subject
+  )
+ )];
+
+ const sections =
+ [...new Set(
+  TestsIndexCache.flatMap(
+   t =>
+   (t.sections || []).map(
+    s =>
+    s.title?.en ||
+    s.section_id
+   )
+  )
+ )];
+
+ switch(type){
+
+  case 'daily':
+
+   return{
+
+    exam:'all',
+
+    subjects,
+
+    sections,
+
+    difficulty:'mixed',
+
+    qCount:20,
+
+    duration:20
+
+   };
+
+   default:
+
+    return null;
+
+ }
+
+}
+
+    async function generatePresetTest(
+ filters
+){
+
+ State.exam =
+ filters.exam;
+
+ State.subjects =
+ [...filters.subjects];
+
+ State.sections =
+ [...filters.sections];
+
+ State.difficulty =
+ filters.difficulty;
+
+ State.qCount =
+ filters.qCount;
+
+ State.timeStrategy =
+ 'custom';
+
+ State.customTime =
+ filters.duration;
+
+ closePresetPopup();
+
+ await generateTest();
+
+}
+    
     /* ============================================================
        BOOTSTRAP
     ============================================================ */
