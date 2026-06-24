@@ -2393,6 +2393,116 @@ case 'gk':{
  };
 
 }
+
+case 'challenge':{
+
+ const availableSubjects =
+  [...subjects];
+
+ const selectedSubjects = [];
+
+ if(
+  availableSubjects.includes(
+   'Mixed'
+  )
+ ){
+  selectedSubjects.push(
+   'Mixed'
+  );
+ }
+
+ if(
+  availableSubjects.includes(
+   'Quantitative Aptitude'
+  )
+ ){
+  selectedSubjects.push(
+   'Quantitative Aptitude'
+  );
+ }
+
+ if(
+  availableSubjects.includes(
+   'General Intelligence'
+  )
+ ){
+  selectedSubjects.push(
+   'General Intelligence'
+  );
+ }
+
+ if(
+  selectedSubjects.length === 0
+ ){
+
+  showToast(
+   'Required subjects are not available.',
+   'error'
+  );
+
+  return null;
+
+ }
+
+ const availableSections =
+  [...sections];
+
+ const selectedSections = [];
+
+ if(
+  availableSections.includes(
+   'Quantitative Aptitude'
+  )
+ ){
+
+  selectedSections.push(
+   'Quantitative Aptitude'
+  );
+
+ }
+
+ if(
+  availableSections.includes(
+   'General Intelligence'
+  )
+ ){
+
+  selectedSections.push(
+   'General Intelligence'
+  );
+
+ }
+
+ if(
+  selectedSections.length === 0
+ ){
+
+  showToast(
+   'Required sections are not available.',
+   'error'
+  );
+
+  return null;
+
+ }
+
+ return{
+
+  exam:'all',
+
+  subjects:selectedSubjects,
+
+  sections:selectedSections,
+
+  difficulty:'mixed',
+
+  qCount:25,
+
+  duration:30
+
+ };
+
+}
      
    default:
 
