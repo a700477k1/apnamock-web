@@ -2267,6 +2267,75 @@ if (State.filters.actualExam.length) {
       const nav = document.querySelector('.site-nav');
       nav.classList.toggle('mobile-open');
     });
+
+              function closeMobileMenu() {
+
+ const nav =
+  document.querySelector('.site-nav');
+
+ if (
+  nav.classList.contains(
+   'mobile-open'
+  )
+ ) {
+
+  nav.classList.remove(
+   'mobile-open'
+  );
+
+ }
+
+}
+
+      document.addEventListener(
+ 'click',
+ function(e){
+
+  const nav =
+   document.querySelector('.site-nav');
+
+  const menuBtn =
+   document.getElementById(
+    'mobileMenuBtn'
+   );
+
+  if (
+   !nav.contains(e.target) &&
+   !menuBtn.contains(e.target)
+  ){
+
+   closeMobileMenu();
+
+  }
+
+ }
+);
+
+      window.addEventListener(
+ 'scroll',
+ function(){
+
+  closeMobileMenu();
+
+ }
+);
+
+      document
+.querySelectorAll(
+ '.site-nav .nav-link'
+)
+.forEach(link => {
+
+ link.addEventListener(
+  'click',
+  function(){
+
+   closeMobileMenu();
+
+  }
+ );
+
+});
  
     /* ============================================================
        INIT
