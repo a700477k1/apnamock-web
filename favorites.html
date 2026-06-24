@@ -1385,18 +1385,73 @@ renderChipGroup(
       let filtered = [...State.allFavorites]; 
  
       // 1. Text Search 
-      if (State.searchQuery) { 
-        const q = State.searchQuery.toLowerCase(); 
-        filtered = filtered.filter(item => { 
-          const testTitle = (item.testTitle || '').toLowerCase(); 
-          const qTextEn = (item.question?.question?.en || item.question?.question || '').toLowerCase(); 
-          const qTextHi = (item.question?.question?.hi || '').toLowerCase(); 
-          const exam = (item.question?.exam || '').toLowerCase(); 
-          const subject = (item.question?.subject || '').toLowerCase(); 
-           
-          return testTitle.includes(q) || qTextEn.includes(q) || qTextHi.includes(q) || exam.includes(q) || subject.includes(q); 
-        }); 
-      } 
+      if (State.searchQuery) {
+
+ const q =
+  State.searchQuery.toLowerCase();
+
+ filtered =
+  filtered.filter(item => {
+
+   const testTitle =
+    (
+     item.testTitle ||
+     ''
+    ).toLowerCase();
+
+   const qTextEn =
+    (
+     item.question?.question?.en ||
+     item.question?.question ||
+     ''
+    ).toLowerCase();
+
+   const qTextHi =
+    (
+     item.question?.question?.hi ||
+     ''
+    ).toLowerCase();
+
+   const exam =
+    (
+     item.exam ||
+     item.question?.exam ||
+     ''
+    ).toLowerCase();
+
+   const examGroup =
+    (
+     item.examGroup ||
+     item.question?.exam_group ||
+     ''
+    ).toLowerCase();
+
+   const section =
+    (
+     item.section ||
+     item.question?.sectionId ||
+     ''
+    ).toLowerCase();
+
+   return (
+
+    testTitle.includes(q) ||
+
+    qTextEn.includes(q) ||
+
+    qTextHi.includes(q) ||
+
+    exam.includes(q) ||
+
+    examGroup.includes(q) ||
+
+    section.includes(q)
+
+   );
+
+  });
+
+}
  
       // 2. Exact Filters 
       if (
