@@ -1259,6 +1259,8 @@ PresetGenerating = true;
 
   if(!ActivePresetFilters){
 
+    PresetGenerating = false;
+
    btn.disabled = false;
 
    btn.innerHTML =
@@ -2237,6 +2239,94 @@ function openDB() {
 
   case 'daily':
 
+     case 'gk':{
+
+ const availableSubjects =
+  [...subjects];
+
+ const selectedSubjects = [];
+
+ if(
+  availableSubjects.includes(
+   'Mixed'
+  )
+ ){
+  selectedSubjects.push(
+   'Mixed'
+  );
+ }
+
+ if(
+  availableSubjects.includes(
+   'General Awareness'
+  )
+ ){
+  selectedSubjects.push(
+   'General Awareness'
+  );
+ }
+
+ if(
+  selectedSubjects.length === 0
+ ){
+
+  showToast(
+   'General Awareness questions are not available.',
+   'error'
+  );
+
+  return null;
+
+ }
+
+ const availableSections =
+  [...sections];
+
+ const selectedSections = [];
+
+ if(
+  availableSections.includes(
+   'General Awareness'
+  )
+ ){
+
+  selectedSections.push(
+   'General Awareness'
+  );
+
+ }
+
+ if(
+  selectedSections.length === 0
+ ){
+
+  showToast(
+   'General Awareness section is not available.',
+   'error'
+  );
+
+  return null;
+
+ }
+
+ return{
+
+  exam:'all',
+
+  subjects:selectedSubjects,
+
+  sections:selectedSections,
+
+  difficulty:'mixed',
+
+  qCount:15,
+
+  duration:5
+
+ };
+
+}
+
    return{
 
     exam:'all',
@@ -2249,7 +2339,7 @@ function openDB() {
 
     qCount:20,
 
-    duration:20
+    duration:15
 
    };
 
