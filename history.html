@@ -1128,7 +1128,21 @@
       });
 
       // Migrate any missing localStorage data first
-      await migrateLocalStorageHistory();
+     const migrationDone =
+ storageGet(
+  'history_migrated'
+ );
+
+if (!migrationDone) {
+
+ await migrateLocalStorageHistory();
+
+ storageSet(
+  'history_migrated',
+  true
+ );
+
+}
 
       // Load Data
       const rawData = await getAllHistory();
