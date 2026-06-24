@@ -1587,14 +1587,50 @@
     }
  
     function onDataReady() {
-      State.attemptHistory = storageGet('attempt_history') || {};
-      buildFilterOptions();
-      applyFiltersAndSort();
-    }
+
+ State.attemptHistory =
+  storageGet(
+   'attempt_history'
+  ) || {};
+
+ buildFilterOptions();
+
+ applyUrlFilters();
+
+}
  
     /* ============================================================
        FILTER OPTIONS BUILDER
     ============================================================ */
+    function applyUrlFilters() {
+
+ const params =
+  new URLSearchParams(
+   location.search
+  );
+
+ const exam =
+  params.get(
+   'exam'
+  );
+
+ if (!exam) {
+
+  applyFiltersAndSort();
+
+  return;
+
+ }
+
+ State.filters.actualExam =
+  [exam];
+
+ renderActiveFilters();
+
+ applyFiltersAndSort();
+
+}
+    
     function buildFilterOptions() {
       const exams =
 [
