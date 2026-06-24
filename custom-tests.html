@@ -2239,7 +2239,23 @@ function openDB() {
 
   case 'daily':
 
-     case 'gk':{
+   return{
+
+    exam:'all',
+
+    subjects,
+
+    sections,
+
+    difficulty:'mixed',
+
+    qCount:20,
+
+    duration:15
+
+   };
+
+case 'gk':{
 
  const availableSubjects =
   [...subjects];
@@ -2326,23 +2342,7 @@ function openDB() {
  };
 
 }
-
-   return{
-
-    exam:'all',
-
-    subjects,
-
-    sections,
-
-    difficulty:'mixed',
-
-    qCount:20,
-
-    duration:15
-
-   };
-
+     
    default:
 
     return null;
