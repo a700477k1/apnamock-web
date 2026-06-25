@@ -1,1 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Legal Center — ApnaMock</title>
+
+<meta
+name="description"
+content="Read the Privacy Policy, Terms of Use, Disclaimer, Cookie Policy, Contact Information and other legal information related to ApnaMock."
+>
+
+<meta
+name="robots"
+content="index,follow"
+>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap"
+rel="stylesheet"
+>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+>
+
+<style>
+
+/* ============================================================
+DESIGN TOKENS
+============================================================ */
+
+:root{
+
+--primary:#1a56db;
+--primary-dark:#1e429f;
+--primary-light:#e8f0fe;
+
+--success:#16a34a;
+--warning:#f59e0b;
+--error:#dc2626;
+
+--bg-base:#f8fafc;
+--bg-card:#ffffff;
+--bg-muted:#f1f5f9;
+
+--text-primary:#1e293b;
+--text-secondary:#475569;
+--text-muted:#94a3b8;
+
+--border:#e2e8f0;
+
+--shadow-sm:0 1px 3px rgba(0,0,0,.08);
+--shadow-md:0 6px 18px rgba(0,0,0,.08);
+
+--radius-sm:6px;
+--radius-md:10px;
+--radius-lg:16px;
+--radius-xl:22px;
+
+--header-height:64px;
+
+--font-body:'Inter',sans-serif;
+--font-heading:'Poppins',sans-serif;
+
+}
+
+body.dark-mode{
+
+--bg-base:#0f172a;
+--bg-card:#1e293b;
+--bg-muted:#334155;
+
+--text-primary:#f8fafc;
+--text-secondary:#cbd5e1;
+--text-muted:#94a3b8;
+
+--border:#334155;
+
+--primary-light:rgba(26,86,219,.20);
+
+}
+
+/* ============================================================
+RESET
+============================================================ */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+
+font-family:var(--font-body);
+
+background:var(--bg-base);
+
+color:var(--text-primary);
+
+line-height:1.7;
+
+font-size:15px;
+
+transition:.3s;
+
+display:flex;
+
+flex-direction:column;
+
+min-height:100vh;
+
+}
+
+a{
+
+text-decoration:none;
+
+color:inherit;
+
+}
+
+button{
+
+cursor:pointer;
+
+border:none;
+
+background:none;
+
+font-family:inherit;
+
+}
+
+img{
+
+max-width:100%;
+
+display:block;
+
+}
+
+.align-wrapper{
+
+max-width:1180px;
+
+margin:auto;
+
+padding-left:20px;
+
+padding-right:20px;
+
+width:100%;
+
+}
+
+/* ============================================================
+HEADER
+============================================================ */
+
+.site-header{
+
+position:sticky;
+
+top:0;
+
+height:var(--header-height);
+
+background:rgba(255,255,255,.95);
+
+backdrop-filter:blur(12px);
+
+border-bottom:1px solid var(--border);
+
+z-index:100;
+
+}
+
+body.dark-mode .site-header{
+
+background:rgba(30,41,59,.95);
+
+}
+
+.header-inner{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+height:100%;
+
+}
+
+.brand{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+}
+
+.brand-icon{
+
+width:36px;
+
+height:36px;
+
+border-radius:10px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:linear-gradient(135deg,#1a56db,#f97316);
+
+color:#fff;
+
+font-weight:700;
+
+}
+
+.brand-text{
+
+display:flex;
+
+flex-direction:column;
+
+line-height:1.1;
+
+}
+
+.brand-name{
+
+font-family:var(--font-heading);
+
+font-size:18px;
+
+font-weight:700;
+
+color:var(--primary);
+
+}
+
+.brand-tagline{
+
+font-size:10px;
+
+color:var(--text-muted);
+
+}
+
+.site-nav{
+
+display:flex;
+
+align-items:center;
+
+gap:4px;
+
+}
+
+.nav-link{
+
+padding:8px 14px;
+
+border-radius:8px;
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+font-size:14px;
+
+font-weight:500;
+
+color:var(--text-secondary);
+
+transition:.15s;
+
+}
+
+.nav-link:hover{
+
+background:var(--bg-muted);
+
+}
+
+.nav-link.active{
+
+background:var(--primary-light);
+
+color:var(--primary);
+
+font-weight:600;
+
+}
+
+.header-actions{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+}
+
+.btn-icon{
+
+width:38px;
+
+height:38px;
+
+border-radius:8px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:var(--text-secondary);
+
+transition:.15s;
+
+}
+
+.btn-icon:hover{
+
+background:var(--bg-muted);
+
+}
+
+.mobile-menu-btn{
+
+display:none;
+
+}
+
+/* ============================================================
+PAGE HERO
+============================================================ */
+
+.page-hero{
+
+padding:48px 0 30px;
+
+text-align:center;
+
+}
+
+.hero-icon{
+
+width:74px;
+
+height:74px;
+
+margin:auto;
+
+margin-bottom:20px;
+
+border-radius:20px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:30px;
+
+background:var(--primary-light);
+
+color:var(--primary);
+
+}
+
+.hero-title{
+
+font-family:var(--font-heading);
+
+font-size:40px;
+
+font-weight:700;
+
+margin-bottom:12px;
+
+}
+
+.hero-desc{
+
+max-width:760px;
+
+margin:auto;
+
+font-size:16px;
+
+color:var(--text-secondary);
+
+}
+
+/* ============================================================
+MAIN LAYOUT
+============================================================ */
+
+.legal-layout{
+
+display:grid;
+
+grid-template-columns:260px 1fr;
+
+gap:28px;
+
+padding-bottom:60px;
+
+}
+
+/* ============================================================
+SIDEBAR
+============================================================ */
+
+.legal-sidebar{
+
+position:sticky;
+
+top:90px;
+
+align-self:start;
+
+background:var(--bg-card);
+
+border:1px solid var(--border);
+
+border-radius:var(--radius-xl);
+
+padding:20px;
+
+box-shadow:var(--shadow-sm);
+
+}
+
+.sidebar-title{
+
+font-family:var(--font-heading);
+
+font-size:16px;
+
+font-weight:700;
+
+margin-bottom:18px;
+
+}
+
+.sidebar-nav{
+
+display:flex;
+
+flex-direction:column;
+
+gap:6px;
+
+}
+
+.sidebar-link{
+
+padding:10px 12px;
+
+border-radius:8px;
+
+font-size:14px;
+
+font-weight:500;
+
+color:var(--text-secondary);
+
+transition:.15s;
+
+}
+
+.sidebar-link:hover{
+
+background:var(--primary-light);
+
+color:var(--primary);
+
+}
+
+/* ============================================================
+CONTENT
+============================================================ */
+
+.legal-content{
+
+display:flex;
+
+flex-direction:column;
+
+gap:28px;
+
+}
+
+.legal-section{
+
+background:var(--bg-card);
+
+border:1px solid var(--border);
+
+border-radius:var(--radius-xl);
+
+padding:28px;
+
+box-shadow:var(--shadow-sm);
+
+}
+
+.legal-section h2{
+
+font-family:var(--font-heading);
+
+font-size:24px;
+
+margin-bottom:14px;
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+}
+
+.legal-section h2 i{
+
+color:var(--primary);
+
+}
+
+.legal-section p{
+
+margin-bottom:14px;
+
+color:var(--text-secondary);
+
+}
+
+.legal-section ul{
+
+padding-left:22px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+color:var(--text-secondary);
+
+}
+
+/* ============================================================
+RESPONSIVE
+============================================================ */
+
+@media(max-width:900px){
+
+.legal-layout{
+
+grid-template-columns:1fr;
+
+}
+
+.legal-sidebar{
+
+position:relative;
+
+top:auto;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.site-nav{
+
+display:none;
+
+}
+
+.mobile-menu-btn{
+
+display:flex;
+
+}
+
+.hero-title{
+
+font-size:30px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+<div class="header-inner align-wrapper">
+
+<a href="/index.html" class="brand">
+
+<div class="brand-icon">A</div>
+
+<div class="brand-text">
+
+<span class="brand-name">ApnaMock</span>
+
+<span class="brand-tagline">Practice. Improve. Succeed.</span>
+
+</div>
+
+</a>
+
+<nav class="site-nav">
+
+<a href="/index.html" class="nav-link">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a href="/tests.html" class="nav-link">
+<i class="fa-solid fa-list-check"></i>
+<span>Tests</span>
+</a>
+
+<a href="/custom-tests.html" class="nav-link">
+<i class="fa-solid fa-sliders"></i>
+<span>Custom Tests</span>
+</a>
+
+<a href="/favorites.html" class="nav-link">
+<i class="fa-solid fa-bookmark"></i>
+<span>Favorites</span>
+</a>
+
+<a href="/history.html" class="nav-link">
+<i class="fa-solid fa-clock-rotate-left"></i>
+<span>History</span>
+</a>
+
+<a href="/legal.html" class="nav-link active">
+<i class="fa-solid fa-scale-balanced"></i>
+<span>Legal</span>
+</a>
+
+</nav>
+
+<div class="header-actions">
+
+<button
+class="btn-icon"
+id="themeToggleBtn">
+
+<i class="fa-solid fa-moon"></i>
+
+</button>
+
+<button
+class="btn-icon mobile-menu-btn"
+id="mobileMenuBtn">
+
+<i class="fa-solid fa-bars"></i>
+
+</button>
+
+</div>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="page-hero align-wrapper">
+
+<div class="hero-icon">
+
+<i class="fa-solid fa-scale-balanced"></i>
+
+</div>
+
+<h1 class="hero-title">
+
+Legal Center
+
+</h1>
+
+<p class="hero-desc">
+
+This page explains how ApnaMock works, how your information is handled, the terms governing the use of our platform, and other important legal information. We encourage every user to read these policies before using the website.
+
+</p>
+
+</section>
+
+<div class="legal-layout align-wrapper">
+
+<aside class="legal-sidebar">
+
+<div class="sidebar-title">
+
+Quick Navigation
+
+</div>
+
+<div class="sidebar-nav">
+
+<a href="#privacy" class="sidebar-link">
+Privacy Policy
+</a>
+
+<a href="#terms" class="sidebar-link">
+Terms of Use
+</a>
+
+<a href="#disclaimer" class="sidebar-link">
+Disclaimer
+</a>
+
+<a href="#cookies" class="sidebar-link">
+Cookies & Browser Storage
+</a>
+
+<a href="#storage" class="sidebar-link">
+Offline Data Storage
+</a>
+
+<a href="#thirdparty" class="sidebar-link">
+Third‑Party Services
+</a>
+
+<a href="#copyright" class="sidebar-link">
+Copyright
+</a>
+
+<a href="#children" class="sidebar-link">
+Children's Privacy
+</a>
+
+<a href="#contact" class="sidebar-link">
+Contact
+</a>
+
+<a href="#updates" class="sidebar-link">
+Policy Updates
+</a>
+
+</div>
+
+</aside>
+
+<section class="legal-content">
+
+  <!-- ============================================================
+PRIVACY POLICY
+============================================================ -->
+
+<section
+class="legal-section"
+id="privacy">
+
+<h2>
+<i class="fa-solid fa-user-shield"></i>
+Privacy Policy
+</h2>
+
+<p>
+At ApnaMock, we value your privacy. Our platform has been designed to function primarily within your own web browser. Unlike many online services, ApnaMock does not require you to create an account or submit personal information in order to access mock tests.
+</p>
+
+<p>
+Most of the information generated while using the website remains stored locally on your own device. This allows you to continue your preparation, revisit your results, and resume unfinished tests without requiring an online account.
+</p>
+
+<p>
+We may update this Privacy Policy from time to time whenever new features or services are introduced. Continued use of ApnaMock after such updates indicates your acceptance of the revised policy.
+</p>
+
+<h3 style="margin:20px 0 12px;font-size:18px;">Information Stored Locally</h3>
+
+<ul>
+
+<li>Your selected theme (Light/Dark mode).</li>
+
+<li>Quiz progress for unfinished tests.</li>
+
+<li>Your completed test results.</li>
+
+<li>Your attempt history.</li>
+
+<li>Your saved favourite questions.</li>
+
+<li>Your generated custom tests.</li>
+
+</ul>
+
+<h3 style="margin:20px 0 12px;font-size:18px;">Personal Information</h3>
+
+<p>
+
+At present, ApnaMock does not ask users to register an account or provide personal information such as:
+
+</p>
+
+<ul>
+
+<li>Name</li>
+
+<li>Phone Number</li>
+
+<li>Email Address</li>
+
+<li>Residential Address</li>
+
+<li>Government Identification</li>
+
+</ul>
+
+<p>
+
+If account-based features are introduced in the future, this Privacy Policy will be updated accordingly.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+TERMS OF USE
+============================================================ -->
+
+<section
+class="legal-section"
+id="terms">
+
+<h2>
+
+<i class="fa-solid fa-file-contract"></i>
+
+Terms of Use
+
+</h2>
+
+<p>
+
+By accessing and using ApnaMock, you agree to comply with these Terms of Use.
+
+</p>
+
+<ul>
+
+<li>ApnaMock is intended solely for educational and examination preparation purposes.</li>
+
+<li>You agree not to misuse, disrupt or interfere with the normal functioning of the website.</li>
+
+<li>You agree not to copy, redistribute, scrape or commercially reproduce the website's software, interface or content without permission.</li>
+
+<li>You agree not to use automated tools or bots to overload or abuse the platform.</li>
+
+<li>You are responsible for ensuring that your use of the website complies with applicable laws in your jurisdiction.</li>
+
+</ul>
+
+<p>
+
+ApnaMock reserves the right to modify, suspend or discontinue any feature of the website without prior notice whenever necessary.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+DISCLAIMER
+============================================================ -->
+
+<section
+class="legal-section"
+id="disclaimer">
+
+<h2>
+
+<i class="fa-solid fa-circle-info"></i>
+
+Disclaimer
+
+</h2>
+
+<p>
+
+ApnaMock is an independent educational platform created for competitive examination preparation.
+
+</p>
+
+<p>
+
+ApnaMock is <strong>not affiliated with</strong>, endorsed by, sponsored by, or officially connected with any government organisation, examination authority, recruiting agency or educational institution including but not limited to:
+
+</p>
+
+<ul>
+
+<li>Staff Selection Commission (SSC)</li>
+
+<li>Railway Recruitment Boards (RRB)</li>
+
+<li>Institute of Banking Personnel Selection (IBPS)</li>
+
+<li>National Testing Agency (NTA)</li>
+
+<li>Union Public Service Commission (UPSC)</li>
+
+<li>Any State Public Service Commission</li>
+
+</ul>
+
+<p>
+
+Mock tests, previous year questions and practice material are provided solely to help candidates prepare for competitive examinations.
+
+</p>
+
+<p>
+
+Although every effort is made to maintain accuracy, ApnaMock does not guarantee that all questions, answers, explanations or examination information are completely free from errors.
+
+</p>
+
+<p>
+
+Users should always verify official notifications, examination schedules, eligibility criteria and recruitment information from the respective official websites.
+
+</p>
+
+<p>
+
+Performance achieved on ApnaMock mock tests should not be interpreted as a guarantee of success in any actual examination.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+COOKIES & STORAGE
+============================================================ -->
+
+<section
+class="legal-section"
+id="cookies">
+
+<h2>
+
+<i class="fa-solid fa-cookie-bite"></i>
+
+Cookies & Browser Storage
+
+</h2>
+
+<p>
+
+ApnaMock makes limited use of browser technologies to improve user experience.
+
+</p>
+
+<ul>
+
+<li>Cookies may be used by future third-party services such as Google AdSense.</li>
+
+<li>Local Storage is used to remember user preferences and quiz data.</li>
+
+<li>IndexedDB is used for storing larger offline datasets such as favourites and attempt history.</li>
+
+<li>No browser storage is used to collect sensitive personal information.</li>
+
+</ul>
+
+<p>
+
+If Google AdSense or similar advertising services are enabled in the future, those providers may use cookies in accordance with their own privacy policies.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+OFFLINE STORAGE
+============================================================ -->
+
+<section
+class="legal-section"
+id="storage">
+
+<h2>
+
+<i class="fa-solid fa-hard-drive"></i>
+
+Offline Data Storage
+
+</h2>
+
+<p>
+
+One of the key features of ApnaMock is that much of your learning data is stored directly inside your own browser instead of being uploaded to a remote server.
+
+</p>
+
+<p>
+
+This enables:
+
+</p>
+
+<ul>
+
+<li>Offline-friendly quiz experience.</li>
+
+<li>Automatic recovery of interrupted tests.</li>
+
+<li>Fast loading without repeated downloads.</li>
+
+<li>Personal revision through favourite questions.</li>
+
+<li>Attempt history even without user accounts.</li>
+
+</ul>
+
+<p>
+
+Because this information is stored locally on your device, clearing your browser data, uninstalling your browser, or using another device may remove this information unless future cloud-sync features are introduced.
+
+</p>
+
+</section>
+
+  <!-- ============================================================
+THIRD-PARTY SERVICES
+============================================================ -->
+
+<section
+class="legal-section"
+id="thirdparty">
+
+<h2>
+
+<i class="fa-solid fa-globe"></i>
+
+Third-Party Services
+
+</h2>
+
+<p>
+
+To provide a smooth and reliable experience, ApnaMock may use trusted third-party services.
+
+</p>
+
+<ul>
+
+<li><strong>Google Fonts</strong> — used for typography.</li>
+
+<li><strong>Font Awesome</strong> — used for icons displayed throughout the website.</li>
+
+<li><strong>jsDelivr CDN</strong> — used to deliver static assets and question data efficiently.</li>
+
+<li><strong>Chart.js</strong> — used for visualising performance statistics.</li>
+
+</ul>
+
+<p>
+
+In the future, ApnaMock may integrate additional services including:
+
+</p>
+
+<ul>
+
+<li>Google AdSense</li>
+
+<li>Google Analytics</li>
+
+<li>Email services</li>
+
+<li>Cloud backup services</li>
+
+</ul>
+
+<p>
+
+Each third-party provider maintains its own privacy policy and terms of service.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+COPYRIGHT
+============================================================ -->
+
+<section
+class="legal-section"
+id="copyright">
+
+<h2>
+
+<i class="fa-solid fa-copyright"></i>
+
+Copyright & Intellectual Property
+
+</h2>
+
+<p>
+
+The ApnaMock website, including its design, branding, interface, software logic, analytics system, custom test generator and original written content are protected by applicable copyright and intellectual property laws.
+
+</p>
+
+<p>
+
+Users may use ApnaMock for personal educational purposes only.
+
+</p>
+
+<ul>
+
+<li>Do not copy large portions of the website.</li>
+
+<li>Do not reproduce the interface for commercial purposes.</li>
+
+<li>Do not redistribute datasets without permission.</li>
+
+<li>Do not remove copyright notices.</li>
+
+</ul>
+
+<p>
+
+Previous year examination questions remain the intellectual property of their respective examination authorities wherever applicable.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+CHILDREN'S PRIVACY
+============================================================ -->
+
+<section
+class="legal-section"
+id="children">
+
+<h2>
+
+<i class="fa-solid fa-child"></i>
+
+Children's Privacy
+
+</h2>
+
+<p>
+
+ApnaMock is intended for students and competitive examination aspirants.
+
+</p>
+
+<p>
+
+The website does not knowingly collect personal information from children under the age required by applicable law without appropriate consent.
+
+</p>
+
+<p>
+
+If you believe that a child has submitted personal information through future features of this website, please contact us so that appropriate action can be taken.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+CONTACT
+============================================================ -->
+
+<section
+class="legal-section"
+id="contact">
+
+<h2>
+
+<i class="fa-solid fa-envelope"></i>
+
+Contact Us
+
+</h2>
+
+<p>
+
+If you have any questions regarding these policies, encounter any issues while using the platform, or would like to report an error, you may contact us.
+
+</p>
+
+<ul>
+
+<li><strong>Email:</strong> your-email@example.com</li>
+
+<li><strong>Website:</strong> https://your-domain.com</li>
+
+<li><strong>Expected Response Time:</strong> 2–5 working days</li>
+
+</ul>
+
+<p>
+
+We welcome suggestions that help improve ApnaMock for students and aspirants.
+
+</p>
+
+</section>
+
+<!-- ============================================================
+POLICY UPDATES
+============================================================ -->
+
+<section
+class="legal-section"
+id="updates">
+
+<h2>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Changes to These Policies
+
+</h2>
+
+<p>
+
+ApnaMock may update this Legal Center whenever new features, services, regulations or technologies are introduced.
+
+</p>
+
+<p>
+
+Significant updates will become effective immediately after being published on this page.
+
+</p>
+
+<p>
+
+Users are encouraged to review this page periodically to stay informed about the latest policies.
+
+</p>
+
+<div
+style="
+margin-top:24px;
+padding:16px;
+border-radius:12px;
+background:var(--primary-light);
+border:1px solid rgba(26,86,219,.15);
+">
+
+<strong>Last Updated:</strong>
+
+25 June 2026
+
+</div>
+
+</section>
+
+</section>
+
+</div>
+
+</main>
+
+<!-- ============================================================
+FOOTER
+============================================================ -->
+
+<footer class="site-footer">
+
+<div class="footer-inner align-wrapper">
+
+<div>
+
+<div class="footer-brand-name">
+
+ApnaMock
+
+</div>
+
+<div class="footer-brand-desc">
+
+Free previous year mock tests for competitive examination preparation.
+
+</div>
+
+</div>
+
+<div>
+
+<div class="footer-col-title">
+
+Quick Links
+
+</div>
+
+<div class="footer-links">
+
+<a href="/index.html" class="footer-link">Home</a>
+
+<a href="/tests.html" class="footer-link">Tests</a>
+
+<a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+
+<a href="/favorites.html" class="footer-link">Favorites</a>
+
+<a href="/history.html" class="footer-link">History</a>
+
+</div>
+
+</div>
+
+<div>
+
+<div class="footer-col-title">
+
+Legal
+
+</div>
+
+<div class="footer-links">
+
+<a href="#privacy" class="footer-link">Privacy Policy</a>
+
+<a href="#terms" class="footer-link">Terms of Use</a>
+
+<a href="#disclaimer" class="footer-link">Disclaimer</a>
+
+<a href="#contact" class="footer-link">Contact</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer-bottom align-wrapper">
+
+<span class="footer-copy">
+
+© 2026 ApnaMock. All rights reserved.
+
+</span>
+
+<span class="footer-copy">
+
+Practice. Improve. Succeed.
+
+</span>
+
+</div>
+
+</footer>
+
+<!-- ============================================================
+JAVASCRIPT
+============================================================ -->
+
+<script>
+
+/* ============================================================
+LOCAL STORAGE HELPERS
+============================================================ */
+
+const STORAGE_PREFIX = 'apnamock_';
+
+function storageGet(key){
+
+ try{
+
+  const raw =
+   localStorage.getItem(
+    STORAGE_PREFIX + key
+   );
+
+  return raw
+   ? JSON.parse(raw)
+   : null;
+
+ }catch{
+
+  return null;
+
+ }
+
+}
+
+function storageSet(key,value){
+
+ try{
+
+  localStorage.setItem(
+   STORAGE_PREFIX + key,
+   JSON.stringify(value)
+  );
+
+ }catch{}
+
+}
+
+/* ============================================================
+THEME
+============================================================ */
+
+const savedTheme =
+ storageGet('theme');
+
+if(savedTheme === 'dark'){
+
+ document.body.classList.add(
+  'dark-mode'
+ );
+
+ document.querySelector(
+  '#themeToggleBtn i'
+ ).className =
+ 'fa-solid fa-sun';
+
+}
+
+document
+.getElementById(
+ 'themeToggleBtn'
+)
+.addEventListener(
+ 'click',
+ function(){
+
+  document.body.classList.toggle(
+   'dark-mode'
+  );
+
+  const isDark =
+   document.body.classList.contains(
+    'dark-mode'
+   );
+
+  document.querySelector(
+   '#themeToggleBtn i'
+  ).className =
+   isDark
+   ? 'fa-solid fa-sun'
+   : 'fa-solid fa-moon';
+
+  storageSet(
+   'theme',
+   isDark
+   ? 'dark'
+   : 'light'
+  );
+
+ }
+);
+
+/* ============================================================
+MOBILE MENU
+============================================================ */
+
+document
+.getElementById(
+ 'mobileMenuBtn'
+)
+.addEventListener(
+ 'click',
+ function(){
+
+  document
+  .querySelector(
+   '.site-nav'
+  )
+  .classList.toggle(
+   'mobile-open'
+  );
+
+ }
+);
+
+function closeMobileMenu(){
+
+ const nav =
+ document.querySelector(
+  '.site-nav'
+ );
+
+ nav.classList.remove(
+  'mobile-open'
+ );
+
+}
+
+document
+.addEventListener(
+ 'click',
+ function(e){
+
+  const nav =
+   document.querySelector(
+    '.site-nav'
+   );
+
+  const btn =
+   document.getElementById(
+    'mobileMenuBtn'
+   );
+
+  if(
+   !nav.contains(e.target) &&
+   !btn.contains(e.target)
+  ){
+
+   closeMobileMenu();
+
+  }
+
+ }
+);
+
+window.addEventListener(
+ 'scroll',
+ closeMobileMenu
+);
+
+document
+.querySelectorAll(
+ '.site-nav .nav-link'
+)
+.forEach(link=>{
+
+ link.addEventListener(
+  'click',
+  closeMobileMenu
+ );
+
+});
+
+</script>
+
+</body>
+
+</html>
