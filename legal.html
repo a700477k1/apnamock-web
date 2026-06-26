@@ -152,7 +152,7 @@ display:block;
 
 .align-wrapper{
 
-max-width:1180px;
+max-width:1000px;
 
 margin:auto;
 
@@ -360,62 +360,38 @@ display:none;
 PAGE HERO
 ============================================================ */
 
-.page-hero{
-
-padding:48px 0 30px;
-
-text-align:center;
-
+.page-wrapper{
+    padding-top:28px;
+    padding-bottom:60px;
+    flex:1;
 }
 
-.hero-icon{
-
-width:74px;
-
-height:74px;
-
-margin:auto;
-
-margin-bottom:20px;
-
-border-radius:20px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:30px;
-
-background:var(--primary-light);
-
-color:var(--primary);
-
+.page-header{
+    margin-bottom:32px;
 }
 
-.hero-title{
-
-font-family:var(--font-heading);
-
-font-size:40px;
-
-font-weight:700;
-
-margin-bottom:12px;
-
+.page-title{
+    font-family:var(--font-heading);
+    font-size:26px;
+    font-weight:700;
+    color:var(--text-primary);
+    line-height:1.2;
+    margin-bottom:6px;
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
-.hero-desc{
+.page-title i{
+    color:var(--primary);
+}
 
-max-width:760px;
-
-margin:auto;
-
-font-size:16px;
-
-color:var(--text-secondary);
-
+.page-subtitle{
+    font-size:14.5px;
+    color:var(--text-muted);
+    font-weight:400;
+    max-width:600px;
+    line-height:1.5;
 }
 
 /* ============================================================
@@ -577,6 +553,113 @@ color:var(--text-secondary);
 }
 
 /* ============================================================
+FOOTER
+============================================================ */
+
+.site-footer{
+    background:var(--text-primary);
+    color:#fff;
+    padding:40px 20px 24px;
+    margin-top:auto;
+}
+
+body.dark-mode .site-footer{
+    color:#0f172a;
+}
+
+body.dark-mode .footer-brand-name{
+    color:#0f172a;
+}
+
+body.dark-mode .footer-brand-desc{
+    color:rgba(15,23,42,.7);
+}
+
+body.dark-mode .footer-col-title{
+    color:rgba(15,23,42,.7);
+}
+
+body.dark-mode .footer-link{
+    color:rgba(15,23,42,.8);
+}
+
+body.dark-mode .footer-link:hover{
+    color:#0f172a;
+}
+
+body.dark-mode .footer-copy{
+    color:rgba(15,23,42,.6);
+}
+
+body.dark-mode .footer-bottom{
+    border-top-color:rgba(15,23,42,.15);
+}
+
+.footer-inner{
+    max-width:1000px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:32px;
+    margin-bottom:32px;
+}
+
+.footer-brand-name{
+    font-family:var(--font-heading);
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.footer-brand-desc{
+    font-size:13px;
+    color:rgba(255,255,255,.5);
+    line-height:1.6;
+}
+
+.footer-col-title{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    color:rgba(255,255,255,.5);
+    margin-bottom:12px;
+}
+
+.footer-links{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.footer-link{
+    font-size:13px;
+    color:rgba(255,255,255,.7);
+    transition:color .15s;
+}
+
+.footer-link:hover{
+    color:#fff;
+}
+
+.footer-bottom{
+    max-width:1000px;
+    margin:0 auto;
+    border-top:1px solid rgba(255,255,255,.1);
+    padding-top:20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.footer-copy{
+    font-size:13px;
+    color:rgba(255,255,255,.4);
+}
+  
+/* ============================================================
 RESPONSIVE
 ============================================================ */
 
@@ -612,10 +695,8 @@ display:flex;
 
 }
 
-.hero-title{
-
-font-size:30px;
-
+.page-title{
+    font-size:22px;
 }
 
 }
@@ -704,27 +785,22 @@ id="mobileMenuBtn">
 
 <main>
 
-<section class="page-hero align-wrapper">
+<div class="page-wrapper align-wrapper">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fa-solid fa-scale-balanced"></i>
+            Legal Center
+        </h1>
 
-<div class="hero-icon">
+        <p class="page-subtitle">
+            This page explains how ApnaMock works, how your information is handled, the terms governing the use of our platform, and other important legal information.
+        </p>
+    </div>
 
-<i class="fa-solid fa-scale-balanced"></i>
-
+    <div class="legal-layout">
+        ...
+    </div>
 </div>
-
-<h1 class="hero-title">
-
-Legal Center
-
-</h1>
-
-<p class="hero-desc">
-
-This page explains how ApnaMock works, how your information is handled, the terms governing the use of our platform, and other important legal information. We encourage every user to read these policies before using the website.
-
-</p>
-
-</section>
 
 <div class="legal-layout align-wrapper">
 
@@ -1309,89 +1385,47 @@ FOOTER
 ============================================================ -->
 
 <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
 
-<div class="footer-inner align-wrapper">
+        <div>
+            <div class="footer-brand-name">ApnaMock</div>
+            <div class="footer-brand-desc">
+                Free previous year mock tests for competitive exam preparation.
+            </div>
+        </div>
 
-<div>
+        <div>
+            <div class="footer-col-title">Quick Links</div>
+            <div class="footer-links">
+                <a href="/index.html" class="footer-link">Home</a>
+                <a href="/tests.html" class="footer-link">Tests</a>
+                <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+                <a href="/favorites.html" class="footer-link">Favorites</a>
+                <a href="/history.html" class="footer-link">History</a>
+            </div>
+        </div>
 
-<div class="footer-brand-name">
+        <div>
+            <div class="footer-col-title">Legal</div>
+            <div class="footer-links">
+                <a href="#privacy" class="footer-link">Privacy Policy</a>
+                <a href="#terms" class="footer-link">Terms of Use</a>
+                <a href="#disclaimer" class="footer-link">Disclaimer</a>
+                <a href="#contact" class="footer-link">Contact</a>
+            </div>
+        </div>
 
-ApnaMock
+    </div>
 
-</div>
+    <div class="footer-bottom align-wrapper">
+        <span class="footer-copy">
+            &copy; 2026 ApnaMock. All rights reserved.
+        </span>
 
-<div class="footer-brand-desc">
-
-Free previous year mock tests for competitive examination preparation.
-
-</div>
-
-</div>
-
-<div>
-
-<div class="footer-col-title">
-
-Quick Links
-
-</div>
-
-<div class="footer-links">
-
-<a href="/index.html" class="footer-link">Home</a>
-
-<a href="/tests.html" class="footer-link">Tests</a>
-
-<a href="/custom-tests.html" class="footer-link">Custom Tests</a>
-
-<a href="/favorites.html" class="footer-link">Favorites</a>
-
-<a href="/history.html" class="footer-link">History</a>
-
-</div>
-
-</div>
-
-<div>
-
-<div class="footer-col-title">
-
-Legal
-
-</div>
-
-<div class="footer-links">
-
-<a href="#privacy" class="footer-link">Privacy Policy</a>
-
-<a href="#terms" class="footer-link">Terms of Use</a>
-
-<a href="#disclaimer" class="footer-link">Disclaimer</a>
-
-<a href="#contact" class="footer-link">Contact</a>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="footer-bottom align-wrapper">
-
-<span class="footer-copy">
-
-© 2026 ApnaMock. All rights reserved.
-
-</span>
-
-<span class="footer-copy">
-
-Practice. Improve. Succeed.
-
-</span>
-
-</div>
-
+        <span class="footer-copy">
+            Practice. Improve. Succeed.
+        </span>
+    </div>
 </footer>
 
 <!-- ============================================================
