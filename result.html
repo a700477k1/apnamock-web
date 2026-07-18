@@ -934,21 +934,55 @@ Done
         .replace(/'/g, '&#39;');
     }
 
-        /* ============================================================
-       KATEX MATH RENDERER HELPER
+    /* ============================================================
+       KATEX MATH RENDERER HELPER (QUILL COMPATIBLE)
     ============================================================ */
-    function renderMath(element) {
-      if (window.renderMathInElement) {
-        renderMathInElement(element, {
-          delimiters: [
-            {left: "$$", right: "$$", display: true},
-            {left: "$", right: "$", display: false},
-            {left: "\\(", right: "\\)", display: false},
-            {left: "\\[", right: "\\]", display: true}
-          ],
-          throwOnError: false
-        });
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+
+      // Helper to unescape HTML entities that Quill might create
+      function decodeEntities(str) {
+        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
       }
+
+      // 1. Replace $$ ... $$ (display math)
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, ''); // Strip HTML tags inside math
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 2. Replace \[ ... \] (display math)
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 3. Replace \( ... \) (inline math)
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 4. Replace $ ... $ (inline math) - only if it doesn't span across paragraphs
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
+        if (math.includes('</p>') || math.includes('<p')) return match; 
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      return htmlString;
     }
 
     /* ============================================================
@@ -1822,13 +1856,6 @@ function selectSectionFilter(
         reviewList.insertAdjacentHTML('beforeend', renderReviewCard(qr, q));
       });
 
-      // Explicitly render math for questions, options, AND explanations
-      renderMath(reviewList);
-      
-      // Force KaTeX to scan explanation boxes specifically (just in case)
-      const explanationElements = reviewList.querySelectorAll('.explanation-text');
-      explanationElements.forEach(el => renderMath(el));
-
       Result.displayedReviews = end;
 
       // Load more button
@@ -1857,9 +1884,9 @@ function selectSectionFilter(
       if (lang === 'bilingual') {
           const enText = q.question?.en || q.question || '';
           const hiText = q.question?.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${q.question.hi}</span>` : '';
-          questionTextHtml = enText + hiText;
+          questionTextHtml = renderMathInString(enText + hiText);
       } else {
-          questionTextHtml = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
+          questionTextHtml = renderMathInString(q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || ''));
       }
 
       let explanationHtml = '';
@@ -1867,9 +1894,9 @@ function selectSectionFilter(
           if (lang === 'bilingual') {
               const enExp = q.explanation?.en || q.explanation || '';
               const hiExp = q.explanation?.hi ? `<span style="color:var(--primary);font-size:0.95em;display:block;margin-top:4px;opacity:0.8">${q.explanation.hi}</span>` : '';
-              explanationHtml = enExp + hiExp;
+              explanationHtml = renderMathInString(enExp + hiExp);
           } else {
-              explanationHtml = q.explanation?.[lang] || q.explanation?.en || q.explanation?.hi || String(q.explanation || '');
+              explanationHtml = renderMathInString(q.explanation?.[lang] || q.explanation?.en || q.explanation?.hi || String(q.explanation || ''));
           }
       }
 
@@ -1888,12 +1915,12 @@ function selectSectionFilter(
             if (lang === 'bilingual') {
                 const enOpt = opt.en || '';
                 const hiOpt = opt.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${opt.hi}</span>` : '';
-                optTextHtml = enOpt + hiOpt;
+                optTextHtml = renderMathInString(enOpt + hiOpt);
             } else {
-                optTextHtml = opt[lang] || opt.en || opt.hi || '';
+                optTextHtml = renderMathInString(opt[lang] || opt.en || opt.hi || '');
             }
         } else {
-            optTextHtml = String(opt);
+            optTextHtml = renderMathInString(String(opt));
         }
 
         const isUserAnswer = qr.userAnswer === i;
