@@ -10,6 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
   <style>
     /* ============================================================
        DESIGN TOKENS
@@ -686,6 +690,26 @@
       .btn { width: 100%; }
       .performance-message-card { flex-direction: column; text-align: center; }
     }
+
+    /* ============================================================
+       QUILL EDITOR HTML FIXES
+    ============================================================ */
+    .review-question-text p, .review-option p, .explanation-text p {
+      margin: 0;
+      padding: 0;
+      line-height: inherit;
+    }
+    .review-question-text p + p, .review-option p + p, .explanation-text p + p {
+      margin-top: 8px; /* Adds a small space between multiple paragraphs */
+    }
+    .review-option {
+      align-items: center; /* Keeps letter and text aligned */
+    }
+    .review-option > span {
+      display: flex;
+      flex-direction: column;
+    }
+    
   </style>
 </head>
 
@@ -908,6 +932,23 @@ Done
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+    }
+
+        /* ============================================================
+       KATEX MATH RENDERER HELPER
+    ============================================================ */
+    function renderMath(element) {
+      if (window.renderMathInElement) {
+        renderMathInElement(element, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true}
+          ],
+          throwOnError: false
+        });
+      }
     }
 
     /* ============================================================
@@ -1781,6 +1822,9 @@ function selectSectionFilter(
         reviewList.insertAdjacentHTML('beforeend', renderReviewCard(qr, q));
       });
 
+      // Trigger KaTeX Math Rendering on the newly added cards
+      renderMath(reviewList);
+
       Result.displayedReviews = end;
 
       // Load more button
@@ -1807,21 +1851,21 @@ function selectSectionFilter(
       // Bilingual Handling
       let questionTextHtml = '';
       if (lang === 'bilingual') {
-          const enText = escapeHTML(q.question?.en || q.question || '');
-          const hiText = q.question?.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${escapeHTML(q.question.hi)}</span>` : '';
+          const enText = q.question?.en || q.question || '';
+          const hiText = q.question?.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${q.question.hi}</span>` : '';
           questionTextHtml = enText + hiText;
       } else {
-          questionTextHtml = escapeHTML(q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || ''));
+          questionTextHtml = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
       }
 
       let explanationHtml = '';
       if (q.explanation) {
           if (lang === 'bilingual') {
-              const enExp = escapeHTML(q.explanation?.en || q.explanation || '');
-              const hiExp = q.explanation?.hi ? `<span style="color:var(--primary);font-size:0.95em;display:block;margin-top:4px;opacity:0.8">${escapeHTML(q.explanation.hi)}</span>` : '';
+              const enExp = q.explanation?.en || q.explanation || '';
+              const hiExp = q.explanation?.hi ? `<span style="color:var(--primary);font-size:0.95em;display:block;margin-top:4px;opacity:0.8">${q.explanation.hi}</span>` : '';
               explanationHtml = enExp + hiExp;
           } else {
-              explanationHtml = escapeHTML(q.explanation?.[lang] || q.explanation?.en || q.explanation?.hi || String(q.explanation || ''));
+              explanationHtml = q.explanation?.[lang] || q.explanation?.en || q.explanation?.hi || String(q.explanation || '');
           }
       }
 
@@ -1838,14 +1882,14 @@ function selectSectionFilter(
         let optTextHtml = '';
         if (typeof opt === 'object') {
             if (lang === 'bilingual') {
-                const enOpt = escapeHTML(opt.en || '');
-                const hiOpt = opt.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${escapeHTML(opt.hi)}</span>` : '';
+                const enOpt = opt.en || '';
+                const hiOpt = opt.hi ? `<span style="color:var(--text-secondary);font-size:0.95em;display:block;margin-top:4px;">${opt.hi}</span>` : '';
                 optTextHtml = enOpt + hiOpt;
             } else {
-                optTextHtml = escapeHTML(opt[lang] || opt.en || opt.hi || '');
+                optTextHtml = opt[lang] || opt.en || opt.hi || '';
             }
         } else {
-            optTextHtml = escapeHTML(String(opt));
+            optTextHtml = String(opt);
         }
 
         const isUserAnswer = qr.userAnswer === i;
