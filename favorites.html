@@ -610,6 +610,33 @@ rgba(255,255,255,0.5); margin-bottom: 12px; }
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; 
 display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; } 
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); } 
+
+        /* ============================================================ 
+       LANGUAGE TOGGLE 
+    ============================================================ */ 
+    .lang-toggle-wrap { 
+      display: flex; 
+      gap: 2px; 
+      background: var(--bg-muted); 
+      padding: 3px; 
+      border-radius: var(--radius-md); 
+      border: 1px solid var(--border); 
+    } 
+    .lang-toggle-btn { 
+      padding: 5px 12px; 
+      font-size: 12px; 
+      font-weight: 600; 
+      color: var(--text-muted); 
+      border-radius: 6px; 
+      transition: all 0.15s; 
+      cursor: pointer;
+    } 
+    .lang-toggle-btn:hover { color: var(--text-primary); }
+    .lang-toggle-btn.active { 
+      background: var(--bg-card); 
+      color: var(--primary); 
+      box-shadow: var(--shadow-sm); 
+    } 
  
     /* ============================================================ 
        RESPONSIVE 
@@ -739,6 +766,11 @@ autocomplete="off" />
         <button class="search-clear" id="searchClear"><i class="fa-solid fa-xmark"></i></button> 
       </div> 
       <div class="controls-right"> 
+        <div class="lang-toggle-wrap">
+          <button class="lang-toggle-btn active" data-lang="en">EN</button>
+          <button class="lang-toggle-btn" data-lang="hi">हि</button>
+          <button class="lang-toggle-btn" data-lang="bilingual">Both</button>
+        </div>
         <button class="ctrl-btn" id="filterBtn"> 
           <i class="fa-solid fa-filter"></i> 
           <span>Filter</span> 
@@ -1086,6 +1118,7 @@ undone.</div>
       displayedCount: 0, 
       searchQuery: '', 
       pendingRemoveId: null, 
+      viewLanguage: 'en',
       filters: {
  examGroup: [],
  actualExam: [],
@@ -1413,6 +1446,23 @@ newFilters.testTitle.push(btn.dataset.value));
       buildFilterOptions(); 
       applySearchAndRender(); 
     } 
+
+        /* ============================================================ 
+       LANGUAGE TOGGLE LOGIC 
+    ============================================================ */ 
+    document.querySelectorAll('.lang-toggle-btn').forEach(btn => { 
+      btn.addEventListener('click', () => { 
+        document.querySelectorAll('.lang-toggle-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+        State.viewLanguage = btn.dataset.lang; 
+         
+        // Re-render the grid with the new language 
+        const grid = document.getElementById('favoritesGrid'); 
+        grid.innerHTML = ''; 
+        State.displayedCount = 0; 
+        loadMoreFavorites(); 
+      }); 
+    }); 
  
     /* ============================================================ 
        FILTER OPTIONS BUILDER (For dynamic details) 
@@ -2038,7 +2088,7 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
     function buildFavCard(fav) { 
       const q = fav.question; 
       const qId = fav.qId; 
-      const lang = fav.language || 'en'; // Get the language saved by the user 
+      const lang = State.viewLanguage || fav.language || 'en'; // Prioritize the user's toggle selection
        
       const dateSaved = new Date(fav.savedAt || Date.now()).toLocaleDateString('en-IN', { 
         day: 'numeric', month: 'short', year: 'numeric' 
