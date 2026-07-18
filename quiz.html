@@ -1708,7 +1708,7 @@ const indexRes = await fetch(
   testMeta?.file
     ? `${CONFIG.CDN_BASE}${testMeta.file}?v=${encodeURIComponent(buildId)}`
     : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json?v=${encodeURIComponent(buildId)}`;
-        const testRes = await fetch(dataUrl, { cache: 'force-cache' });
+        const testRes = await fetch(dataUrl, { cache: 'no-cache' });
         if (!testRes.ok) throw new Error(`HTTP ${testRes.status}`);
 
         Quiz.testData = await testRes.json();
