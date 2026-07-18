@@ -10,6 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
   <style>
     /* ============================================================
        DESIGN TOKENS
@@ -1491,6 +1495,23 @@
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+        /* ============================================================
+       KATEX MATH RENDERER HELPER
+    ============================================================ */
+    function renderMath(element) {
+      if (window.renderMathInElement) {
+        renderMathInElement(element, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
     /* ============================================================
        CONFIG
     ============================================================ */
@@ -1866,7 +1887,10 @@ function updateActiveSectionFromQuestion(index) {
           questionHtml = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
       }
       
-      document.getElementById('questionText').innerHTML = questionHtml; 
+      const questionEl = document.getElementById('questionText');
+      questionEl.innerHTML = questionHtml; 
+      renderMath(questionEl); // <--- ADD THIS LINE
+
       document.getElementById('qNumberTag').textContent = `Q${index + 1}`;
       
       const secId = q.sectionId; const sec = Quiz.testData.sections?.find(s => s.section_id === secId);
@@ -1877,7 +1901,8 @@ function updateActiveSectionFromQuestion(index) {
 
       const selected = Quiz.answers[getQId(q, index)];
       
-      document.getElementById('optionsList').innerHTML = (q.options || []).map((opt, i) => {
+      const optionsEl = document.getElementById('optionsList');
+      optionsEl.innerHTML = (q.options || []).map((opt, i) => {
         let optTextHtml = '';
         if (typeof opt === 'object') {
             if (lang === 'bilingual') {
@@ -1893,6 +1918,8 @@ function updateActiveSectionFromQuestion(index) {
 
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
       }).join('');
+
+      renderMath(optionsEl);
 
       updatePaletteGrid(); updateSummary(); autoSave();
     }
