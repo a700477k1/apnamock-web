@@ -13,6 +13,10 @@ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family
 p" rel="stylesheet" /> 
    
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" /> 
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
    
   <style> 
     /* ============================================================ 
@@ -638,6 +642,39 @@ display: flex; align-items: center; justify-content: space-between; flex-wrap: w
       .fav-actions-right { width: 100%; } 
       .fav-actions-right .btn { width: 100%; } 
     } 
+
+    /* ============================================================
+       QUILL EDITOR HTML FIXES & KATEX OVERFLOW
+    ============================================================ */
+    .fav-question-text p, .fav-option p, .fav-explanation-text p {
+      margin: 0;
+      padding: 0;
+      line-height: inherit;
+    }
+    .fav-question-text p + p, .fav-option p + p, .fav-explanation-text p + p {
+      margin-top: 8px;
+    }
+    
+    .fav-question-text, .fav-option {
+      overflow-x: auto;
+      word-break: break-word;
+    }
+    .fav-explanation-text {
+      overflow-x: auto;
+      word-break: break-word;
+    }
+    
+    /* Fix KaTeX display math from breaking the container */
+    .fav-question-text .katex-display,
+    .fav-option .katex-display,
+    .fav-explanation-text .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 4px 0;
+      margin: 0;
+    }
+    
   </style> 
 </head> 
  
@@ -984,6 +1021,56 @@ undone.</div>
         .replace(/"/g, '&quot;') 
         .replace(/'/g, '&#39;'); 
     } 
+
+        /* ============================================================
+       KATEX MATH RENDERER HELPER (QUILL COMPATIBLE)
+    ============================================================ */
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+
+      function decodeEntities(str) {
+        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      }
+
+      // 1. Replace $$ ... $$ (display math)
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 2. Replace \[ ... \] (display math)
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 3. Replace \( ... \) (inline math)
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 4. Replace $ ... $ (inline math)
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
+        if (math.includes('</p>') || math.includes('<p')) return match; 
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      return htmlString;
+    }
  
     /* ============================================================ 
        STATE & CONFIG 
@@ -1924,11 +2011,11 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
     ============================================================ */ 
     function renderBilingualHtml(dataObj) { 
       if (!dataObj) return ''; 
-      if (typeof dataObj === 'string') return escapeHTML(dataObj); 
+      if (typeof dataObj === 'string') return dataObj; 
        
       // If it's an object with language keys, always render bilingual natively for safety in the revision center 
-      const en = dataObj.en ? escapeHTML(dataObj.en) : escapeHTML(dataObj.question || ''); 
-      const hi = dataObj.hi ? `<span class="bilingual-hi-text">${escapeHTML(dataObj.hi)}</span>` : ''; 
+      const en = dataObj.en ? dataObj.en : (dataObj.question || ''); 
+      const hi = dataObj.hi ? `<span class="bilingual-hi-text">${dataObj.hi}</span>` : ''; 
        
       return en + hi; 
     } 
@@ -1947,14 +2034,14 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
       const sectionName = escapeHTML(q.sectionId || 'General'); 
       const testTitle = escapeHTML(fav.testTitle || 'Unknown Test'); 
  
-      const questionHtml = renderBilingualHtml(q.question); 
+      const questionHtml = renderMathInString(renderBilingualHtml(q.question)); 
        
       const letters = ['A', 'B', 'C', 'D', 'E']; 
       const correctAnswerIndex = q.correct !== undefined ? q.correct : -1; 
  
       const optionsHtml = (q.options || []).map((opt, i) => { 
         const isCorrect = i === correctAnswerIndex; 
-        const optHtml = renderBilingualHtml(opt); 
+        const optHtml = renderMathInString(renderBilingualHtml(opt)); 
         const cls = isCorrect ? 'fav-option correct' : 'fav-option'; 
         const indicator = isCorrect ? `<i class="fa-solid fa-check" style="color:var(--success);margin-left:auto"></i>` : ''; 
  
@@ -1974,7 +2061,7 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="fav-explanation-label"> 
               <i class="fa-solid fa-lightbulb"></i> Explanation 
             </div> 
-            <div class="fav-explanation-text">${renderBilingualHtml(q.explanation)}</div> 
+            <div class="fav-explanation-text">${renderMathInString(renderBilingualHtml(q.explanation))}</div> 
           </div> 
         `; 
       } 
