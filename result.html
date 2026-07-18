@@ -1822,8 +1822,12 @@ function selectSectionFilter(
         reviewList.insertAdjacentHTML('beforeend', renderReviewCard(qr, q));
       });
 
-      // Trigger KaTeX Math Rendering on the newly added cards
+      // Explicitly render math for questions, options, AND explanations
       renderMath(reviewList);
+      
+      // Force KaTeX to scan explanation boxes specifically (just in case)
+      const explanationElements = reviewList.querySelectorAll('.explanation-text');
+      explanationElements.forEach(el => renderMath(el));
 
       Result.displayedReviews = end;
 
