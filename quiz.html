@@ -567,6 +567,16 @@
       color: var(--text-primary);
       line-height: 1.7;
       margin-bottom: 20px;
+      overflow-x: auto; /* ADD THIS */
+      word-break: break-word; /* ADD THIS */
+    }
+
+    /* Fix KaTeX display math from breaking the layout */
+    .question-text .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 4px 0;
     }
     /* Bilingual styling helper */
     .bilingual-hi-text {
@@ -625,7 +635,18 @@
       border-color: var(--primary);
       color: #fff;
     }
-    .option-text { flex: 1; }
+      .option-text { 
+      flex: 1;
+      overflow-x: auto;
+      word-break: break-word;
+    }
+    .option-text .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 4px 0;
+      margin: 0;
+    }
 
     /* ============================================================
        RIGHT PANEL - QUESTION PALETTE
@@ -1513,21 +1534,54 @@
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-        /* ============================================================
-       KATEX MATH RENDERER HELPER
+    /* ============================================================
+       KATEX MATH RENDERER HELPER (QUILL COMPATIBLE)
     ============================================================ */
-    function renderMath(element) {
-      if (window.renderMathInElement) {
-        renderMathInElement(element, {
-          delimiters: [
-            {left: "$$", right: "$$", display: true},
-            {left: "$", right: "$", display: false},
-            {left: "\\(", right: "\\)", display: false},
-            {left: "\\[", right: "\\]", display: true}
-          ],
-          throwOnError: false
-        });
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+
+      function decodeEntities(str) {
+        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
       }
+
+      // 1. Replace $$ ... $$ (display math)
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 2. Replace \[ ... \] (display math)
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 3. Replace \( ... \) (inline math)
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      // 4. Replace $ ... $ (inline math)
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
+        if (math.includes('</p>') || math.includes('<p')) return match; 
+        try {
+          let cleanMath = math.replace(/<[^>]+>/g, '');
+          cleanMath = decodeEntities(cleanMath);
+          return katex.renderToString(cleanMath, { displayMode: false, throwOnError: false });
+        } catch (e) { return match; }
+      });
+
+      return htmlString;
     }
 
     /* ============================================================
@@ -1907,7 +1961,6 @@ function updateActiveSectionFromQuestion(index) {
       
       const questionEl = document.getElementById('questionText');
       questionEl.innerHTML = questionHtml; 
-      renderMath(questionEl); // <--- ADD THIS LINE
 
       document.getElementById('qNumberTag').textContent = `Q${index + 1}`;
       
@@ -1936,8 +1989,6 @@ function updateActiveSectionFromQuestion(index) {
 
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
       }).join('');
-
-      renderMath(optionsEl);
 
       updatePaletteGrid(); updateSummary(); autoSave();
     }
