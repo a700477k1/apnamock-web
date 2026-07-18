@@ -1954,13 +1954,13 @@ function updateActiveSectionFromQuestion(index) {
       if (lang === 'bilingual') {
           const enText = q.question?.en || q.question || '';
           const hiText = q.question?.hi ? `<span class="bilingual-hi-text">${q.question.hi}</span>` : '';
-          questionHtml = String(enText) + hiText;
+          questionHtml = renderMathInString(String(enText) + hiText);
       } else {
-          questionHtml = q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || '');
+          questionHtml = renderMathInString(q.question?.[lang] || q.question?.en || q.question?.hi || String(q.question || ''));
       }
       
       const questionEl = document.getElementById('questionText');
-      questionEl.innerHTML = questionHtml; 
+      questionEl.innerHTML = questionHtml;  
 
       document.getElementById('qNumberTag').textContent = `Q${index + 1}`;
       
@@ -1977,14 +1977,14 @@ function updateActiveSectionFromQuestion(index) {
         let optTextHtml = '';
         if (typeof opt === 'object') {
             if (lang === 'bilingual') {
-                const enOpt = opt.en || ''; // Removed escapeHTML
-                const hiOpt = opt.hi ? `<span class="bilingual-hi-text">${opt.hi}</span>` : ''; // Removed escapeHTML
-                optTextHtml = enOpt + hiOpt;
+                const enOpt = opt.en || '';
+                const hiOpt = opt.hi ? `<span class="bilingual-hi-text">${opt.hi}</span>` : '';
+                optTextHtml = renderMathInString(enOpt + hiOpt);
             } else {
-                optTextHtml = opt[lang] || opt.en || opt.hi || ''; // Removed escapeHTML
+                optTextHtml = renderMathInString(opt[lang] || opt.en || opt.hi || '');
             }
         } else {
-            optTextHtml = String(opt); // Removed escapeHTML
+            optTextHtml = renderMathInString(String(opt));
         }
 
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
