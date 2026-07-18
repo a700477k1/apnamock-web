@@ -1117,6 +1117,24 @@
       .preq-card-body { padding: 16px; }
       .preq-title { font-size: 18px; }
     }
+
+        /* ============================================================
+       QUILL EDITOR HTML FIXES
+    ============================================================ */
+    .question-text p, .option-text p {
+      margin: 0;
+      padding: 0;
+      line-height: inherit;
+    }
+    .question-text p + p, .option-text p + p {
+      margin-top: 8px; /* Adds a small space between multiple paragraphs */
+    }
+    .option-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
   </style>
 </head>
 
@@ -1906,14 +1924,14 @@ function updateActiveSectionFromQuestion(index) {
         let optTextHtml = '';
         if (typeof opt === 'object') {
             if (lang === 'bilingual') {
-                const enOpt = escapeHTML(opt.en || '');
-                const hiOpt = opt.hi ? `<span class="bilingual-hi-text">${escapeHTML(opt.hi)}</span>` : '';
+                const enOpt = opt.en || ''; // Removed escapeHTML
+                const hiOpt = opt.hi ? `<span class="bilingual-hi-text">${opt.hi}</span>` : ''; // Removed escapeHTML
                 optTextHtml = enOpt + hiOpt;
             } else {
-                optTextHtml = escapeHTML(opt[lang] || opt.en || opt.hi || '');
+                optTextHtml = opt[lang] || opt.en || opt.hi || ''; // Removed escapeHTML
             }
         } else {
-            optTextHtml = escapeHTML(String(opt));
+            optTextHtml = String(opt); // Removed escapeHTML
         }
 
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
