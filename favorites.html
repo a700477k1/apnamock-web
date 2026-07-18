@@ -2009,15 +2009,27 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
     /* ============================================================ 
        BILINGUAL RENDER HELPER 
     ============================================================ */ 
-    function renderBilingualHtml(dataObj) { 
+    function renderBilingualHtml(dataObj, lang) { 
       if (!dataObj) return ''; 
       if (typeof dataObj === 'string') return dataObj; 
        
-      // If it's an object with language keys, always render bilingual natively for safety in the revision center 
-      const en = dataObj.en ? dataObj.en : (dataObj.question || ''); 
-      const hi = dataObj.hi ? `<span class="bilingual-hi-text">${dataObj.hi}</span>` : ''; 
-       
-      return en + hi; 
+      // Fallback to English if language isn't specified
+      const preferredLang = lang || 'en';
+
+      if (preferredLang === 'hi') {
+        // Hindi only
+        return dataObj.hi || dataObj.en || ''; 
+      } 
+      
+      if (preferredLang === 'bilingual') {
+        // Both English and Hindi
+        const en = dataObj.en || ''; 
+        const hi = dataObj.hi ? `<span class="bilingual-hi-text">${dataObj.hi}</span>` : ''; 
+        return en + hi; 
+      } 
+
+      // Default: English only
+      return dataObj.en || dataObj.hi || ''; 
     } 
  
     /* ============================================================ 
@@ -2026,6 +2038,7 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
     function buildFavCard(fav) { 
       const q = fav.question; 
       const qId = fav.qId; 
+      const lang = fav.language || 'en'; // Get the language saved by the user 
        
       const dateSaved = new Date(fav.savedAt || Date.now()).toLocaleDateString('en-IN', { 
         day: 'numeric', month: 'short', year: 'numeric' 
@@ -2034,14 +2047,14 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
       const sectionName = escapeHTML(q.sectionId || 'General'); 
       const testTitle = escapeHTML(fav.testTitle || 'Unknown Test'); 
  
-      const questionHtml = renderMathInString(renderBilingualHtml(q.question)); 
+      const questionHtml = renderMathInString(renderBilingualHtml(q.question, lang)); 
        
       const letters = ['A', 'B', 'C', 'D', 'E']; 
       const correctAnswerIndex = q.correct !== undefined ? q.correct : -1; 
  
       const optionsHtml = (q.options || []).map((opt, i) => { 
         const isCorrect = i === correctAnswerIndex; 
-        const optHtml = renderMathInString(renderBilingualHtml(opt)); 
+        const optHtml = renderMathInString(renderBilingualHtml(opt, lang)); 
         const cls = isCorrect ? 'fav-option correct' : 'fav-option'; 
         const indicator = isCorrect ? `<i class="fa-solid fa-check" style="color:var(--success);margin-left:auto"></i>` : ''; 
  
@@ -2061,7 +2074,7 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="fav-explanation-label"> 
               <i class="fa-solid fa-lightbulb"></i> Explanation 
             </div> 
-            <div class="fav-explanation-text">${renderMathInString(renderBilingualHtml(q.explanation))}</div> 
+            <div class="fav-explanation-text">${renderMathInString(renderBilingualHtml(q.explanation, lang))}</div> 
           </div> 
         `; 
       } 
