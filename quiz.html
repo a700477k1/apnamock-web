@@ -2219,6 +2219,15 @@ function buildPaletteGrid() {
 
       const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
 
+        gtag('event', 'submit_test', {
+        'test_id': Quiz.testId,
+        'test_title': Quiz.testData.title || 'Unknown',
+        'score': Math.max(0, Math.round(score * 100) / 100),
+        'total_marks': calculatedMarks,
+        'accuracy': correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
+        'auto_submitted': autoSubmit
+      });
+
       const resObj = {
         testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
         score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
