@@ -572,9 +572,43 @@
     .review-status-tag.skipped { background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border); }
     .review-status-tag.marked { background: var(--warning-light); color: #92400e; }
     .review-card-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .review-question-text { font-size: 14.5px; font-weight: 500; color: var(--text-primary); line-height: 1.6; }
+    .review-question-text { 
+      font-size: 14.5px; 
+      font-weight: 500; 
+      color: var(--text-primary); 
+      line-height: 1.6;
+      overflow-x: auto;
+      word-break: break-word;
+    }
+    /* Fix KaTeX display math from breaking the layout */
+    .review-question-text .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 4px 0;
+    }
     .review-options { display: flex; flex-direction: column; gap: 6px; }
-    .review-option { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; }
+    .review-option { 
+      display: flex; 
+      align-items: flex-start; 
+      gap: 10px; 
+      padding: 9px 12px; 
+      border-radius: var(--radius-sm); 
+      border: 1.5px solid var(--border); 
+      font-size: 13.5px; 
+      color: var(--text-secondary); 
+      line-height: 1.5;
+      overflow-x: auto;
+      word-break: break-word;
+    }
+    /* Fix KaTeX display math inside options */
+    .review-option .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 4px 0;
+      margin: 0;
+    }
     .review-option.user-selected { border-color: var(--error); background: var(--error-light); color: #7f1d1d; }
     body.dark-mode .review-option.user-selected { color: var(--error); }
     .review-option.correct-answer { border-color: var(--success); background: var(--success-light); color: #14532d; font-weight: 600; }
