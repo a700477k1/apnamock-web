@@ -1902,7 +1902,7 @@ if (State.filters.actualExam.length) {
           </div>
  
           <div class="card-footer">
-            <a href="/quiz.html?test=${testId}" class="btn btn-primary btn-sm btn-full">
+            <a href="/quiz.html?test=${testId}" class="btn btn-primary btn-sm btn-full" onclick="gtag('event', 'select_test', { 'test_id': '${testId}', 'test_title': '${escapeHTML(test.title || test.title_i18n?.en || 'Untitled Test')}', 'is_reattempt': ${!!attempt} });">
               <i class="fa-solid fa-play"></i>
               ${attempt ? 'Reattempt Test' : 'Start Test'}
             </a>
