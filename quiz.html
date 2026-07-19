@@ -1755,6 +1755,13 @@ const indexRes = await fetch(
     }
 
     function showScreen1Error(message) {
+
+  // Track the error in Analytics
+  gtag('event', 'exception', {
+    'description': `Quiz Load Error: ${message} (Test ID: ${Quiz.testId})`,
+    'fatal': true
+  });
+      
       document.getElementById('preq-title').textContent = 'Error Loading Test';
       document.getElementById('startTestBtn').textContent = message;
       document.getElementById('startTestBtn').disabled = true;
