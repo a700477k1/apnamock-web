@@ -519,6 +519,22 @@
       .card-actions { flex-direction: column; align-items: stretch; }
       .card-actions .btn { width: 100%; }
     }
+
+    /* ============================================================
+       MOBILE FOOTER FIX
+    ============================================================ */
+    @media (max-width: 600px) {
+      .footer-bottom {
+        flex-direction: column; /* Stacks them on top of each other */
+        justify-content: center;
+        text-align: center;
+        flex-wrap: wrap; /* Allows wrapping if needed */
+      }
+      .footer-copy {
+        white-space: normal; /* Allows the text to wrap normally on mobile */
+      }
+    }
+    
   </style>
 </head>
 
