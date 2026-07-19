@@ -411,10 +411,73 @@ EXAM POPUP
       .bento-card { padding: 20px; gap: 12px; }
       .card-custom { grid-column: span 1; padding: 24px 16px; }
     }
+
+    /* ============================================================
+       CUSTOM PWA INSTALL BUTTON
+    ============================================================ */
+    .pwa-install-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      display: none; /* Hidden by default until JS detects it can install */
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      z-index: 999;
+      transition: transform 0.2s, background 0.2s;
+      border: none;
+    }
+    .pwa-install-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .pwa-install-btn i { font-size: 16px; }
+
+    /* iOS Instructions Popup */
+    .ios-popup {
+      position: fixed;
+      bottom: 80px;
+      right: 24px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      max-width: 260px;
+      display: none;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+    .ios-popup.show { display: block; }
+    .ios-popup h4 { margin-bottom: 8px; font-size: 15px; font-family: var(--font-heading); }
+    .ios-popup p { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+    .ios-popup-close { width: 100%; background: var(--bg-muted); color: var(--text-primary); border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;}
+    
   </style>
 </head>
 
 <body>
+
+    <!-- Custom PWA Install Button -->
+  <button class="pwa-install-btn" id="pwaInstallBtn">
+    <i class="fa-solid fa-download"></i>
+    Install App
+  </button>
+
+  <!-- iOS Instructions Popup -->
+  <div class="ios-popup" id="iosPopup">
+    <h4>Install ApnaMock</h4>
+    <p>To install on iPhone, tap the <i class="fa-solid fa-share" style="color:var(--primary)"></i> Share button, then select <strong>"Add to Home Screen"</strong>.</p>
+    <button class="ios-popup-close" onclick="document.getElementById('iosPopup').classList.remove('show')">Got it</button>
+  </div>
 
   <!-- ============================================================
        HEADER
@@ -1039,6 +1102,58 @@ function openExamPopup(
           .catch(err => console.log('Service Worker Error: ', err));
       });
     }
+  </script>
+
+    <script>
+    let deferredPrompt;
+    const pwaBtn = document.getElementById('pwaInstallBtn');
+    const iosPopup = document.getElementById('iosPopup');
+
+    // 1. Listen for the browser's install event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      deferredPrompt = e;
+      // Show our custom button
+      pwaBtn.style.display = 'flex';
+    });
+
+    // 2. When user clicks our custom button
+    pwaBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        // Show the native browser prompt for Android/Desktop
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          }
+          // Hide our button regardless of their choice
+          pwaBtn.style.display = 'none';
+          deferredPrompt = null;
+        });
+      }
+    });
+
+    // 3. Handle iOS (because iOS doesn't support 'beforeinstallprompt')
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    if (isIos && !isInStandaloneMode) {
+      // Show button on iOS if not already installed
+      pwaBtn.style.display = 'flex';
+      
+      // Change click behavior for iOS
+      pwaBtn.onclick = () => {
+        iosPopup.classList.add('show');
+      };
+    }
+
+    // 4. Hide button if app is already installed (Desktop/Android)
+    window.addEventListener('appinstalled', () => {
+      pwaBtn.style.display = 'none';
+    });
   </script>
   
 </body>
