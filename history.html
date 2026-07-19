@@ -470,8 +470,23 @@
     .footer-links { display: flex; flex-direction: column; gap: 8px; }
     .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
     .footer-link:hover { color: #fff; }
-    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .footer-bottom {
+      max-width: 1000px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap; /* Forces them to stay on a single line */
+      gap: 8px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      white-space: nowrap; /* Stops "All rights reserved" from breaking in half */
+    }
 
     /* ============================================================
        RESPONSIVE
