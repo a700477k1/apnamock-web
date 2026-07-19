@@ -2094,6 +2094,12 @@ function selectSectionFilter(
       } else {
         // Add Favorite
         Result.favorites.add(qId);
+
+        gtag('event', 'add_favorite', {
+          'test_id': Result.data.testId,
+          'question_id': qId
+        });
+        
         await addFavoriteToDB({
  qId,
  questionIndex,
