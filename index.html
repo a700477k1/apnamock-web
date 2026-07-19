@@ -1104,53 +1104,48 @@ function openExamPopup(
     }
   </script>
 
-    <script>
+  <script>
     let deferredPrompt;
     const pwaBtn = document.getElementById('pwaInstallBtn');
     const iosPopup = document.getElementById('iosPopup');
 
-    // 1. Listen for the browser's install event
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      deferredPrompt = e;
-      // Show our custom button
+    // 1. Detect iOS
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    // 2. INSTANTLY SHOW BUTTON (If not already installed)
+    if (!isInStandaloneMode) {
       pwaBtn.style.display = 'flex';
+    }
+
+    // 3. Listen for the browser's install event in the background
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e; // Save the event for later
     });
 
-    // 2. When user clicks our custom button
+    // 4. Handle Button Click
     pwaBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
-        // Show the native browser prompt for Android/Desktop
+      if (isIos) {
+        // Show iOS instructions
+        iosPopup.classList.add('show');
+      } else if (deferredPrompt) {
+        // If Chrome is ready, show the native Android/Desktop popup
         deferredPrompt.prompt();
-        // Wait for the user to respond to the prompt
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
             console.log('User accepted the install prompt');
           }
-          // Hide our button regardless of their choice
-          pwaBtn.style.display = 'none';
           deferredPrompt = null;
+          pwaBtn.style.display = 'none'; // Hide after they make a choice
         });
+      } else {
+        // If Chrome isn't ready yet (user clicked too fast)
+        alert("To install the app:\n\n1. Look for the 'Install' icon inside the address bar at the top of your browser.\n\nOR\n\nGo to your browser menu (three dots) and select 'Install ApnaMock' or 'Add to Home screen'.");
       }
     });
 
-    // 3. Handle iOS (because iOS doesn't support 'beforeinstallprompt')
-    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
-
-    if (isIos && !isInStandaloneMode) {
-      // Show button on iOS if not already installed
-      pwaBtn.style.display = 'flex';
-      
-      // Change click behavior for iOS
-      pwaBtn.onclick = () => {
-        iosPopup.classList.add('show');
-      };
-    }
-
-    // 4. Hide button if app is already installed (Desktop/Android)
+    // 5. Hide button if app is already installed (Desktop/Android)
     window.addEventListener('appinstalled', () => {
       pwaBtn.style.display = 'none';
     });
