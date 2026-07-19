@@ -470,23 +470,8 @@
     .footer-links { display: flex; flex-direction: column; gap: 8px; }
     .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
     .footer-link:hover { color: #fff; }
-    .footer-bottom {
-      max-width: 1000px;
-      margin: 0 auto;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: nowrap; /* Forces them to stay on a single line */
-      gap: 8px;
-    }
-
-    .footer-copy {
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      white-space: nowrap; /* Stops "All rights reserved" from breaking in half */
-    }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
     /* ============================================================
        RESPONSIVE
@@ -518,21 +503,6 @@
       
       .card-actions { flex-direction: column; align-items: stretch; }
       .card-actions .btn { width: 100%; }
-    }
-
-    /* ============================================================
-       MOBILE FOOTER FIX
-    ============================================================ */
-    @media (max-width: 600px) {
-      .footer-bottom {
-        flex-direction: column; /* Stacks them on top of each other */
-        justify-content: center;
-        text-align: center;
-        flex-wrap: wrap; /* Allows wrapping if needed */
-      }
-      .footer-copy {
-        white-space: normal; /* Allows the text to wrap normally on mobile */
-      }
     }
     
   </style>
