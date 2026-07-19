@@ -2233,6 +2233,14 @@ if (State.filters.actualExam.length) {
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const val = e.target.value;
       State.search = val;
+
+      // Track searches in Google Analytics (only if length > 2 to avoid spam)
+      if (val.length > 2) {
+        gtag('event', 'search', {
+          'search_term': val
+        });
+      }
+      
       document.getElementById('searchClear').style.display = val ? 'flex' : 'none';
  
       clearTimeout(searchDebounce);
