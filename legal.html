@@ -680,19 +680,28 @@ top:auto;
 @media(max-width:768px){
 
 .site-nav{
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
 
-display:none;
-
+.site-nav.mobile-open{
+    display: flex;
 }
 
 .mobile-menu-btn{
-
-display:flex;
-
+    display: flex;
 }
 
 .page-title{
-    font-size:22px;
+    font-size: 22px;
 }
 
 }
@@ -1400,10 +1409,10 @@ FOOTER
         <div>
             <div class="footer-col-title">Legal</div>
             <div class="footer-links">
-                <a href="#privacy" class="footer-link">Privacy Policy</a>
-                <a href="#terms" class="footer-link">Terms of Use</a>
-                <a href="#disclaimer" class="footer-link">Disclaimer</a>
-                <a href="#contact" class="footer-link">Contact</a>
+                <a href="/legal.html#privacy" class="footer-link">Privacy Policy</a>
+                <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
+                <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
+                <a href="/legal.html#contact" class="footer-link">Contact</a>
             </div>
         </div>
 
