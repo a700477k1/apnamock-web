@@ -1824,6 +1824,14 @@ const indexRes = await fetch(
     }
 
     function beginQuiz(isResume = false) {
+
+      gtag('event', 'start_test', {
+        'test_id': Quiz.testId,
+        'test_title': Quiz.testData.title || 'Unknown',
+        'language': Quiz.language,
+        'is_resume': isResume
+      });
+      
       Quiz.isStarted = true;
       if (!Quiz.historyPushed) { history.pushState({quizLive: true}, document.title, location.href); Quiz.historyPushed = true; }
       
