@@ -1109,43 +1109,46 @@ function openExamPopup(
     const pwaBtn = document.getElementById('pwaInstallBtn');
     const iosPopup = document.getElementById('iosPopup');
 
-    // 1. Detect iOS
+    // 1. Detect Device Type
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+    
+    // 2. Check if the user is currently inside the installed PWA App (Standalone Mode)
+    const isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
 
-    // 2. INSTANTLY SHOW BUTTON (If not already installed)
-    if (!isInStandaloneMode) {
+    // 3. Show/Hide Button based on where the user is
+    if (isInStandaloneMode) {
+      // User is inside the PWA App -> Hide the button permanently
+      pwaBtn.style.display = 'none';
+    } else {
+      // User is in a normal browser (Chrome/Safari) -> Show the button
       pwaBtn.style.display = 'flex';
     }
 
-    // 3. Listen for the browser's install event in the background
+    // 4. Listen for the browser's native install event in the background
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e; // Save the event for later
     });
 
-    // 4. Handle Button Click
+    // 5. Handle Button Click
     pwaBtn.addEventListener('click', () => {
       if (isIos) {
         // Show iOS instructions
         iosPopup.classList.add('show');
       } else if (deferredPrompt) {
-        // If Chrome is ready, show the native Android/Desktop popup
+        // Browser is ready, show native Android/Desktop popup
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          }
           deferredPrompt = null;
           pwaBtn.style.display = 'none'; // Hide after they make a choice
         });
       } else {
-        // If Chrome isn't ready yet (user clicked too fast)
+        // Browser isn't ready yet (user clicked too fast)
         alert("To install the app:\n\n1. Look for the 'Install' icon inside the address bar at the top of your browser.\n\nOR\n\nGo to your browser menu (three dots) and select 'Install ApnaMock' or 'Add to Home screen'.");
       }
     });
 
-    // 5. Hide button if app is already installed (Desktop/Android)
+    // 6. Hide button if app is already installed (Native event listener)
     window.addEventListener('appinstalled', () => {
       pwaBtn.style.display = 'none';
     });
