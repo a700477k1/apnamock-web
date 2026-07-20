@@ -1,4 +1,3 @@
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 const CACHE_NAME = 'apnamock-v2'; // Changed to v2 to force update for existing users
 const urlsToCache = [
   '/',
