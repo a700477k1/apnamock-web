@@ -16,7 +16,7 @@
   </script>
   <!-- ============================================================ -->
 
-      <!-- ============================================================
+<!-- ============================================================
          ONESIGNAL PUSH NOTIFICATIONS
     ============================================================ -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -24,9 +24,11 @@
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(function(OneSignal) {
         OneSignal.init({
-          appId: "c523fd56-16ed-46b2-922b-c240eb4d07d7", // REPLACE THIS WITH YOUR ACTUAL APP ID
+          appId: "c523fd56-16ed-46b2-922b-c240eb4d07d7", // Make sure this is your real ID
           notifyButton: {
-            enable: true, /* Shows a small bell icon in the corner for users to manage notifications */
+            enable: true,
+            position: 'bottom-left', /* Moves it to the left so it doesn't hit the PWA button */
+            showCredit: false
           },
           allowLocalhostAsSecureOrigin: true,
         });
