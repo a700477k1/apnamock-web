@@ -200,8 +200,24 @@
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
-      .controls-bar { flex-wrap: wrap; }
-      .ctrl-btn span:not(.badge) { display: none; }
+      
+      /* Force controls bar to stay on one line */
+      .controls-bar { 
+        flex-wrap: nowrap; 
+      }
+      /* Allow search box to shrink properly */
+      .search-wrap { 
+        min-width: 0; 
+        flex: 1; 
+      }
+      /* Hide button text on mobile so only icons show, saving space */
+      .ctrl-btn span:not(.badge) { 
+        display: none; 
+      }
+      .ctrl-btn {
+        padding: 0 12px;
+        flex-shrink: 0;
+      }
     }
   </style>
 </head>
