@@ -431,9 +431,10 @@
     // Fetch Jobs
     async function loadJobs() {
       try {
-        const res = await fetch(
-    `${CONFIG.CDN_BASE}data/jobs-index.json?t=${Date.now()}`
-);`, { cache: 'no-cache' });
+       const res = await fetch(
+  `${CONFIG.CDN_BASE}data/jobs-index.json?t=${Date.now()}`,
+  { cache: "no-cache" }
+);
         if (!res.ok) throw new Error('Failed to load');
         const json = await res.json();
 
