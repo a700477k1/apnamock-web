@@ -1,36 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Loading Job... | ApnaMock</title>
 
-<meta id="metaDescription"
-      name="description"
-      content="Loading job...">
+<meta
+id="metaDescription"
+name="description"
+content="Loading job...">
 
-<meta property="og:type" content="website">
-<meta property="og:title" id="ogTitle" content="Loading Job">
-<meta property="og:description" id="ogDescription" content="Loading job...">
-<meta property="og:image" id="ogImage" content="">
-<meta property="og:url" id="ogUrl" content="">
+<meta
+property="og:type"
+content="website">
 
-<meta name="twitter:card" content="summary_large_image">
+<meta
+id="ogTitle"
+property="og:title"
+content="Loading Job">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta
+id="ogDescription"
+property="og:description"
+content="Loading Job">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<meta
+id="ogImage"
+property="og:image"
+content="">
 
-<link rel="stylesheet"
+<meta
+id="ogUrl"
+property="og:url"
+content="">
+
+<meta
+name="twitter:card"
+content="summary_large_image">
+
+<link
+rel="manifest"
+href="/manifest.json">
+
+<meta
+name="theme-color"
+content="#1a56db">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script
+defer
+src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
 <style>
 
@@ -46,33 +91,44 @@ href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 --error:#dc2626;
 --error-light:#fee2e2;
 
---bg:#f8fafc;
---card:#ffffff;
---muted:#f1f5f9;
+--warning:#f59e0b;
 
---text:#1e293b;
---text2:#475569;
---text3:#94a3b8;
+--bg-base:#f8fafc;
+--bg-card:#ffffff;
+--bg-muted:#f1f5f9;
+
+--text-primary:#1e293b;
+--text-secondary:#475569;
+--text-muted:#94a3b8;
 
 --border:#e2e8f0;
 
---radius:18px;
+--shadow-sm:0 1px 3px rgba(0,0,0,.08);
+--shadow-md:0 4px 12px rgba(0,0,0,.10);
+--shadow-lg:0 10px 28px rgba(0,0,0,.12);
 
---shadow:0 12px 32px rgba(15,23,42,.08);
+--radius-sm:6px;
+--radius-md:10px;
+--radius-lg:16px;
+--radius-xl:22px;
+
+--header-height:64px;
 
 }
 
 body.dark-mode{
 
---bg:#0f172a;
---card:#1e293b;
---muted:#334155;
+--bg-base:#0f172a;
+--bg-card:#1e293b;
+--bg-muted:#334155;
 
---text:#f8fafc;
---text2:#cbd5e1;
---text3:#94a3b8;
+--text-primary:#f8fafc;
+--text-secondary:#cbd5e1;
+--text-muted:#94a3b8;
 
 --border:#334155;
+
+--primary-light:rgba(26,86,219,.18);
 
 }
 
@@ -82,35 +138,37 @@ padding:0;
 box-sizing:border-box;
 }
 
+html{
+scroll-behavior:smooth;
+}
+
 body{
 
 font-family:Inter,sans-serif;
 
-background:var(--bg);
+background:var(--bg-base);
 
-color:var(--text);
+color:var(--text-primary);
 
-line-height:1.7;
+display:flex;
 
-}
+flex-direction:column;
 
-img{
-
-display:block;
-
-max-width:100%;
+min-height:100vh;
 
 }
 
 a{
-
 text-decoration:none;
-
 color:inherit;
-
 }
 
-.header{
+img{
+display:block;
+max-width:100%;
+}
+
+.site-header{
 
 position:sticky;
 
@@ -118,9 +176,19 @@ top:0;
 
 z-index:100;
 
-background:var(--card);
+height:64px;
+
+background:rgba(255,255,255,.95);
+
+backdrop-filter:blur(12px);
 
 border-bottom:1px solid var(--border);
+
+}
+
+body.dark-mode .site-header{
+
+background:rgba(30,41,59,.95);
 
 }
 
@@ -132,13 +200,13 @@ margin:auto;
 
 padding:0 20px;
 
-height:64px;
+height:100%;
 
 display:flex;
 
-justify-content:space-between;
-
 align-items:center;
+
+justify-content:space-between;
 
 }
 
@@ -155,18 +223,22 @@ gap:10px;
 .brand-icon{
 
 width:36px;
-
 height:36px;
-
-border-radius:10px;
-
-background:linear-gradient(135deg,#1a56db,#f97316);
 
 display:flex;
 
 align-items:center;
 
 justify-content:center;
+
+border-radius:10px;
+
+background:
+linear-gradient(
+135deg,
+var(--primary),
+#f97316
+);
 
 color:#fff;
 
@@ -186,23 +258,103 @@ color:var(--primary);
 
 }
 
-.container{
+.site-nav{
+
+display:flex;
+
+gap:4px;
+
+}
+
+.nav-link{
+
+padding:8px 14px;
+
+border-radius:6px;
+
+font-size:14px;
+
+color:var(--text-secondary);
+
+display:flex;
+
+gap:6px;
+
+align-items:center;
+
+}
+
+.nav-link.active{
+
+background:var(--primary-light);
+
+color:var(--primary);
+
+font-weight:600;
+
+}
+
+.header-actions{
+
+display:flex;
+
+gap:8px;
+
+}
+
+.btn-icon{
+
+width:38px;
+
+height:38px;
+
+border-radius:8px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+cursor:pointer;
+
+color:var(--text-secondary);
+
+}
+
+.btn-icon:hover{
+
+background:var(--bg-muted);
+
+}
+
+.mobile-menu-btn{
+
+display:none;
+
+}
+
+.page{
 
 max-width:1000px;
 
+width:100%;
+
 margin:auto;
 
-padding:30px 20px 80px;
+padding:32px 20px 70px;
+
+flex:1;
 
 }
 
 .breadcrumb{
 
+margin-bottom:24px;
+
 font-size:13px;
 
-color:var(--text3);
-
-margin-bottom:20px;
+color:var(--text-muted);
 
 }
 
@@ -210,342 +362,161 @@ margin-bottom:20px;
 
 color:var(--primary);
 
-}
-
-.job-card{
-
-background:var(--card);
-
-border:1px solid var(--border);
-
-border-radius:20px;
-
-overflow:hidden;
-
-box-shadow:var(--shadow);
-
-}
-
-.hero-image{
-
-width:100%;
-
-height:320px;
-
-object-fit:cover;
-
-background:#ddd;
-
-}
-
-.job-body{
-
-padding:28px;
-
-}
-
-.top-row{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-gap:15px;
-
-margin-bottom:18px;
-
-flex-wrap:wrap;
-
-}
-
-.category{
-
-padding:6px 14px;
-
-background:var(--primary-light);
-
-color:var(--primary);
-
-border-radius:999px;
-
-font-size:12px;
-
-font-weight:700;
-
-}
-
-.status{
-
-padding:6px 14px;
-
-border-radius:999px;
-
-font-size:12px;
-
-font-weight:700;
-
-}
-
-.status.active{
-
-background:var(--success-light);
-
-color:var(--success);
-
-}
-
-.status.expired{
-
-background:var(--error-light);
-
-color:var(--error);
-
-}
-
-.job-title{
-
-font-family:Poppins,sans-serif;
-
-font-size:32px;
-
-font-weight:700;
-
-margin-bottom:8px;
-
-line-height:1.3;
-
-}
-
-.company{
-
-display:flex;
-
-align-items:center;
-
-gap:8px;
-
-font-size:15px;
-
-color:var(--text2);
-
-margin-bottom:25px;
-
-}
-
-.meta-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-
-gap:16px;
-
-margin-bottom:28px;
-
-}
-
-.meta{
-
-background:var(--muted);
-
-padding:16px;
-
-border-radius:14px;
-
-}
-
-.meta small{
-
-display:block;
-
-font-size:11px;
-
-text-transform:uppercase;
-
-color:var(--text3);
-
-margin-bottom:6px;
-
-}
-
-.meta strong{
-
-font-size:15px;
-
-}
-
-.description{
-
-font-size:15px;
-
-line-height:1.9;
-
-color:var(--text2);
-
-}
-
-.description img{
-
-max-width:100%;
-
-margin:20px auto;
-
-border-radius:12px;
-
-}
-
-.description table{
-
-width:100%;
-
-border-collapse:collapse;
-
-margin:18px 0;
-
-}
-
-.description td,
-.description th{
-
-border:1px solid var(--border);
-
-padding:10px;
-
-}
-
-.action-bar{
-
-display:flex;
-
-gap:12px;
-
-margin-top:30px;
-
-flex-wrap:wrap;
-
-}
-
-.btn{
-
-height:44px;
-
-padding:0 22px;
-
-display:inline-flex;
-
-align-items:center;
-
-justify-content:center;
-
-gap:8px;
-
-border-radius:12px;
-
 font-weight:600;
 
 }
 
-.btn-primary{
+#jobRoot{
 
-background:var(--primary);
-
-color:#fff;
-
-}
-
-.btn-outline{
-
-border:1px solid var(--primary);
-
-color:var(--primary);
-
-}
-
-.related{
-
-margin-top:50px;
-
-}
-
-.related h2{
-
-font-size:22px;
-
-margin-bottom:18px;
-
-font-family:Poppins,sans-serif;
-
-}
-
-.footer{
-
-margin-top:80px;
-
-padding:40px;
-
-text-align:center;
-
-font-size:13px;
-
-color:var(--text3);
-
-border-top:1px solid var(--border);
+min-height:300px;
 
 }
 
 .loading{
 
-padding:120px;
+padding:100px 20px;
 
 text-align:center;
 
-color:var(--text3);
+color:var(--text-muted);
+
+}
+
+.loading i{
+
+font-size:30px;
+
+margin-bottom:16px;
+
+}
+
+.site-footer{
+
+margin-top:auto;
+
+background:var(--text-primary);
+
+padding:40px 20px 24px;
+
+color:#fff;
+
+}
+
+.footer-inner{
+
+max-width:1200px;
+
+margin:auto;
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:30px;
+
+margin-bottom:30px;
+
+}
+
+.footer-brand-name{
+
+font-family:Poppins,sans-serif;
+
+font-size:18px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+}
+
+.footer-brand-desc,
+.footer-link,
+.footer-copy,
+.footer-col-title{
+
+color:rgba(255,255,255,.72);
+
+}
+
+.footer-links{
+
+display:flex;
+
+flex-direction:column;
+
+gap:8px;
+
+}
+
+.footer-bottom{
+
+max-width:1200px;
+
+margin:auto;
+
+padding-top:20px;
+
+border-top:1px solid rgba(255,255,255,.12);
+
+display:flex;
+
+justify-content:space-between;
+
+flex-wrap:wrap;
+
+gap:10px;
 
 }
 
 @media(max-width:768px){
 
-.container{
+.site-nav{
 
-padding:18px 12px 60px;
+display:none;
 
-}
+position:absolute;
 
-.hero-image{
+top:64px;
 
-height:220px;
+left:0;
 
-}
+right:0;
 
-.job-body{
-
-padding:20px;
-
-}
-
-.job-title{
-
-font-size:24px;
-
-}
-
-.meta-grid{
-
-grid-template-columns:1fr;
-
-}
-
-.action-bar{
+background:var(--bg-card);
 
 flex-direction:column;
 
+padding:16px;
+
+box-shadow:var(--shadow-md);
+
 }
 
-.btn{
+.site-nav.mobile-open{
 
-width:100%;
+display:flex;
+
+}
+
+.mobile-menu-btn{
+
+display:flex;
+
+}
+
+.page{
+
+padding:20px 14px 60px;
+
+}
+
+.footer-bottom{
+
+flex-direction:column;
+
+text-align:center;
 
 }
 
@@ -557,11 +528,13 @@ width:100%;
 
 <body>
 
-<header class="header">
+<header class="site-header">
 
 <div class="header-inner">
 
-<a class="brand" href="/index.html">
+<a
+href="/index.html"
+class="brand">
 
 <div class="brand-icon">
 A
@@ -573,16 +546,86 @@ ApnaMock
 
 </a>
 
+<nav class="site-nav">
+
+<a
+href="/index.html"
+class="nav-link">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a
+href="/tests.html"
+class="nav-link">
+<i class="fa-solid fa-list-check"></i>
+<span>Tests</span>
+</a>
+
+<a
+href="/custom-tests.html"
+class="nav-link">
+<i class="fa-solid fa-sliders"></i>
+<span>Custom Tests</span>
+</a>
+
+<a
+href="/favorites.html"
+class="nav-link">
+<i class="fa-solid fa-bookmark"></i>
+<span>Favorites</span>
+</a>
+
+<a
+href="/history.html"
+class="nav-link">
+<i class="fa-solid fa-clock-rotate-left"></i>
+<span>History</span>
+</a>
+
+<a
+href="/jobs.html"
+class="nav-link active">
+<i class="fa-solid fa-briefcase"></i>
+<span>Jobs</span>
+</a>
+
+</nav>
+
+<div class="header-actions">
+
+<button
+id="themeToggleBtn"
+class="btn-icon">
+
+<i class="fa-solid fa-moon"></i>
+
+</button>
+
+<button
+id="mobileMenuBtn"
+class="btn-icon mobile-menu-btn">
+
+<i class="fa-solid fa-bars"></i>
+
+</button>
+
+</div>
+
 </div>
 
 </header>
 
-<div class="container">
+<main class="page">
 
 <div class="breadcrumb">
 
 <a href="jobs.html">
-← Back to Jobs
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back to Jobs
+
 </a>
 
 </div>
@@ -591,12 +634,11 @@ ApnaMock
 
 <div class="loading">
 
-<i class="fa-solid fa-spinner fa-spin"
-style="font-size:32px;margin-bottom:15px;"></i>
+<i class="fa-solid fa-spinner fa-spin"></i>
 
 <div>
 
-Loading job...
+Loading Job...
 
 </div>
 
@@ -604,43 +646,182 @@ Loading job...
 
 </div>
 
+</main>
+
+<footer class="site-footer">
+
+<div class="footer-inner">
+
+<div>
+
+<div class="footer-brand-name">
+
+ApnaMock
+
 </div>
 
-<footer class="footer">
+<div class="footer-brand-desc">
 
-© 2025 ApnaMock • Practice. Improve. Succeed.
+Practice. Improve. Succeed.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer-bottom">
+
+<div class="footer-copy">
+
+© 2025 ApnaMock
+
+</div>
+
+<div class="footer-copy">
+
+All Rights Reserved
+
+</div>
+
+</div>
 
 </footer>
 
 <script>
+/* ============================================================
+CONFIG
+============================================================ */
+
 const CONFIG = {
   CDN_BASE: "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/"
 };
 
-/* ---------------- Theme ---------------- */
+/* ============================================================
+LOCAL STORAGE HELPERS
+============================================================ */
 
-function storageGet(key){
-  try{
-    return JSON.parse(localStorage.getItem("apnamock_"+key));
-  }catch(e){
+function storageGet(key) {
+  try {
+    return JSON.parse(localStorage.getItem("apnamock_" + key));
+  } catch (e) {
     return null;
   }
 }
 
-function storageSet(key,val){
+function storageSet(key, value) {
   localStorage.setItem(
-    "apnamock_"+key,
-    JSON.stringify(val)
+    "apnamock_" + key,
+    JSON.stringify(value)
   );
 }
 
-const savedTheme = storageGet("theme");
+/* ============================================================
+THEME
+============================================================ */
 
-if(savedTheme==="dark"){
-  document.body.classList.add("dark-mode");
+(function initTheme() {
+
+  const savedTheme = storageGet("theme");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+
+    const icon = document.querySelector("#themeToggleBtn i");
+
+    if (icon) {
+      icon.className = "fa-solid fa-sun";
+    }
+  }
+
+})();
+
+document
+.getElementById("themeToggleBtn")
+.addEventListener("click", function () {
+
+  document.body.classList.toggle("dark-mode");
+
+  const isDark =
+    document.body.classList.contains("dark-mode");
+
+  const icon =
+    document.querySelector("#themeToggleBtn i");
+
+  if (icon) {
+    icon.className =
+      isDark
+        ? "fa-solid fa-sun"
+        : "fa-solid fa-moon";
+  }
+
+  storageSet(
+    "theme",
+    isDark ? "dark" : "light"
+  );
+
+});
+
+/* ============================================================
+MOBILE MENU
+============================================================ */
+
+const nav =
+  document.querySelector(".site-nav");
+
+const menuBtn =
+  document.getElementById("mobileMenuBtn");
+
+if (menuBtn) {
+
+  menuBtn.addEventListener("click", function () {
+
+    nav.classList.toggle("mobile-open");
+
+  });
+
 }
 
-/* ---------------- Helpers ---------------- */
+function closeMobileMenu() {
+
+  if (nav) {
+    nav.classList.remove("mobile-open");
+  }
+
+}
+
+document.addEventListener("click", function (e) {
+
+  if (!nav) return;
+
+  if (
+    !nav.contains(e.target) &&
+    !menuBtn.contains(e.target)
+  ) {
+    closeMobileMenu();
+  }
+
+});
+
+window.addEventListener(
+  "scroll",
+  closeMobileMenu
+);
+
+document
+.querySelectorAll(".site-nav .nav-link")
+.forEach(function (link) {
+
+  link.addEventListener(
+    "click",
+    closeMobileMenu
+  );
+
+});
+
+/* ============================================================
+KATEX RENDERER
+============================================================ */
 
 function renderMathInString(htmlString) {
 
@@ -648,527 +829,463 @@ function renderMathInString(htmlString) {
 
   function decodeEntities(str) {
     return str
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
       .replace(/&quot;/g, '"')
       .replace(/&#39;/g, "'");
   }
 
-  htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
-    try {
-      return katex.renderToString(
-        decodeEntities(math.replace(/<[^>]+>/g, '')),
-        {
-          displayMode: true,
-          throwOnError: false
-        }
-      );
-    } catch (e) {
-      return match;
+  htmlString = htmlString.replace(
+    /\$\$([\s\S]*?)\$\$/g,
+    function (match, math) {
+
+      try {
+
+        return katex.renderToString(
+
+          decodeEntities(
+            math.replace(/<[^>]+>/g, "")
+          ),
+
+          {
+            displayMode: true,
+            throwOnError: false
+          }
+
+        );
+
+      } catch (e) {
+
+        return match;
+
+      }
+
     }
-  });
+  );
 
-  htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
-    try {
-      return katex.renderToString(
-        decodeEntities(math.replace(/<[^>]+>/g, '')),
-        {
-          displayMode: true,
-          throwOnError: false
-        }
-      );
-    } catch (e) {
-      return match;
+  htmlString = htmlString.replace(
+    /\\\[([\s\S]*?)\\\]/g,
+    function (match, math) {
+
+      try {
+
+        return katex.renderToString(
+
+          decodeEntities(
+            math.replace(/<[^>]+>/g, "")
+          ),
+
+          {
+            displayMode: true,
+            throwOnError: false
+          }
+
+        );
+
+      } catch (e) {
+
+        return match;
+
+      }
+
     }
-  });
+  );
 
-  htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
-    try {
-      return katex.renderToString(
-        decodeEntities(math.replace(/<[^>]+>/g, '')),
-        {
-          displayMode: false,
-          throwOnError: false
-        }
-      );
-    } catch (e) {
-      return match;
+  htmlString = htmlString.replace(
+    /\\\(([\s\S]*?)\\\)/g,
+    function (match, math) {
+
+      try {
+
+        return katex.renderToString(
+
+          decodeEntities(
+            math.replace(/<[^>]+>/g, "")
+          ),
+
+          {
+            displayMode: false,
+            throwOnError: false
+          }
+
+        );
+
+      } catch (e) {
+
+        return match;
+
+      }
+
     }
-  });
+  );
 
-  htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
+  htmlString = htmlString.replace(
+    /\$([^\$\n]*?)\$/g,
+    function (match, math) {
 
-    // Don't treat HTML as math
-    if (math.includes("</p>") || math.includes("<p")) {
-      return match;
+      if (
+        math.includes("</p>") ||
+        math.includes("<p")
+      ) {
+        return match;
+      }
+
+      try {
+
+        return katex.renderToString(
+
+          decodeEntities(
+            math.replace(/<[^>]+>/g, "")
+          ),
+
+          {
+            displayMode: false,
+            throwOnError: false
+          }
+
+        );
+
+      } catch (e) {
+
+        return match;
+
+      }
+
     }
-
-    try {
-      return katex.renderToString(
-        decodeEntities(math.replace(/<[^>]+>/g, '')),
-        {
-          displayMode: false,
-          throwOnError: false
-        }
-      );
-    } catch (e) {
-      return match;
-    }
-
-  });
+  );
 
   return htmlString;
 
 }
 
-/* ---------------- SEO ---------------- */
+/* ============================================================
+SEO HELPERS
+============================================================ */
 
-function updateSeo(job){
+function updatePageSeo(job) {
 
   document.title =
-      job.title + " | ApnaMock";
+    job.title + " | ApnaMock";
+
+  const desc =
+    (job.description || "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .substring(0, 160);
 
   document
-      .getElementById("metaDescription")
-      .setAttribute(
-          "content",
-          (
-              job.description || job.title
-          )
-          .replace(/<[^>]+>/g," ")
-          .substring(0,160)
-      );
+    .getElementById("metaDescription")
+    .setAttribute(
+      "content",
+      desc
+    );
 
-  document
-      .getElementById("ogTitle")
-      .content = job.title;
+}
 
-  document
-      .getElementById("ogDescription")
-      .content =
-      (
-          job.description ||
-          job.title
-      )
+/* ============================================================
+LOAD SINGLE JOB
+============================================================ */
+
+async function loadJob() {
+
+  const slug =
+    new URLSearchParams(
+      location.search
+    ).get("job");
+
+  if (!slug) {
+
+    document.getElementById("jobRoot").innerHTML = `
+      <div class="loading">
+        <h2>Job not found.</h2>
+      </div>
+    `;
+
+    return;
+  }
+
+  try {
+
+    const url =
+      CONFIG.CDN_BASE +
+      "data/jobs/" +
+      slug +
+      ".json?ts=" +
+      Date.now();
+
+    const res =
+      await fetch(url);
+
+    if (!res.ok) {
+      throw new Error("Job not found");
+    }
+
+    const job =
+      await res.json();
+
+    updatePageSeo(job);
+
+    // Part 2B will render this object
+    renderJob(job);
+
+  }
+  catch (err) {
+
+    console.error(err);
+
+    document.getElementById("jobRoot").innerHTML = `
+      <div class="loading">
+        <h2>Unable to load job.</h2>
+      </div>
+    `;
+
+  }
+
+}
+
+/* ============================================================
+RENDER JOB
+============================================================ */
+
+function renderJob(job) {
+
+  const root = document.getElementById("jobRoot");
+
+  root.innerHTML = `
+
+<div class="job-card">
+
+  ${job.imageUrl ? `
+    <img
+      class="hero-image"
+      src="${job.imageUrl}"
+      alt="${escapeHtml(job.title)}"
+      loading="eager">
+  ` : ""}
+
+  <div class="job-body">
+
+    <div class="top-row">
+
+      <span class="category">
+        ${escapeHtml(job.category || "General")}
+      </span>
+
+      <span class="status ${job.status === "expired" ? "expired" : "active"}">
+        ${escapeHtml(job.status || "active")}
+      </span>
+
+    </div>
+
+    <h1 class="job-title">
+      ${escapeHtml(job.title)}
+    </h1>
+
+    <div class="company">
+      <i class="fa-solid fa-building"></i>
+      ${escapeHtml(job.company || "Government")}
+    </div>
+
+    <div class="meta-grid">
+
+      <div class="meta">
+        <small>Post Date</small>
+        <strong>${escapeHtml(job.postDate || "—")}</strong>
+      </div>
+
+      <div class="meta">
+        <small>Last Date</small>
+        <strong>${escapeHtml(job.lastDate || "—")}</strong>
+      </div>
+
+      <div class="meta">
+        <small>Eligibility</small>
+        <strong>${escapeHtml(job.eligibility || "—")}</strong>
+      </div>
+
+      <div class="meta">
+        <small>Status</small>
+        <strong>${escapeHtml(job.status || "active")}</strong>
+      </div>
+
+    </div>
+
+    <div class="description">
+
+      ${renderMathInString(job.description || "")}
+
+    </div>
+
+    <div class="action-bar">
+
+      ${job.pdfUrl ? `
+      <a
+        class="btn btn-outline"
+        href="${job.pdfUrl}"
+        target="_blank">
+
+        <i class="fa-solid fa-file-pdf"></i>
+
+        Notification
+
+      </a>
+      ` : ""}
+
+      ${job.applyUrl ? `
+      <a
+        class="btn btn-primary"
+        href="${job.applyUrl}"
+        target="_blank">
+
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+        Apply Online
+
+      </a>
+      ` : ""}
+
+    </div>
+
+    <div
+      id="relatedJobs"
+      style="margin-top:50px;">
+
+      <h2
+      style="
+      font-family:Poppins,sans-serif;
+      font-size:22px;
+      margin-bottom:18px;
+      ">
+
+      Related Jobs
+
+      </h2>
+
+      <div
+      style="
+      color:var(--text-muted);
+      ">
+
+      Loading...
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+`;
+
+  updateOpenGraph(job);
+
+  injectJobSchema(job);
+
+  loadRelatedJobs(job);
+
+}
+
+/* ============================================================
+ESCAPE HTML
+============================================================ */
+
+function escapeHtml(str){
+
+  return String(str || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+
+}
+
+/* ============================================================
+OPEN GRAPH
+============================================================ */
+
+function updateOpenGraph(job){
+
+  document.getElementById("ogTitle").content =
+    job.title;
+
+  document.getElementById("ogDescription").content =
+    (job.description || "")
       .replace(/<[^>]+>/g," ")
       .substring(0,180);
 
-  document
-      .getElementById("ogImage")
-      .content =
-      job.imageUrl || "";
+  document.getElementById("ogImage").content =
+    job.imageUrl || "";
 
-  document
-      .getElementById("ogUrl")
-      .content =
-      location.href;
+  document.getElementById("ogUrl").content =
+    location.href;
 
-  let schema =
-  {
-      "@context":"https://schema.org",
+}
 
-      "@type":"JobPosting",
+/* ============================================================
+JOBPOSTING SCHEMA
+============================================================ */
 
-      "title":job.title,
+function injectJobSchema(job){
 
-      "description":
-      (
-          job.description ||
-          ""
-      ).replace(/<[^>]+>/g," "),
+  const old =
+    document.getElementById("jobSchema");
 
-      "datePosted":
-      job.postDate,
+  if(old){
+    old.remove();
+  }
 
-      "validThrough":
-      job.lastDate,
+  const schema = {
 
-      "hiringOrganization":{
-          "@type":"Organization",
-          "name":job.company
-      },
+    "@context":"https://schema.org",
 
-      "employmentType":"FULL_TIME"
+    "@type":"JobPosting",
+
+    "title":job.title,
+
+    "description":
+      (job.description || "")
+      .replace(/<[^>]+>/g," "),
+
+    "datePosted":job.postDate,
+
+    "validThrough":job.lastDate,
+
+    "employmentType":"FULL_TIME",
+
+    "hiringOrganization":{
+
+      "@type":"Organization",
+
+      "name":job.company
+
+    }
+
   };
 
-  let old =
-      document.getElementById(
-          "jobSchema"
-      );
-
-  if(old)
-      old.remove();
-
-  let script =
-      document.createElement(
-          "script"
-      );
+  const script =
+    document.createElement("script");
 
   script.type =
-      "application/ld+json";
+    "application/ld+json";
 
   script.id =
-      "jobSchema";
+    "jobSchema";
 
   script.textContent =
-      JSON.stringify(schema);
+    JSON.stringify(schema);
 
   document.head.appendChild(script);
 
 }
 
-/* ---------------- Render ---------------- */
-
-function renderJob(job){
-
-document.getElementById("jobRoot").innerHTML=`
-
-<div class="job-card">
-
-${job.imageUrl ?
-`<img
-class="hero-image"
-src="${job.imageUrl}"
-alt="${job.title}">`
-:""}
-
-<div class="job-body">
-
-<div class="top-row">
-
-<span class="category">
-
-${job.category||"General"}
-
-</span>
-
-<span class="status ${job.status}">
-
-${job.status}
-
-</span>
-
-</div>
-
-<h1 class="job-title">
-
-${job.title}
-
-</h1>
-
-<div class="company">
-
-<i class="fa-solid fa-building"></i>
-
-${job.company||""}
-
-</div>
-
-<div class="meta-grid">
-
-<div class="meta">
-
-<small>
-
-Post Date
-
-</small>
-
-<strong>
-
-${job.postDate||"—"}
-
-</strong>
-
-</div>
-
-<div class="meta">
-
-<small>
-
-Last Date
-
-</small>
-
-<strong>
-
-${job.lastDate||"—"}
-
-</strong>
-
-</div>
-
-<div class="meta">
-
-<small>
-
-Eligibility
-
-</small>
-
-<strong>
-
-${job.eligibility||"—"}
-
-</strong>
-
-</div>
-
-<div class="meta">
-
-<small>
-
-Category
-
-</small>
-
-<strong>
-
-${job.category||"General"}
-
-</strong>
-
-</div>
-
-</div>
-
-<div class="description">
-
-${renderMathInString(job.description || "")}
-
-</div>
-
-<div class="action-bar">
-
-${job.pdfUrl?
-
-`<a
-class="btn btn-outline"
-target="_blank"
-href="${job.pdfUrl}">
-
-<i class="fa-solid fa-file-pdf"></i>
-
-Notification
-
-</a>`
-
-:""}
-
-${job.applyUrl?
-
-`<a
-class="btn btn-primary"
-target="_blank"
-href="${job.applyUrl}">
-
-<i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-Apply Online
-
-</a>`
-
-:""}
-
-</div>
-
-<div
-class="related"
-id="relatedJobs">
-
-<h2>
-
-Related Jobs
-
-</h2>
-
-<div>
-
-Loading...
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-/* ---------------- Related Jobs ---------------- */
-
-async function loadRelatedJobs(current){
-
-try{
-
-const res =
-await fetch(
-CONFIG.CDN_BASE+
-"data/jobs-index.json?"+
-Date.now()
-);
-
-const json =
-await res.json();
-
-const jobs =
-(json.jobs||[])
-.filter(j=>
-
-j.category===current.category &&
-j.job_id!==current.job_id
-
-)
-.slice(0,4);
-
-const root =
-document.getElementById(
-"relatedJobs"
-);
-
-if(!jobs.length){
-
-root.innerHTML=
-"<h2>Related Jobs</h2><p>No related jobs.</p>";
-
-return;
-
-}
-
-root.innerHTML=
-`
-<h2>Related Jobs</h2>
-
-<div
-style="
-display:grid;
-gap:12px;
-">
-
-${jobs.map(j=>`
-
-<a
-href="job.html?job=${encodeURIComponent(
-j.file_name.replace(".json","")
-)}"
-
-style="
-padding:14px;
-border:1px solid var(--border);
-border-radius:12px;
-display:block;
-transition:.2s;
-background:var(--muted);
-">
-
-<div
-style="
-font-weight:600;
-margin-bottom:4px;
-">
-
-${j.title}
-
-</div>
-
-<div
-style="
-font-size:13px;
-color:var(--text2);
-">
-
-${j.company}
-
-</div>
-
-</a>
-
-`).join("")}
-
-</div>
-`;
-
-}catch(e){
-
-console.error(e);
-
-}
-
-}
-
-/* ---------------- Load ---------------- */
-
-async function loadJob(){
-
-const slug =
-new URLSearchParams(
-location.search
-).get("job");
-
-if(!slug){
-
-document.getElementById(
-"jobRoot"
-).innerHTML=
-"<h2>Job not found.</h2>";
-
-return;
-
-}
-
-try{
-
-const res =
-await fetch(
-CONFIG.CDN_BASE+
-"data/jobs/"+
-slug+
-".json?"+
-Date.now()
-);
-
-if(!res.ok)
-throw new Error();
-
-const job =
-await res.json();
-
-updateSeo(job);
-
-renderJob(job);
-
-loadRelatedJobs(job);
-
-}
-catch(err){
-
-document.getElementById(
-"jobRoot"
-).innerHTML=
-`
-<div class="loading">
-
-<h2>
-
-Unable to load job.
-
-</h2>
-
-</div>
-`;
-
-console.error(err);
-
-}
-
-}
-
-loadJob();
+      loadJob();
+      
 </script>
 
 </body>
+
 </html>
