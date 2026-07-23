@@ -544,29 +544,6 @@ body.dark-mode .footer-bottom{
       <p class="page-subtitle">Stay updated with the latest government job vacancies, exam dates, and eligibility criteria.</p>
     </div>
 
-    <div class="controls-bar">
-      <div class="search-wrap">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search by title, company, or exam..." />
-      </div>
-      <button class="ctrl-btn" id="filterBtn">
-        <i class="fa-solid fa-filter"></i>
-        <span>Filter</span>
-        <span class="badge" id="filterBadge">0</span>
-      </button>
-      <button class="ctrl-btn" id="sortBtn">
-        <i class="fa-solid fa-arrow-up-wide-short"></i>
-        <span>Sort By</span>
-      </button>
-    </div>
-
-    <div class="jobs-list" id="jobsList">
-      <div style="text-align:center;padding:40px;color:var(--text-muted)">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
-        <div>Loading jobs...</div>
-      </div>
-    </div>
-
         <!-- SEO CONTENT BLOCK FOR GOOGLE -->
     <section class="seo-content">
       <h2>Free Job Alert - Latest Government Jobs Notifications</h2>
@@ -581,53 +558,32 @@ body.dark-mode .footer-bottom{
     
   </main>
 
-  <!-- FILTER POPUP -->
-  <div class="overlay" id="filterOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <span class="popup-title">Filter Jobs</span>
-        <button class="popup-close" onclick="closeOverlay('filterOverlay')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body">
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Status</div>
-        <div class="filter-chips-wrap" id="filterStatus" style="margin-bottom:20px;">
-          <button class="filter-chip-select" data-type="status" data-value="active">Active</button>
-          <button class="filter-chip-select" data-type="status" data-value="expired">Expired</button>
-        </div>
-        
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Category</div>
-        <div class="filter-chips-wrap" id="filterCategories"></div>
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-outline" style="flex:1" onclick="clearAllFilters()">Clear All</button>
-        <button class="btn btn-primary" style="flex:1" onclick="applyFilters()">Apply Filters</button>
-      </div>
-    </div>
-  </div>
+<div id="jobRoot">
 
-  <!-- SORT POPUP -->
-  <div class="overlay" id="sortOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <span class="popup-title">Sort Jobs</span>
-        <button class="popup-close" onclick="closeOverlay('sortOverlay')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body">
-        <div class="sort-options" id="sortOptions">
-          <div class="sort-option selected" data-sort="date-desc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar-days"></i></div><span>Latest Posted First</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i>
-          </div>
-          <div class="sort-option" data-sort="date-asc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar"></i></div><span>Oldest Posted First</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-          <div class="sort-option" data-sort="last-date-asc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-hourglass-ending"></i></div><span>Closing Soon (Last Date)</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-        </div>
-      </div>
+<div style="
+padding:80px 20px;
+text-align:center;
+color:var(--text-muted);
+">
+
+<i
+class="fa-solid fa-spinner fa-spin"
+style="
+font-size:28px;
+margin-bottom:18px;
+">
+</i>
+
+<div>
+
+Loading Job...
+
+</div>
+
+</div>
+
+</div>
+  
       <div class="popup-footer">
         <button class="btn btn-primary" style="width:100%" onclick="applySort()">Apply Sort</button>
       </div>
@@ -780,10 +736,6 @@ document
 
 });
 
-    // Popup Helpers
-    function openOverlay(id) { document.getElementById(id).classList.add('open'); }
-    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
-
     // KaTeX Math Renderer Helper (Quill Compatible)
     function renderMathInString(htmlString) {
       if (!window.katex) return htmlString;
@@ -807,198 +759,6 @@ document
     }
 
     // Fetch Jobs
-    async function loadJobs() {
-      try {
-       const res = await fetch(
-  `${CONFIG.CDN_BASE}data/jobs-index.json?t=${Date.now()}`,
-  { cache: "no-cache" }
-);
-        if (!res.ok) throw new Error('Failed to load');
-        const json = await res.json();
-
-State.allJobs = json.jobs || [];
-        
-        // Extract unique categories for the filter popup
-        const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))];
-        const catContainer = document.getElementById('filterCategories');
-        catContainer.innerHTML = categories.map(cat => `<button class="filter-chip-select" data-type="category" data-value="${cat}">${cat}</button>`).join('');
-        
-        // Attach listeners to new chips
-        document.querySelectorAll('.filter-chip-select').forEach(btn => {
-          btn.addEventListener('click', () => btn.classList.toggle('selected'));
-        });
-
-        applyFiltersAndSort();
-      } catch (err) {
-        document.getElementById('jobsList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">Failed to load jobs.</div>`;
-      }
-    }
-
-    function applyFiltersAndSort() {
-      let filtered = [...State.allJobs];
-
-      // Search
-      if (State.search) {
-        const q = State.search.toLowerCase();
-        filtered = filtered.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
-      }
-
-      // Filters
-      if (State.filters.status.length > 0) {
-        filtered = filtered.filter(j => State.filters.status.includes(j.status));
-      }
-      if (State.filters.category.length > 0) {
-        filtered = filtered.filter(j => State.filters.category.includes(j.category));
-      }
-
-      // Sort
-      filtered.sort((a, b) => {
-        const dateA = new Date(a.postDate || 0).getTime();
-        const dateB = new Date(b.postDate || 0).getTime();
-        const lastA = new Date(a.lastDate || 9999999999999).getTime();
-        const lastB = new Date(b.lastDate || 9999999999999).getTime();
-        
-        if (State.sort === 'date-desc') return dateB - dateA;
-        if (State.sort === 'date-asc') return dateA - dateB;
-        if (State.sort === 'last-date-asc') return lastA - lastB;
-        return 0;
-      });
-
-      State.filteredJobs = filtered;
-      renderJobs(filtered);
-    }
-
-    function renderJobs(jobs) {
-      const list = document.getElementById('jobsList');
-      if (jobs.length === 0) {
-        list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">No jobs found matching your criteria.</div>`;
-        return;
-      }
-list.innerHTML = jobs.map(job => `
-
-<div class="job-card">
-
-${job.imageUrl ?
-`<img class="job-image"
-src="${job.imageUrl}"
-loading="lazy"
-alt="${job.title}">`
-: ""}
-
-<div class="job-content">
-
-<div class="job-top">
-
-<span class="category-chip">
-${job.category || "General"}
-</span>
-
-<span class="status-chip ${job.status}">
-${job.status}
-</span>
-
-</div>
-
-<div class="job-title">
-${job.title}
-</div>
-
-<div class="job-company">
-<i class="fa-solid fa-building"></i>
-${job.company || "Government"}
-</div>
-
-<div class="job-meta-grid">
-
-<div class="job-meta">
-<i class="fa-solid fa-calendar-days"></i>
-<div>
-<small>Posted</small>
-<strong>${job.postDate || "—"}</strong>
-</div>
-</div>
-
-<div class="job-meta">
-<i class="fa-solid fa-hourglass-end"></i>
-<div>
-<small>Last Date</small>
-<strong>${job.lastDate || "—"}</strong>
-</div>
-</div>
-
-<div class="job-meta">
-<i class="fa-solid fa-user-graduate"></i>
-<div>
-<small>Eligibility</small>
-<strong>${job.eligibility || "Check Notice"}</strong>
-</div>
-</div>
-
-<div class="job-meta">
-<i class="fa-solid fa-tag"></i>
-<div>
-<small>Category</small>
-<strong>${job.category || "General"}</strong>
-</div>
-</div>
-
-</div>
-
-<div class="job-preview">
-${job.description
-? job.description.replace(/<[^>]+>/g," ").substring(0,220) + "..."
-: ""}
-</div>
-
-<div class="job-actions">
-
-<a
-href="job.html?job=${encodeURIComponent(job.file_name)}"
-class="btn btn-primary">
-
-<i class="fa-solid fa-eye"></i>
-
-View Details
-
-</a>
-
-${job.pdfUrl ?
-
-`<a
-href="${job.pdfUrl}"
-target="_blank"
-class="btn btn-outline">
-
-<i class="fa-solid fa-file-pdf"></i>
-
-PDF
-
-</a>`
-
-: ""}
-
-${job.applyUrl ?
-
-`<a
-href="${job.applyUrl}"
-target="_blank"
-class="btn btn-outline">
-
-<i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-Apply
-
-</a>`
-
-: ""}
-
-</div>
-
-</div>
-
-</div>
-
-`).join("");
 
       // === SEO: Inject JobPosting Schema.org Data ===
       const schema = {
@@ -1038,63 +798,57 @@ Apply
       schemaScript.textContent = JSON.stringify(schema);
       // =================================================
     }
+   
+async function loadJob(){
 
-    // Search Event
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      State.search = e.target.value;
-      applyFiltersAndSort();
-    });
+    const slug =
+        new URLSearchParams(location.search)
+        .get("job");
 
-    // Filter Logic
-    document.getElementById('filterBtn').addEventListener('click', () => openOverlay('filterOverlay'));
-    
-    function applyFilters() {
-      State.filters.status = Array.from(document.querySelectorAll('#filterStatus .selected')).map(b => b.dataset.value);
-      State.filters.category = Array.from(document.querySelectorAll('#filterCategories .selected')).map(b => b.dataset.value);
-      
-      const totalFilters = State.filters.status.length + State.filters.category.length;
-      const badge = document.getElementById('filterBadge');
-      if (totalFilters > 0) {
-        badge.textContent = totalFilters;
-        badge.classList.add('show');
-        document.getElementById('filterBtn').classList.add('active');
-      } else {
-        badge.classList.remove('show');
-        document.getElementById('filterBtn').classList.remove('active');
-      }
-      
-      closeOverlay('filterOverlay');
-      applyFiltersAndSort();
+    if(!slug){
+
+        document.getElementById("jobRoot")
+        .innerHTML =
+        "<h2>Job not found.</h2>";
+
+        return;
+
     }
 
-    function clearAllFilters() {
-      document.querySelectorAll('.filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      State.filters = { status: [], category: [] };
-      applyFilters();
+    const url =
+        CONFIG.CDN_BASE +
+        "data/jobs/" +
+        slug +
+        ".json";
+
+    try{
+
+        const res =
+            await fetch(url,{
+                cache:"no-cache"
+            });
+
+        if(!res.ok)
+            throw new Error();
+
+        const job =
+            await res.json();
+
+        console.log(job);
+
+    }
+    catch(err){
+
+        document.getElementById("jobRoot")
+        .innerHTML =
+        "<h2>Unable to load job.</h2>";
+
     }
 
-    // Sort Logic
-    document.getElementById('sortBtn').addEventListener('click', () => openOverlay('sortOverlay'));
-    
-    document.querySelectorAll('.sort-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.sort-option').forEach(o => {
-          o.classList.remove('selected');
-          o.querySelector('i.fa-check').style.display = 'none';
-        });
-        opt.classList.add('selected');
-        opt.querySelector('i.fa-check').style.display = 'block';
-      });
-    });
+}
 
-    function applySort() {
-      const selected = document.querySelector('.sort-option.selected');
-      State.sort = selected ? selected.dataset.sort : 'date-desc';
-      closeOverlay('sortOverlay');
-      applyFiltersAndSort();
-    }
-
-    loadJobs();
+    loadJob();
+  
   </script>
 </body>
 </html>
