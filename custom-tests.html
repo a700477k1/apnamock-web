@@ -570,48 +570,26 @@ PRESET POPUP
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
+    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
     @media (max-width: 768px) {
-      .site-nav {
-        display: none; 
-        flex-direction: column;
-        position: absolute;
-        top: var(--header-height);
-        left: 0;
-        width: 100%;
-        background: var(--bg-card);
-        padding: 16px;
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow-md);
-      }
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
+      
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
 
       .page-title { font-size: 22px; }
       
-      .builder-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
-      
-      .builder-footer { flex-direction: column; align-items: stretch; text-align: center; }
+      /* Reduced padding for builder rows and presets to make content wider */
+      .builder-row { grid-template-columns: 1fr; gap: 12px; padding: 14px; }
+      .preset-card { padding: 14px; }
+      .builder-footer { flex-direction: column; align-items: stretch; text-align: center; padding: 14px; }
       .availability-status { justify-content: center; }
+
+      .overlay { padding: 16px; }
+      .popup { max-width: 380px; }
     }
-    @media (max-width:768px){
-
- .overlay{
-
-  padding:16px;
-
- }
-
- .popup{
-
-  max-width:380px;
-
- }
-
-}
   </style>
 </head>
 
