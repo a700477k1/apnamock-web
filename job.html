@@ -53,7 +53,7 @@
 
   <style>
     /* ============================================================ 
-       DESIGN TOKENS (Congruent with jobs.html & tests.html)
+       DESIGN TOKENS
     ============================================================ */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
@@ -79,7 +79,9 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
-    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+    
+    /* Aligned Wrapper - 1000px is perfect for reading articles */
+    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 24px; padding-right: 24px; }
 
     /* HEADER */
     .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
@@ -99,47 +101,51 @@
     .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
     .mobile-menu-btn { display: none; }
 
-    /* PAGE LAYOUT */
-    .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
-    .page-header { margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px; }
-    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; display: flex; align-items: center; gap: 10px; }
+    /* PAGE LAYOUT - Increased bottom padding for breathing room */
+    .page-wrapper { padding-top: 32px; padding-bottom: 80px; flex: 1; }
+    .page-header { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+    .page-title { font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1.2; display: flex; align-items: center; gap: 12px; }
     .page-title i { color: var(--primary); }
-    .breadcrumb { margin-bottom: 24px; }
+    .breadcrumb { margin-bottom: 28px; }
     .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color 0.15s; }
     .back-link:hover { color: var(--primary); }
 
-    /* JOB CARD STYLES */
-    .job-detail-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 40px; }
-    .hero-image { width: 100%; height: 360px; object-fit: cover; background: var(--bg-muted); display: block; }
-    .job-detail-body { padding: 32px; }
+    /* JOB CARD STYLES - Increased padding inside the card */
+    .job-detail-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 48px; }
+    .hero-image { width: 100%; height: 380px; object-fit: cover; background: var(--bg-muted); display: block; }
+    .job-detail-body { padding: 40px; } /* Increased from 32px to 40px */
     
-    .job-top-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .job-top-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
     .category-chip { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .status-chip { padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .status-chip.active { background: var(--success-light); color: var(--success); }
     .status-chip.expired { background: var(--error-light); color: var(--error); }
 
-    .job-detail-title { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 10px; }
-    .job-detail-company { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 15px; font-weight: 500; margin-bottom: 28px; }
+    .job-detail-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 12px; }
+    .job-detail-company { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 15px; font-weight: 500; margin-bottom: 32px; }
     .job-detail-company i { color: var(--primary); }
 
-    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; background: var(--bg-muted); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 32px; }
-    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+    /* META GRID - Increased gap and padding */
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; background: var(--bg-muted); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 36px; }
+    .meta-item { display: flex; flex-direction: column; gap: 6px; }
     .meta-item small { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
     .meta-item strong { font-size: 15px; color: var(--text-primary); font-weight: 600; text-transform: capitalize; }
 
-    .job-description { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 32px; }
-    .job-description p { margin-bottom: 14px; }
-    .job-description h2, .job-description h3 { color: var(--text-primary); margin: 20px 0 10px; }
-    .job-description ul, .job-description ol { padding-left: 24px; margin-bottom: 14px; }
+    /* DESCRIPTION - Better line height for reading */
+    .job-description { font-size: 15.5px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 36px; }
+    .job-description p { margin-bottom: 16px; }
+    .job-description h2, .job-description h3 { color: var(--text-primary); margin: 24px 0 12px; }
+    .job-description ul, .job-description ol { padding-left: 24px; margin-bottom: 16px; }
+    .job-description li { margin-bottom: 8px; }
     .job-description table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    .job-description th, .job-description td { border: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; font-size: 14px; }
+    .job-description th, .job-description td { border: 1px solid var(--border-strong); padding: 12px 16px; text-align: left; font-size: 14px; }
 
-    .action-bar { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--border); }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 46px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; }
-    .btn-primary { background: var(--primary); color: #fff; flex: 1; min-width: 200px; }
+    /* ACTION BAR - Increased top border spacing */
+    .action-bar { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--border); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 28px; height: 48px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--primary); color: #fff; flex: 1; min-width: 220px; }
     .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); flex: 1; min-width: 200px; }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); flex: 1; min-width: 220px; }
     .btn-outline:hover { background: var(--primary-light); }
 
     /* RELATED JOBS */
@@ -147,11 +153,11 @@
     .related-section h2 i { color: var(--primary); }
 
     /* LOADING STATE */
-    .loading-state { padding: 100px 20px; text-align: center; color: var(--text-muted); }
+    .loading-state { padding: 120px 20px; text-align: center; color: var(--text-muted); }
     .loading-state i { font-size: 30px; margin-bottom: 16px; }
 
     /* FOOTER */
-    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    .site-footer { background: var(--text-primary); color: #fff; padding: 48px 20px 24px; margin-top: auto; }
     body.dark-mode .site-footer { color: #0f172a; }
     body.dark-mode .footer-brand-name { color: #0f172a; }
     body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
@@ -170,18 +176,19 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE */
+    /* RESPONSIVE - Adjusted mobile padding to prevent cramping */
     @media (max-width: 768px) {
+      .align-wrapper { padding-left: 16px; padding-right: 16px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .page-title { font-size: 22px; }
       .hero-image { height: 220px; }
-      .job-detail-body { padding: 20px; }
-      .job-detail-title { font-size: 20px; }
-      .meta-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
-      .action-bar { flex-direction: column; }
-      .btn-primary, .btn-outline { width: 100%; min-width: unset; }
+      .job-detail-body { padding: 24px; } /* 24px is standard for mobile */
+      .job-detail-title { font-size: 21px; line-height: 1.35; }
+      .meta-grid { grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; }
+      .action-bar { flex-direction: column; gap: 10px; padding-top: 24px; }
+      .btn-primary, .btn-outline { width: 100%; min-width: unset; height: 44px; }
     }
   </style>
 </head>
