@@ -176,7 +176,7 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-        /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
@@ -185,11 +185,23 @@
       
       .job-card{ width:100%; margin-bottom:18px; }
       .job-image{ height:220px; }
-      .job-content{ padding: 14px; } /* Reduced from 18px to 14px */
+      .job-content{ padding: 14px; } 
       .job-title{ font-size:20px; }
-      .job-meta-grid{ grid-template-columns:1fr; padding: 14px; } /* Reduced padding inside meta grid too */
-      .job-actions{ flex-direction:column; }
-      .job-actions .btn{ width:100%; }
+      .job-meta-grid{ grid-template-columns:1fr; padding: 14px; } 
+      
+      /* Exact button styling from jobs.html to make them match perfectly */
+      .job-actions { flex-direction: column; }
+      .job-actions .btn {
+        flex: 1;
+        width: 100%;
+        height: 40px;
+        min-height: 40px;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+        gap: 6px;
+      }
     }
   </style>
 </head>
