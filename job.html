@@ -612,7 +612,517 @@ Loading job...
 
 </footer>
 
-<!-- JavaScript will go here in Part 2 -->
+<script>
+const CONFIG = {
+  CDN_BASE: "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/"
+};
+
+/* ---------------- Theme ---------------- */
+
+function storageGet(key){
+  try{
+    return JSON.parse(localStorage.getItem("apnamock_"+key));
+  }catch(e){
+    return null;
+  }
+}
+
+function storageSet(key,val){
+  localStorage.setItem(
+    "apnamock_"+key,
+    JSON.stringify(val)
+  );
+}
+
+const savedTheme = storageGet("theme");
+
+if(savedTheme==="dark"){
+  document.body.classList.add("dark-mode");
+}
+
+/* ---------------- Helpers ---------------- */
+
+function renderMath(html){
+
+  if(!window.katex) return html;
+
+  function decode(str){
+    return str
+      .replace(/&amp;/g,"&")
+      .replace(/&lt;/g,"<")
+      .replace(/&gt;/g,">")
+      .replace(/&quot;/g,'"')
+      .replace(/&#39;/g,"'");
+  }
+
+  return html.replace(/\$([^\$]+)\$/g,function(match,math){
+
+      try{
+
+          return katex.renderToString(
+              decode(math),
+              {
+                  throwOnError:false
+              }
+          );
+
+      }catch(e){
+
+          return match;
+
+      }
+
+  });
+
+}
+
+/* ---------------- SEO ---------------- */
+
+function updateSeo(job){
+
+  document.title =
+      job.title + " | ApnaMock";
+
+  document
+      .getElementById("metaDescription")
+      .setAttribute(
+          "content",
+          (
+              job.description || job.title
+          )
+          .replace(/<[^>]+>/g," ")
+          .substring(0,160)
+      );
+
+  document
+      .getElementById("ogTitle")
+      .content = job.title;
+
+  document
+      .getElementById("ogDescription")
+      .content =
+      (
+          job.description ||
+          job.title
+      )
+      .replace(/<[^>]+>/g," ")
+      .substring(0,180);
+
+  document
+      .getElementById("ogImage")
+      .content =
+      job.imageUrl || "";
+
+  document
+      .getElementById("ogUrl")
+      .content =
+      location.href;
+
+  let schema =
+  {
+      "@context":"https://schema.org",
+
+      "@type":"JobPosting",
+
+      "title":job.title,
+
+      "description":
+      (
+          job.description ||
+          ""
+      ).replace(/<[^>]+>/g," "),
+
+      "datePosted":
+      job.postDate,
+
+      "validThrough":
+      job.lastDate,
+
+      "hiringOrganization":{
+          "@type":"Organization",
+          "name":job.company
+      },
+
+      "employmentType":"FULL_TIME"
+  };
+
+  let old =
+      document.getElementById(
+          "jobSchema"
+      );
+
+  if(old)
+      old.remove();
+
+  let script =
+      document.createElement(
+          "script"
+      );
+
+  script.type =
+      "application/ld+json";
+
+  script.id =
+      "jobSchema";
+
+  script.textContent =
+      JSON.stringify(schema);
+
+  document.head.appendChild(script);
+
+}
+
+/* ---------------- Render ---------------- */
+
+function renderJob(job){
+
+document.getElementById("jobRoot").innerHTML=`
+
+<div class="job-card">
+
+${job.imageUrl ?
+`<img
+class="hero-image"
+src="${job.imageUrl}"
+alt="${job.title}">`
+:""}
+
+<div class="job-body">
+
+<div class="top-row">
+
+<span class="category">
+
+${job.category||"General"}
+
+</span>
+
+<span class="status ${job.status}">
+
+${job.status}
+
+</span>
+
+</div>
+
+<h1 class="job-title">
+
+${job.title}
+
+</h1>
+
+<div class="company">
+
+<i class="fa-solid fa-building"></i>
+
+${job.company||""}
+
+</div>
+
+<div class="meta-grid">
+
+<div class="meta">
+
+<small>
+
+Post Date
+
+</small>
+
+<strong>
+
+${job.postDate||"—"}
+
+</strong>
+
+</div>
+
+<div class="meta">
+
+<small>
+
+Last Date
+
+</small>
+
+<strong>
+
+${job.lastDate||"—"}
+
+</strong>
+
+</div>
+
+<div class="meta">
+
+<small>
+
+Eligibility
+
+</small>
+
+<strong>
+
+${job.eligibility||"—"}
+
+</strong>
+
+</div>
+
+<div class="meta">
+
+<small>
+
+Category
+
+</small>
+
+<strong>
+
+${job.category||"General"}
+
+</strong>
+
+</div>
+
+</div>
+
+<div class="description">
+
+${renderMath(job.description||"")}
+
+</div>
+
+<div class="action-bar">
+
+${job.pdfUrl?
+
+`<a
+class="btn btn-outline"
+target="_blank"
+href="${job.pdfUrl}">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Notification
+
+</a>`
+
+:""}
+
+${job.applyUrl?
+
+`<a
+class="btn btn-primary"
+target="_blank"
+href="${job.applyUrl}">
+
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+Apply Online
+
+</a>`
+
+:""}
+
+</div>
+
+<div
+class="related"
+id="relatedJobs">
+
+<h2>
+
+Related Jobs
+
+</h2>
+
+<div>
+
+Loading...
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+/* ---------------- Related Jobs ---------------- */
+
+async function loadRelatedJobs(current){
+
+try{
+
+const res =
+await fetch(
+CONFIG.CDN_BASE+
+"data/jobs-index.json?"+
+Date.now()
+);
+
+const json =
+await res.json();
+
+const jobs =
+(json.jobs||[])
+.filter(j=>
+
+j.category===current.category &&
+j.job_id!==current.job_id
+
+)
+.slice(0,4);
+
+const root =
+document.getElementById(
+"relatedJobs"
+);
+
+if(!jobs.length){
+
+root.innerHTML=
+"<h2>Related Jobs</h2><p>No related jobs.</p>";
+
+return;
+
+}
+
+root.innerHTML=
+`
+<h2>Related Jobs</h2>
+
+<div
+style="
+display:grid;
+gap:12px;
+">
+
+${jobs.map(j=>`
+
+<a
+href="job.html?job=${encodeURIComponent(
+j.file_name.replace(".json","")
+)}"
+
+style="
+padding:14px;
+border:1px solid var(--border);
+border-radius:12px;
+display:block;
+transition:.2s;
+background:var(--muted);
+">
+
+<div
+style="
+font-weight:600;
+margin-bottom:4px;
+">
+
+${j.title}
+
+</div>
+
+<div
+style="
+font-size:13px;
+color:var(--text2);
+">
+
+${j.company}
+
+</div>
+
+</a>
+
+`).join("")}
+
+</div>
+`;
+
+}catch(e){
+
+console.error(e);
+
+}
+
+}
+
+/* ---------------- Load ---------------- */
+
+async function loadJob(){
+
+const slug =
+new URLSearchParams(
+location.search
+).get("job");
+
+if(!slug){
+
+document.getElementById(
+"jobRoot"
+).innerHTML=
+"<h2>Job not found.</h2>";
+
+return;
+
+}
+
+try{
+
+const res =
+await fetch(
+CONFIG.CDN_BASE+
+"data/jobs/"+
+slug+
+".json?"+
+Date.now()
+);
+
+if(!res.ok)
+throw new Error();
+
+const job =
+await res.json();
+
+updateSeo(job);
+
+renderJob(job);
+
+loadRelatedJobs(job);
+
+}
+catch(err){
+
+document.getElementById(
+"jobRoot"
+).innerHTML=
+`
+<div class="loading">
+
+<h2>
+
+Unable to load job.
+
+</h2>
+
+</div>
+`;
+
+console.error(err);
+
+}
+
+}
+
+loadJob();
+</script>
 
 </body>
 </html>
