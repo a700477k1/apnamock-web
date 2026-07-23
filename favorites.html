@@ -650,36 +650,25 @@ rgba(255,255,255,0.5); margin-bottom: 12px; }
 display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; } 
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); } 
  
-    /* ============================================================ 
-       RESPONSIVE 
-    ============================================================ */ 
-    @media (max-width: 768px) { 
-      .site-nav { 
-        display: none;  
-        flex-direction: column; 
-        position: absolute; 
-        top: var(--header-height); 
-        left: 0; 
-        width: 100%; 
-        background: var(--bg-card); 
-        padding: 16px; 
-        border-bottom: 1px solid var(--border); 
-        box-shadow: var(--shadow-md); 
-      } 
-      .site-nav.mobile-open { display: flex; } 
-      .mobile-menu-btn { display: flex; } 
-      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; } 
- 
-      .page-title { font-size: 22px; } 
- 
-      .controls-bar { flex-wrap: nowrap; gap: 8px; } 
-      .search-wrap { min-width: 0; } 
-      .ctrl-btn span:not(.badge) { display: none; } 
-       
-      .fav-card-footer { flex-direction: column; align-items: stretch; } 
-      .fav-actions-left { width: 100%; display: grid; grid-template-columns: 1fr 1fr; } 
-      .fav-actions-right { width: 100%; } 
-      .fav-actions-right .btn { width: 100%; } 
+    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    @media (max-width: 768px) {
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
+      
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+
+      .page-title { font-size: 22px; }
+      
+      /* Reduced padding for favorite cards to make content wider */
+      .fav-card-header { padding: 12px; }
+      .fav-card-body { padding: 14px; }
+      .fav-card-footer { flex-direction: column; align-items: stretch; }
+      .fav-actions-left { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+      .fav-actions-right { width: 100%; }
+      .fav-actions-right .btn { width: 100%; }
+      .fav-explanation { padding: 12px; }
     } 
 
     /* ============================================================
