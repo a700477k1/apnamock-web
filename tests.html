@@ -1145,50 +1145,26 @@
  
     .footer-copy { font-size: 13px; }
  
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
+    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
     @media (max-width: 768px) {
-      .site-nav {
-        display: none; 
-        flex-direction: column;
-        position: absolute;
-        top: var(--header-height);
-        left: 0;
-        width: 100%;
-        background: var(--bg-card);
-        padding: 16px;
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow-md);
-      }
-      .site-nav.mobile-open {
-        display: flex;
-      }
-      .mobile-menu-btn { display: flex; }
-      .page-title { font-size: 22px; }
-      .tests-grid { grid-template-columns: 1fr; }
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
       
-      /* Updated Mobile Controls Bar to stay inline */
-      .controls-bar { 
-        gap: 8px; 
-        flex-wrap: nowrap; 
-      }
-      .search-wrap { 
-        min-width: 0; 
-      }
-      .ctrl-btn { 
-        padding: 0 12px; 
-      }
-      .ctrl-btn span:not(.badge) { 
-        display: none; 
-      }
- 
-      /* Tagline display on mobile */
-      .brand-tagline { 
-        display: block; 
-        font-size: 9px;
-        letter-spacing: 0.1px; 
-      }
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
+      .page-title { font-size: 22px; }
+      
+      /* Reduced padding for test cards to make content wider */
+      .test-card { padding: 14px; }
+      .stat-box { padding: 8px 10px; }
+
+      .tests-grid { grid-template-columns: 1fr; gap: 12px; }
+      
+      .controls-bar { flex-wrap: nowrap; gap: 8px; }
+      .search-wrap { min-width: 0; flex: 1; }
+      .ctrl-btn { padding: 0 12px; flex-shrink: 0; }
+      .ctrl-btn span:not(.badge) { display: none; }
     }
  
     @media (max-width: 480px) {
