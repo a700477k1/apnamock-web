@@ -33,8 +33,14 @@
   <meta name="theme-color" content="#1a56db">
 
   <!-- SEO OPTIMIZED META TAGS -->
-  <title>Latest Govt Jobs 2024 Notification | Free Job Alert — ApnaMock</title>
-  <meta name="description" content="Looking for the latest government jobs? Get free job alerts, exam dates, and eligibility criteria for SSC, Banking, Railway, and State exams. Apply online directly on ApnaMock." />
+  <title>
+Loading Job... | ApnaMock
+</title>
+  <meta
+id="metaDescription"
+name="description"
+content="Loading job..."
+/>
   
   <!-- Open Graph Tags for WhatsApp/Telegram Sharing -->
   <meta property="og:type" content="website" />
@@ -558,6 +564,8 @@ body.dark-mode .footer-bottom{
     
   </main>
 
+<main class="page-wrapper align-wrapper">
+
 <div id="jobRoot">
 
 <div style="
@@ -571,8 +579,7 @@ class="fa-solid fa-spinner fa-spin"
 style="
 font-size:28px;
 margin-bottom:18px;
-">
-</i>
+"></i>
 
 <div>
 
@@ -583,12 +590,8 @@ Loading Job...
 </div>
 
 </div>
-  
-      <div class="popup-footer">
-        <button class="btn btn-primary" style="width:100%" onclick="applySort()">Apply Sort</button>
-      </div>
-    </div>
-  </div>
+
+</main>
 
   <footer class="site-footer">
     <div class="footer-inner align-wrapper">
@@ -632,13 +635,10 @@ Loading Job...
 
   <script>
     const CONFIG = { CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/' };
-    const State = {
-      allJobs: [],
-      filteredJobs: [],
-      search: '',
-      filters: { status: [], category: [] },
-      sort: 'date-desc'
-    };
+   const CONFIG = {
+    CDN_BASE:
+    "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/"
+};
 
     // Theme & Menu Logic
     function storageGet(key){
@@ -759,44 +759,7 @@ document
     }
 
     // Fetch Jobs
-
-      // === SEO: Inject JobPosting Schema.org Data ===
-      const schema = {
-        "@context": "https://schema.org/",
-        "@type": "ItemList",
-        "itemListElement": jobs.map((job, index) => ({
-          "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "JobPosting",
-            "title": job.title,
-            "description": job.description ? job.description.replace(/<[^>]+>/g, ' ') : job.title,
-            "datePosted": job.postDate,
-            "validThrough": job.lastDate,
-            "hiringOrganization": {
-              "@type": "Organization",
-              "name": job.company || "Government of India"
-            },
-            "jobLocation": {
-              "@type": "Place",
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "IN"
-              }
-            }
-          }
-        }))
-      };
-      
-      let schemaScript = document.getElementById('jobSchema');
-      if (!schemaScript) {
-        schemaScript = document.createElement('script');
-        schemaScript.id = 'jobSchema';
-        schemaScript.type = 'application/ld+json';
-        document.head.appendChild(schemaScript);
-      }
-      schemaScript.textContent = JSON.stringify(schema);
-   
+  
 async function loadJob(){
 
     const slug =
