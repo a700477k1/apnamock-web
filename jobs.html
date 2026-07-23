@@ -80,7 +80,7 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
-    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+    .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
     @media (max-width:768px){
 
   .align-wrapper{
@@ -279,11 +279,16 @@
     flex:1;
 }
 
-@media(max-width:768px){
+@media (max-width:768px){
 
 .align-wrapper{
     padding-left:10px;
     padding-right:10px;
+}
+
+.page-wrapper{
+    padding-top:18px;
+    padding-bottom:48px;
 }
 
 .jobs-list{
@@ -294,11 +299,12 @@
 
 .job-card{
     width:100%;
-    border-radius:18px;
+    border-radius:20px;
+    overflow:hidden;
 }
 
 .job-image{
-    height:230px;
+    height:220px;
 }
 
 .job-content{
@@ -352,18 +358,90 @@
     .sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); }
 
     /* SEO CONTENT BLOCK */
-    .seo-content { margin-top: 48px; padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
-    .seo-content h2 { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
-    .seo-content h3 { font-family: var(--font-heading); font-size: 17px; font-weight: 600; color: var(--text-primary); margin-top: 20px; margin-bottom: 10px; }
-    .seo-content p { font-size: 14.5px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px; }
-    .seo-content strong { color: var(--primary); font-weight: 600; }
+    .seo-content{
+
+    margin-top:60px;
+
+    padding:38px;
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+}
+
+.seo-content p{
+
+    font-size:15px;
+
+    line-height:1.9;
+
+    text-align:justify;
+
+}
+
+.seo-content h2{
+
+    font-size:24px;
+
+}
+
+.seo-content h3{
+
+    font-size:19px;
+
+}
+
+@media(max-width:768px){
+
+.seo-content{
+
+    padding:24px;
+
+}
+
+.seo-content p{
+
+    text-align:left;
+
+}
+
+}
 
     /* FOOTER (Consistent with index.html) */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
     
     /* FOOTER */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
-    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name{
+    color:#0f172a;
+}
+
+body.dark-mode .footer-brand-desc{
+    color:rgba(15,23,42,.75);
+}
+
+body.dark-mode .footer-col-title{
+    color:rgba(15,23,42,.75);
+}
+
+body.dark-mode .footer-link{
+    color:rgba(15,23,42,.8);
+}
+
+body.dark-mode .footer-link:hover{
+    color:#0f172a;
+}
+
+body.dark-mode .footer-copy{
+    color:rgba(15,23,42,.6);
+}
+
+body.dark-mode .footer-bottom{
+    border-top-color:rgba(15,23,42,.15);
+}
     .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
     .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
     .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
@@ -586,13 +664,100 @@
     };
 
     // Theme & Menu Logic
-    const savedTheme = localStorage.getItem('apnamock_theme');
-    if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-    document.getElementById('themeToggleBtn').addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('apnamock_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    });
-    document.getElementById('mobileMenuBtn').addEventListener('click', () => document.querySelector('.site-nav').classList.toggle('mobile-open'));
+    function storageGet(key){
+    try{
+        return JSON.parse(localStorage.getItem("apnamock_"+key));
+    }catch(e){
+        return null;
+    }
+}
+
+function storageSet(key,value){
+    localStorage.setItem(
+        "apnamock_"+key,
+        JSON.stringify(value)
+    );
+}
+
+const savedTheme = storageGet("theme");
+
+if(savedTheme==="dark"){
+
+    document.body.classList.add("dark-mode");
+
+    document.querySelector("#themeToggleBtn i").className =
+        "fa-solid fa-sun";
+
+}
+
+document.getElementById("themeToggleBtn")
+.addEventListener("click",function(){
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDark =
+        document.body.classList.contains("dark-mode");
+
+    document.querySelector("#themeToggleBtn i").className =
+        isDark
+        ? "fa-solid fa-sun"
+        : "fa-solid fa-moon";
+
+    storageSet(
+        "theme",
+        isDark ? "dark" : "light"
+    );
+
+});
+    document.getElementById("mobileMenuBtn")
+.addEventListener("click",function(){
+
+    document
+        .querySelector(".site-nav")
+        .classList.toggle("mobile-open");
+
+});
+
+function closeMobileMenu(){
+
+    document
+        .querySelector(".site-nav")
+        .classList.remove("mobile-open");
+
+}
+
+document.addEventListener("click",function(e){
+
+    const nav =
+        document.querySelector(".site-nav");
+
+    const btn =
+        document.getElementById("mobileMenuBtn");
+
+    if(
+        !nav.contains(e.target) &&
+        !btn.contains(e.target)
+    ){
+        closeMobileMenu();
+    }
+
+});
+
+window.addEventListener(
+    "scroll",
+    closeMobileMenu
+);
+
+document
+.querySelectorAll(".site-nav .nav-link")
+.forEach(function(link){
+
+    link.addEventListener(
+        "click",
+        closeMobileMenu
+    );
+
+});
 
     // Popup Helpers
     function openOverlay(id) { document.getElementById(id).classList.add('open'); }
