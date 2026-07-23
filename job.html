@@ -642,37 +642,83 @@ if(savedTheme==="dark"){
 
 /* ---------------- Helpers ---------------- */
 
-function renderMath(html){
+function renderMathInString(htmlString) {
 
-  if(!window.katex) return html;
+  if (!window.katex) return htmlString;
 
-  function decode(str){
+  function decodeEntities(str) {
     return str
-      .replace(/&amp;/g,"&")
-      .replace(/&lt;/g,"<")
-      .replace(/&gt;/g,">")
-      .replace(/&quot;/g,'"')
-      .replace(/&#39;/g,"'");
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
   }
 
-  return html.replace(/\$([^\$]+)\$/g,function(match,math){
+  htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+    try {
+      return katex.renderToString(
+        decodeEntities(math.replace(/<[^>]+>/g, '')),
+        {
+          displayMode: true,
+          throwOnError: false
+        }
+      );
+    } catch (e) {
+      return match;
+    }
+  });
 
-      try{
+  htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
+    try {
+      return katex.renderToString(
+        decodeEntities(math.replace(/<[^>]+>/g, '')),
+        {
+          displayMode: true,
+          throwOnError: false
+        }
+      );
+    } catch (e) {
+      return match;
+    }
+  });
 
-          return katex.renderToString(
-              decode(math),
-              {
-                  throwOnError:false
-              }
-          );
+  htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
+    try {
+      return katex.renderToString(
+        decodeEntities(math.replace(/<[^>]+>/g, '')),
+        {
+          displayMode: false,
+          throwOnError: false
+        }
+      );
+    } catch (e) {
+      return match;
+    }
+  });
 
-      }catch(e){
+  htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
 
-          return match;
+    // Don't treat HTML as math
+    if (math.includes("</p>") || math.includes("<p")) {
+      return match;
+    }
 
-      }
+    try {
+      return katex.renderToString(
+        decodeEntities(math.replace(/<[^>]+>/g, '')),
+        {
+          displayMode: false,
+          throwOnError: false
+        }
+      );
+    } catch (e) {
+      return match;
+    }
 
   });
+
+  return htmlString;
 
 }
 
@@ -889,7 +935,7 @@ ${job.category||"General"}
 
 <div class="description">
 
-${renderMath(job.description||"")}
+${renderMathInString(job.description || "")}
 
 </div>
 
