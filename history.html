@@ -513,9 +513,11 @@
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
     /* ============================================================
-       RESPONSIVE
+       RESPONSIVE - Reduced padding to maximize content width on mobile
     ============================================================ */
     @media (max-width: 768px) {
+      .align-wrapper { padding-left: 8px; padding-right: 8px; } /* Pulls outer wrapper closer to edge */
+      
       .site-nav {
         display: none; 
         flex-direction: column;
@@ -536,6 +538,13 @@
 
       .dashboard-grid { grid-template-columns: 1fr; gap: 16px; }
       .summary-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      
+      /* Reduced padding inside the cards to maximize text width */
+      .summary-card { padding: 14px; }
+      .chart-card { padding: 14px; }
+      .history-card { padding: 14px; }
+      .card-stats-grid { padding: 14px; }
+
       .controls-bar { flex-wrap: wrap; gap: 8px; }
       .controls-right { width: 100%; justify-content: space-between; }
       .ctrl-btn { flex: 1; justify-content: center; }
