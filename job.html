@@ -52,7 +52,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
   <style>
-    /* DESIGN TOKENS (Exact match to jobs.html) */
+    /* DESIGN TOKENS */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
       --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
@@ -78,9 +78,8 @@
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
     
-    /* Aligned Wrapper - Matches jobs.html exactly */
     .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
-    @media (max-width:768px){ .align-wrapper{ padding-left:12px; padding-right:12px; } }
+    @media (max-width:768px){ .align-wrapper{ padding-left:8px; padding-right:8px; } }
 
     /* HEADER */
     .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
@@ -109,10 +108,9 @@
     .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color 0.15s; }
     .back-link:hover { color: var(--primary); }
 
-    /* SINGLE JOB CONTAINER - Increased width by 20% (960px) for wider content */
     .single-job-container { display: block; max-width: 960px; margin: 0 auto; }
 
-    /* JOB CARDS - Exact CSS from jobs.html */
+    /* JOB CARDS */
     .job-card { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow:0 8px 24px rgba(15,23,42,.06); transition:.28s ease; display:flex; flex-direction:column; }
     .job-card:hover { transform:translateY(-6px); border-color:var(--primary); box-shadow:0 18px 40px rgba(26,86,219,.15); }
     .job-image { width:100%; height:220px; object-fit:cover; display:block; }
@@ -124,7 +122,6 @@
     .status-chip.active { background:#dcfce7; color:#15803d; }
     .status-chip.expired { background:#fee2e2; color:#dc2626; }
 
-    /* Removed the -webkit-line-clamp so the full title shows */
     .job-title { font-size:21px; font-weight:700; line-height:1.35; color:var(--text-primary); }
     .job-company { display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:14px; }
     .job-company i { color:var(--primary); }
@@ -135,23 +132,55 @@
     .job-meta small { display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; margin-bottom:3px; }
     .job-meta strong { font-size:14px; color:var(--text-primary); font-weight:600; }
 
-    /* Full description styling (replaces job-preview line clamp) */
-    .job-full-description { color:var(--text-secondary); line-height:1.7; font-size:15px; display:block; }
-    .job-full-description p { margin-bottom: 12px; }
-    .job-full-description h2, .job-full-description h3 { margin-top: 20px; margin-bottom: 8px; color: var(--text-primary); }
-    .job-full-description ul, .job-full-description ol { padding-left: 20px; margin-bottom: 12px; }
-    .job-full-description table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; font-size: 14px; }
+    /* PREMIUM TYPOGRAPHY FOR DESCRIPTION */
+    .job-full-description { color:var(--text-secondary); line-height:1.8; font-size:15.5px; display:block; word-wrap: break-word; }
+    .job-full-description p { margin-bottom: 16px; }
+    .job-full-description h2 { font-family: var(--font-heading); font-size: 19px; font-weight: 700; color: var(--text-primary); margin: 28px 0 12px; padding-left: 12px; border-left: 4px solid var(--primary); }
+    .job-full-description h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 24px 0 10px; }
+    .job-full-description ul, .job-full-description ol { padding-left: 24px; margin-bottom: 16px; }
+    .job-full-description li { margin-bottom: 8px; }
+    .job-full-description a { color: var(--primary); text-decoration: underline; font-weight: 500; }
+    .job-full-description strong { color: var(--text-primary); font-weight: 700; }
+    .job-full-description table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; display: block; overflow-x: auto; white-space: nowrap; }
+    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 12px 16px; text-align: left; }
+    .job-full-description th { background: var(--bg-muted); font-weight: 700; color: var(--text-primary); }
+    .job-full-description tr:nth-child(even) { background: var(--bg-muted); }
 
-    .job-actions { display:flex; gap:10px; margin-top:auto; }
-    .job-actions .btn { flex:1; }
-
-    /* BUTTONS - Exact CSS from jobs.html */
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; height: 40px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; transition: all 0.2s; border: 1.5px solid transparent; }
+    .job-actions { display:flex; gap:10px; margin-top:auto; flex-wrap: wrap; }
+    .job-actions .btn { flex:1; min-width: 140px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; height: 40px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; transition: all 0.2s; border: 1.5px solid transparent; cursor: pointer; }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
     .btn-outline:hover { background: var(--primary-light); }
+
+    /* WHATSAPP FLOAT */
+    .whatsapp-float {
+      position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
+      background: #25D366; color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); z-index: 90; transition: transform 0.2s;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); color: #fff; }
+
+    /* MOBILE STICKY APPLY BAR */
+    .mobile-sticky-apply {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 95;
+      background: rgba(255,255,255,0.98); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border); padding: 10px 12px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.05); display: none;
+    }
+    body.dark-mode .mobile-sticky-apply { background: rgba(30,41,59,0.98); }
+    .mobile-sticky-apply .sticky-info small { display:block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    .mobile-sticky-apply .sticky-info strong { font-size: 14px; color: var(--text-primary); }
+    .mobile-sticky-apply .btn { width: auto; padding: 0 24px; }
+
+    /* PRINT HEADER */
+    #printHeader { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a56db; padding-bottom: 10px; }
+    #printHeader h1 { font-family: 'Poppins', sans-serif; font-size: 24px; color: #1a56db; margin: 0; }
+    #printHeader p { font-size: 12px; color: #555; margin: 4px 0 0; }
+    #printHeader a { color: #1a56db; text-decoration: none; }
 
     /* LOADING STATE */
     .loading-state { padding: 100px 20px; text-align: center; color: var(--text-muted); }
@@ -176,9 +205,8 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .align-wrapper { padding-left: 8px; padding-right: 8px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
@@ -189,23 +217,39 @@
       .job-title{ font-size:20px; }
       .job-meta-grid{ grid-template-columns:1fr; padding: 14px; } 
       
-      /* Exact button styling from jobs.html to make them match perfectly */
       .job-actions { flex-direction: column; }
-      .job-actions .btn {
-        flex: 1;
-        width: 100%;
-        height: 40px;
-        min-height: 40px;
-        padding: 0 16px;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1;
-        gap: 6px;
-      }
+      .job-actions .btn { flex: 1; width: 100%; height: 40px; min-height: 40px; padding: 0 16px; font-size: 13px; font-weight: 600; line-height: 1; gap: 6px; }
+
+      /* Show sticky bar and move whatsapp button up */
+      .mobile-sticky-apply { display: flex; }
+      .page-wrapper { padding-bottom: 80px; }
+      .whatsapp-float { bottom: 80px; }
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body { background: #fff; }
+      .site-header, .site-footer, .breadcrumb, .page-title, .job-actions, .mobile-sticky-apply, .whatsapp-float { display: none !important; }
+      #printHeader { display: block !important; }
+      .job-card { border: none; box-shadow: none; border-radius: 0; }
+      .job-content { padding: 0; }
+      .job-full-description { font-size: 12pt; color: #000; }
+      .job-full-description th { background: #eee !important; -webkit-print-color-adjust: exact; }
+      .job-full-description tr:nth-child(even) { background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
+      .job-meta-grid { border: 1px solid #ccc; }
     }
   </style>
 </head>
 <body>
+
+   <!-- PRINT HEADER (Hidden on screen, visible on print) -->
+  <div id="printHeader">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #1a56db, #f97316); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: 'Poppins', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact;">A</div>
+      <h1 style="font-family: 'Poppins', sans-serif; font-size: 24px; color: #1a56db; margin: 0;">ApnaMock</h1>
+    </div>
+    <p style="font-size: 12px; color: #555; margin: 0;">Practice. Improve. Succeed. - Visit <a href="https://apnamock-web.apnamock.workers.dev/" style="color: #1a56db; text-decoration: none;">https://apnamock-web.apnamock.workers.dev/</a></p>
+  </div>
 
   <header class="site-header">
     <div class="header-inner align-wrapper">
@@ -247,6 +291,22 @@
       </div>
     </div>
   </main>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="#" id="whatsappShareBtn" class="whatsapp-float" target="_blank" title="Share on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Mobile Sticky Apply Bar -->
+  <div id="mobileStickyBar" class="mobile-sticky-apply">
+    <div class="sticky-info">
+      <small>Last Date</small>
+      <strong id="stickyLastDate">—</strong>
+    </div>
+    <a href="#" id="stickyApplyBtn" class="btn btn-primary" target="_blank">
+      Apply Online <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    </a>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-inner align-wrapper">
@@ -290,17 +350,11 @@
   </footer>
 
   <script>
-    /* ============================================================
-       CONFIG & STORAGE
-    ============================================================ */
     const CONFIG = { CDN_BASE: "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/" };
 
     function storageGet(key) { try { return JSON.parse(localStorage.getItem("apnamock_" + key)); } catch (e) { return null; } }
     function storageSet(key, value) { localStorage.setItem("apnamock_" + key, JSON.stringify(value)); }
 
-    /* ============================================================
-       THEME & MOBILE MENU
-    ============================================================ */
     (function initTheme() {
       const savedTheme = storageGet("theme");
       if (savedTheme === "dark") {
@@ -333,9 +387,6 @@
       link.addEventListener("click", closeMobileMenu);
     });
 
-    /* ============================================================
-       KATEX RENDERER
-    ============================================================ */
     function renderMathInString(htmlString) {
       if (!window.katex) return htmlString;
       function decodeEntities(str) {
@@ -357,9 +408,6 @@
       return htmlString;
     }
 
-    /* ============================================================
-       SEO & SCHEMA HELPERS
-    ============================================================ */
     function updatePageSeo(job) {
       document.title = job.title + " | ApnaMock";
       const desc = (job.description || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().substring(0, 160);
@@ -393,18 +441,12 @@
       document.head.appendChild(script);
     }
 
-    /* ============================================================
-       HTML ESCAPE
-    ============================================================ */
     function escapeHtml(str) {
       return String(str || "")
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    /* ============================================================
-       LOAD & RENDER JOB
-    ============================================================ */
     async function loadJob() {
       const slug = new URLSearchParams(location.search).get("job");
       const root = document.getElementById("jobRoot");
@@ -432,7 +474,6 @@
     function renderJob(job) {
       const root = document.getElementById("jobRoot");
 
-      // Using the exact same HTML structure and classes as the job cards on jobs.html
       root.innerHTML = `
         <div class="single-job-container">
           <div class="job-card">
@@ -489,6 +530,9 @@
               </div>
 
               <div class="job-actions">
+                <button class="btn btn-outline" onclick="window.print()">
+                  <i class="fa-solid fa-print"></i> Save as PDF
+                </button>
                 ${job.pdfUrl ? `
                   <a class="btn btn-outline" href="${job.pdfUrl}" target="_blank">
                     <i class="fa-solid fa-file-pdf"></i> Notification
@@ -505,11 +549,25 @@
         </div>
       `;
 
+      // 1. Update Sticky Bar
+      document.getElementById('stickyLastDate').textContent = job.lastDate || "N/A";
+      const stickyApplyBtn = document.getElementById('stickyApplyBtn');
+      if (job.applyUrl) {
+          stickyApplyBtn.href = job.applyUrl;
+          stickyApplyBtn.style.display = 'flex';
+      } else {
+          stickyApplyBtn.style.display = 'none'; // Hide apply button if no link
+      }
+
+      // 2. Update WhatsApp Share Button
+      const waBtn = document.getElementById('whatsappShareBtn');
+      const shareText = `Check out this job: ${job.title} at ApnaMock. Apply here: ${window.location.href}`;
+      waBtn.href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+
       updateOpenGraph(job);
       injectJobSchema(job);
     }
 
-    // Initialize
     loadJob();
   </script>
 </body>
