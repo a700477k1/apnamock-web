@@ -1,1292 +1,487 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Loading Job... | ApnaMock</title>
-
-<meta
-id="metaDescription"
-name="description"
-content="Loading job...">
-
-<meta
-property="og:type"
-content="website">
-
-<meta
-id="ogTitle"
-property="og:title"
-content="Loading Job">
-
-<meta
-id="ogDescription"
-property="og:description"
-content="Loading Job">
-
-<meta
-id="ogImage"
-property="og:image"
-content="">
-
-<meta
-id="ogUrl"
-property="og:url"
-content="">
-
-<meta
-name="twitter:card"
-content="summary_large_image">
-
-<link
-rel="manifest"
-href="/manifest.json">
-
-<meta
-name="theme-color"
-content="#1a56db">
-
-<link
-rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link
-rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
-rel="stylesheet">
-
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link
-rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-
-<script
-defer
-src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-
-<style>
-
-:root{
-
---primary:#1a56db;
---primary-dark:#1e429f;
---primary-light:#e8f0fe;
-
---success:#16a34a;
---success-light:#dcfce7;
-
---error:#dc2626;
---error-light:#fee2e2;
-
---warning:#f59e0b;
-
---bg-base:#f8fafc;
---bg-card:#ffffff;
---bg-muted:#f1f5f9;
-
---text-primary:#1e293b;
---text-secondary:#475569;
---text-muted:#94a3b8;
-
---border:#e2e8f0;
-
---shadow-sm:0 1px 3px rgba(0,0,0,.08);
---shadow-md:0 4px 12px rgba(0,0,0,.10);
---shadow-lg:0 10px 28px rgba(0,0,0,.12);
-
---radius-sm:6px;
---radius-md:10px;
---radius-lg:16px;
---radius-xl:22px;
-
---header-height:64px;
-
-}
-
-body.dark-mode{
-
---bg-base:#0f172a;
---bg-card:#1e293b;
---bg-muted:#334155;
-
---text-primary:#f8fafc;
---text-secondary:#cbd5e1;
---text-muted:#94a3b8;
-
---border:#334155;
-
---primary-light:rgba(26,86,219,.18);
-
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-
-font-family:Inter,sans-serif;
-
-background:var(--bg-base);
-
-color:var(--text-primary);
-
-display:flex;
-
-flex-direction:column;
-
-min-height:100vh;
-
-}
-
-a{
-text-decoration:none;
-color:inherit;
-}
-
-img{
-display:block;
-max-width:100%;
-}
-
-.site-header{
-
-position:sticky;
-
-top:0;
-
-z-index:100;
-
-height:64px;
-
-background:rgba(255,255,255,.95);
-
-backdrop-filter:blur(12px);
-
-border-bottom:1px solid var(--border);
-
-}
-
-body.dark-mode .site-header{
-
-background:rgba(30,41,59,.95);
-
-}
-
-.header-inner{
-
-max-width:1200px;
-
-margin:auto;
-
-padding:0 20px;
-
-height:100%;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-}
-
-.brand{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-}
-
-.brand-icon{
-
-width:36px;
-height:36px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-border-radius:10px;
-
-background:
-linear-gradient(
-135deg,
-var(--primary),
-#f97316
-);
-
-color:#fff;
-
-font-weight:700;
-
-}
-
-.brand-name{
-
-font-family:Poppins,sans-serif;
-
-font-size:18px;
-
-font-weight:700;
-
-color:var(--primary);
-
-}
-
-.site-nav{
-
-display:flex;
-
-gap:4px;
-
-}
-
-.nav-link{
-
-padding:8px 14px;
-
-border-radius:6px;
-
-font-size:14px;
-
-color:var(--text-secondary);
-
-display:flex;
-
-gap:6px;
-
-align-items:center;
-
-}
-
-.nav-link.active{
-
-background:var(--primary-light);
-
-color:var(--primary);
-
-font-weight:600;
-
-}
-
-.header-actions{
-
-display:flex;
-
-gap:8px;
-
-}
-
-.btn-icon{
-
-width:38px;
-
-height:38px;
-
-border-radius:8px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-cursor:pointer;
-
-color:var(--text-secondary);
-
-}
-
-.btn-icon:hover{
-
-background:var(--bg-muted);
-
-}
-
-.mobile-menu-btn{
-
-display:none;
-
-}
-
-.page{
-
-max-width:1000px;
-
-width:100%;
-
-margin:auto;
-
-padding:32px 20px 70px;
-
-flex:1;
-
-}
-
-.breadcrumb{
-
-margin-bottom:24px;
-
-font-size:13px;
-
-color:var(--text-muted);
-
-}
-
-.breadcrumb a{
-
-color:var(--primary);
-
-font-weight:600;
-
-}
-
-#jobRoot{
-
-min-height:300px;
-
-}
-
-.loading{
-
-padding:100px 20px;
-
-text-align:center;
-
-color:var(--text-muted);
-
-}
-
-.loading i{
-
-font-size:30px;
-
-margin-bottom:16px;
-
-}
-
-.site-footer{
-
-margin-top:auto;
-
-background:var(--text-primary);
-
-padding:40px 20px 24px;
-
-color:#fff;
-
-}
-
-.footer-inner{
-
-max-width:1200px;
-
-margin:auto;
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(180px,1fr));
-
-gap:30px;
-
-margin-bottom:30px;
-
-}
-
-.footer-brand-name{
-
-font-family:Poppins,sans-serif;
-
-font-size:18px;
-
-font-weight:700;
-
-margin-bottom:8px;
-
-}
-
-.footer-brand-desc,
-.footer-link,
-.footer-copy,
-.footer-col-title{
-
-color:rgba(255,255,255,.72);
-
-}
-
-.footer-links{
-
-display:flex;
-
-flex-direction:column;
-
-gap:8px;
-
-}
-
-.footer-bottom{
-
-max-width:1200px;
-
-margin:auto;
-
-padding-top:20px;
-
-border-top:1px solid rgba(255,255,255,.12);
-
-display:flex;
-
-justify-content:space-between;
-
-flex-wrap:wrap;
-
-gap:10px;
-
-}
-
-@media(max-width:768px){
-
-.site-nav{
-
-display:none;
-
-position:absolute;
-
-top:64px;
-
-left:0;
-
-right:0;
-
-background:var(--bg-card);
-
-flex-direction:column;
-
-padding:16px;
-
-box-shadow:var(--shadow-md);
-
-}
-
-.site-nav.mobile-open{
-
-display:flex;
-
-}
-
-.mobile-menu-btn{
-
-display:flex;
-
-}
-
-.page{
-
-padding:20px 14px 60px;
-
-}
-
-.footer-bottom{
-
-flex-direction:column;
-
-text-align:center;
-
-}
-
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- GOOGLE ANALYTICS -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DNVHG69MX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1DNVHG69MX');
+  </script>
+
+  <!-- ONESIGNAL -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(function(OneSignal) {
+      OneSignal.init({
+        appId: "c523fd56-16ed-46b2-922b-c240eb4d07d7",
+        notifyButton: { enable: true, position: 'bottom-left', showCredit: false },
+        serviceWorkerParam: { scope: '/' },
+        serviceWorkerPath: 'service-worker.js',
+        allowLocalhostAsSecureOrigin: true,
+      });
+    });
+  </script>
+
+  <!-- PWA Setup -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a56db">
+
+  <title>Loading Job... | ApnaMock</title>
+  <meta id="metaDescription" name="description" content="Loading job...">
+  <meta property="og:type" content="website">
+  <meta id="ogTitle" property="og:title" content="Loading Job">
+  <meta id="ogDescription" property="og:description" content="Loading Job">
+  <meta id="ogImage" property="og:image" content="">
+  <meta id="ogUrl" property="og:url" content="">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <style>
+    /* ============================================================ 
+       DESIGN TOKENS (Congruent with jobs.html & tests.html)
+    ============================================================ */
+    :root {
+      --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
+      --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
+      --error: #dc2626; --error-light: #fee2e2; --warning: #f59e0b; --warning-light: #fef3c7;
+      --purple: #7c3aed; --purple-light: #ede9fe;
+      --bg-base: #f8fafc; --bg-card: #ffffff; --bg-muted: #f1f5f9;
+      --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.10); --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --header-height: 64px; --font-body: 'Inter', sans-serif; --font-heading: 'Poppins', sans-serif;
+    }
+    body.dark-mode {
+      --bg-base: #0f172a; --bg-card: #1e293b; --bg-muted: #334155;
+      --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+      --border: #334155; --border-strong: #475569; --primary-light: rgba(26, 86, 219, 0.2);
+      --success-light: rgba(22, 163, 74, 0.2); --warning-light: rgba(245, 158, 11, 0.2); --error-light: rgba(220, 38, 38, 0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+
+    /* HEADER */
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
+    body.dark-mode .site-header { background: rgba(30,41,59,0.95); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
+    .brand-tagline { font-size: 10px; color: var(--text-muted); }
+    .site-nav { display: flex; align-items: center; gap: 4px; }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .mobile-menu-btn { display: none; }
+
+    /* PAGE LAYOUT */
+    .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
+    .page-header { margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px; }
+    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; display: flex; align-items: center; gap: 10px; }
+    .page-title i { color: var(--primary); }
+    .breadcrumb { margin-bottom: 24px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color 0.15s; }
+    .back-link:hover { color: var(--primary); }
+
+    /* JOB CARD STYLES */
+    .job-detail-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 40px; }
+    .hero-image { width: 100%; height: 360px; object-fit: cover; background: var(--bg-muted); display: block; }
+    .job-detail-body { padding: 32px; }
+    
+    .job-top-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .category-chip { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-chip { padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-chip.active { background: var(--success-light); color: var(--success); }
+    .status-chip.expired { background: var(--error-light); color: var(--error); }
+
+    .job-detail-title { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 10px; }
+    .job-detail-company { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 15px; font-weight: 500; margin-bottom: 28px; }
+    .job-detail-company i { color: var(--primary); }
+
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; background: var(--bg-muted); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 32px; }
+    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .meta-item small { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .meta-item strong { font-size: 15px; color: var(--text-primary); font-weight: 600; text-transform: capitalize; }
+
+    .job-description { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 32px; }
+    .job-description p { margin-bottom: 14px; }
+    .job-description h2, .job-description h3 { color: var(--text-primary); margin: 20px 0 10px; }
+    .job-description ul, .job-description ol { padding-left: 24px; margin-bottom: 14px; }
+    .job-description table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .job-description th, .job-description td { border: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; font-size: 14px; }
+
+    .action-bar { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--border); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 46px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--primary); color: #fff; flex: 1; min-width: 200px; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); flex: 1; min-width: 200px; }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    /* RELATED JOBS */
+    .related-section h2 { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .related-section h2 i { color: var(--primary); }
+
+    /* LOADING STATE */
+    .loading-state { padding: 100px 20px; text-align: center; color: var(--text-muted); }
+    .loading-state i { font-size: 30px; margin-bottom: 16px; }
+
+    /* FOOTER */
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-col-title { color: rgba(15, 23, 42, 0.7); }
+    body.dark-mode .footer-link { color: rgba(15, 23, 42, 0.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15, 23, 42, 0.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15, 23, 42, 0.15); }
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .page-title { font-size: 22px; }
+      .hero-image { height: 220px; }
+      .job-detail-body { padding: 20px; }
+      .job-detail-title { font-size: 20px; }
+      .meta-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+      .action-bar { flex-direction: column; }
+      .btn-primary, .btn-outline { width: 100%; min-width: unset; }
+    }
+  </style>
 </head>
-
 <body>
 
-<header class="site-header">
-
-<div class="header-inner">
-
-<a
-href="/index.html"
-class="brand">
-
-<div class="brand-icon">
-A
-</div>
-
-<div class="brand-name">
-ApnaMock
-</div>
-
-</a>
-
-<nav class="site-nav">
-
-<a
-href="/index.html"
-class="nav-link">
-<i class="fa-solid fa-house"></i>
-<span>Home</span>
-</a>
-
-<a
-href="/tests.html"
-class="nav-link">
-<i class="fa-solid fa-list-check"></i>
-<span>Tests</span>
-</a>
-
-<a
-href="/custom-tests.html"
-class="nav-link">
-<i class="fa-solid fa-sliders"></i>
-<span>Custom Tests</span>
-</a>
-
-<a
-href="/favorites.html"
-class="nav-link">
-<i class="fa-solid fa-bookmark"></i>
-<span>Favorites</span>
-</a>
-
-<a
-href="/history.html"
-class="nav-link">
-<i class="fa-solid fa-clock-rotate-left"></i>
-<span>History</span>
-</a>
-
-<a
-href="/jobs.html"
-class="nav-link active">
-<i class="fa-solid fa-briefcase"></i>
-<span>Jobs</span>
-</a>
-
-</nav>
-
-<div class="header-actions">
-
-<button
-id="themeToggleBtn"
-class="btn-icon">
-
-<i class="fa-solid fa-moon"></i>
-
-</button>
-
-<button
-id="mobileMenuBtn"
-class="btn-icon mobile-menu-btn">
-
-<i class="fa-solid fa-bars"></i>
-
-</button>
-
-</div>
-
-</div>
-
-</header>
-
-<main class="page">
-
-<div class="breadcrumb">
-
-<a href="jobs.html">
-
-<i class="fa-solid fa-arrow-left"></i>
-
-Back to Jobs
-
-</a>
-
-</div>
-
-<div id="jobRoot">
-
-<div class="loading">
-
-<i class="fa-solid fa-spinner fa-spin"></i>
-
-<div>
-
-Loading Job...
-
-</div>
-
-</div>
-
-</div>
-
-</main>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div>
-      <div class="footer-brand-name">ApnaMock</div>
-      <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
-    </div>
-    <div>
-      <div class="footer-col-title">Quick Links</div>
-      <div class="footer-links">
-        <a href="/tests.html" class="footer-link">All Tests</a>
-        <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
-        <a href="/favorites.html" class="footer-link">Favorites</a>
-        <a href="/history.html" class="footer-link">History</a>
-        <a href="/jobs.html" class="footer-link">Jobs</a>
-      </div>
-    </div>
-    <div>
-      <div class="footer-col-title">Popular Exams</div>
-      <div class="footer-links">
-        <a href="/tests.html" class="footer-link">SSC CGL</a>
-        <a href="/tests.html" class="footer-link">SSC CHSL</a>
-        <a href="/tests.html" class="footer-link">Railway NTPC</a>
-        <a href="/tests.html" class="footer-link">Railway Group D</a>
-      </div>
-    </div>
-    <div>
-      <div class="footer-col-title">Legal</div>
-      <div class="footer-links">
-        <a href="/legal.html#privacy" class="footer-link">Privacy Policy</a>
-        <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
-        <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
-        <a href="/legal.html#contact" class="footer-link">Contact</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
-    <span class="footer-copy">Practice. Improve. Succeed.</span>
-  </div>
-</footer>
-
-<script>
-/* ============================================================
-CONFIG
-============================================================ */
-
-const CONFIG = {
-  CDN_BASE: "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/"
-};
-
-/* ============================================================
-LOCAL STORAGE HELPERS
-============================================================ */
-
-function storageGet(key) {
-  try {
-    return JSON.parse(localStorage.getItem("apnamock_" + key));
-  } catch (e) {
-    return null;
-  }
-}
-
-function storageSet(key, value) {
-  localStorage.setItem(
-    "apnamock_" + key,
-    JSON.stringify(value)
-  );
-}
-
-/* ============================================================
-THEME
-============================================================ */
-
-(function initTheme() {
-
-  const savedTheme = storageGet("theme");
-
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-
-    const icon = document.querySelector("#themeToggleBtn i");
-
-    if (icon) {
-      icon.className = "fa-solid fa-sun";
-    }
-  }
-
-})();
-
-document
-.getElementById("themeToggleBtn")
-.addEventListener("click", function () {
-
-  document.body.classList.toggle("dark-mode");
-
-  const isDark =
-    document.body.classList.contains("dark-mode");
-
-  const icon =
-    document.querySelector("#themeToggleBtn i");
-
-  if (icon) {
-    icon.className =
-      isDark
-        ? "fa-solid fa-sun"
-        : "fa-solid fa-moon";
-  }
-
-  storageSet(
-    "theme",
-    isDark ? "dark" : "light"
-  );
-
-});
-
-/* ============================================================
-MOBILE MENU
-============================================================ */
-
-const nav =
-  document.querySelector(".site-nav");
-
-const menuBtn =
-  document.getElementById("mobileMenuBtn");
-
-if (menuBtn) {
-
-  menuBtn.addEventListener("click", function () {
-
-    nav.classList.toggle("mobile-open");
-
-  });
-
-}
-
-function closeMobileMenu() {
-
-  if (nav) {
-    nav.classList.remove("mobile-open");
-  }
-
-}
-
-document.addEventListener("click", function (e) {
-
-  if (!nav) return;
-
-  if (
-    !nav.contains(e.target) &&
-    !menuBtn.contains(e.target)
-  ) {
-    closeMobileMenu();
-  }
-
-});
-
-window.addEventListener(
-  "scroll",
-  closeMobileMenu
-);
-
-document
-.querySelectorAll(".site-nav .nav-link")
-.forEach(function (link) {
-
-  link.addEventListener(
-    "click",
-    closeMobileMenu
-  );
-
-});
-
-/* ============================================================
-KATEX RENDERER
-============================================================ */
-
-function renderMathInString(htmlString) {
-
-  if (!window.katex) return htmlString;
-
-  function decodeEntities(str) {
-    return str
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
-  }
-
-  htmlString = htmlString.replace(
-    /\$\$([\s\S]*?)\$\$/g,
-    function (match, math) {
-
-      try {
-
-        return katex.renderToString(
-
-          decodeEntities(
-            math.replace(/<[^>]+>/g, "")
-          ),
-
-          {
-            displayMode: true,
-            throwOnError: false
-          }
-
-        );
-
-      } catch (e) {
-
-        return match;
-
-      }
-
-    }
-  );
-
-  htmlString = htmlString.replace(
-    /\\\[([\s\S]*?)\\\]/g,
-    function (match, math) {
-
-      try {
-
-        return katex.renderToString(
-
-          decodeEntities(
-            math.replace(/<[^>]+>/g, "")
-          ),
-
-          {
-            displayMode: true,
-            throwOnError: false
-          }
-
-        );
-
-      } catch (e) {
-
-        return match;
-
-      }
-
-    }
-  );
-
-  htmlString = htmlString.replace(
-    /\\\(([\s\S]*?)\\\)/g,
-    function (match, math) {
-
-      try {
-
-        return katex.renderToString(
-
-          decodeEntities(
-            math.replace(/<[^>]+>/g, "")
-          ),
-
-          {
-            displayMode: false,
-            throwOnError: false
-          }
-
-        );
-
-      } catch (e) {
-
-        return match;
-
-      }
-
-    }
-  );
-
-  htmlString = htmlString.replace(
-    /\$([^\$\n]*?)\$/g,
-    function (match, math) {
-
-      if (
-        math.includes("</p>") ||
-        math.includes("<p")
-      ) {
-        return match;
-      }
-
-      try {
-
-        return katex.renderToString(
-
-          decodeEntities(
-            math.replace(/<[^>]+>/g, "")
-          ),
-
-          {
-            displayMode: false,
-            throwOnError: false
-          }
-
-        );
-
-      } catch (e) {
-
-        return match;
-
-      }
-
-    }
-  );
-
-  return htmlString;
-
-}
-
-/* ============================================================
-SEO HELPERS
-============================================================ */
-
-function updatePageSeo(job) {
-
-  document.title =
-    job.title + " | ApnaMock";
-
-  const desc =
-    (job.description || "")
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .substring(0, 160);
-
-  document
-    .getElementById("metaDescription")
-    .setAttribute(
-      "content",
-      desc
-    );
-
-}
-
-/* ============================================================
-LOAD SINGLE JOB
-============================================================ */
-
-async function loadJob() {
-
-  const slug =
-    new URLSearchParams(
-      location.search
-    ).get("job");
-
-  if (!slug) {
-
-    document.getElementById("jobRoot").innerHTML = `
-      <div class="loading">
-        <h2>Job not found.</h2>
-      </div>
-    `;
-
-    return;
-  }
-
-  try {
-
-    const url =
-      CONFIG.CDN_BASE +
-      "data/jobs/" +
-      slug +
-      ".json?ts=" +
-      Date.now();
-
-    const res =
-      await fetch(url);
-
-    if (!res.ok) {
-      throw new Error("Job not found");
-    }
-
-    const job =
-      await res.json();
-
-    updatePageSeo(job);
-
-    // Part 2B will render this object
-    renderJob(job);
-
-  }
-  catch (err) {
-
-    console.error(err);
-
-    document.getElementById("jobRoot").innerHTML = `
-      <div class="loading">
-        <h2>Unable to load job.</h2>
-      </div>
-    `;
-
-  }
-
-}
-
-/* ============================================================
-RENDER JOB
-============================================================ */
-
-function renderJob(job) {
-
-  const root = document.getElementById("jobRoot");
-
-  root.innerHTML = `
-
-<div class="job-card">
-
-  ${job.imageUrl ? `
-    <img
-      class="hero-image"
-      src="${job.imageUrl}"
-      alt="${escapeHtml(job.title)}"
-      loading="eager">
-  ` : ""}
-
-  <div class="job-body">
-
-    <div class="top-row">
-
-      <span class="category">
-        ${escapeHtml(job.category || "General")}
-      </span>
-
-      <span class="status ${job.status === "expired" ? "expired" : "active"}">
-        ${escapeHtml(job.status || "active")}
-      </span>
-
-    </div>
-
-    <h1 class="job-title">
-      ${escapeHtml(job.title)}
-    </h1>
-
-    <div class="company">
-      <i class="fa-solid fa-building"></i>
-      ${escapeHtml(job.company || "Government")}
-    </div>
-
-    <div class="meta-grid">
-
-      <div class="meta">
-        <small>Post Date</small>
-        <strong>${escapeHtml(job.postDate || "—")}</strong>
-      </div>
-
-      <div class="meta">
-        <small>Last Date</small>
-        <strong>${escapeHtml(job.lastDate || "—")}</strong>
-      </div>
-
-      <div class="meta">
-        <small>Eligibility</small>
-        <strong>${escapeHtml(job.eligibility || "—")}</strong>
-      </div>
-
-      <div class="meta">
-        <small>Status</small>
-        <strong>${escapeHtml(job.status || "active")}</strong>
-      </div>
-
-    </div>
-
-    <div class="description">
-
-      ${renderMathInString(job.description || "")}
-
-    </div>
-
-    <div class="action-bar">
-
-      ${job.pdfUrl ? `
-      <a
-        class="btn btn-outline"
-        href="${job.pdfUrl}"
-        target="_blank">
-
-        <i class="fa-solid fa-file-pdf"></i>
-
-        Notification
-
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
       </a>
-      ` : ""}
-
-      ${job.applyUrl ? `
-      <a
-        class="btn btn-primary"
-        href="${job.applyUrl}"
-        target="_blank">
-
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-        Apply Online
-
-      </a>
-      ` : ""}
-
-    </div>
-
-    <div
-      id="relatedJobs"
-      style="margin-top:50px;">
-
-      <h2
-      style="
-      font-family:Poppins,sans-serif;
-      font-size:22px;
-      margin-bottom:18px;
-      ">
-
-      Related Jobs
-
-      </h2>
-
-      <div
-      style="
-      color:var(--text-muted);
-      ">
-
-      Loading...
-
+      <nav class="site-nav">
+        <a href="/index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="/tests.html" class="nav-link"><i class="fa-solid fa-list-check"></i><span>Tests</span></a>
+        <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
+        <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
+        <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+        <a href="/jobs.html" class="nav-link active"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
+      </nav>
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn"><i class="fa-solid fa-moon"></i></button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
       </div>
+    </div>
+  </header>
 
+  <main class="page-wrapper align-wrapper">
+    <div class="breadcrumb">
+      <a href="/jobs.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to All Jobs</a>
     </div>
 
-  </div>
+    <div class="page-header">
+      <h1 class="page-title"><i class="fa-solid fa-briefcase"></i> Job Details</h1>
+    </div>
 
-</div>
+    <div id="jobRoot">
+      <div class="loading-state">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <div>Loading Job...</div>
+      </div>
+    </div>
+  </main>
 
-`;
+  <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+          <a href="/jobs.html" class="footer-link">Jobs</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">SSC CGL</a>
+          <a href="/tests.html" class="footer-link">SSC CHSL</a>
+          <a href="/tests.html" class="footer-link">Railway NTPC</a>
+          <a href="/tests.html" class="footer-link">Railway Group D</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="/legal.html#privacy" class="footer-link">Privacy Policy</a>
+          <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
+          <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
+          <a href="/legal.html#contact" class="footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom align-wrapper">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
+    </div>
+  </footer>
 
-  updateOpenGraph(job);
+  <script>
+    /* ============================================================
+       CONFIG & STORAGE
+    ============================================================ */
+    const CONFIG = { CDN_BASE: "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/" };
 
-  injectJobSchema(job);
+    function storageGet(key) { try { return JSON.parse(localStorage.getItem("apnamock_" + key)); } catch (e) { return null; } }
+    function storageSet(key, value) { localStorage.setItem("apnamock_" + key, JSON.stringify(value)); }
 
-  loadRelatedJobs(job);
+    /* ============================================================
+       THEME & MOBILE MENU
+    ============================================================ */
+    (function initTheme() {
+      const savedTheme = storageGet("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        const icon = document.querySelector("#themeToggleBtn i");
+        if (icon) icon.className = "fa-solid fa-sun";
+      }
+    })();
 
-}
+    document.getElementById("themeToggleBtn").addEventListener("click", function () {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      const icon = document.querySelector("#themeToggleBtn i");
+      if (icon) icon.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      storageSet("theme", isDark ? "dark" : "light");
+    });
 
-/* ============================================================
-ESCAPE HTML
-============================================================ */
+    const nav = document.querySelector(".site-nav");
+    const menuBtn = document.getElementById("mobileMenuBtn");
+    if (menuBtn) {
+      menuBtn.addEventListener("click", function () { nav.classList.toggle("mobile-open"); });
+    }
+    function closeMobileMenu() { if (nav) nav.classList.remove("mobile-open"); }
+    document.addEventListener("click", function (e) {
+      if (!nav) return;
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); }
+    });
+    window.addEventListener("scroll", closeMobileMenu);
+    document.querySelectorAll(".site-nav .nav-link").forEach(function (link) {
+      link.addEventListener("click", closeMobileMenu);
+    });
 
-function escapeHtml(str){
-
-  return String(str || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-
-}
-
-/* ============================================================
-OPEN GRAPH
-============================================================ */
-
-function updateOpenGraph(job){
-
-  document.getElementById("ogTitle").content =
-    job.title;
-
-  document.getElementById("ogDescription").content =
-    (job.description || "")
-      .replace(/<[^>]+>/g," ")
-      .substring(0,180);
-
-  document.getElementById("ogImage").content =
-    job.imageUrl || "";
-
-  document.getElementById("ogUrl").content =
-    location.href;
-
-}
-
-/* ============================================================
-JOBPOSTING SCHEMA
-============================================================ */
-
-function injectJobSchema(job){
-
-  const old =
-    document.getElementById("jobSchema");
-
-  if(old){
-    old.remove();
-  }
-
-  const schema = {
-
-    "@context":"https://schema.org",
-
-    "@type":"JobPosting",
-
-    "title":job.title,
-
-    "description":
-      (job.description || "")
-      .replace(/<[^>]+>/g," "),
-
-    "datePosted":job.postDate,
-
-    "validThrough":job.lastDate,
-
-    "employmentType":"FULL_TIME",
-
-    "hiringOrganization":{
-
-      "@type":"Organization",
-
-      "name":job.company
-
+    /* ============================================================
+       KATEX RENDERER
+    ============================================================ */
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+      function decodeEntities(str) {
+        return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      }
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, function (match, math) {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, "")), { displayMode: true, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, function (match, math) {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, "")), { displayMode: true, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, function (match, math) {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, "")), { displayMode: false, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, function (match, math) {
+        if (math.includes("</p>") || math.includes("<p")) return match; 
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, "")), { displayMode: false, throwOnError: false }); } catch (e) { return match; }
+      });
+      return htmlString;
     }
 
-  };
+    /* ============================================================
+       SEO & SCHEMA HELPERS
+    ============================================================ */
+    function updatePageSeo(job) {
+      document.title = job.title + " | ApnaMock";
+      const desc = (job.description || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().substring(0, 160);
+      document.getElementById("metaDescription").setAttribute("content", desc);
+    }
 
-  const script =
-    document.createElement("script");
+    function updateOpenGraph(job) {
+      document.getElementById("ogTitle").content = job.title;
+      document.getElementById("ogDescription").content = (job.description || "").replace(/<[^>]+>/g, " ").substring(0, 180);
+      document.getElementById("ogImage").content = job.imageUrl || "";
+      document.getElementById("ogUrl").content = location.href;
+    }
 
-  script.type =
-    "application/ld+json";
+    function injectJobSchema(job) {
+      const old = document.getElementById("jobSchema");
+      if (old) old.remove();
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        "title": job.title,
+        "description": (job.description || "").replace(/<[^>]+>/g, " "),
+        "datePosted": job.postDate,
+        "validThrough": job.lastDate,
+        "employmentType": "FULL_TIME",
+        "hiringOrganization": { "@type": "Organization", "name": job.company }
+      };
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "jobSchema";
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
 
-  script.id =
-    "jobSchema";
+    /* ============================================================
+       HTML ESCAPE
+    ============================================================ */
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
 
-  script.textContent =
-    JSON.stringify(schema);
+    /* ============================================================
+       LOAD & RENDER JOB
+    ============================================================ */
+    async function loadJob() {
+      const slug = new URLSearchParams(location.search).get("job");
+      const root = document.getElementById("jobRoot");
 
-  document.head.appendChild(script);
+      if (!slug) {
+        root.innerHTML = `<div class="loading-state"><i class="fa-solid fa-circle-exclamation" style="font-size:28px;margin-bottom:12px;"></i><h2>Job not found.</h2></div>`;
+        return;
+      }
 
-}
+      try {
+        const url = CONFIG.CDN_BASE + "data/jobs/" + slug + ".json?ts=" + Date.now();
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Job not found");
+        const job = await res.json();
+        
+        updatePageSeo(job);
+        renderJob(job);
 
-      loadJob();
-      
-</script>
+      } catch (err) {
+        console.error(err);
+        root.innerHTML = `<div class="loading-state"><i class="fa-solid fa-wifi" style="font-size:28px;margin-bottom:12px;color:var(--error);"></i><h2>Unable to load job.</h2></div>`;
+      }
+    }
 
+    function renderJob(job) {
+      const root = document.getElementById("jobRoot");
+
+      root.innerHTML = `
+        <div class="job-detail-card">
+          ${job.imageUrl ? `
+            <img class="hero-image" src="${job.imageUrl}" alt="${escapeHtml(job.title)}" loading="eager">
+          ` : ""}
+          
+          <div class="job-detail-body">
+            <div class="job-top-row">
+              <span class="category-chip">${escapeHtml(job.category || "General")}</span>
+              <span class="status-chip ${job.status === 'expired' ? 'expired' : 'active'}">${escapeHtml(job.status || 'active')}</span>
+            </div>
+
+            <h1 class="job-detail-title">${escapeHtml(job.title)}</h1>
+            
+            <div class="job-detail-company">
+              <i class="fa-solid fa-building"></i>
+              ${escapeHtml(job.company || "Government")}
+            </div>
+
+            <div class="meta-grid">
+              <div class="meta-item">
+                <small>Post Date</small>
+                <strong>${escapeHtml(job.postDate || "—")}</strong>
+              </div>
+              <div class="meta-item">
+                <small>Last Date</small>
+                <strong>${escapeHtml(job.lastDate || "—")}</strong>
+              </div>
+              <div class="meta-item">
+                <small>Eligibility</small>
+                <strong>${escapeHtml(job.eligibility || "—")}</strong>
+              </div>
+              <div class="meta-item">
+                <small>Status</small>
+                <strong style="text-transform: capitalize;">${escapeHtml(job.status || "active")}</strong>
+              </div>
+            </div>
+
+            <div class="job-description">
+              ${renderMathInString(job.description || "")}
+            </div>
+
+            <div class="action-bar">
+              ${job.pdfUrl ? `
+                <a class="btn btn-outline" href="${job.pdfUrl}" target="_blank">
+                  <i class="fa-solid fa-file-pdf"></i> View Notification
+                </a>
+              ` : ""}
+              ${job.applyUrl ? `
+                <a class="btn btn-primary" href="${job.applyUrl}" target="_blank">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Apply Online
+                </a>
+              ` : ""}
+            </div>
+          </div>
+        </div>
+
+        <div class="related-section" style="margin-top: 40px;">
+          <h2><i class="fa-solid fa-layer-group"></i> Related Jobs</h2>
+          <div id="relatedJobs" style="color: var(--text-muted);">Loading...</div>
+        </div>
+      `;
+
+      updateOpenGraph(job);
+      injectJobSchema(job);
+      // loadRelatedJobs(job); // Hook for future feature
+    }
+
+    // Initialize
+    loadJob();
+  </script>
 </body>
-
 </html>
