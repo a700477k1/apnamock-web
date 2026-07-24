@@ -472,14 +472,8 @@
     // Cleans up invisible empty paragraphs and excessive line breaks created by Quill
     function cleanQuillHtml(html) {
       if (!html) return "";
-      // Remove <p> tags (even with classes/attributes) that only contain <br>, whitespace, or &nbsp;
-      let cleaned = html.replace(/<p[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '');
-      // Remove <div> tags (even with classes/attributes) that only contain <br>, whitespace, or &nbsp;
-      cleaned = cleaned.replace(/<div[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/div>/gi, '');
-      // Remove empty <p> tags that have absolutely nothing inside them
-      cleaned = cleaned.replace(/<p[^>]*>\s*<\/p>/gi, '');
-      // Replace multiple consecutive <br> tags with a single one
-      cleaned = cleaned.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+      // Basic string cleanup first
+      let cleaned = html.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
       return cleaned;
     }
 
@@ -561,7 +555,7 @@
                 </div>
               </div>
 
-              <div class="job-full-description">
+              <div class="job-full-description" id="jobDescriptionContent">
                 ${renderMathInString(cleanQuillHtml(decodeHtmlEntities(job.description || "")))}
               </div>
 
@@ -584,6 +578,17 @@
           </div>
         </div>
       `;
+
+            // 3. DOM-Based Cleanup: Physically remove empty tags that create gaps
+      const descContainer = document.getElementById('jobDescriptionContent');
+      if (descContainer) {
+        // Remove empty <p> and <div> tags that only contain whitespace or <br>
+        descContainer.querySelectorAll('p, div').forEach(el => {
+          if (!el.textContent.trim() && !el.querySelector('img, table, ul, ol, iframe')) {
+            el.remove();
+          }
+        });
+      }
 
       // 1. Update Sticky Bar
       document.getElementById('stickyLastDate').textContent = job.lastDate || "N/A";
