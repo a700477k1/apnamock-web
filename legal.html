@@ -16,28 +16,6 @@
   </script>
   <!-- ============================================================ -->
 
-<!-- ============================================================
-         ONESIGNAL PUSH NOTIFICATIONS
-    ============================================================ -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(function(OneSignal) {
-        OneSignal.init({
-          appId: "c523fd56-16ed-46b2-922b-c240eb4d07d7",
-          notifyButton: {
-            enable: true,
-            position: 'bottom-left', 
-            showCredit: false
-          },
-          // Point to your MAIN service worker now:
-          serviceWorkerParam: { scope: '/' },
-          serviceWorkerPath: 'service-worker.js',
-          allowLocalhostAsSecureOrigin: true,
-        });
-      });
-    </script>
-
         <!-- PWA Setup -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a56db">
