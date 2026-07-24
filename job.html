@@ -133,16 +133,21 @@
     .job-meta strong { font-size:14px; color:var(--text-primary); font-weight:600; }
 
     /* PREMIUM TYPOGRAPHY FOR DESCRIPTION */
-    .job-full-description { color:var(--text-secondary); line-height:1.8; font-size:15.5px; display:block; word-wrap: break-word; }
-    .job-full-description p { margin-bottom: 16px; }
-    .job-full-description h2 { font-family: var(--font-heading); font-size: 19px; font-weight: 700; color: var(--text-primary); margin: 28px 0 12px; padding-left: 12px; border-left: 4px solid var(--primary); }
-    .job-full-description h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 24px 0 10px; }
-    .job-full-description ul, .job-full-description ol { padding-left: 24px; margin-bottom: 16px; }
-    .job-full-description li { margin-bottom: 8px; }
+    .job-full-description { color:var(--text-secondary); line-height:1.6; font-size:15px; display:block; word-wrap: break-word; }
+    .job-full-description p { margin: 0 0 12px 0; }
+    .job-full-description p:last-child { margin-bottom: 0; }
+    .job-full-description p:empty { display: none; } /* Hides invisible empty paragraphs from Quill */
+    
+    .job-full-description h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 24px 0 10px; padding-left: 10px; border-left: 4px solid var(--primary); }
+    .job-full-description h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 20px 0 8px; }
+    
+    .job-full-description ul, .job-full-description ol { padding-left: 22px; margin: 0 0 12px 0; }
+    .job-full-description li { margin-bottom: 6px; }
     .job-full-description a { color: var(--primary); text-decoration: underline; font-weight: 500; }
     .job-full-description strong { color: var(--text-primary); font-weight: 700; }
-    .job-full-description table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; display: block; overflow-x: auto; white-space: nowrap; }
-    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 12px 16px; text-align: left; }
+    
+    .job-full-description table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; display: block; overflow-x: auto; white-space: nowrap; }
+    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; }
     .job-full-description th { background: var(--bg-muted); font-weight: 700; color: var(--text-primary); }
     .job-full-description tr:nth-child(even) { background: var(--bg-muted); }
 
