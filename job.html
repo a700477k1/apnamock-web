@@ -135,6 +135,15 @@
     /* PREMIUM TYPOGRAPHY FOR DESCRIPTION - Aggressively resets Quill margins */
     .job-full-description { color:var(--text-secondary); line-height:1.6; font-size:15px; display:block; word-wrap: break-word; overflow: hidden; }
     .job-full-description * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* PREMIUM TYPOGRAPHY FOR DESCRIPTION - Aggressively resets Quill margins */
+    .job-full-description { color:var(--text-secondary); line-height:1.6; font-size:15px; display:block; word-wrap: break-word; overflow: hidden; }
+    .job-full-description * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* Forcefully hide any empty tags to prevent vertical gaps */
+    .job-full-description p:empty,
+    .job-full-description div:empty,
+    .job-full-description p:has(br:only-child) { display: none !important; }
     
     .job-full-description p { margin: 0 0 12px 0; }
     .job-full-description h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 24px 0 12px; padding-left: 10px; border-left: 4px solid var(--primary); }
@@ -463,10 +472,12 @@
     // Cleans up invisible empty paragraphs and excessive line breaks created by Quill
     function cleanQuillHtml(html) {
       if (!html) return "";
-      // Remove <p> tags that only contain <br>, whitespace, or &nbsp;
-      let cleaned = html.replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '');
-      // Remove <div> tags that only contain <br>, whitespace, or &nbsp;
-      cleaned = cleaned.replace(/<div>(\s|&nbsp;|<br\s*\/?>)*<\/div>/gi, '');
+      // Remove <p> tags (even with classes/attributes) that only contain <br>, whitespace, or &nbsp;
+      let cleaned = html.replace(/<p[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '');
+      // Remove <div> tags (even with classes/attributes) that only contain <br>, whitespace, or &nbsp;
+      cleaned = cleaned.replace(/<div[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/div>/gi, '');
+      // Remove empty <p> tags that have absolutely nothing inside them
+      cleaned = cleaned.replace(/<p[^>]*>\s*<\/p>/gi, '');
       // Replace multiple consecutive <br> tags with a single one
       cleaned = cleaned.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
       return cleaned;
