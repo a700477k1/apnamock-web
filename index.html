@@ -1122,11 +1122,14 @@ function openExamPopup(
   </script>
 
   <script>
+    // OneSignal handles the service worker registration automatically 
+    // via the serviceWorkerPath config in the OneSignal.init() block above.
+    // We just listen to ensure it's ready for our PWA install prompt.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('Service Worker Registered!'))
-          .catch(err => console.log('Service Worker Error: ', err));
+        navigator.serviceWorker.ready.then(registration => {
+          console.log('Service Worker is ready & controlled by:', registration.scope);
+        });
       });
     }
   </script>
