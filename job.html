@@ -241,17 +241,54 @@
       .whatsapp-float { bottom: 80px; }
     }
 
-    /* PRINT STYLES */
+    /* PRINT STYLES - Optimized for multi-page header & compact text */
     @media print {
-      body { background: #fff; }
+      body { background: #fff; font-size: 10pt; }
+      
+      /* Hide screen-only elements */
       .site-header, .site-footer, .breadcrumb, .page-title, .job-actions, .mobile-sticky-apply, .whatsapp-float { display: none !important; }
-      #printHeader { display: block !important; }
+      
+      /* Fix header to top of page so it repeats on every printed page */
+      #printHeader { 
+        display: block !important; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 50px; /* Fixed height prevents layout shifting */
+        background: #fff; 
+        z-index: 9999; 
+        border-bottom: 2px solid #1a56db; 
+        padding-top: 5px;
+      }
+      
+      /* Push the content down so it doesn't hide behind the fixed header on the first page */
+      .page-wrapper { 
+        padding-top: 60px !important; 
+        padding-bottom: 0 !important;
+      }
+      
       .job-card { border: none; box-shadow: none; border-radius: 0; }
       .job-content { padding: 0; }
-      .job-full-description { font-size: 12pt; color: #000; }
-      .job-full-description th { background: #eee !important; -webkit-print-color-adjust: exact; }
-      .job-full-description tr:nth-child(even) { background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
-      .job-meta-grid { border: 1px solid #ccc; }
+      
+      /* Reduce font sizes and margins to fit more content */
+      .job-full-description { font-size: 9.5pt; color: #000; line-height: 1.3; }
+      .job-full-description p { margin-bottom: 4pt; }
+      .job-full-description h2 { font-size: 12pt; margin: 8pt 0 3pt; }
+      .job-full-description h3 { font-size: 10.5pt; margin: 6pt 0 2pt; }
+      .job-full-description ul, .job-full-description ol { margin-bottom: 4pt; }
+      .job-full-description li { margin-bottom: 1pt; }
+      
+      /* Compact tables */
+      .job-full-description table { margin-bottom: 4pt; }
+      .job-full-description th, .job-full-description td { padding: 3pt 5pt; }
+      .job-full-description th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .job-full-description tr:nth-child(even) { background: #f9f9f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      
+      /* Compact meta grid */
+      .job-meta-grid { border: 1px solid #ccc; padding: 5pt; gap: 5pt; }
+      .job-meta small { font-size: 7pt; }
+      .job-meta strong { font-size: 9pt; }
     }
   </style>
 </head>
