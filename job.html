@@ -447,6 +447,13 @@
         .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
+    function decodeHtmlEntities(str) {
+      // Create a temporary textarea element to decode the HTML entities safely
+      const txt = document.createElement("textarea");
+      txt.innerHTML = str;
+      return txt.value;
+    }
+
     async function loadJob() {
       const slug = new URLSearchParams(location.search).get("job");
       const root = document.getElementById("jobRoot");
@@ -526,7 +533,7 @@
               </div>
 
               <div class="job-full-description">
-                ${renderMathInString(job.description || "")}
+                ${renderMathInString(decodeHtmlEntities(job.description || ""))}
               </div>
 
               <div class="job-actions">
