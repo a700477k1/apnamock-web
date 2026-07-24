@@ -133,31 +133,22 @@
     .job-meta strong { font-size:14px; color:var(--text-primary); font-weight:600; }
 
     /* PREMIUM TYPOGRAPHY FOR DESCRIPTION */
-    .job-full-description { color:var(--text-secondary); line-height:1.6; font-size:15px; display:block; word-wrap: break-word; }
-    .job-full-description p { margin: 0 0 12px 0; }
+    .job-full-description { color:var(--text-secondary); line-height:1.5; font-size:15px; display:block; word-wrap: break-word; }
+    .job-full-description p { margin: 0 0 8px 0; padding: 0; }
     .job-full-description p:last-child { margin-bottom: 0; }
-    .job-full-description p:empty { display: none; } /* Hides invisible empty paragraphs from Quill */
     
-    .job-full-description h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 24px 0 10px; padding-left: 10px; border-left: 4px solid var(--primary); }
-    .job-full-description h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 20px 0 8px; }
+    .job-full-description h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 20px 0 8px; padding-left: 10px; border-left: 4px solid var(--primary); }
+    .job-full-description h3 { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 16px 0 6px; }
     
-    .job-full-description ul, .job-full-description ol { padding-left: 22px; margin: 0 0 12px 0; }
-    .job-full-description li { margin-bottom: 6px; }
+    .job-full-description ul, .job-full-description ol { padding-left: 22px; margin: 0 0 8px 0; }
+    .job-full-description li { margin-bottom: 4px; }
     .job-full-description a { color: var(--primary); text-decoration: underline; font-weight: 500; }
     .job-full-description strong { color: var(--text-primary); font-weight: 700; }
     
-    .job-full-description table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; display: block; overflow-x: auto; white-space: nowrap; }
-    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; }
+    .job-full-description table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 14px; display: block; overflow-x: auto; white-space: nowrap; }
+    .job-full-description th, .job-full-description td { border: 1px solid var(--border-strong); padding: 8px 12px; text-align: left; }
     .job-full-description th { background: var(--bg-muted); font-weight: 700; color: var(--text-primary); }
     .job-full-description tr:nth-child(even) { background: var(--bg-muted); }
-
-    .job-actions { display:flex; gap:10px; margin-top:auto; flex-wrap: wrap; }
-    .job-actions .btn { flex:1; min-width: 140px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; height: 40px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; transition: all 0.2s; border: 1.5px solid transparent; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
-    .btn-outline:hover { background: var(--primary-light); }
 
     /* WHATSAPP FLOAT */
     .whatsapp-float {
@@ -459,6 +450,18 @@
       return txt.value;
     }
 
+    // Cleans up invisible empty paragraphs and excessive line breaks created by Quill
+    function cleanQuillHtml(html) {
+      if (!html) return "";
+      // Remove <p> tags that only contain <br> or whitespace
+      let cleaned = html.replace(/<p>(\s|&nbsp;|<br>)*<\/p>/gi, '');
+      // Remove <div> tags that only contain <br> or whitespace
+      cleaned = cleaned.replace(/<div>(\s|&nbsp;|<br>)*<\/div>/gi, '');
+      // Replace multiple consecutive <br> tags with a single one
+      cleaned = cleaned.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+      return cleaned;
+    }
+
     async function loadJob() {
       const slug = new URLSearchParams(location.search).get("job");
       const root = document.getElementById("jobRoot");
@@ -538,7 +541,7 @@
               </div>
 
               <div class="job-full-description">
-                ${renderMathInString(decodeHtmlEntities(job.description || ""))}
+                ${renderMathInString(cleanQuillHtml(decodeHtmlEntities(job.description || "")))}
               </div>
 
               <div class="job-actions">
