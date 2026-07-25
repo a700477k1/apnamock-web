@@ -474,11 +474,13 @@
     }
 
     // Helper to calculate days left and urgency tags
-    function getJobUrgency(lastDateStr) {
+    function getJobUrgency(job) {
+      // Use extended_last_date if it exists, otherwise use lastDate
+      const lastDateStr = job.extendedLastDate || job.lastDate;
       if (!lastDateStr) return { isExpired: false, tag: "", class: "" };
       
       const today = new Date();
-      today.setHours(0, 0, 0, 0); 
+      today.setHours(0, 0, 0, 0);  
       
       const lastDate = new Date(lastDateStr);
       if (isNaN(lastDate.getTime())) return { isExpired: false, tag: "", class: "" };
@@ -536,7 +538,7 @@
               <div class="job-top">
                 <span class="category-chip">${escapeHtml(job.category || "General")}</span>
                 ${(() => {
-                  const u = getJobUrgency(job.lastDate);
+                  const u = getJobUrgency(job); // <-- UPDATED TO PASS WHOLE OBJECT
                   const displayStatus = u.isExpired ? 'expired' : job.status;
                   return `
                     <span class="status-chip ${displayStatus === 'expired' ? 'expired' : 'active'}">${displayStatus}</span>
@@ -552,7 +554,7 @@
                 ${escapeHtml(job.company || "Government")}
               </div>
 
-              <div class="job-meta-grid">
+                            <div class="job-meta-grid">
                 <div class="job-meta">
                   <i class="fa-solid fa-calendar-days"></i>
                   <div>
@@ -567,6 +569,24 @@
                     <strong>${escapeHtml(job.lastDate || "—")}</strong>
                   </div>
                 </div>
+                ${job.extendedLastDate ? `
+                <div class="job-meta">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  <div>
+                    <small>Extended To</small>
+                    <strong>${escapeHtml(job.extendedLastDate)}</strong>
+                  </div>
+                </div>
+                ` : ""}
+                ${job.totalPosts ? `
+                <div class="job-meta">
+                  <i class="fa-solid fa-users"></i>
+                  <div>
+                    <small>Total Posts</small>
+                    <strong>${escapeHtml(job.totalPosts)}</strong>
+                  </div>
+                </div>
+                ` : ""}
                 <div class="job-meta">
                   <i class="fa-solid fa-user-graduate"></i>
                   <div>
@@ -574,6 +594,15 @@
                     <strong>${escapeHtml(job.eligibility || "—")}</strong>
                   </div>
                 </div>
+                ${job.applicationFee ? `
+                <div class="job-meta">
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <div>
+                    <small>App Fee</small>
+                    <strong>${escapeHtml(job.applicationFee)}</strong>
+                  </div>
+                </div>
+                ` : ""}
                 <div class="job-meta">
                   <i class="fa-solid fa-tag"></i>
                   <div>
