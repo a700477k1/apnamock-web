@@ -276,6 +276,14 @@
       </div>
     </div>
 
+    <!-- Load More Pagination Button -->
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none; flex-direction:column; align-items:center; gap:10px; margin-top:32px;">
+      <span class="load-more-text" id="loadMoreText" style="font-size:13px; color:var(--text-muted);"></span>
+      <button class="btn btn-outline" id="loadMoreBtn" style="height:40px;">
+        <i class="fa-solid fa-arrow-down"></i> Load More Jobs
+      </button>
+    </div>
+
     <!-- SEO CONTENT BLOCK FOR GOOGLE -->
     <section class="seo-content">
       <h2>Free Job Alert - Latest Government Jobs Notifications</h2>
@@ -323,18 +331,28 @@
       </div>
       <div class="popup-body">
         <div class="sort-options" id="sortOptions">
-          <div class="sort-option selected" data-sort="date-desc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar-days"></i></div><span>Latest Posted First</span></div>
+          
+          <!-- NEW DEFAULT OPTION -->
+          <div class="sort-option selected" data-sort="expiry-asc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-hourglass-end"></i></div><span>Closing Soon First</span></div>
             <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i>
           </div>
+
+          <div class="sort-option" data-sort="date-desc">
+            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar-days"></i></div><span>Latest Posted First</span></div>
+            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
+          </div>
+
           <div class="sort-option" data-sort="date-asc">
             <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar"></i></div><span>Oldest Posted First</span></div>
             <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
           </div>
+
           <div class="sort-option" data-sort="last-date-asc">
             <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-hourglass-ending"></i></div><span>Closing Soon (Last Date)</span></div>
             <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
           </div>
+
         </div>
       </div>
       <div class="popup-footer">
@@ -385,13 +403,17 @@
   </footer>
 
   <script>
-    const CONFIG = { CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/' };
+    const CONFIG = { 
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/', 
+      ITEMS_PER_PAGE: 20 // Loads 20 jobs at a time
+    };
     const State = {
       allJobs: [],
       filteredJobs: [],
+      displayedCount: 0, // Keeps track of how many we have shown
       search: '',
       filters: { status: [], category: [] },
-      sort: 'date-desc'
+      sort: 'expiry-asc'
     };
 
     // Theme & Menu Logic
@@ -538,6 +560,19 @@
 
       // Sort
       filtered.sort((a, b) => {
+        // 1. Always push Expired jobs to the very bottom
+        const uA = getJobUrgency(a.lastDate).isExpired ? 1 : 0;
+        const uB = getJobUrgency(b.lastDate).isExpired ? 1 : 0;
+        if (uA !== uB) return uA - uB; 
+
+        // 2. If sorting by Closing Soon (Expiry Ascending)
+        if (State.sort === 'expiry-asc') {
+          const lastA = new Date(a.lastDate || "9999-12-31").getTime();
+          const lastB = new Date(b.lastDate || "9999-12-31").getTime();
+          return lastA - lastB;
+        }
+
+        // 3. Manual Sorting options
         const dateA = new Date(a.postDate || 0).getTime();
         const dateB = new Date(b.postDate || 0).getTime();
         const lastA = new Date(a.lastDate || 9999999999999).getTime();
@@ -554,13 +589,34 @@
     }
 
     function renderJobs(jobs) {
+      State.filteredJobs = jobs;
+      State.displayedCount = 0; // Reset count whenever we re-render
+      
       const list = document.getElementById('jobsList');
-      if (jobs.length === 0) {
+      list.innerHTML = ''; // Clear loading spinner or old jobs
+      
+      loadMoreJobs(); // Render the first batch of 20
+
+      // Setup Load More button listener
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      loadMoreBtn.onclick = loadMoreJobs;
+    }
+
+    function loadMoreJobs() {
+      const list = document.getElementById('jobsList');
+      const start = State.displayedCount;
+      const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredJobs.length);
+      const batch = State.filteredJobs.slice(start, end); // Get the next 20 jobs
+
+      // If no jobs match the search/filter
+      if (batch.length === 0 && start === 0) {
         list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">No jobs found matching your criteria.</div>`;
+        document.getElementById('loadMoreWrap').style.display = 'none';
         return;
       }
-      
-      list.innerHTML = jobs.map(job => `
+
+      // Append the new batch of 20 job cards to the bottom of the list
+      list.insertAdjacentHTML('beforeend', batch.map(job => `
         <div class="job-card">
           ${job.imageUrl ? `<img class="job-image" src="${job.imageUrl}" loading="lazy" alt="${job.title}">` : ""}
           <div class="job-content">
@@ -623,7 +679,22 @@
             </div>
           </div>
         </div>
-      `).join("");
+      `).join(""));
+
+      State.displayedCount = end; // Update our tracker
+      
+      // Show or hide the Load More button based on if there are more jobs to show
+      const wrap = document.getElementById('loadMoreWrap');
+      const text = document.getElementById('loadMoreText');
+      const remaining = State.filteredJobs.length - State.displayedCount;
+      
+      if (remaining > 0) {
+        wrap.style.display = 'flex';
+        text.textContent = `${remaining} more job${remaining !== 1 ? 's' : ''} remaining`;
+      } else {
+        wrap.style.display = 'none'; // Hide button if all jobs are loaded
+      }
+    }
 
       // === SEO: Inject JobPosting Schema.org Data ===
       const schema = {
