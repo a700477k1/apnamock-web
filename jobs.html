@@ -492,12 +492,12 @@
     }
 
     // Helper to calculate days left and urgency tags
-    function getJobUrgency(lastDateStr) {
+    function getJobUrgency(job) {
+      // Use extended_last_date if it exists, otherwise use lastDate
+      const lastDateStr = job.extendedLastDate || job.lastDate;
       if (!lastDateStr) return { isExpired: false, tag: "", class: "" };
-      
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Normalize to midnight
-      
+      today.setHours(0, 0, 0, 0);
       const lastDate = new Date(lastDateStr);
       if (isNaN(lastDate.getTime())) return { isExpired: false, tag: "", class: "" };
       lastDate.setHours(23, 59, 59, 999); // End of the last day
@@ -561,14 +561,14 @@
       // Sort
       filtered.sort((a, b) => {
         // 1. Always push Expired jobs to the very bottom
-        const uA = getJobUrgency(a.lastDate).isExpired ? 1 : 0;
-        const uB = getJobUrgency(b.lastDate).isExpired ? 1 : 0;
+        const uA = getJobUrgency(a).isExpired ? 1 : 0;
+        const uB = getJobUrgency(b).isExpired ? 1 : 0;
         if (uA !== uB) return uA - uB; 
 
         // 2. If sorting by Closing Soon (Expiry Ascending)
         if (State.sort === 'expiry-asc') {
-          const lastA = new Date(a.lastDate || "9999-12-31").getTime();
-          const lastB = new Date(b.lastDate || "9999-12-31").getTime();
+          const lastA = new Date(a.extendedLastDate || a.lastDate || "9999-12-31").getTime();
+          const lastB = new Date(b.extendedLastDate || b.lastDate || "9999-12-31").getTime();
           return lastA - lastB;
         }
 
@@ -622,7 +622,7 @@
             <div class="job-top">
               <span class="category-chip">${job.category || "General"}</span>
               ${(() => {
-                const u = getJobUrgency(job.lastDate);
+                const u = getJobUrgency(job); // <-- UPDATED TO PASS WHOLE OBJECT
                 const displayStatus = u.isExpired ? 'expired' : job.status;
                 return `
                   <span class="status-chip ${displayStatus}">${displayStatus}</span>
@@ -635,7 +635,7 @@
               <i class="fa-solid fa-building"></i>
               ${job.company || "Government"}
             </div>
-            <div class="job-meta-grid">
+                <div class="job-meta-grid">
               <div class="job-meta">
                 <i class="fa-solid fa-calendar-days"></i>
                 <div>
@@ -650,6 +650,15 @@
                   <strong>${job.lastDate || "—"}</strong>
                 </div>
               </div>
+              ${job.extendedLastDate ? `
+              <div class="job-meta">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <div>
+                  <small>Extended To</small>
+                  <strong>${job.extendedLastDate}</strong>
+                </div>
+              </div>
+              ` : ""}
               <div class="job-meta">
                 <i class="fa-solid fa-user-graduate"></i>
                 <div>
@@ -657,13 +666,24 @@
                   <strong>${job.eligibility || "Check Notice"}</strong>
                 </div>
               </div>
+              ${job.totalPosts ? `
               <div class="job-meta">
-                <i class="fa-solid fa-tag"></i>
+                <i class="fa-solid fa-users"></i>
                 <div>
-                  <small>Category</small>
-                  <strong>${job.category || "General"}</strong>
+                  <small>Total Posts</small>
+                  <strong>${job.totalPosts}</strong>
                 </div>
               </div>
+              ` : ""}
+              ${job.applicationFee ? `
+              <div class="job-meta">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <div>
+                  <small>App Fee</small>
+                  <strong>${job.applicationFee}</strong>
+                </div>
+              </div>
+              ` : ""}
             </div>
             <div class="job-preview">
               ${job.description ? job.description.replace(/<[^>]+>/g," ").substring(0,220) + "..." : ""}
@@ -674,7 +694,9 @@
                 View Details
               </a>
               ${job.pdfUrl ? `<a href="${job.pdfUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : ""}
-              ${job.applyUrl ? `<a href="${job.applyUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-arrow-up-right-from-square"></i> Apply</a>` : ""}
+              <a href="https://wa.me/?text=${encodeURIComponent('Check out this job: ' + job.title + ' on ApnaMock. Apply here: ' + window.location.origin + '/job.html?job=' + job.file_name.replace('.json',''))}" target="_blank" class="btn btn-outline" style="color:#25D366; border-color:#25D366;">
+                <i class="fa-brands fa-whatsapp"></i> Share
+              </a>
             </div>
           </div>
         </div>
