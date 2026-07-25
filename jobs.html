@@ -104,6 +104,17 @@
     .ctrl-btn .badge { background: var(--primary); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 600; min-width: 20px; text-align: center; display: none; }
     .ctrl-btn .badge.show { display: inline-block; }
 
+    /* Urgency Tags */
+    .urgency-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .urgency-chip.last-day { background: #fee2e2; color: #dc2626; animation: pulse 1.5s infinite; }
+    .urgency-chip.closing-soon { background: #fef3c7; color: #d97706; }
+    .urgency-chip.days-left { background: #e8f0fe; color: #1a56db; }
+    body.dark-mode .urgency-chip.last-day { background: rgba(220, 38, 38, 0.2); color: #fca5a5; }
+    body.dark-mode .urgency-chip.closing-soon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    body.dark-mode .urgency-chip.days-left { background: rgba(26, 86, 219, 0.2); color: #93c5fd; }
+    
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
     /* JOB CARDS */
     .jobs-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; }
     .job-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(15,23,42,.06); transition: .28s ease; display: flex; flex-direction: column; }
@@ -458,6 +469,31 @@
       return htmlString;
     }
 
+    // Helper to calculate days left and urgency tags
+    function getJobUrgency(lastDateStr) {
+      if (!lastDateStr) return { isExpired: false, tag: "", class: "" };
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to midnight
+      
+      const lastDate = new Date(lastDateStr);
+      if (isNaN(lastDate.getTime())) return { isExpired: false, tag: "", class: "" };
+      lastDate.setHours(23, 59, 59, 999); // End of the last day
+      
+      const diffTime = lastDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) {
+        return { isExpired: true, tag: "Expired", class: "status-chip expired" };
+      } else if (diffDays === 0) {
+        return { isExpired: false, tag: "Last Day!", class: "urgency-chip last-day" };
+      } else if (diffDays <= 3) {
+        return { isExpired: false, tag: "Closing Soon", class: "urgency-chip closing-soon" };
+      } else {
+        return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-chip days-left" };
+      }
+    }
+
     // Fetch Jobs
     async function loadJobs() {
       try {
@@ -530,7 +566,14 @@
           <div class="job-content">
             <div class="job-top">
               <span class="category-chip">${job.category || "General"}</span>
-              <span class="status-chip ${job.status}">${job.status}</span>
+              ${(() => {
+                const u = getJobUrgency(job.lastDate);
+                const displayStatus = u.isExpired ? 'expired' : job.status;
+                return `
+                  <span class="status-chip ${displayStatus}">${displayStatus}</span>
+                  ${u.tag && !u.isExpired ? `<span class="${u.class}">${u.tag}</span>` : ''}
+                `;
+              })()}
             </div>
             <div class="job-title">${job.title}</div>
             <div class="job-company">
