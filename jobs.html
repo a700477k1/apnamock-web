@@ -590,32 +590,31 @@
 
     function renderJobs(jobs) {
       State.filteredJobs = jobs;
-      State.displayedCount = 0; // Reset count whenever we re-render
+      State.displayedCount = 0; 
       
       const list = document.getElementById('jobsList');
-      list.innerHTML = ''; // Clear loading spinner or old jobs
+      list.innerHTML = ''; 
       
-      loadMoreJobs(); // Render the first batch of 20
+      loadMoreJobs(); 
 
-      // Setup Load More button listener
       const loadMoreBtn = document.getElementById('loadMoreBtn');
       loadMoreBtn.onclick = loadMoreJobs;
+      
+      injectSeoSchema(jobs); // Call the SEO function safely
     }
 
     function loadMoreJobs() {
       const list = document.getElementById('jobsList');
       const start = State.displayedCount;
       const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredJobs.length);
-      const batch = State.filteredJobs.slice(start, end); // Get the next 20 jobs
+      const batch = State.filteredJobs.slice(start, end); 
 
-      // If no jobs match the search/filter
       if (batch.length === 0 && start === 0) {
         list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">No jobs found matching your criteria.</div>`;
         document.getElementById('loadMoreWrap').style.display = 'none';
         return;
       }
 
-      // Append the new batch of 20 job cards to the bottom of the list
       list.insertAdjacentHTML('beforeend', batch.map(job => `
         <div class="job-card">
           ${job.imageUrl ? `<img class="job-image" src="${job.imageUrl}" loading="lazy" alt="${job.title}">` : ""}
@@ -681,9 +680,8 @@
         </div>
       `).join(""));
 
-      State.displayedCount = end; // Update our tracker
+      State.displayedCount = end; 
       
-      // Show or hide the Load More button based on if there are more jobs to show
       const wrap = document.getElementById('loadMoreWrap');
       const text = document.getElementById('loadMoreText');
       const remaining = State.filteredJobs.length - State.displayedCount;
@@ -692,11 +690,12 @@
         wrap.style.display = 'flex';
         text.textContent = `${remaining} more job${remaining !== 1 ? 's' : ''} remaining`;
       } else {
-        wrap.style.display = 'none'; // Hide button if all jobs are loaded
+        wrap.style.display = 'none'; 
       }
     }
 
-      // === SEO: Inject JobPosting Schema.org Data ===
+    // === SEO: Inject JobPosting Schema.org Data ===
+    function injectSeoSchema(jobs) {
       const schema = {
         "@context": "https://schema.org/",
         "@type": "ItemList",
@@ -732,6 +731,7 @@
         document.head.appendChild(schemaScript);
       }
       schemaScript.textContent = JSON.stringify(schema);
+    }
 
     // Search Event
     document.getElementById('searchInput').addEventListener('input', (e) => {
