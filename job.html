@@ -618,11 +618,19 @@
                     <i class="fa-solid fa-file-pdf"></i> Notification
                   </a>
                 ` : ""}
-                ${job.applyUrl ? `
-                  <a class="btn btn-primary" href="${job.applyUrl}" target="_blank">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Apply Online
-                  </a>
-                ` : ""}
+                ${(() => {
+                  const u = getJobUrgency(job);
+                  if (job.applyUrl) {
+                    if (u.isExpired) {
+                      // If the job is expired, show a disabled "Apply Closed" button
+                      return `<button class="btn btn-primary" disabled style="opacity: 0.5; cursor: not-allowed; pointer-events: none;"><i class="fa-solid fa-lock"></i> Apply Closed</button>`;
+                    } else {
+                      // If active, show the normal Apply Online link
+                      return `<a class="btn btn-primary" href="${job.applyUrl}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Apply Online</a>`;
+                    }
+                  }
+                  return "";
+                })()}
               </div>
             </div>
           </div>
