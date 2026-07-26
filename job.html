@@ -118,7 +118,7 @@
     .status-chip.active { background:#dcfce7; color:#15803d; }
     .status-chip.expired { background:#fee2e2; color:#dc2626; }
 
-    .job-title { font-size:21px; font-weight:700; line-height:1.35; color:var(--text-primary); }
+    .job-title { font-size:18px; font-weight:700; line-height:1.35; color:var(--text-primary); }
     .job-company { display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:14px; }
     .job-company i { color:var(--primary); }
 
@@ -225,7 +225,7 @@
       .job-card{ width:100%; margin-bottom:18px; }
       .job-image{ height:220px; }
       .job-content{ padding: 14px; } 
-      .job-title{ font-size:20px; }
+      .job-title{ font-size:18px; }
       .job-meta-grid{ grid-template-columns:1fr; padding: 14px; } 
       
       .job-actions { flex-direction: column; gap: 8px; }
@@ -554,11 +554,11 @@
                 ${escapeHtml(job.company || "Government")}
               </div>
 
-                            <div class="job-meta-grid">
+               <div class="job-meta-grid">
                 <div class="job-meta">
                   <i class="fa-solid fa-calendar-days"></i>
                   <div>
-                    <small>Post Date</small>
+                    <small>Start Date</small>
                     <strong>${escapeHtml(job.postDate || "—")}</strong>
                   </div>
                 </div>
@@ -598,18 +598,11 @@
                 <div class="job-meta">
                   <i class="fa-solid fa-indian-rupee-sign"></i>
                   <div>
-                    <small>App Fee</small>
+                    <small>Application Fee</small>
                     <strong>${escapeHtml(job.applicationFee)}</strong>
                   </div>
                 </div>
                 ` : ""}
-                <div class="job-meta">
-                  <i class="fa-solid fa-tag"></i>
-                  <div>
-                    <small>Category</small>
-                    <strong>${escapeHtml(job.category || "General")}</strong>
-                  </div>
-                </div>
               </div>
 
               <div class="job-full-description" id="jobDescriptionContent">
