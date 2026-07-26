@@ -38,6 +38,9 @@
   <!-- KaTeX for Math Rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- html2canvas for Image Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
     /* DESIGN TOKENS */
@@ -157,6 +160,28 @@
       cursor: pointer; border: none; background: none;
     }
     .clear-all-btn:hover { background: var(--error-light); }
+
+    /* IMAGE SHARE MODAL & TEMPLATE */
+    .image-share-overlay { z-index: 300; }
+    #shareImageTemplate {
+      position: absolute; left: -9999px; top: 0; width: 800px; 
+      background: linear-gradient(135deg, #1a56db, #f97316); padding: 40px; 
+      font-family: 'Inter', sans-serif; box-sizing: border-box;
+    }
+    .tpl-header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+    .tpl-logo { width: 60px; height: 60px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 30px; color: #1a56db; }
+    .tpl-brand-name { color: #fff; font-size: 32px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; }
+    .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 16px; margin-top: 5px; }
+    .tpl-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .tpl-img { width: 100%; height: 400px; object-fit: cover; display: block; }
+    .tpl-body { padding: 30px; }
+    .tpl-category { display: inline-block; background: #e8f0fe; color: #1a56db; padding: 8px 16px; border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+    .tpl-title { margin: 0 0 15px 0; font-size: 28px; color: #1e293b; line-height: 1.3; font-family: 'Poppins', sans-serif; }
+    .tpl-company { font-size: 20px; color: #475569; margin-bottom: 25px; }
+    .tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; }
+    .tpl-grid-item div:first-child { font-size: 12px; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
+    .tpl-grid-item div:last-child { font-size: 18px; font-weight: 600; color: #1e293b; }
+    .tpl-footer { margin-top: 20px; text-align: center; color: #94a3b8; font-size: 14px; }
 
     /* CONTROLS BAR */
     .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -322,6 +347,50 @@
     <!-- DYNAMIC SCROLLABLE CATEGORY CHIPS -->
     <div class="category-chips-wrap" id="categoryChipsWrap">
       <div class="cat-chip" style="opacity: 0.5;">Loading categories...</div>
+    </div>
+
+    <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
+    <div id="shareImageTemplate">
+      <div class="tpl-header">
+        <div class="tpl-logo">A</div>
+        <div>
+          <div class="tpl-brand-name">ApnaMock</div>
+          <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+        </div>
+      </div>
+      <div class="tpl-card">
+        <img id="templateImage" class="tpl-img" crossorigin="anonymous" src="">
+        <div class="tpl-body">
+          <div id="templateCategory" class="tpl-category"></div>
+          <h2 id="templateTitle" class="tpl-title"></h2>
+          <div id="templateCompany" class="tpl-company"></div>
+          <div class="tpl-grid">
+            <div class="tpl-grid-item"><div>Start Date</div><div id="templatePostDate"></div></div>
+            <div class="tpl-grid-item"><div>Last Date</div><div id="templateLastDate"></div></div>
+            <div class="tpl-grid-item"><div>Total Posts</div><div id="templateTotalPosts"></div></div>
+            <div class="tpl-grid-item"><div>App Fee</div><div id="templateAppFee"></div></div>
+          </div>
+          <div class="tpl-footer">Visit apnamock-web.apnamock.workers.dev for more details</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE SHARE POPUP -->
+    <div class="overlay image-share-overlay" id="imageShareOverlay">
+      <div class="popup">
+        <div class="popup-header">
+          <span class="popup-title">Share Image</span>
+          <button class="popup-close" onclick="closeOverlay('imageShareOverlay')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="popup-body" style="text-align: center;">
+          <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 0;">The custom message and link will be shared automatically along with this image.</p>
+        </div>
+        <div class="popup-footer">
+          <a id="downloadImageBtn" class="btn btn-outline" style="flex:1; text-decoration: none;" download="apnamock_job.jpg"><i class="fa-solid fa-download"></i> Download</a>
+          <button id="nativeImageShareBtn" class="btn btn-primary" style="flex:1;"><i class="fa-solid fa-share-nodes"></i> Share</button>
+        </div>
+      </div>
     </div>
 
     <!-- STATE SELECTION POPUP -->
@@ -801,6 +870,82 @@ const State = {
       });
     }
 
+      // Global variable to hold the current job's share text
+    let _currentImageShareText = "";
+
+    // Generates the job image and opens the preview popup
+    async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, totalPosts, appFee, encodedJobSlug) {
+      showToast.info("Generating...", "Creating image");
+      
+      const jobSlug = decodeURIComponent(encodedJobSlug);
+      const imageUrl = decodeURIComponent(encodedImageUrl);
+      const shareUrl = `${window.location.origin}/job.html?job=${jobSlug}`;
+      _currentImageShareText = `Check out this job: ${title} on ApnaMock.\nApply here: ${shareUrl}`;
+
+      // 1. Populate the hidden template
+      document.getElementById('templateTitle').innerText = title;
+      document.getElementById('templateCategory').innerText = category;
+      document.getElementById('templateCompany').innerText = company;
+      document.getElementById('templatePostDate').innerText = postDate || "—";
+      document.getElementById('templateLastDate').innerText = lastDate || "—";
+      document.getElementById('templateTotalPosts').innerText = totalPosts || "—";
+      document.getElementById('templateAppFee').innerText = appFee || "—";
+      
+      const imgEl = document.getElementById('templateImage');
+      if (imageUrl && imageUrl !== "undefined") {
+        imgEl.src = imageUrl;
+      } else {
+        imgEl.src = "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data/icon-512.png"; // Fallback logo
+      }
+
+      // Wait for image to load before drawing canvas
+      await new Promise(resolve => {
+        if (imgEl.complete) return resolve();
+        imgEl.onload = () => resolve();
+        imgEl.onerror = () => resolve();
+      });
+
+      // 2. Generate Canvas
+      const template = document.getElementById('shareImageTemplate');
+      try {
+        const canvas = await html2canvas(template, { useCORS: true, backgroundColor: null, scale: 2 });
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+        // 3. Show Preview
+        document.getElementById('generatedImagePreview').src = dataUrl;
+        document.getElementById('downloadImageBtn').href = dataUrl;
+        
+        // Attach Share Logic
+        const shareBtn = document.getElementById('nativeImageShareBtn');
+        shareBtn.onclick = async () => {
+          try {
+            const blob = await (await fetch(dataUrl)).blob();
+            const file = new File([blob], "apnamock_job.jpg", { type: blob.type });
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: "ApnaMock Job Alert",
+                text: _currentImageShareText,
+                files: [file]
+              });
+            } else {
+              // Fallback for desktop: copy text and download image
+              navigator.clipboard.writeText(_currentImageShareText);
+              showToast.success("Text Copied!", "Link copied. Image is downloading...");
+              document.getElementById('downloadImageBtn').click();
+            }
+          } catch (err) {
+            console.error("Share failed", err);
+          }
+        };
+
+        openOverlay('imageShareOverlay');
+      } catch (err) {
+        console.error("html2canvas error", err);
+        showToast.error("Error", "Could not generate image.");
+      }
+    }
+
     // Fetch Jobs
     async function loadJobs() {
       try {
@@ -980,6 +1125,9 @@ const State = {
                 <i class="fa-brands fa-whatsapp"></i> Share
               </button>
               </a>
+              <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
+                <i class="fa-solid fa-image"></i> Share Image
+              </button>
             </div>
           </div>
         </div>
