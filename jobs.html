@@ -976,8 +976,9 @@ const State = {
                 View Details
               </a>
               ${job.pdfUrl ? `<a href="${job.pdfUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : ""}
-              <a href="https://wa.me/?text=${encodeURIComponent('Check out this job: ' + job.title + ' on ApnaMock. Apply here: ' + window.location.origin + '/job.html?job=' + job.file_name.replace('.json',''))}" target="_blank" class="btn btn-outline" style="color:#25D366; border-color:#25D366;">
+              <button onclick="shareJobCard('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:#25D366; border-color:#25D366;">
                 <i class="fa-brands fa-whatsapp"></i> Share
+              </button>
               </a>
             </div>
           </div>
@@ -1035,6 +1036,55 @@ const State = {
         document.head.appendChild(schemaScript);
       }
       schemaScript.textContent = JSON.stringify(schema);
+    }
+
+    // Native Share API for sharing image + text to any app
+    async function shareJobCard(title, encodedImageUrl, encodedJobSlug) {
+      const jobTitle = decodeURIComponent(title);
+      const imageUrl = decodeURIComponent(encodedImageUrl);
+      const jobSlug = decodeURIComponent(encodedJobSlug);
+      
+      const shareUrl = `${window.location.origin}/job.html?job=${jobSlug}`;
+      const shareText = `Check out this job: ${jobTitle} on ApnaMock.\nApply here: ${shareUrl}`;
+
+      // 1. Check if the Native Share API is supported (Mobile/Modern Browsers)
+      if (navigator.share) {
+        try {
+          // If there's an image, try to fetch it and share it as a file
+          if (imageUrl && imageUrl !== "undefined") {
+            try {
+              const response = await fetch(imageUrl);
+              const blob = await response.blob();
+              const file = new File([blob], "job.jpg", { type: blob.type });
+
+              // Check if the device supports sharing actual files
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  title: "ApnaMock Job Alert",
+                  text: shareText,
+                  files: [file]
+                });
+                return; // Success, stop here
+              }
+            } catch (imgErr) {
+              console.error("Image fetch failed, falling back to text share.", imgErr);
+            }
+          }
+
+          // Fallback if no image, or if device can't share files: Share text + URL
+          await navigator.share({
+            title: "ApnaMock Job Alert",
+            text: shareText,
+            url: shareUrl
+          });
+
+        } catch (err) {
+          console.error("Native share failed:", err);
+        }
+      } else {
+        // 2. Fallback for Desktop/Older browsers: Open WhatsApp text link
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+      }
     }
 
     // Search Event
