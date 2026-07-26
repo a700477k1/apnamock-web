@@ -362,8 +362,6 @@
     <div class="active-filters" id="activeFilters"></div>
 
     <div class="jobs-list" id="jobsList">
-
-    <div class="jobs-list" id="jobsList">
       <div style="text-align:center;padding:40px;color:var(--text-muted)">
         <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
         <div>Loading jobs...</div>
@@ -407,12 +405,11 @@
         </div>
         
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Category</div>
-        <div class="filter-chips-wrap" id="filterCategories"></div>
-      </div>
-
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px; margin-top:20px;">By State</div>
-        <div class="filter-chips-wrap" id="filterStates">
-        </div>
+        <div class="filter-chips-wrap" id="filterCategories" style="margin-bottom:20px;"></div>
+        
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By State</div>
+        <div class="filter-chips-wrap" id="filterStates"></div>
+      </div> 
       
       <div class="popup-footer">
         <button class="btn btn-outline" style="flex:1" onclick="clearAllFilters()">Clear All</button>
