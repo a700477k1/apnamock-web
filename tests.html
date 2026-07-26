@@ -1935,7 +1935,8 @@ if (State.filters.actualExam.length) {
  
       State.filteredTests = tests;
       State.displayedCount = 0;
- 
+
+      renderActiveFilters();
       renderResults();
     }
  
@@ -2139,24 +2140,50 @@ if (State.filters.actualExam.length) {
       const container = document.getElementById('activeFilters');
       const chips = [];
  
-     const typeLabels = {
- exam: 'Exam Group',
- actualExam: 'Exam',
- year: 'Year',
- subject: 'Subject',
- paperType: 'Type',
- difficulty: 'Difficulty',
- attempt: 'Attempt'
-};
+      // 1. Instant Chips Filters (Exam Group, Exam, Subject)
+      if (State.activeExamGroup) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>Exam Group: ${escapeHTML(State.activeExamGroup)}</span>
+            <button class="filter-chip-remove" onclick="removeInstantFilter('activeExamGroup')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+      if (State.activeExam) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>Exam: ${escapeHTML(State.activeExam)}</span>
+            <button class="filter-chip-remove" onclick="removeInstantFilter('activeExam')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+      if (State.activeSubject) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>Subject: ${escapeHTML(State.activeSubject)}</span>
+            <button class="filter-chip-remove" onclick="removeInstantFilter('activeSubject')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+
+      // 2. Advanced Popup Filters
+      const typeLabels = {
+        exam: 'Exam Group',
+        actualExam: 'Exam',
+        year: 'Year',
+        subject: 'Subject',
+        paperType: 'Type',
+        difficulty: 'Difficulty',
+        attempt: 'Attempt'
+      };
  
-     [
- 'exam',
- 'actualExam',
- 'year',
- 'subject',
- 'paperType',
- 'difficulty'
-].forEach(type => {
+      ['exam', 'actualExam', 'year', 'subject', 'paperType', 'difficulty'].forEach(type => {
         (State.filters[type] || []).forEach(value => {
           chips.push(`
             <div class="filter-chip">
@@ -2180,6 +2207,7 @@ if (State.filters.actualExam.length) {
         `);
       }
  
+      // 3. Add Clear All button if any chips exist
       if (chips.length) {
         chips.push(`
           <button class="clear-all-btn" onclick="clearAllFilters()">
@@ -2190,6 +2218,7 @@ if (State.filters.actualExam.length) {
  
       container.innerHTML = chips.join('');
  
+      // 4. Update the filter button badge count
       const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
       const badge = document.getElementById('filterBadge');
       const filterBtn = document.getElementById('filterBtn');
@@ -2202,6 +2231,14 @@ if (State.filters.actualExam.length) {
         badge.style.display = 'none';
         filterBtn.classList.remove('active');
       }
+    }
+
+   // Helper to clear instant filters from the active tags
+    function removeInstantFilter(stateKey) {
+      State[stateKey] = null; // Sets activeExamGroup, activeExam, or activeSubject to null
+      renderTestChips(); // Update the horizontal chips active state
+      renderActiveFilters(); // Update the tags below search
+      applyFiltersAndSort(); // Re-filter the grid
     }
  
     function removeFilter(type, value) {
