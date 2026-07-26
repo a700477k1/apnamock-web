@@ -215,6 +215,8 @@
     .cross-link-inline h4 { margin: 0 0 2px 0; font-size: 15px; color: var(--text-primary); }
     .cross-link-inline p { margin: 0; font-size: 12px; color: var(--text-muted); }
     .cross-link-inline .arrow { color: var(--primary); font-size: 16px; margin-left: auto; }
+    /* PDF SPECIFIC ACTIONS (Hidden on screen, visible in PDF) */
+    .pdf-actions { display: none; }
 
     /* ACTION BUTTONS - Fixed layout */
     .job-actions { display:flex; gap:10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; }
@@ -343,6 +345,32 @@
       .cross-link-inline .icon-box { 
         background: #f1f5f9 !important; 
         color: #1a56db !important; 
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      /* Show and style PDF Action Buttons */
+      .pdf-actions {
+        display: flex !important;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #ccc;
+      }
+      .pdf-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 12pt;
+        border: 2px solid #1a56db;
+        color: #1a56db;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .pdf-btn-primary {
+        background-color: #1a56db;
+        color: #ffffff !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -563,57 +591,66 @@
       return txt.value;
     }
 
-        // Custom PDF Generator: Swaps external links to job URL, prints, then restores
+    // Custom PDF Generator: Swaps external links & PDF buttons to job URL, prints, then restores
     function generatePdfWithCustomLinks() {
       const jobUrl = window.location.href; // The link we want external links to point to
       const descContainer = document.getElementById('jobDescriptionContent');
+      const pdfActionsContainer = document.getElementById('pdfActionsContainer');
       
+      const linksToSwap = [];
+
+      // 1. Collect external links from the description
       if (descContainer) {
-        const links = descContainer.querySelectorAll('a');
-        
-        // 1. Swap external links
-        links.forEach(link => {
+        descContainer.querySelectorAll('a').forEach(link => {
           const href = link.getAttribute('href') || "";
-          
-          // Check if it's an external link (starts with http and is not your own domain/cdn)
           if (href.startsWith('http') && !href.includes('apnamock-web.apnamock.workers.dev') && !href.includes('cdn.jsdelivr.net')) {
-            // Save the original link so we can restore it later
-            if (!link.getAttribute('data-original-href')) {
-              link.setAttribute('data-original-href', href);
-            }
-            // Change the link to the current job page URL
-            link.setAttribute('href', jobUrl);
+            linksToSwap.push(link);
           }
         });
+      }
 
-        // 2. Function to restore the original links after printing
-        const restoreLinks = () => {
-          const modifiedLinks = descContainer.querySelectorAll('a[data-original-href]');
-          modifiedLinks.forEach(link => {
+      // 2. Collect the PDF Action buttons
+      if (pdfActionsContainer) {
+        const pdfNotifBtn = document.getElementById('pdfNotificationBtn');
+        const pdfApplyBtn = document.getElementById('pdfApplyBtn');
+        if (pdfNotifBtn) linksToSwap.push(pdfNotifBtn);
+        if (pdfApplyBtn) linksToSwap.push(pdfApplyBtn);
+      }
+
+      // 3. Swap all collected links to the jobUrl
+      linksToSwap.forEach(link => {
+        const originalHref = link.getAttribute('href') || "#";
+        if (originalHref !== jobUrl) {
+          if (!link.getAttribute('data-original-href')) {
+            link.setAttribute('data-original-href', originalHref);
+          }
+          link.setAttribute('href', jobUrl);
+        }
+      });
+
+      // 4. Function to restore the original links after printing
+      const restoreLinks = () => {
+        linksToSwap.forEach(link => {
+          if (link.getAttribute('data-original-href')) {
             link.setAttribute('href', link.getAttribute('data-original-href'));
             link.removeAttribute('data-original-href');
-          });
-          // Clean up the event listener
-          window.removeEventListener('afterprint', restoreLinks);
-        };
-
-        // Listen for the print dialog to close
-        window.addEventListener('afterprint', restoreLinks);
-
-        // 3. Trigger the print dialog
-        window.print();
-        
-        // Fallback: If the browser doesn't support 'afterprint' well, 
-        // restore links after a short delay just in case.
-        setTimeout(() => {
-          if (descContainer.querySelector('a[data-original-href]')) {
-            restoreLinks();
           }
-        }, 1000);
-      } else {
-        // If no description container found, just print normally
-        window.print();
-      }
+        });
+        window.removeEventListener('afterprint', restoreLinks);
+      };
+
+      // Listen for the print dialog to close
+      window.addEventListener('afterprint', restoreLinks);
+
+      // 5. Trigger the print dialog
+      window.print();
+      
+      // Fallback restore just in case
+      setTimeout(() => {
+        if (linksToSwap.some(l => l.getAttribute('data-original-href'))) {
+          restoreLinks();
+        }
+      }, 1000);
     }
 
     // Cleans up invisible empty paragraphs and excessive line breaks created by Quill
@@ -793,15 +830,19 @@
                   const u = getJobUrgency(job);
                   if (job.applyUrl) {
                     if (u.isExpired) {
-                      // If the job is expired, show a disabled "Apply Closed" button
                       return `<button class="btn btn-primary" disabled style="opacity: 0.5; cursor: not-allowed; pointer-events: none;"><i class="fa-solid fa-lock"></i> Apply Closed</button>`;
                     } else {
-                      // If active, show the normal Apply Online link
                       return `<a class="btn btn-primary" href="${job.applyUrl}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Apply Online</a>`;
                     }
                   }
                   return "";
                 })()}
+              </div>
+
+              <!-- PDF ONLY ACTIONS (Visible only when saving as PDF) -->
+              <div class="pdf-actions" id="pdfActionsContainer">
+                ${job.pdfUrl ? `<a class="pdf-btn" href="${job.pdfUrl}" id="pdfNotificationBtn">View Notification PDF</a>` : ""}
+                ${job.applyUrl ? `<a class="pdf-btn pdf-btn-primary" href="${job.applyUrl}" id="pdfApplyBtn">Apply Online</a>` : ""}
               </div>
             </div>
           </div>
