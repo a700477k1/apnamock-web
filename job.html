@@ -649,13 +649,27 @@
       }
 
       // 1. Update Sticky Bar
-      document.getElementById('stickyLastDate').textContent = job.lastDate || "N/A";
+      document.getElementById('stickyLastDate').textContent = job.extendedLastDate || job.lastDate || "N/A";
       const stickyApplyBtn = document.getElementById('stickyApplyBtn');
-      if (job.applyUrl) {
+      const isExpired = getJobUrgency(job).isExpired;
+      
+      if (job.applyUrl && !isExpired) {
+          // Job is active: Show normal Apply Online button
           stickyApplyBtn.href = job.applyUrl;
+          stickyApplyBtn.innerHTML = 'Apply Online <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+          stickyApplyBtn.style.pointerEvents = 'auto';
+          stickyApplyBtn.style.opacity = '1';
+          stickyApplyBtn.style.display = 'flex';
+      } else if (job.applyUrl && isExpired) {
+          // Job is expired: Disable the button and change text
+          stickyApplyBtn.removeAttribute('href');
+          stickyApplyBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Apply Closed';
+          stickyApplyBtn.style.pointerEvents = 'none';
+          stickyApplyBtn.style.opacity = '0.5';
           stickyApplyBtn.style.display = 'flex';
       } else {
-          stickyApplyBtn.style.display = 'none'; // Hide apply button if no link
+          // No apply URL exists at all
+          stickyApplyBtn.style.display = 'none';
       }
 
       // 2. Update Native Share Button Logic
