@@ -303,10 +303,10 @@
     </div>
   </main>
 
-  <!-- Floating WhatsApp Button -->
-  <a href="#" id="whatsappShareBtn" class="whatsapp-float" target="_blank" title="Share on WhatsApp">
+  <!-- Floating WhatsApp Button (Now uses Native Share API) -->
+  <button id="whatsappShareBtn" class="whatsapp-float" title="Share Job">
     <i class="fa-brands fa-whatsapp"></i>
-  </a>
+  </button>
 
   <!-- Mobile Sticky Apply Bar -->
   <div id="mobileStickyBar" class="mobile-sticky-apply">
@@ -650,10 +650,52 @@
           stickyApplyBtn.style.display = 'none'; // Hide apply button if no link
       }
 
-      // 2. Update WhatsApp Share Button
-      const waBtn = document.getElementById('whatsappShareBtn');
-      const shareText = `Check out this job: ${job.title} at ApnaMock. Apply here: ${window.location.href}`;
-      waBtn.href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      // 2. Update Native Share Button Logic
+      const shareBtn = document.getElementById('whatsappShareBtn');
+      const shareUrl = window.location.href;
+      const shareText = `Check out this job: ${job.title} at ApnaMock.\nApply here: ${shareUrl}`;
+      const fallbackUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+
+      shareBtn.onclick = async () => {
+        // Check if Native Share API is supported (Mobile/Modern Browsers)
+        if (navigator.share) {
+          try {
+            // If there's an image, try to fetch it and share it as a file
+            if (job.imageUrl) {
+              try {
+                const response = await fetch(job.imageUrl);
+                const blob = await response.blob();
+                const file = new File([blob], "job.jpg", { type: blob.type });
+
+                // Check if the device supports sharing actual files
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                  await navigator.share({
+                    title: "ApnaMock Job Alert",
+                    text: shareText,
+                    files: [file]
+                  });
+                  return; // Success, stop here
+                }
+              } catch (imgErr) {
+                console.error("Image fetch failed, falling back to text share.", imgErr);
+              }
+            }
+
+            // Fallback if no image, or if device can't share files: Share text + URL
+            await navigator.share({
+              title: "ApnaMock Job Alert",
+              text: shareText,
+              url: shareUrl
+            });
+
+          } catch (err) {
+            console.error("Native share failed:", err);
+          }
+        } else {
+          // Fallback for Desktop/Older browsers: Open WhatsApp text link
+          window.open(fallbackUrl, '_blank');
+        }
+      };
 
       updateOpenGraph(job);
       injectJobSchema(job);
