@@ -561,6 +561,17 @@ const State = {
       link.addEventListener("click", closeMobileMenu);
     });
 
+    // XSS Utility
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     // Popup Helpers
     function openOverlay(id) { document.getElementById(id).classList.add('open'); }
     function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
@@ -785,7 +796,7 @@ const State = {
       }).join('');
 
       // Attach listeners
-      document.querySelectorAll('#filterCategories .filter-chip-select, #filterStates .filter-chip-select').forEach(btn => {
+      document.querySelectorAll('#filterStatus .filter-chip-select, #filterCategories .filter-chip-select, #filterStates .filter-chip-select').forEach(btn => {
         btn.addEventListener('click', () => btn.classList.toggle('selected'));
       });
     }
