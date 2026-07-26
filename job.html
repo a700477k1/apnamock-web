@@ -563,6 +563,59 @@
       return txt.value;
     }
 
+        // Custom PDF Generator: Swaps external links to job URL, prints, then restores
+    function generatePdfWithCustomLinks() {
+      const jobUrl = window.location.href; // The link we want external links to point to
+      const descContainer = document.getElementById('jobDescriptionContent');
+      
+      if (descContainer) {
+        const links = descContainer.querySelectorAll('a');
+        
+        // 1. Swap external links
+        links.forEach(link => {
+          const href = link.getAttribute('href') || "";
+          
+          // Check if it's an external link (starts with http and is not your own domain/cdn)
+          if (href.startsWith('http') && !href.includes('apnamock-web.apnamock.workers.dev') && !href.includes('cdn.jsdelivr.net')) {
+            // Save the original link so we can restore it later
+            if (!link.getAttribute('data-original-href')) {
+              link.setAttribute('data-original-href', href);
+            }
+            // Change the link to the current job page URL
+            link.setAttribute('href', jobUrl);
+          }
+        });
+
+        // 2. Function to restore the original links after printing
+        const restoreLinks = () => {
+          const modifiedLinks = descContainer.querySelectorAll('a[data-original-href]');
+          modifiedLinks.forEach(link => {
+            link.setAttribute('href', link.getAttribute('data-original-href'));
+            link.removeAttribute('data-original-href');
+          });
+          // Clean up the event listener
+          window.removeEventListener('afterprint', restoreLinks);
+        };
+
+        // Listen for the print dialog to close
+        window.addEventListener('afterprint', restoreLinks);
+
+        // 3. Trigger the print dialog
+        window.print();
+        
+        // Fallback: If the browser doesn't support 'afterprint' well, 
+        // restore links after a short delay just in case.
+        setTimeout(() => {
+          if (descContainer.querySelector('a[data-original-href]')) {
+            restoreLinks();
+          }
+        }, 1000);
+      } else {
+        // If no description container found, just print normally
+        window.print();
+      }
+    }
+
     // Cleans up invisible empty paragraphs and excessive line breaks created by Quill
     function cleanQuillHtml(html) {
       if (!html) return "";
@@ -728,7 +781,7 @@
               </a>
 
               <div class="job-actions">
-                <button class="btn btn-outline" onclick="window.print()">
+                <button class="btn btn-outline" onclick="generatePdfWithCustomLinks()">
                   <i class="fa-solid fa-print"></i> Save as PDF
                 </button>
                 ${job.pdfUrl ? `
