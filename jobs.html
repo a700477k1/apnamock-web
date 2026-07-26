@@ -256,6 +256,21 @@
     .sort-option .sort-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); }
     .sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); }
 
+    /* TOAST */
+    .toast-container {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
+    }
+    .toast {
+      display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff;
+      padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500;
+      box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 340px; text-align: center;
+    }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+    .toast.warning { background: var(--warning); }
+
     /* SEO CONTENT BLOCK */
     .seo-content { margin-top: 60px; padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); border-radius: 18px; }
     .seo-content h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; line-height: 1.4; }
@@ -487,6 +502,8 @@
     </div>
   </div>
 
+  <div class="toast-container" id="toastContainer"></div>
+
   <!-- SORT POPUP -->
   <div class="overlay" id="sortOverlay">
     <div class="popup">
@@ -639,6 +656,21 @@ const State = {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+    }
+
+    // Toast Notification Helper
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${
+        type === 'success' ? 'fa-circle-check' :
+        type === 'error' ? 'fa-circle-xmark' :
+        type === 'warning' ? 'fa-triangle-exclamation' :
+        'fa-circle-info'
+      }"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
     }
 
     // Popup Helpers
@@ -1124,7 +1156,6 @@ const State = {
               <button onclick="shareJobCard('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:#25D366; border-color:#25D366;">
                 <i class="fa-brands fa-whatsapp"></i> Share
               </button>
-              </a>
               <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
                 <i class="fa-solid fa-image"></i> Share Image
               </button>
