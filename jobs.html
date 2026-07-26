@@ -126,7 +126,7 @@
     .status-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
     .status-chip.active { background: #dcfce7; color: #15803d; }
     .status-chip.expired { background: #fee2e2; color: #dc2626; }
-    .job-title { font-size: 21px; font-weight: 700; line-height: 1.35; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .job-title { font-size: 18px; font-weight: 700; line-height: 1.35; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .job-company { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; }
     .job-company i { color: var(--primary); }
     .job-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: var(--bg-muted); border-radius: 14px; padding: 14px; }
@@ -209,7 +209,7 @@
       .job-card { width: 100%; margin-bottom: 18px; border-radius: 20px; overflow: hidden; }
       .job-image { height: 220px; }
       .job-content { padding: 14px; }
-      .job-title { font-size: 20px; }
+      .job-title { font-size: 18px; }
       .job-meta-grid { grid-template-columns: 1fr; padding: 14px; }
       .job-actions { flex-direction: column; }
       .job-actions .btn { flex: 1; width: 100%; height: 40px; min-height: 40px; padding: 0 16px; font-size: 13px; font-weight: 600; line-height: 1; gap: 6px; }
@@ -636,10 +636,10 @@
               ${job.company || "Government"}
             </div>
                 <div class="job-meta-grid">
-              <div class="job-meta">
+                 <div class="job-meta">
                 <i class="fa-solid fa-calendar-days"></i>
                 <div>
-                  <small>Posted</small>
+                  <small>Start Date</small>
                   <strong>${job.postDate || "—"}</strong>
                 </div>
               </div>
@@ -676,10 +676,10 @@
               </div>
               ` : ""}
               ${job.applicationFee ? `
-              <div class="job-meta">
+                <div class="job-meta">
                 <i class="fa-solid fa-indian-rupee-sign"></i>
                 <div>
-                  <small>App Fee</small>
+                  <small>Application Fee</small>
                   <strong>${job.applicationFee}</strong>
                 </div>
               </div>
