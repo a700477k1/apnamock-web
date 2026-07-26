@@ -165,41 +165,44 @@
     .image-share-overlay { z-index: 300; }
     #shareImageTemplate {
       position: fixed; top: 0; left: -9999px; z-index: -1; 
-      width: 800px; background: #fff; font-family: 'Inter', sans-serif; box-sizing: border-box;
+      width: 800px; 
+      background: linear-gradient(135deg, #1a56db, #f97316); /* Gradient now wraps the whole image */
+      font-family: 'Inter', sans-serif; box-sizing: border-box;
       overflow: hidden; margin: 0; padding: 0;
     }
     .tpl-header { 
-      background: linear-gradient(135deg, #1a56db, #f97316); 
-      padding: 40px; display: flex; align-items: center; gap: 20px; margin: 0; 
+      background: transparent; /* Header is now transparent to show the main gradient */
+      padding: 50px; display: flex; align-items: center; gap: 20px; margin: 0; 
     }
     .tpl-logo { 
-      width: 70px; height: 70px; background: #fff; border-radius: 16px; 
+      width: 80px; height: 80px; background: #fff; border-radius: 16px; 
       display: flex; align-items: center; justify-content: center; 
-      font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; flex-shrink: 0; 
+      font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 42px; color: #1a56db; flex-shrink: 0; 
     }
-    .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
-    .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
-    .tpl-img-wrap { width: 100%; height: 400px; overflow: hidden; background: #f1f5f9; margin: 0; padding: 0; display: block; }
+    .tpl-brand-name { color: #fff; font-size: 44px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
+    .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 22px; margin-top: 8px; }
+    .tpl-img-wrap { width: 100%; height: 450px; overflow: hidden; background: #f1f5f9; margin: 0; padding: 0; display: block; }
     .tpl-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .tpl-body { padding: 40px; margin: 0; display: block; }
+    .tpl-body { padding: 50px; margin: 0; display: block; background: transparent; }
     .tpl-category { 
-      display: inline-block; background: #e8f0fe; color: #1a56db; padding: 10px 20px; 
-      border-radius: 99px; font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; 
+      display: inline-block; background: rgba(255,255,255,0.25); color: #fff; padding: 12px 24px; 
+      border-radius: 99px; font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 25px; 
     }
-    .tpl-title { margin: 0 0 20px 0; font-size: 32px; color: #1e293b; line-height: 1.3; font-family: 'Poppins', sans-serif; }
-    .tpl-company { font-size: 22px; color: #475569; margin-bottom: 30px; font-weight: 500; }
+    .tpl-title { margin: 0 0 25px 0; font-size: 38px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; }
+    .tpl-company { font-size: 26px; color: rgba(255,255,255,0.9); margin-bottom: 40px; font-weight: 500; }
     .tpl-grid { 
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; 
-      background: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; margin: 0; 
+      display: grid; grid-template-columns: 1fr 1fr; gap: 25px; 
+      background: rgba(15, 23, 42, 0.4); /* Dark frosted glass effect so text pops on the gradient */
+      padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); margin: 0; 
     }
-    .tpl-grid-item { display: flex; flex-direction: column; gap: 6px; }
-    .tpl-grid-label { font-size: 14px; color: #94a3b8; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-    .tpl-grid-value { font-size: 20px; font-weight: 600; color: #1e293b; }
+    .tpl-grid-item { display: flex; flex-direction: column; gap: 8px; }
+    .tpl-grid-label { font-size: 16px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .tpl-grid-value { font-size: 24px; font-weight: 600; color: #ffffff; }
     .tpl-footer { 
-      background: #0f172a; padding: 30px 40px; text-align: center; margin: 0; 
+      background: #0f172a; padding: 40px 50px; text-align: center; margin: 0; 
     }
-    .tpl-footer-text { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .tpl-footer-url { color: #93c5fd; font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
+    .tpl-footer-text { color: #fff; font-size: 24px; font-weight: 600; margin-bottom: 10px; }
+    .tpl-footer-url { color: #93c5fd; font-size: 20px; font-weight: 500; letter-spacing: 0.5px; }
 
     /* CONTROLS BAR */
     .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
