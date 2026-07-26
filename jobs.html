@@ -907,7 +907,7 @@ const State = {
 
     // Generates the job image and opens the preview popup
     async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, totalPosts, appFee, encodedJobSlug) {
-      showToast.info("Generating...", "Creating image");
+      showToast("Creating image...", "info");
       
       const jobSlug = decodeURIComponent(encodedJobSlug);
       const imageUrl = decodeURIComponent(encodedImageUrl);
@@ -963,7 +963,7 @@ const State = {
             } else {
               // Fallback for desktop: copy text and download image
               navigator.clipboard.writeText(_currentImageShareText);
-              showToast.success("Text Copied!", "Link copied. Image is downloading...");
+              showToast("Link copied. Image is downloading...", "success");
               document.getElementById('downloadImageBtn').click();
             }
           } catch (err) {
@@ -974,7 +974,7 @@ const State = {
         openOverlay('imageShareOverlay');
       } catch (err) {
         console.error("html2canvas error", err);
-        showToast.error("Error", "Could not generate image.");
+        showToast("Could not generate image.", "error");
       }
     }
 
