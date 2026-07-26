@@ -851,7 +851,7 @@
       -webkit-backdrop-filter: blur(4px);
       z-index: 200;
       display: flex;
-      align-items: flex-end;
+      align-items: center; /* CHANGED to center */
       justify-content: center;
       padding: 16px;
       opacity: 0;
@@ -861,30 +861,24 @@
  
     .overlay.open { opacity: 1; pointer-events: all; }
  
-    @media (min-width: 600px) { .overlay { align-items: center; } }
- 
     /* ============================================================
        POPUP PANEL
     ============================================================ */
     .popup {
       background: var(--bg-card);
-      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      border-radius: var(--radius-xl); /* CHANGED to uniform rounded corners */
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       max-height: 85vh;
       display: flex;
       flex-direction: column;
       box-shadow: var(--shadow-lg);
-      transform: translateY(24px);
+      transform: scale(0.95) translateY(12px); /* CHANGED for center pop-in effect */
       transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
       overflow: hidden;
     }
  
-    @media (min-width: 600px) {
-      .popup { border-radius: var(--radius-xl); max-height: 90vh; }
-    }
- 
-    .overlay.open .popup { transform: translateY(0); }
+    .overlay.open .popup { transform: scale(1) translateY(0); }
  
     .popup-header {
       display: flex;
