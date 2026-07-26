@@ -1560,18 +1560,15 @@
       allTests: [],
       filteredTests: [],
       displayedCount: 0,
-  activeExamGroup: null,
-  activeExam: null,
-  activeSubject: null, 
       filters: {
- exam: [],
- actualExam: [],
- year: [],
- subject: [],
- paperType: [],
- difficulty: [],
- attempt: null
-},
+         exam: [],
+         actualExam: [],
+         year: [],
+         subject: [],
+         paperType: [],
+         difficulty: [],
+         attempt: null
+      },
       sort: null,
       search: '',
       attemptHistory: {}
@@ -1656,24 +1653,28 @@
       }
     }
 
-        // Renders the horizontal chips
+    // Renders the horizontal chips
     function renderTestChips() {
       const wrap = document.getElementById('testChipsWrap');
       if (!wrap) return;
       
       const examGroups = [...new Set(State.allTests.map(t => t.exam_group).filter(Boolean))].sort();
       
-      let html = `<div class="cat-chip ${!State.activeExamGroup && !State.activeExam && !State.activeSubject ? 'active' : ''}" onclick="clearAllInstantFilters()">All Tests</div>`;
+      // Active if NO exam or subject filters are applied
+      const isAllActive = State.filters.exam.length === 0 && State.filters.actualExam.length === 0 && State.filters.subject.length === 0;
+      let html = `<div class="cat-chip ${isAllActive ? 'active' : ''}" onclick="clearAllInstantFilters()">All Tests</div>`;
       
       examGroups.forEach(group => {
-        const isActive = State.activeExamGroup === group || (State.activeExam && State.allTests.find(t => t.exam === State.activeExam)?.exam_group === group);
+        // Active if this group is the ONLY exam group selected, and no specific exam is selected
+        const isActive = State.filters.exam.length === 1 && State.filters.exam[0] === group && State.filters.actualExam.length === 0;
         html += `<div class="cat-chip ${isActive ? 'active' : ''}" onclick="openExamGroupPopup('${group.replace(/'/g, "\\'")}')">${group}</div>`;
       });
       
-      // Add Subject Button
-      html += `<div class="cat-chip ${State.activeSubject ? 'active' : ''}" onclick="openSubjectPopup()"><i class="fa-solid fa-book"></i> Subjects</div>`;
+      // Subject Button: Active if exactly 1 subject is selected
+      const isSubjectActive = State.filters.subject.length === 1;
+      html += `<div class="cat-chip ${isSubjectActive ? 'active' : ''}" onclick="openSubjectPopup()"><i class="fa-solid fa-book"></i> Subjects</div>`;
       
-      // Add More Button
+      // More Button
       html += `<div class="cat-chip" onclick="openOverlay('filterOverlay')"><i class="fa-solid fa-sliders"></i> More</div>`;
       
       wrap.innerHTML = html;
@@ -1684,13 +1685,14 @@
       const container = document.getElementById('examGroupListContainer');
       document.getElementById('examGroupPopupTitle').textContent = group + " Exams";
       
-      // Find all exams belonging to this group
       const exams = [...new Set(State.allTests.filter(t => t.exam_group === group).map(t => t.exam).filter(Boolean))].sort();
       
-      let html = `<button class="filter-chip-select ${State.activeExamGroup === group ? 'selected' : ''}" onclick="setActiveExamGroup('${group.replace(/'/g, "\\'")}')">All ${group} Exams</button>`;
+      const isGroupSelected = State.filters.exam.includes(group);
+      let html = `<button class="filter-chip-select ${isGroupSelected ? 'selected' : ''}" onclick="setActiveExamGroup('${group.replace(/'/g, "\\'")}')">All ${group} Exams</button>`;
       
       exams.forEach(exam => {
-        html += `<button class="filter-chip-select ${State.activeExam === exam ? 'selected' : ''}" onclick="setActiveExam('${exam.replace(/'/g, "\\'")}')">${exam}</button>`;
+        const isExamSelected = State.filters.actualExam.includes(exam);
+        html += `<button class="filter-chip-select ${isExamSelected ? 'selected' : ''}" onclick="setActiveExam('${exam.replace(/'/g, "\\'")}')">${exam}</button>`;
       });
       
       container.innerHTML = html;
@@ -1699,21 +1701,23 @@
 
     // Sets the filter to an entire Exam Group
     function setActiveExamGroup(group) {
-      State.activeExamGroup = group;
-      State.activeExam = null; // Clear specific exam
-      State.activeSubject = null; // Clear subject to avoid empty results
+      State.filters.exam = [group];
+      State.filters.actualExam = []; 
+      State.filters.subject = []; 
       closeOverlay('examGroupOverlay');
       renderTestChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
     // Sets the filter to a specific Exam
     function setActiveExam(exam) {
-      State.activeExam = exam;
-      State.activeExamGroup = null; // Clear broad group
-      State.activeSubject = null; // Clear subject
+      State.filters.actualExam = [exam];
+      State.filters.exam = []; 
+      State.filters.subject = []; 
       closeOverlay('examGroupOverlay');
       renderTestChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
@@ -1724,7 +1728,8 @@
       
       let html = '';
       subjects.forEach(sub => {
-        html += `<button class="filter-chip-select ${State.activeSubject === sub ? 'selected' : ''}" onclick="setActiveSubject('${sub.replace(/'/g, "\\'")}')">${sub}</button>`;
+        const isSelected = State.filters.subject.includes(sub);
+        html += `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" onclick="setActiveSubject('${sub.replace(/'/g, "\\'")}')">${sub}</button>`;
       });
       
       container.innerHTML = html;
@@ -1733,28 +1738,31 @@
 
     // Sets the active subject
     function setActiveSubject(subject) {
-      State.activeSubject = subject;
-      State.activeExamGroup = null;
-      State.activeExam = null;
+      State.filters.subject = [subject];
+      State.filters.exam = [];
+      State.filters.actualExam = [];
       closeOverlay('subjectOverlay');
       renderTestChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
     // Clears subject filter
     function clearSubjectFilter() {
-      State.activeSubject = null;
+      State.filters.subject = [];
       closeOverlay('subjectOverlay');
       renderTestChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
     // Clears all instant filters (when "All Tests" is clicked)
     function clearAllInstantFilters() {
-      State.activeExamGroup = null;
-      State.activeExam = null;
-      State.activeSubject = null;
+      State.filters.exam = [];
+      State.filters.actualExam = [];
+      State.filters.subject = [];
       renderTestChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
  
@@ -1866,17 +1874,6 @@ renderChipGroup(
     ============================================================ */
     function applyFiltersAndSort() {
       let tests = [...State.allTests];
-
-      // Instant Chips Filters
-      if (State.activeExamGroup) {
-        tests = tests.filter(t => t.exam_group === State.activeExamGroup);
-      }
-      if (State.activeExam) {
-        tests = tests.filter(t => t.exam === State.activeExam);
-      }
-      if (State.activeSubject) {
-        tests = tests.filter(t => t.subject === State.activeSubject);
-      }
  
       // Search
       if (State.search) {
@@ -2377,6 +2374,7 @@ if (State.filters.actualExam.length) {
  
       closeOverlay('filterOverlay');
       renderActiveFilters();
+      renderTestChips();
       applyFiltersAndSort();
     });
  
