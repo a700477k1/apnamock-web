@@ -634,6 +634,99 @@
       applyFiltersAndSort();
     }
 
+    // Renders the active filter tags below the search bar
+    function renderActiveFilters() {
+      const container = document.getElementById('activeFilters');
+      if (!container) return;
+      const chips = [];
+
+      // 1. Instant Chips Filters (Category & State)
+      if (State.activeCategory) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>Category: ${escapeHtml(State.activeCategory)}</span>
+            <button class="filter-chip-remove" onclick="removeInstantFilter('activeCategory')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+      if (State.activeState) {
+        chips.push(`
+          <div class="filter-chip">
+            <span>State: ${escapeHtml(State.activeState)}</span>
+            <button class="filter-chip-remove" onclick="removeInstantFilter('activeState')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `);
+      }
+
+      // 2. Advanced Popup Filters (Status & Category)
+      const typeLabels = {
+        status: 'Status',
+        category: 'Category'
+      };
+
+      ['status', 'category'].forEach(type => {
+        (State.filters[type] || []).forEach(value => {
+          chips.push(`
+            <div class="filter-chip">
+              <span>${typeLabels[type]}: ${escapeHtml(value)}</span>
+              <button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHtml(value)}')">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          `);
+        });
+      });
+
+      // 3. Add Clear All button if any tags exist
+      if (chips.length) {
+        chips.push(`
+          <button class="clear-all-btn" onclick="clearAllFilters()">
+            Clear All
+          </button>
+        `);
+      }
+
+      container.innerHTML = chips.join('');
+
+      // 4. Update the filter button badge count
+      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
+      const badge = document.getElementById('filterBadge');
+      const filterBtn = document.getElementById('filterBtn');
+      
+      if (totalFilters > 0) {
+        badge.textContent = totalFilters;
+        badge.classList.add('show');
+        filterBtn.classList.add('active');
+      } else {
+        badge.classList.remove('show');
+        filterBtn.classList.remove('active');
+      }
+    }
+
+    // Helper to clear instant filters from the active tags
+    function removeInstantFilter(type) {
+      State[type] = null; // Sets activeCategory or activeState to null
+      renderCategoryChips(); // Update the horizontal chips active state
+      renderActiveFilters(); // Update the tags
+      applyFiltersAndSort(); // Re-filter the grid
+    }
+
+    // Helper to remove advanced popup filters from the active tags
+    function removeFilter(type, value) {
+      if (State.filters[type]) {
+        State.filters[type] = State.filters[type].filter(v => v !== value);
+        // Also unselect it in the popup UI visually
+        const chipToDeselect = document.querySelector(`#filter${type.charAt(0).toUpperCase() + type.slice(1)} .filter-chip-select[data-value="${value}"]`);
+        if (chipToDeselect) chipToDeselect.classList.remove('selected');
+      }
+      renderActiveFilters();
+      applyFiltersAndSort();
+    }
+
     // Fetch Jobs
     async function loadJobs() {
       try {
@@ -712,6 +805,7 @@
       });
 
       State.filteredJobs = filtered;
+      renderActiveFilters();
       renderJobs(filtered);
     }
 
@@ -913,6 +1007,10 @@
     function clearAllFilters() {
       document.querySelectorAll('.filter-chip-select').forEach(btn => btn.classList.remove('selected'));
       State.filters = { status: [], category: [] };
+      State.activeCategory = null; 
+      State.activeState = null; 
+      renderCategoryChips(); 
+      renderActiveFilters();
       applyFilters();
     }
 
