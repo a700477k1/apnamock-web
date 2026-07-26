@@ -306,6 +306,29 @@
       <p class="page-subtitle">Stay updated with the latest government job vacancies, exam dates, and eligibility criteria.</p>
     </div>
 
+    <!-- DYNAMIC SCROLLABLE CATEGORY CHIPS -->
+    <div class="category-chips-wrap" id="categoryChipsWrap">
+      <div class="cat-chip" style="opacity: 0.5;">Loading categories...</div>
+    </div>
+
+    <!-- STATE SELECTION POPUP -->
+    <div class="overlay" id="statePopupOverlay">
+      <div class="popup">
+        <div class="popup-header">
+          <span class="popup-title">Select State</span>
+          <button class="popup-close" onclick="closeOverlay('statePopupOverlay')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="popup-body">
+          <div class="filter-chips-wrap" id="stateListContainer"></div>
+        </div>
+        <div class="popup-footer">
+          <button class="btn btn-outline" style="flex:1" onclick="clearStateFilter()">Clear State Filter</button>
+          <button class="btn btn-primary" style="flex:1" onclick="closeOverlay('statePopupOverlay')">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS BAR -->
     <div class="controls-bar">
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
