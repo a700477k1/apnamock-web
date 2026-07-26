@@ -123,6 +123,41 @@
     .cat-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
     .cat-chip i { font-size: 12px; }
 
+    /* ACTIVE FILTERS ROW */
+    .active-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .active-filters:empty { display: none; }
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(26,86,219,0.2);
+      border-radius: 99px;
+      padding: 4px 10px 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .filter-chip-remove {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(26,86,219,0.15); color: var(--primary);
+      font-size: 10px; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; cursor: pointer; border: none;
+    }
+    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); }
+    .clear-all-btn {
+      font-size: 12px; color: var(--error); font-weight: 600;
+      padding: 4px 8px; border-radius: 99px; transition: background 0.15s;
+      cursor: pointer; border: none; background: none;
+    }
+    .clear-all-btn:hover { background: var(--error-light); }
+
     /* CONTROLS BAR */
     .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
     .search-wrap { flex: 1; min-width: 220px; position: relative; }
@@ -322,6 +357,11 @@
         <span>Sort By</span>
       </button>
     </div>
+
+    <!-- ACTIVE FILTERS ROW -->
+    <div class="active-filters" id="activeFilters"></div>
+
+    <div class="jobs-list" id="jobsList">
 
     <div class="jobs-list" id="jobsList">
       <div style="text-align:center;padding:40px;color:var(--text-muted)">
@@ -660,35 +700,13 @@ const State = {
       if (!container) return;
       const chips = [];
 
-      // 1. Instant Chips Filters (Category & State)
-      if (State.activeCategory) {
-        chips.push(`
-          <div class="filter-chip">
-            <span>Category: ${escapeHtml(State.activeCategory)}</span>
-            <button class="filter-chip-remove" onclick="removeInstantFilter('activeCategory')">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        `);
-      }
-      if (State.activeState) {
-        chips.push(`
-          <div class="filter-chip">
-            <span>State: ${escapeHtml(State.activeState)}</span>
-            <button class="filter-chip-remove" onclick="removeInstantFilter('activeState')">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        `);
-      }
-
-      // 2. Advanced Popup Filters (Status & Category)
       const typeLabels = {
         status: 'Status',
-        category: 'Category'
+        category: 'Category',
+        state: 'State'
       };
 
-      ['status', 'category'].forEach(type => {
+      ['status', 'category', 'state'].forEach(type => {
         (State.filters[type] || []).forEach(value => {
           chips.push(`
             <div class="filter-chip">
@@ -701,7 +719,6 @@ const State = {
         });
       });
 
-      // 3. Add Clear All button if any tags exist
       if (chips.length) {
         chips.push(`
           <button class="clear-all-btn" onclick="clearAllFilters()">
@@ -712,7 +729,6 @@ const State = {
 
       container.innerHTML = chips.join('');
 
-      // 4. Update the filter button badge count
       const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
       const badge = document.getElementById('filterBadge');
       const filterBtn = document.getElementById('filterBtn');
@@ -810,6 +826,9 @@ const State = {
       }
       if (State.filters.category.length > 0) {
         filtered = filtered.filter(j => State.filters.category.includes(j.category));
+      }
+      if (State.filters.state.length > 0) {
+        filtered = filtered.filter(j => State.filters.state.includes(j.stateName));
       }
 
       // Sort
