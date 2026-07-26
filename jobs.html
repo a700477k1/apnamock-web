@@ -369,6 +369,11 @@
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Category</div>
         <div class="filter-chips-wrap" id="filterCategories"></div>
       </div>
+
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px; margin-top:20px;">By State</div>
+        <div class="filter-chips-wrap" id="filterStates">
+        </div>
+      
       <div class="popup-footer">
         <button class="btn btn-outline" style="flex:1" onclick="clearAllFilters()">Clear All</button>
         <button class="btn btn-primary" style="flex:1" onclick="applyFilters()">Apply Filters</button>
@@ -461,16 +466,14 @@
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/', 
       ITEMS_PER_PAGE: 20 // Loads 20 jobs at a time
     };
-    const State = {
-      allJobs: [],
-      filteredJobs: [],
-      displayedCount: 0, // Keeps track of how many we have shown
-      search: '',
-      activeCategory: null,
-      activeState: null,
-      filters: { status: [], category: [] },
-      sort: 'expiry-asc'
-    };
+const State = {
+  allJobs: [],
+  filteredJobs: [],
+  displayedCount: 0,
+  search: '',
+  filters: { status: [], category: [], state: [] }, // <--- ADD state array here
+  sort: 'expiry-asc'
+};
 
     // Theme & Menu Logic
     function storageGet(key){
@@ -572,34 +575,48 @@
       }
     }
 
-    // Renders the horizontal category chips
+        // Renders the horizontal chips
     function renderCategoryChips() {
       const wrap = document.getElementById('categoryChipsWrap');
       if (!wrap) return;
       
-      // Get unique categories from the loaded jobs data
       const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))].sort();
       
-      let html = `<div class="cat-chip ${!State.activeCategory && !State.activeState ? 'active' : ''}" onclick="setActiveCategory(null)">All Jobs</div>`;
+      // Active if NO category or state filters are applied
+      const isAllActive = State.filters.category.length === 0 && State.filters.state.length === 0;
+      let html = `<div class="cat-chip ${isAllActive ? 'active' : ''}" onclick="clearAllInstantFilters()">All Jobs</div>`;
       
       // Force the "State" button to be the first chip
       const hasStates = State.allJobs.some(j => j.stateName);
       if (hasStates) {
-        html += `<div class="cat-chip ${State.activeState ? 'active' : ''}" onclick="openStatePopup()"><i class="fa-solid fa-map-location-dot"></i> State Jobs</div>`;
+        const isStateActive = State.filters.state.length === 1 && State.filters.category.length === 0;
+        html += `<div class="cat-chip ${isStateActive ? 'active' : ''}" onclick="openStatePopup()"><i class="fa-solid fa-map-location-dot"></i> State Jobs</div>`;
       }
       
       categories.forEach(cat => {
-        html += `<div class="cat-chip ${State.activeCategory === cat ? 'active' : ''}" onclick="setActiveCategory('${cat.replace(/'/g, "\\'")}')">${cat}</div>`;
+        // Active if this is the ONLY category selected
+        const isActive = State.filters.category.length === 1 && State.filters.category[0] === cat;
+        html += `<div class="cat-chip ${isActive ? 'active' : ''}" onclick="setActiveCategory('${cat.replace(/'/g, "\\'")}')">${cat}</div>`;
       });
       
       wrap.innerHTML = html;
     }
 
+    // Clears all instant filters (when "All Jobs" is clicked)
+    function clearAllInstantFilters() {
+      State.filters.category = [];
+      State.filters.state = [];
+      renderCategoryChips();
+      buildFilterOptions(); // Sync the advanced popup UI
+      applyFiltersAndSort();
+    }
+
     // Filters by a specific category (SSC, Bank, etc.) and clears any state filter
     function setActiveCategory(cat) {
-      State.activeCategory = cat;
-      State.activeState = null; // Clear state if clicking a normal category
+      State.filters.category = [cat];
+      State.filters.state = []; // Clear state if clicking a normal category
       renderCategoryChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
@@ -610,7 +627,8 @@
       
       let html = '';
       states.forEach(state => {
-        html += `<button class="filter-chip-select ${State.activeState === state ? 'selected' : ''}" onclick="setActiveState('${state.replace(/'/g, "\\'")}')">${state}</button>`;
+        const isSelected = State.filters.state.includes(state);
+        html += `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" onclick="setActiveState('${state.replace(/'/g, "\\'")}')">${state}</button>`;
       });
       
       container.innerHTML = html;
@@ -619,18 +637,20 @@
 
     // Filters by a specific state and clears any category filter
     function setActiveState(state) {
-      State.activeState = state;
-      State.activeCategory = null; // Clear category if clicking a state
+      State.filters.state = [state];
+      State.filters.category = []; // Clear category if clicking a state
       closeOverlay('statePopupOverlay');
       renderCategoryChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
     // Clears the state filter
     function clearStateFilter() {
-      State.activeState = null;
+      State.filters.state = [];
       closeOverlay('statePopupOverlay');
       renderCategoryChips();
+      buildFilterOptions(); // Sync the advanced popup UI
       applyFiltersAndSort();
     }
 
@@ -716,15 +736,45 @@
     }
 
     // Helper to remove advanced popup filters from the active tags
+    // Helper to remove advanced popup filters from the active tags
     function removeFilter(type, value) {
       if (State.filters[type]) {
         State.filters[type] = State.filters[type].filter(v => v !== value);
-        // Also unselect it in the popup UI visually
-        const chipToDeselect = document.querySelector(`#filter${type.charAt(0).toUpperCase() + type.slice(1)} .filter-chip-select[data-value="${value}"]`);
-        if (chipToDeselect) chipToDeselect.classList.remove('selected');
+        // Sync UI based on type
+        if (type === 'category' || type === 'state') {
+          buildFilterOptions();
+          renderCategoryChips();
+        } else if (type === 'status') {
+           const chipToDeselect = document.querySelector(`#filterStatus .filter-chip-select[data-value="${value}"]`);
+           if (chipToDeselect) chipToDeselect.classList.remove('selected');
+        }
       }
       renderActiveFilters();
       applyFiltersAndSort();
+    }
+
+    // Builds the advanced filter popup UI and syncs selected states
+    function buildFilterOptions() {
+      // Categories
+      const catContainer = document.getElementById('filterCategories');
+      const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))];
+      catContainer.innerHTML = categories.map(cat => {
+        const isSelected = State.filters.category.includes(cat);
+        return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="category" data-value="${cat}">${cat}</button>`;
+      }).join('');
+      
+      // States
+      const stateContainer = document.getElementById('filterStates');
+      const states = [...new Set(State.allJobs.map(j => j.stateName).filter(Boolean))];
+      stateContainer.innerHTML = states.map(st => {
+        const isSelected = State.filters.state.includes(st);
+        return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="state" data-value="${st}">${st}</button>`;
+      }).join('');
+
+      // Attach listeners
+      document.querySelectorAll('#filterCategories .filter-chip-select, #filterStates .filter-chip-select').forEach(btn => {
+        btn.addEventListener('click', () => btn.classList.toggle('selected'));
+      });
     }
 
     // Fetch Jobs
@@ -737,15 +787,7 @@
         State.allJobs = json.jobs || [];
         renderCategoryChips();
         
-        // Extract unique categories for the filter popup
-        const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))];
-        const catContainer = document.getElementById('filterCategories');
-        catContainer.innerHTML = categories.map(cat => `<button class="filter-chip-select" data-type="category" data-value="${cat}">${cat}</button>`).join('');
-        
-        // Attach listeners to new chips
-        document.querySelectorAll('.filter-chip-select').forEach(btn => {
-          btn.addEventListener('click', () => btn.classList.toggle('selected'));
-        });
+      buildFilterOptions(); // Build the advanced popup dynamically
 
         applyFiltersAndSort();
       } catch (err) {
@@ -755,14 +797,6 @@
 
     function applyFiltersAndSort() {
       let filtered = [...State.allJobs];
-
-      // Active Category & State Filters (from the chips)
-      if (State.activeCategory) {
-        filtered = filtered.filter(j => j.category === State.activeCategory);
-      }
-      if (State.activeState) {
-        filtered = filtered.filter(j => j.stateName === State.activeState);
-      }
 
       // Search
       if (State.search) {
@@ -988,30 +1022,20 @@
     function applyFilters() {
       State.filters.status = Array.from(document.querySelectorAll('#filterStatus .selected')).map(b => b.dataset.value);
       State.filters.category = Array.from(document.querySelectorAll('#filterCategories .selected')).map(b => b.dataset.value);
-      
-      const totalFilters = State.filters.status.length + State.filters.category.length;
-      const badge = document.getElementById('filterBadge');
-      if (totalFilters > 0) {
-        badge.textContent = totalFilters;
-        badge.classList.add('show');
-        document.getElementById('filterBtn').classList.add('active');
-      } else {
-        badge.classList.remove('show');
-        document.getElementById('filterBtn').classList.remove('active');
-      }
+      State.filters.state = Array.from(document.querySelectorAll('#filterStates .selected')).map(b => b.dataset.value);
       
       closeOverlay('filterOverlay');
+      renderCategoryChips(); // Sync instant chips
+      renderActiveFilters(); // Sync tags
       applyFiltersAndSort();
     }
 
     function clearAllFilters() {
       document.querySelectorAll('.filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      State.filters = { status: [], category: [] };
-      State.activeCategory = null; 
-      State.activeState = null; 
+      State.filters = { status: [], category: [], state: [] };
       renderCategoryChips(); 
       renderActiveFilters();
-      applyFilters();
+      applyFiltersAndSort();
     }
 
     // Sort Logic
