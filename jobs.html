@@ -585,7 +585,7 @@
       // Force the "State" button to be the first chip
       const hasStates = State.allJobs.some(j => j.stateName);
       if (hasStates) {
-        html += `<div class="cat-chip ${State.activeState ? 'active' : ''}" onclick="openStatePopup()"><i class="fa-solid fa-map-location-dot"></i> State</div>`;
+        html += `<div class="cat-chip ${State.activeState ? 'active' : ''}" onclick="openStatePopup()"><i class="fa-solid fa-map-location-dot"></i> State Jobs</div>`;
       }
       
       categories.forEach(cat => {
