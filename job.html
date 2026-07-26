@@ -186,21 +186,24 @@
     .cross-link-banner p { margin: 0; font-size: 13px; opacity: 0.9; }
     .cross-link-banner .arrow { font-size: 18px; opacity: 0.8; }
 
-    /* 2. Soft Inline Banner (After Description) */
+    /* 2. Premium Inline Banner (After Description) */
     .cross-link-inline {
       margin-top: 24px;
       margin-bottom: 8px;
       padding: 16px 20px;
-      border: 1.5px dashed var(--border-strong);
+      border: 4px solid transparent; /* Broad transparent border */
       border-radius: 12px;
-      background: var(--bg-muted);
+      background: 
+        linear-gradient(var(--bg-card), var(--bg-card)) padding-box, /* Inside background */
+        linear-gradient(135deg, var(--primary), var(--accent)) border-box; /* Gradient border */
       display: flex; align-items: center; gap: 16px;
       text-decoration: none; color: var(--text-primary);
       transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .cross-link-inline:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26,86,219,0.15);
       text-decoration: none;
     }
     .cross-link-inline .icon-box {
@@ -325,10 +328,23 @@
         print-color-adjust: exact !important;
       }
 
-      /* Fix Banner 2 for Print */
+      /* Fix Banner 2 for Print (Gradient Border + Black Text) */
       .cross-link-inline {
-        background: #fff !important;
-        border: 1.5px solid #cbd5e1 !important;
+        border: 4px solid transparent !important; 
+        background: 
+          linear-gradient(#ffffff, #ffffff) padding-box, 
+          linear-gradient(135deg, #1a56db, #f97316) border-box !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: #000 !important;
+        box-shadow: none !important;
+      }
+      .cross-link-inline h4, .cross-link-inline p { color: #000 !important; }
+      .cross-link-inline .icon-box { 
+        background: #f1f5f9 !important; 
+        color: #1a56db !important; 
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
   </style>
