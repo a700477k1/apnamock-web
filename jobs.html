@@ -737,6 +737,16 @@ const State = {
       setTimeout(() => toast.remove(), duration);
     }
 
+    // Date Formatter (DD-MM-YYYY)
+    function formatDateDDMMYYYY(dateStr) {
+      if (!dateStr) return "—";
+      const parts = dateStr.split('-'); // Splits "2026-07-31"
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Flips to "31-07-2026"
+      }
+      return dateStr; // Fallback
+    }
+
     // Popup Helpers
     function openOverlay(id) { document.getElementById(id).classList.add('open'); }
     function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
@@ -1172,14 +1182,14 @@ const State = {
                 <i class="fa-solid fa-calendar-days"></i>
                 <div>
                   <small>Start Date</small>
-                  <strong>${job.postDate || "—"}</strong>
+                  <strong>${formatDateDDMMYYYY(job.postDate)}</strong>
                 </div>
               </div>
               <div class="job-meta">
                 <i class="fa-solid fa-hourglass-end"></i>
                 <div>
                   <small>Last Date</small>
-                  <strong>${job.lastDate || "—"}</strong>
+                  <strong>${formatDateDDMMYYYY(job.lastDate)}</strong>
                 </div>
               </div>
               ${job.extendedLastDate ? `
@@ -1187,7 +1197,7 @@ const State = {
                 <i class="fa-solid fa-calendar-plus"></i>
                 <div>
                   <small>Extended To</small>
-                  <strong>${job.extendedLastDate}</strong>
+                  <strong>${formatDateDDMMYYYY(job.extendedLastDate)}</strong>
                 </div>
               </div>
               ` : ""}
@@ -1198,6 +1208,15 @@ const State = {
                   <strong>${job.eligibility || "Check Notice"}</strong>
                 </div>
               </div>
+              ${job.ageLimit ? `
+              <div class="job-meta">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <div>
+                  <small>Age Limit</small>
+                  <strong>${job.ageLimit}</strong>
+                </div>
+              </div>
+              ` : ""}
               ${job.totalPosts ? `
               <div class="job-meta">
                 <i class="fa-solid fa-users"></i>
