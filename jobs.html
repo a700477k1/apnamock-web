@@ -164,7 +164,7 @@
     /* IMAGE SHARE MODAL & TEMPLATE */
     .image-share-overlay { z-index: 300; }
     #shareImageTemplate {
-      position: absolute; top: 0; left: 0; z-index: -1; opacity: 1; pointer-events: none;
+      position: relative; top: 0; left: 0;
       width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
       font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
     }
@@ -401,7 +401,8 @@
     </div>
 
     <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
-    <div id="shareImageTemplate">
+    <div style="height:0; width:0; overflow:hidden; position:absolute; top:0; left:0; z-index:-1; opacity:0;">
+    <div id="shareImageTemplate" style="opacity: 1;">
       <div class="tpl-content-wrapper">
         
         <!-- Header -->
@@ -442,6 +443,7 @@
 
       </div>
     </div>
+    </div> <!-- End of hidden wrapper -->
 
     <!-- IMAGE SHARE POPUP -->
     <div class="overlay image-share-overlay" id="imageShareOverlay">
