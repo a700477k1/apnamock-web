@@ -183,12 +183,13 @@
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
     
-    /* 2. Job Image */
-    .tpl-img-wrap { 
-      width: 100%; height: 350px; border-radius: 16px; overflow: hidden; 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3); background: #f1f5f9; 
+    /* 2. Promo Card (Replaces Job Image) */
+    .tpl-promo-card { 
+      background: rgba(255, 255, 255, 0.15); /* Frosted glass effect */
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; 
+      padding: 25px; text-align: center; 
+      color: #ffffff; font-size: 20px; font-weight: 600; line-height: 1.4; 
     }
-    .tpl-img { width: 100%; height: 100%; object-fit: cover; display: block; }
     
     /* 3. Frosted Glass Info Card */
     .tpl-job-info { 
@@ -414,9 +415,9 @@
           </div>
         </div>
 
-        <!-- Job Image -->
-        <div class="tpl-img-wrap">
-          <img id="templateImage" class="tpl-img" crossorigin="anonymous" src="">
+        <!-- Promo Text Card -->
+        <div class="tpl-promo-card">
+          Visit ApnaMock for free mock tests, job updates and much more
         </div>
 
         <!-- Job Info Card -->
@@ -980,34 +981,7 @@ const State = {
       document.getElementById('templateAppFee').innerText = appFee || "—";
       document.getElementById('templateEligibility').innerText = eligibility || "—";
       
-      const imgEl = document.getElementById('templateImage');
-      
-      // 2. FIX CORS BUG: Fetch the image and convert to Base64 Data URL
-      if (imageUrl && imageUrl !== "undefined") {
-        try {
-          const response = await fetch(imageUrl);
-          const blob = await response.blob();
-          const reader = new FileReader();
-          imgEl.src = await new Promise((resolve) => {
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-          });
-        } catch (e) {
-          console.error("Failed to fetch image, using fallback", e);
-          imgEl.src = "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data/icon-512.png";
-        }
-      } else {
-        imgEl.src = "https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data/icon-512.png";
-      }
-
-      // Wait for the base64 image to load
-      await new Promise(resolve => {
-        if (imgEl.complete) return resolve();
-        imgEl.onload = () => resolve();
-        imgEl.onerror = () => resolve();
-      });
-
-      // Wait 300ms to ensure DOM updates layout (fixes white space)
+      // Wait 300ms to ensure DOM updates layout
       await new Promise(r => setTimeout(r, 300));
 
       // 3. Generate Canvas
