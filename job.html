@@ -36,6 +36,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
+  <!-- html2canvas for Image Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <style>
     /* DESIGN TOKENS */
     :root {
@@ -227,6 +230,33 @@
     .cross-link-inline .arrow { color: var(--primary); font-size: 16px; margin-left: auto; }
     /* PDF SPECIFIC ACTIONS (Hidden on screen, visible in PDF) */
     .pdf-actions { display: none; }
+
+    /* IMAGE SHARE MODAL & TEMPLATE */
+    .image-share-overlay { z-index: 300; }
+    #shareImageTemplate {
+      position: absolute; top: 0; left: 0; z-index: -1; opacity: 1; pointer-events: none;
+      width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
+      font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
+    }
+    .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
+    .tpl-header { display: flex; align-items: center; gap: 20px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; }
+    .tpl-logo { width: 70px; height: 70px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; flex-shrink: 0; }
+    .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
+    .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
+    .tpl-promo-card { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; padding: 25px; text-align: center; color: #ffffff; font-size: 20px; font-weight: 600; line-height: 1.4; }
+    .tpl-job-info { background: rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 35px; border: 1px solid rgba(255,255,255,0.3); }
+    .tpl-tags-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tpl-category { display: inline-block; background: rgba(15, 23, 42, 0.4); color: #fff; padding: 8px 18px; border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .tpl-urgency { display: inline-block; background: rgba(220, 38, 38, 0.6); color: #fff; padding: 8px 18px; border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .tpl-title { margin: 0 0 15px 0; font-size: 30px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; }
+    .tpl-company { font-size: 20px; color: rgba(255,255,255,0.9); margin-bottom: 30px; font-weight: 500; }
+    .tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .tpl-grid-item { background: rgba(15, 23, 42, 0.3); padding: 18px; border-radius: 12px; }
+    .tpl-grid-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .tpl-grid-value { font-size: 20px; font-weight: 600; color: #ffffff; line-height: 1.2; }
+    .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; }
+    .tpl-footer-text { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+    .tpl-footer-url { color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
 
     /* ACTION BUTTONS - Fixed layout */
     .job-actions { display:flex; gap:10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; }
@@ -437,11 +467,67 @@
         <div>Loading Job...</div>
       </div>
     </div>
+
+    <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
+    <div style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1;">
+      <div id="shareImageTemplate" style="opacity: 1;">
+        <div class="tpl-content-wrapper">
+          <div class="tpl-header">
+            <div class="tpl-logo">A</div>
+            <div>
+              <div class="tpl-brand-name">ApnaMock</div>
+              <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+            </div>
+          </div>
+          <div class="tpl-promo-card">Visit ApnaMock for free mock tests, job updates and much more</div>
+          <div class="tpl-job-info">
+            <div class="tpl-tags-row">
+              <div id="tplCategory" class="tpl-category"></div>
+              <div id="tplUrgency" class="tpl-urgency" style="display: none;"></div>
+            </div>
+            <h2 id="tplTitle" class="tpl-title"></h2>
+            <div id="tplCompany" class="tpl-company"></div>
+            <div class="tpl-grid">
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Start Date</div><div id="tplPostDate" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Last Date</div><div id="tplLastDate" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Extended To</div><div id="tplExtDate" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Total Posts</div><div id="tplTotalPosts" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Application Fee</div><div id="tplAppFee" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Eligibility</div><div id="tplEligibility" class="tpl-grid-value"></div></div>
+              <div class="tpl-grid-item"><div class="tpl-grid-label">Age Limit</div><div id="tplAgeLimit" class="tpl-grid-value"></div></div>
+            </div>
+          </div>
+          <div class="tpl-footer">
+            <div class="tpl-footer-text">Visit ApnaMock for more details</div>
+            <div id="tplFooterUrl" class="tpl-footer-url"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE SHARE POPUP -->
+    <div class="overlay image-share-overlay" id="imageShareOverlay">
+      <div class="popup">
+        <div class="popup-header">
+          <span class="popup-title">Share Job Info</span>
+          <button class="popup-close" onclick="closeOverlay('imageShareOverlay')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="popup-body" style="text-align: center;">
+          <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 0;">The job details and link will be shared automatically along with this image.</p>
+        </div>
+        <div class="popup-footer">
+          <a id="downloadImageBtn" class="btn btn-outline" style="flex:1; text-decoration: none;" download="apnamock_job.jpg"><i class="fa-solid fa-download"></i> Download</a>
+          <button id="nativeImageShareBtn" class="btn btn-primary" style="flex:1;"><i class="fa-solid fa-share-nodes"></i> Share</button>
+        </div>
+      </div>
+    </div>
+    
   </main>
 
-  <!-- Floating WhatsApp Button (Now uses Native Share API) -->
-  <button id="whatsappShareBtn" class="whatsapp-float" title="Share Job">
-    <i class="fa-brands fa-whatsapp"></i>
+  <!-- Floating Share Job Button -->
+  <button id="stickyShareBtn" class="whatsapp-float" title="Share Job">
+    <i class="fa-solid fa-share-nodes"></i>
   </button>
 
   <!-- Mobile Sticky Apply Bar -->
@@ -913,50 +999,71 @@
           stickyApplyBtn.style.display = 'none';
       }
 
-      // 2. Update Native Share Button Logic
-      const shareBtn = document.getElementById('whatsappShareBtn');
-      const shareUrl = window.location.href;
-      const shareText = `Check out this job: ${job.title} at ApnaMock.\nApply here: ${shareUrl}`;
-      const fallbackUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      // 2. Update Sticky Share Button to Generate Image
+      const stickyBtn = document.getElementById('stickyShareBtn');
+      stickyBtn.onclick = async () => {
+        showToast("Preparing job details...", "info");
+        const shareUrl = window.location.href;
+        const shareText = `Check out this job: ${job.title} on ApnaMock.\nApply here: ${shareUrl}`;
 
-      shareBtn.onclick = async () => {
-        // Check if Native Share API is supported (Mobile/Modern Browsers)
-        if (navigator.share) {
-          try {
-            // If there's an image, try to fetch it and share it as a file
-            if (job.imageUrl) {
-              try {
-                const response = await fetch(job.imageUrl);
-                const blob = await response.blob();
-                const file = new File([blob], "job.jpg", { type: blob.type });
-
-                // Check if the device supports sharing actual files
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                  await navigator.share({
-                    title: "ApnaMock Job Alert",
-                    text: shareText,
-                    files: [file]
-                  });
-                  return; // Success, stop here
-                }
-              } catch (imgErr) {
-                console.error("Image fetch failed, falling back to text share.", imgErr);
-              }
-            }
-
-            // Fallback if no image, or if device can't share files: Share text + URL
-            await navigator.share({
-              title: "ApnaMock Job Alert",
-              text: shareText,
-              url: shareUrl
-            });
-
-          } catch (err) {
-            console.error("Native share failed:", err);
-          }
+        // 1. Populate the hidden template
+        document.getElementById('tplTitle').innerText = job.title;
+        document.getElementById('tplCategory').innerText = job.category || "General";
+        document.getElementById('tplCompany').innerText = job.company || "";
+        document.getElementById('tplFooterUrl').innerText = window.location.hostname.replace('www.', '');
+        document.getElementById('tplAgeLimit').innerText = job.ageLimit || "—";
+        
+        // Calculate and inject "Days Left" tag
+        const urgencyEl = document.getElementById('tplUrgency');
+        const u = getJobUrgency(job);
+        if (!u.isExpired && u.tag) {
+          urgencyEl.innerText = u.tag;
+          urgencyEl.style.display = 'inline-block';
         } else {
-          // Fallback for Desktop/Older browsers: Open WhatsApp text link
-          window.open(fallbackUrl, '_blank');
+          urgencyEl.style.display = 'none';
+        }
+        document.getElementById('tplPostDate').innerText = formatDateDDMMYYYY(job.postDate);
+        document.getElementById('tplLastDate').innerText = formatDateDDMMYYYY(job.lastDate);
+        document.getElementById('tplExtDate').innerText = formatDateDDMMYYYY(job.extendedLastDate);
+        document.getElementById('tplTotalPosts').innerText = job.totalPosts || "—";
+        document.getElementById('tplAppFee').innerText = job.applicationFee || "—";
+        document.getElementById('tplEligibility').innerText = job.eligibility || "—";
+        
+        await new Promise(r => setTimeout(r, 300));
+
+        // 2. Generate Canvas
+        const template = document.getElementById('shareImageTemplate');
+        try {
+          const canvas = await html2canvas(template, { 
+            useCORS: true, backgroundColor: null, scale: 2,
+            width: template.scrollWidth, height: template.scrollHeight, windowWidth: 800
+          });
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+          // 3. Show Preview
+          document.getElementById('generatedImagePreview').src = dataUrl;
+          document.getElementById('downloadImageBtn').href = dataUrl;
+          
+          // 4. Attach Share Logic
+          const nativeBtn = document.getElementById('nativeImageShareBtn');
+          nativeBtn.onclick = async () => {
+            try {
+              const blob = await (await fetch(dataUrl)).blob();
+              const file = new File([blob], "apnamock_job.jpg", { type: blob.type });
+
+              if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ title: "ApnaMock Job Alert", text: shareText, files: [file] });
+              } else {
+                navigator.clipboard.writeText(shareText);
+                showToast("Link copied. Image is downloading...", "success");
+                document.getElementById('downloadImageBtn').click();
+              }
+            } catch (err) { console.error("Share failed", err); }
+          };
+          openOverlay('imageShareOverlay');
+        } catch (err) {
+          console.error("html2canvas error", err);
+          showToast("Could not generate image.", "error");
         }
       };
 
