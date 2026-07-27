@@ -165,12 +165,16 @@
     .image-share-overlay { z-index: 300; }
     #shareImageTemplate {
       position: absolute; top: 0; left: 0; z-index: -1; opacity: 1; pointer-events: none;
-      transform: translateX(-9999px); /* Moves it off-screen visually without breaking html2canvas coordinates */
+      transform: translateX(-9999px);
       width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
       font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
     }
+    .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
+    
+    /* 1. Header */
     .tpl-header { 
-      background: transparent; padding: 40px; display: flex; align-items: center; gap: 20px; margin: 0; 
+      display: flex; align-items: center; gap: 20px; 
+      border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; 
     }
     .tpl-logo { 
       width: 70px; height: 70px; background: #fff; border-radius: 16px; 
@@ -179,27 +183,42 @@
     }
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
-    .tpl-img-wrap { width: 100%; height: 350px; overflow: hidden; background: #f1f5f9; margin: 0; padding: 0; display: block; }
-    .tpl-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .tpl-body { padding: 40px; margin: 0; display: block; background: transparent; }
-    .tpl-category { 
-      display: inline-block; background: rgba(255,255,255,0.25); color: #fff; padding: 10px 20px; 
-      border-radius: 99px; font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; 
+    
+    /* 2. Job Image */
+    .tpl-img-wrap { 
+      width: 100%; height: 350px; border-radius: 16px; overflow: hidden; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3); background: #f1f5f9; 
     }
-    .tpl-title { margin: 0 0 20px 0; font-size: 32px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; }
-    .tpl-company { font-size: 22px; color: rgba(255,255,255,0.9); margin-bottom: 30px; font-weight: 500; }
+    .tpl-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    
+    /* 3. Frosted Glass Info Card */
+    .tpl-job-info { 
+      background: rgba(255, 255, 255, 0.15); /* Frosted glass effect */
+      border-radius: 20px; padding: 35px; border: 1px solid rgba(255,255,255,0.3); 
+    }
+    .tpl-category { 
+      display: inline-block; background: rgba(15, 23, 42, 0.4); color: #fff; padding: 8px 18px; 
+      border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; 
+    }
+    .tpl-title { margin: 0 0 15px 0; font-size: 30px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; }
+    .tpl-company { font-size: 20px; color: rgba(255,255,255,0.9); margin-bottom: 30px; font-weight: 500; }
+    
+    /* 4. Details Grid */
     .tpl-grid { 
       display: grid; grid-template-columns: 1fr 1fr; gap: 20px; 
-      background: rgba(15, 23, 42, 0.4); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); margin: 0; 
     }
-    .tpl-grid-item { display: flex; flex-direction: column; gap: 6px; }
-    .tpl-grid-label { font-size: 14px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-    .tpl-grid-value { font-size: 22px; font-weight: 600; color: #ffffff; line-height: 1.2; }
+    .tpl-grid-item { 
+      background: rgba(15, 23, 42, 0.3); padding: 18px; border-radius: 12px; 
+    }
+    .tpl-grid-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .tpl-grid-value { font-size: 20px; font-weight: 600; color: #ffffff; line-height: 1.2; }
+    
+    /* 5. Footer */
     .tpl-footer { 
-      background: #0f172a; padding: 30px 40px; text-align: center; margin: 0; 
+      text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; 
     }
-    .tpl-footer-text { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .tpl-footer-url { color: #93c5fd; font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
+    .tpl-footer-text { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+    .tpl-footer-url { color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
 
     /* CONTROLS BAR */
     .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -384,32 +403,44 @@
 
     <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
     <div id="shareImageTemplate">
-      <div class="tpl-header">
-        <div class="tpl-logo">A</div>
-        <div>
-          <div class="tpl-brand-name">ApnaMock</div>
-          <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+      <div class="tpl-content-wrapper">
+        
+        <!-- Header -->
+        <div class="tpl-header">
+          <div class="tpl-logo">A</div>
+          <div>
+            <div class="tpl-brand-name">ApnaMock</div>
+            <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+          </div>
         </div>
-      </div>
-      <div class="tpl-img-wrap">
-        <img id="templateImage" class="tpl-img" crossorigin="anonymous" src="">
-      </div>
-      <div class="tpl-body">
-        <div id="templateCategory" class="tpl-category"></div>
-        <h2 id="templateTitle" class="tpl-title"></h2>
-        <div id="templateCompany" class="tpl-company"></div>
-        <div class="tpl-grid">
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Start Date</div><div id="templatePostDate" class="tpl-grid-value"></div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Last Date</div><div id="templateLastDate" class="tpl-grid-value"></div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Extended To</div><div id="templateExtDate" class="tpl-grid-value"></div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Total Posts</div><div id="templateTotalPosts" class="tpl-grid-value"></div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Application Fee</div><div id="templateAppFee" class="tpl-grid-value"></div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Eligibility</div><div id="templateEligibility" class="tpl-grid-value"></div></div>
+
+        <!-- Job Image -->
+        <div class="tpl-img-wrap">
+          <img id="templateImage" class="tpl-img" crossorigin="anonymous" src="">
         </div>
-      </div>
-      <div class="tpl-footer">
-        <div class="tpl-footer-text">Visit ApnaMock for more details</div>
-        <div class="tpl-footer-url">apnamock-web.apnamock.workers.dev</div>
+
+        <!-- Job Info Card -->
+        <div class="tpl-job-info">
+          <div id="templateCategory" class="tpl-category"></div>
+          <h2 id="templateTitle" class="tpl-title"></h2>
+          <div id="templateCompany" class="tpl-company"></div>
+          
+          <div class="tpl-grid">
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Start Date</div><div id="templatePostDate" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Last Date</div><div id="templateLastDate" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Extended To</div><div id="templateExtDate" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Total Posts</div><div id="templateTotalPosts" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Application Fee</div><div id="templateAppFee" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Eligibility</div><div id="templateEligibility" class="tpl-grid-value"></div></div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="tpl-footer">
+          <div class="tpl-footer-text">Visit ApnaMock for more details</div>
+          <div class="tpl-footer-url">apnamock-web.apnamock.workers.dev</div>
+        </div>
+
       </div>
     </div>
 
@@ -984,10 +1015,11 @@ const State = {
       try {
         const canvas = await html2canvas(template, { 
           useCORS: true, 
-          backgroundColor: '#ffffff', 
+          backgroundColor: null, 
           scale: 2,
           width: 800,
-          windowWidth: 800
+          windowWidth: 800,
+          height: template.offsetHeight 
         });
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
 
