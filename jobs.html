@@ -458,12 +458,13 @@
     <div class="overlay image-share-overlay" id="imageShareOverlay">
       <div class="popup">
         <div class="popup-header">
-          <span class="popup-title">Share Image</span>
+        <div class="popup-header">
+          <span class="popup-title">Share Job Info</span>
           <button class="popup-close" onclick="closeOverlay('imageShareOverlay')"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="popup-body" style="text-align: center;">
           <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 0;">The custom message and link will be shared automatically along with this image.</p>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 0;">The job details and link will be shared automatically along with this image.</p>
         </div>
         <div class="popup-footer">
           <a id="downloadImageBtn" class="btn btn-outline" style="flex:1; text-decoration: none;" download="apnamock_job.jpg"><i class="fa-solid fa-download"></i> Download</a>
@@ -971,7 +972,7 @@ const State = {
 
     // Generates the job image and opens the preview popup
     async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, extDate, totalPosts, appFee, eligibility, encodedJobSlug) {
-      showToast("Creating image...", "info");
+      showToast("Preparing job details...", "info");
       
       const jobSlug = decodeURIComponent(encodedJobSlug);
       const imageUrl = decodeURIComponent(encodedImageUrl);
@@ -1226,11 +1227,8 @@ const State = {
                 View Details
               </a>
               ${job.pdfUrl ? `<a href="${job.pdfUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : ""}
-              <button onclick="shareJobCard('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:#25D366; border-color:#25D366;">
-                <i class="fa-brands fa-whatsapp"></i> Share
-              </button>
               <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.extendedLastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${escapeHtml(job.eligibility || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
-                <i class="fa-solid fa-image"></i> Share Image
+                <i class="fa-solid fa-share-nodes"></i> Share Job
               </button>
             </div>
           </div>
