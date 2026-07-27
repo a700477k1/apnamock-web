@@ -165,7 +165,6 @@
     .image-share-overlay { z-index: 300; }
     #shareImageTemplate {
       position: absolute; top: 0; left: 0; z-index: -1; opacity: 1; pointer-events: none;
-      transform: translateX(-9999px);
       width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
       font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
     }
@@ -1017,9 +1016,9 @@ const State = {
           useCORS: true, 
           backgroundColor: null, 
           scale: 2,
-          width: 800,
-          windowWidth: 800,
-          height: template.offsetHeight 
+          width: template.scrollWidth,
+          height: template.scrollHeight,
+          windowWidth: 800
         });
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
 
