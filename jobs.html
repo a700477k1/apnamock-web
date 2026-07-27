@@ -447,7 +447,7 @@
         <!-- Footer -->
         <div class="tpl-footer">
           <div class="tpl-footer-text">Visit ApnaMock for more details</div>
-          <div class="tpl-footer-url">apnamock-web.apnamock.workers.dev</div>
+          <div id="templateFooterUrl" class="tpl-footer-url"></div>
         </div>
 
       </div>
@@ -982,6 +982,7 @@ const State = {
       document.getElementById('templateTitle').innerText = title;
       document.getElementById('templateCategory').innerText = category;
       document.getElementById('templateCompany').innerText = company;
+      document.getElementById('templateFooterUrl').innerText = window.location.hostname.replace('www.', '');
       
       // Calculate and inject "Days Left" tag
       const urgencyEl = document.getElementById('templateUrgency');
