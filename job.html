@@ -87,7 +87,17 @@
     /* PAGE LAYOUT */
     .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
     .page-header { margin-bottom: 24px; }
-    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .page-title {
+    font-family: var(--font-heading);
+    font-size: 20px; /* Changed from 26px to 20px */
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    display: flex;
+   align-items: center;
+   gap: 10px;
+   }
     .page-title i { color: var(--primary); }
     .breadcrumb { margin-bottom: 24px; }
     .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color 0.15s; }
@@ -584,6 +594,16 @@
         .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
+    // Date Formatter (DD-MM-YYYY)
+    function formatDateDDMMYYYY(dateStr) {
+      if (!dateStr) return "—";
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    }
+
     function decodeHtmlEntities(str) {
       // Create a temporary textarea element to decode the HTML entities safely
       const txt = document.createElement("textarea");
@@ -747,14 +767,14 @@
                   <i class="fa-solid fa-calendar-days"></i>
                   <div>
                     <small>Start Date</small>
-                    <strong>${escapeHtml(job.postDate || "—")}</strong>
+                    <strong>${formatDateDDMMYYYY(job.postDate)}</strong>
                   </div>
                 </div>
                 <div class="job-meta">
                   <i class="fa-solid fa-hourglass-end"></i>
                   <div>
                     <small>Last Date</small>
-                    <strong>${escapeHtml(job.lastDate || "—")}</strong>
+                    <strong>${formatDateDDMMYYYY(job.lastDate)}</strong>
                   </div>
                 </div>
                 ${job.extendedLastDate ? `
@@ -762,7 +782,7 @@
                   <i class="fa-solid fa-calendar-plus"></i>
                   <div>
                     <small>Extended To</small>
-                    <strong>${escapeHtml(job.extendedLastDate)}</strong>
+                    <strong>${formatDateDDMMYYYY(job.extendedLastDate)}</strong>
                   </div>
                 </div>
                 ` : ""}
@@ -782,6 +802,15 @@
                     <strong>${escapeHtml(job.eligibility || "—")}</strong>
                   </div>
                 </div>
+                ${job.ageLimit ? `
+                <div class="job-meta">
+                  <i class="fa-solid fa-hourglass-half"></i>
+                  <div>
+                    <small>Age Limit</small>
+                    <strong>${escapeHtml(job.ageLimit)}</strong>
+                  </div>
+                </div>
+                ` : ""}
                 ${job.applicationFee ? `
                 <div class="job-meta">
                   <i class="fa-solid fa-indian-rupee-sign"></i>
@@ -861,7 +890,7 @@
       }
 
       // 1. Update Sticky Bar
-      document.getElementById('stickyLastDate').textContent = job.extendedLastDate || job.lastDate || "N/A";
+      document.getElementById('stickyLastDate').textContent = formatDateDDMMYYYY(job.extendedLastDate || job.lastDate) || "N/A";
       const stickyApplyBtn = document.getElementById('stickyApplyBtn');
       const isExpired = getJobUrgency(job).isExpired;
       
