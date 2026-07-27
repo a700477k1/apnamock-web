@@ -242,9 +242,16 @@
     
     /* 1. Alert Bar */
     .tpl-alert-bar {
-      background: #ffffff; color: #1a56db; text-align: center; padding: 12px 20px; 
-      border-radius: 12px; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+      background: #ffffff; color: #1a56db; 
+      display: flex; align-items: center; justify-content: center; gap: 15px;
+      padding: 12px 20px; border-radius: 12px; 
+      font-size: 33px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .tpl-alert-bell {
+      font-size: 1.2em; 
+      color: #facc15; /* Yellow */
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black border */
     }
     
     /* 2. Header (Split Left/Right) */
@@ -257,9 +264,8 @@
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
     
-    .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; }
-    .tpl-header-url { color: #ffffff; font-size: 24px; font-weight: 700; }
-    .tpl-header-promo { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; }
+    .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+    .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
     
     /* 3. Promo Card */
     .tpl-promo-card { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; padding: 25px; text-align: center; color: #ffffff; font-size: 20px; font-weight: 600; line-height: 1.4; }
@@ -531,7 +537,11 @@
         <div class="tpl-content-wrapper">
           
           <!-- Top Alert Bar -->
-          <div class="tpl-alert-bar">New Govt. Job Alert</div>
+          <div class="tpl-alert-bar">
+            <span class="tpl-alert-bell">🔔</span>
+            New Govt. Job Alert
+            <span class="tpl-alert-bell">🔔</span>
+          </div>
 
           <!-- Header (Split Layout) -->
           <div class="tpl-header">
@@ -543,8 +553,7 @@
               </div>
             </div>
             <div class="tpl-header-right">
-              <div id="tplHeaderUrl" class="tpl-header-url"></div>
-              <div class="tpl-header-promo">free mock tests, job updates and much more....</div>
+              <div class="tpl-header-promo">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
             </div>
           </div>
 
@@ -1108,7 +1117,6 @@
         document.getElementById('tplCategory').innerText = job.category || "General";
         document.getElementById('tplCompany').innerText = job.company || "";
         const currentDomain = window.location.hostname.replace('www.', '');
-        document.getElementById('tplHeaderUrl').innerText = currentDomain;
         document.getElementById('tplFooterUrl').innerText = currentDomain;
         document.getElementById('tplAgeLimit').innerText = job.ageLimit || "—";
         
