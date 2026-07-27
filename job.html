@@ -290,6 +290,21 @@
     .mobile-sticky-apply .sticky-info strong { font-size: 14px; color: var(--text-primary); }
     .mobile-sticky-apply .btn { width: auto; padding: 0 24px; }
 
+    /* TOAST */
+    .toast-container {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
+    }
+    .toast {
+      display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff;
+      padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500;
+      box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 340px; text-align: center;
+    }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+    .toast.warning { background: var(--warning); }
+
     /* PRINT HEADER */
     #printHeader { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a56db; padding-bottom: 10px; }
     #printHeader h1 { font-family: 'Poppins', sans-serif; font-size: 24px; color: #1a56db; margin: 0; }
@@ -530,6 +545,8 @@
     <i class="fa-solid fa-share-nodes"></i>
   </button>
 
+  <div class="toast-container" id="toastContainer"></div>
+
   <!-- Mobile Sticky Apply Bar -->
   <div id="mobileStickyBar" class="mobile-sticky-apply">
     <div class="sticky-info">
@@ -673,6 +690,25 @@
       script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
     }
+
+    // Toast Notification Helper
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${
+        type === 'success' ? 'fa-circle-check' :
+        type === 'error' ? 'fa-circle-xmark' :
+        type === 'warning' ? 'fa-triangle-exclamation' :
+        'fa-circle-info'
+      }"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
+
+    // Popup Helpers
+    function openOverlay(id) { document.getElementById(id).classList.add('open'); }
+    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
 
     function escapeHtml(str) {
       return String(str || "")
