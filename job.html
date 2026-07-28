@@ -1135,7 +1135,6 @@
 
         document.getElementById('tplFooterUrl').innerText = displayDomain;
         document.getElementById('tplPromoText').innerText = "Visit: " + displayDomain;
-        document.getElementById('tplAgeLimit').innerText = job.ageLimit || "—";
         
         // Calculate and inject "Days Left" tag
         const urgencyEl = document.getElementById('tplUrgency');
@@ -1146,12 +1145,25 @@
         } else {
           urgencyEl.style.display = 'none';
         }
-        document.getElementById('tplPostDate').innerText = formatDateDDMMYYYY(job.postDate);
-        document.getElementById('tplLastDate').innerText = formatDateDDMMYYYY(job.lastDate);
-        document.getElementById('tplExtDate').innerText = formatDateDDMMYYYY(job.extendedLastDate);
-        document.getElementById('tplTotalPosts').innerText = job.totalPosts || "—";
-        document.getElementById('tplAppFee').innerText = job.applicationFee || "—";
-        document.getElementById('tplEligibility').innerText = job.eligibility || "—";
+// Helper function to hide empty grid items in the image
+function setTplVal(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (value && value !== "—") {
+    el.innerText = value;
+    el.parentElement.style.display = 'block'; // Show the grid item
+  } else {
+    el.parentElement.style.display = 'none'; // Hide the grid item completely
+  }
+}
+
+setTplVal('tplPostDate', formatDateDDMMYYYY(job.postDate));
+setTplVal('tplLastDate', formatDateDDMMYYYY(job.lastDate));
+setTplVal('tplExtDate', formatDateDDMMYYYY(job.extendedLastDate));
+setTplVal('tplTotalPosts', job.totalPosts);
+setTplVal('tplAppFee', job.applicationFee);
+setTplVal('tplEligibility', job.eligibility);
+setTplVal('tplAgeLimit', job.ageLimit);
         
         await new Promise(r => setTimeout(r, 300));
 
