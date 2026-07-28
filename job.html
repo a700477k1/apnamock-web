@@ -363,6 +363,14 @@
     .toast.success { background: var(--success); }
     .toast.error { background: var(--error); }
     .toast.warning { background: var(--warning); }
+    .toast.info { background: var(--primary); color: #fff; } /* Makes info toasts blue */
+    
+    /* Fix default toast in dark mode so it isn't a white box */
+    body.dark-mode .toast:not(.success):not(.error):not(.warning):not(.info) {
+      background: #1e293b; 
+      color: #f8fafc; 
+      border: 1px solid var(--border);
+    }
 
     /* PRINT HEADER */
     #printHeader { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a56db; padding-bottom: 10px; }
