@@ -1116,9 +1116,12 @@
         document.getElementById('tplTitle').innerText = job.title;
         document.getElementById('tplCategory').innerText = job.category || "General";
         document.getElementById('tplCompany').innerText = job.company || "";
-        const currentDomain = window.location.hostname.replace('www.', '');
-        document.getElementById('tplFooterUrl').innerText = currentDomain;
-        document.getElementById('tplPromoText').innerText = "Visit: " + currentDomain;
+        // Clean the domain and force "www." in front of it
+        const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+        const displayDomain = "www." + cleanDomain;
+
+        document.getElementById('tplFooterUrl').innerText = displayDomain;
+        document.getElementById('tplPromoText').innerText = "Visit: " + displayDomain;
         document.getElementById('tplAgeLimit').innerText = job.ageLimit || "—";
         
         // Calculate and inject "Days Left" tag
