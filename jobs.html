@@ -170,18 +170,18 @@
     }
     .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
     
-    /* 1. Header */
-    .tpl-header { 
-      display: flex; align-items: center; gap: 20px; 
-      border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; 
-    }
-    .tpl-logo { 
-      width: 70px; height: 70px; background: #fff; border-radius: 16px; 
-      display: flex; align-items: center; justify-content: center; 
-      font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; flex-shrink: 0; 
-    }
+    /* 1. Alert Bar */
+    .tpl-alert-bar { background: #ffffff; color: #1a56db; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 12px 20px; border-radius: 12px; font-size: 33px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .tpl-alert-bell { font-size: 1.2em; color: #facc15; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+    
+    /* 2. Header (Split Layout) */
+    .tpl-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; gap: 20px; }
+    .tpl-header-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .tpl-logo { width: 70px; height: 70px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; }
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
+    .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+    .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
     
     /* 2. Promo Card (Now a Capsule) */
     .tpl-promo-card { 
@@ -218,12 +218,10 @@
     .tpl-grid-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
     .tpl-grid-value { font-size: 20px; font-weight: 600; color: #ffffff; line-height: 1.2; }
     
-    /* 5. Footer */
-    .tpl-footer { 
-      text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; 
-    }
-    .tpl-footer-text { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
-    .tpl-footer-url { color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
+    /* 5. Footer with Highlighted URL Box */
+    .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .tpl-footer-text { color: #fff; font-size: 18px; font-weight: 600; }
+    .tpl-footer-box { background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
     /* CONTROLS BAR */
     .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -419,12 +417,24 @@
     <div id="shareImageTemplate" style="opacity: 1;">
       <div class="tpl-content-wrapper">
         
-        <!-- Header -->
+        <!-- Top Alert Bar -->
+        <div class="tpl-alert-bar">
+          <span class="tpl-alert-bell">🔔</span>
+          New Govt. Job Alert
+          <span class="tpl-alert-bell">🔔</span>
+        </div>
+
+        <!-- Header (Split Layout) -->
         <div class="tpl-header">
-          <div class="tpl-logo">A</div>
-          <div>
-            <div class="tpl-brand-name">ApnaMock</div>
-            <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+          <div class="tpl-header-left">
+            <div class="tpl-logo">A</div>
+            <div>
+              <div class="tpl-brand-name">ApnaMock</div>
+              <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+            </div>
+          </div>
+          <div class="tpl-header-right">
+            <div class="tpl-header-promo">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
           </div>
         </div>
 
@@ -447,13 +457,14 @@
             <div class="tpl-grid-item"><div class="tpl-grid-label">Total Posts</div><div id="templateTotalPosts" class="tpl-grid-value"></div></div>
             <div class="tpl-grid-item"><div class="tpl-grid-label">Application Fee</div><div id="templateAppFee" class="tpl-grid-value"></div></div>
             <div class="tpl-grid-item"><div class="tpl-grid-label">Eligibility</div><div id="templateEligibility" class="tpl-grid-value"></div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Age Limit</div><div id="templateAgeLimit" class="tpl-grid-value"></div></div>
           </div>
         </div>
 
-        <!-- Footer -->
+        <!-- Footer with Highlighted Box -->
         <div class="tpl-footer">
           <div class="tpl-footer-text">Visit ApnaMock for more details</div>
-          <div id="templateFooterUrl" class="tpl-footer-url"></div>
+          <div id="templateFooterUrl" class="tpl-footer-box"></div>
         </div>
 
       </div>
@@ -988,7 +999,7 @@ const State = {
     let _currentImageShareText = "";
 
     // Generates the job image and opens the preview popup
-    async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, extDate, totalPosts, appFee, eligibility, encodedJobSlug) {
+    async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, extDate, totalPosts, appFee, eligibility, ageLimit, encodedJobSlug) {
       showToast("Preparing job details...", "info");
       
       const jobSlug = decodeURIComponent(encodedJobSlug);
@@ -1036,6 +1047,7 @@ const State = {
       setTplVal('templateTotalPosts', totalPosts);
       setTplVal('templateAppFee', appFee);
       setTplVal('templateEligibility', eligibility);
+      setTplVal('templateAgeLimit', ageLimit);
       
       // Wait 300ms to ensure DOM updates layout
       await new Promise(r => setTimeout(r, 300));
@@ -1272,7 +1284,7 @@ const State = {
                 View Details
               </a>
               ${job.pdfUrl ? `<a href="${job.pdfUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : ""}
-              <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.extendedLastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${escapeHtml(job.eligibility || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
+              <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.extendedLastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${escapeHtml(job.eligibility || "")}', '${escapeHtml(job.ageLimit || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
                 <i class="fa-solid fa-share-nodes"></i> Share Job
               </button>
             </div>
