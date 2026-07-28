@@ -183,12 +183,12 @@
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
     
-    /* 2. Promo Card (Replaces Job Image) */
+    /* 2. Promo Card (Now a Capsule) */
     .tpl-promo-card { 
-      background: rgba(255, 255, 255, 0.15); /* Frosted glass effect */
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; 
-      padding: 25px; text-align: center; 
-      color: #ffffff; font-size: 20px; font-weight: 600; line-height: 1.4; 
+      align-self: center;
+      background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px;
+      font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none;
     }
     
     /* 3. Frosted Glass Info Card */
@@ -312,6 +312,14 @@
     .toast.success { background: var(--success); }
     .toast.error { background: var(--error); }
     .toast.warning { background: var(--warning); }
+    .toast.info { background: var(--primary); color: #fff; } /* Makes info toasts blue */
+    
+    /* Fix default toast in dark mode so it isn't a white box */
+    body.dark-mode .toast:not(.success):not(.error):not(.warning):not(.info) {
+      background: #1e293b; 
+      color: #f8fafc; 
+      border: 1px solid var(--border);
+    }
 
     /* SEO CONTENT BLOCK */
     .seo-content { margin-top: 60px; padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); border-radius: 18px; }
@@ -421,9 +429,7 @@
         </div>
 
         <!-- Promo Text Card -->
-        <div class="tpl-promo-card">
-          Visit ApnaMock for free mock tests, job updates and much more
-        </div>
+        <div class="tpl-promo-card" id="tplPromoText"></div>
 
         <!-- Job Info Card -->
         <div class="tpl-job-info">
@@ -458,12 +464,14 @@
     <div class="overlay image-share-overlay" id="imageShareOverlay">
       <div class="popup">
         <div class="popup-header">
-          <span class="popup-title">Share Job Info</span>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <span class="popup-title">Share Job Info</span>
+            <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">The job details and link will be shared automatically along with this image.</span>
+          </div>
           <button class="popup-close" onclick="closeOverlay('imageShareOverlay')"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="popup-body" style="text-align: center;">
-          <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 0;">The job details and link will be shared automatically along with this image.</p>
+          <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 0;">
         </div>
         <div class="popup-footer">
           <a id="downloadImageBtn" class="btn btn-outline" style="flex:1; text-decoration: none;" download="apnamock_job.jpg"><i class="fa-solid fa-download"></i> Download</a>
@@ -992,7 +1000,13 @@ const State = {
       document.getElementById('templateTitle').innerText = title;
       document.getElementById('templateCategory').innerText = category;
       document.getElementById('templateCompany').innerText = company;
-      document.getElementById('templateFooterUrl').innerText = window.location.hostname.replace('www.', '');
+      
+      // Clean the domain and force "www." in front of it
+      const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+      const displayDomain = "www." + cleanDomain;
+
+      document.getElementById('templateFooterUrl').innerText = displayDomain;
+      document.getElementById('tplPromoText').innerText = "Visit: " + displayDomain;
       
       // Calculate and inject "Days Left" tag
       const urgencyEl = document.getElementById('templateUrgency');
@@ -1003,12 +1017,25 @@ const State = {
       } else {
         urgencyEl.style.display = 'none';
       }
-      document.getElementById('templatePostDate').innerText = postDate || "—";
-      document.getElementById('templateLastDate').innerText = lastDate || "—";
-      document.getElementById('templateExtDate').innerText = extDate || "—";
-      document.getElementById('templateTotalPosts').innerText = totalPosts || "—";
-      document.getElementById('templateAppFee').innerText = appFee || "—";
-      document.getElementById('templateEligibility').innerText = eligibility || "—";
+
+      // Helper function to hide empty grid items in the image
+      function setTplVal(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (value && value !== "—") {
+          el.innerText = value;
+          el.parentElement.style.display = 'block'; // Show the grid item
+        } else {
+          el.parentElement.style.display = 'none'; // Hide the grid item completely
+        }
+      }
+
+      setTplVal('templatePostDate', postDate);
+      setTplVal('templateLastDate', lastDate);
+      setTplVal('templateExtDate', extDate);
+      setTplVal('templateTotalPosts', totalPosts);
+      setTplVal('templateAppFee', appFee);
+      setTplVal('templateEligibility', eligibility);
       
       // Wait 300ms to ensure DOM updates layout
       await new Promise(r => setTimeout(r, 300));
