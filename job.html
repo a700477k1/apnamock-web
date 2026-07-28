@@ -558,7 +558,7 @@
           </div>
 
           <!-- Promo Text Card -->
-          <div class="tpl-promo-card">Visit ApnaMock for free mock tests, job updates and much more</div>
+          <div class="tpl-promo-card" id="tplPromoText"></div>
 
           <!-- Job Info Card -->
           <div class="tpl-job-info">
@@ -1118,6 +1118,7 @@
         document.getElementById('tplCompany').innerText = job.company || "";
         const currentDomain = window.location.hostname.replace('www.', '');
         document.getElementById('tplFooterUrl').innerText = currentDomain;
+        document.getElementById('tplPromoText').innerText = "Visit: " + currentDomain;
         document.getElementById('tplAgeLimit').innerText = job.ageLimit || "—";
         
         // Calculate and inject "Days Left" tag
