@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- GOOGLE ANALYTICS -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DNVHG69MX"></script>
@@ -21,13 +21,13 @@
   <meta name="description" content="Practice rapid fire questions in a fun, addictive reels format." />
 
   <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
-    /* DESIGN TOKENS */
+    /* DESIGN TOKENS (Matching your exact design system) */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
       --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
@@ -48,28 +48,39 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font-body); background: var(--bg-base); color: var(--color-text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
-    .align-wrapper { max-width: 600px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
 
-    /* HEADER */
-    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
-    body.dark-mode .site-header { background: rgba(30,41,59,0.95); }
+    /* HEADER & NAV (Exact copy from tests.html) */
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
     .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
     .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
     .brand-tagline { font-size: 10px; color: var(--text-muted); }
+    .site-nav { display: flex; align-items: center; gap: 4px; }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
     .header-actions { display: flex; align-items: center; gap: 8px; }
     .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; }
     .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .mobile-menu-btn { display: none; }
 
-    /* PRE-QUIZ DASHBOARD */
-    .page-wrapper { padding-top: 32px; padding-bottom: 60px; flex: 1; }
-    .dashboard-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; }
+    /* PAGE LAYOUT */
+    .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
+    .page-header { margin-bottom: 24px; }
+    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .page-title i { color: var(--primary); }
+    .page-subtitle { font-size: 14px; color: var(--text-muted); }
+
+    /* DASHBOARD CARDS */
+    .dashboard-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
     .greeting-text { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .sub-greeting { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 
@@ -105,9 +116,16 @@
     /* REELS SCREEN (Hidden initially) */
     #reelScreen { display: none; }
     
-    /* FOOTER */
+    /* FOOTER (Exact copy from tests.html) */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
     body.dark-mode .site-footer { color: #0f172a; }
+    body.dark-mode .footer-brand-name { color: #0f172a; }
+    body.dark-mode .footer-brand-desc { color: rgba(15,23,42,.75); }
+    body.dark-mode .footer-col-title { color: rgba(15,23,42,.75); }
+    body.dark-mode .footer-link { color: rgba(15,23,42,.8); }
+    body.dark-mode .footer-link:hover { color: #0f172a; }
+    body.dark-mode .footer-copy { color: rgba(15,23,42,.6); }
+    body.dark-mode .footer-bottom { border-top-color: rgba(15,23,42,.15); }
     .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
     .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
     .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
@@ -117,6 +135,15 @@
     .footer-link:hover { color: #fff; }
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .align-wrapper { padding-left: 12px; padding-right: 12px; }
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .pace-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -127,11 +154,20 @@
         <div class="brand-icon">A</div>
         <div class="brand-text">
           <span class="brand-name">ApnaMock</span>
-          <span class="brand-tagline">Rapid Fire Mode</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
         </div>
       </a>
+      <nav class="site-nav">
+        <a href="/index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="/tests.html" class="nav-link"><i class="fa-solid fa-list-check"></i><span>Tests</span></a>
+        <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
+        <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
+        <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+        <a href="/jobs.html" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
+      </nav>
       <div class="header-actions">
         <button class="btn-icon" id="themeToggleBtn"><i class="fa-solid fa-moon"></i></button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
       </div>
     </div>
   </header>
@@ -140,6 +176,11 @@
     
     <!-- PRE-QUIZ DASHBOARD -->
     <div id="preQuizScreen">
+      <div class="page-header">
+        <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Rapid Fire Mode</h1>
+        <p class="page-subtitle">Practice rapid fire questions in a fun, addictive reels format.</p>
+      </div>
+
       <!-- Personal Message Card -->
       <div class="dashboard-card">
         <div class="greeting-text" id="greetingText">Welcome to Rapid Fire! 🚀</div>
@@ -218,7 +259,28 @@
         <div class="footer-col-title">Quick Links</div>
         <div class="footer-links">
           <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
           <a href="/jobs.html" class="footer-link">Jobs</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">SSC CGL</a>
+          <a href="/tests.html" class="footer-link">SSC CHSL</a>
+          <a href="/tests.html" class="footer-link">Railway NTPC</a>
+          <a href="/tests.html" class="footer-link">Railway Group D</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="/legal.html#privacy" class="footer-link">Privacy Policy</a>
+          <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
+          <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
+          <a href="/legal.html#contact" class="footer-link">Contact</a>
         </div>
       </div>
     </div>
@@ -233,7 +295,7 @@
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
     };
 
-    // --- Theme Toggle ---
+    // --- Theme & Menu (Exact logic from your other pages) ---
     const savedTheme = localStorage.getItem('apnamock_theme');
     if (savedTheme === '"dark"') {
       document.body.classList.add("dark-mode");
@@ -244,6 +306,21 @@
       const isDark = document.body.classList.contains("dark-mode");
       document.querySelector("#themeToggleBtn i").className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
       localStorage.setItem('apnamock_theme', JSON.stringify(isDark ? "dark" : "light"));
+    });
+
+    const nav = document.querySelector(".site-nav");
+    const menuBtn = document.getElementById("mobileMenuBtn");
+    if (menuBtn) {
+      menuBtn.addEventListener("click", function() { nav.classList.toggle("mobile-open"); });
+    }
+    function closeMobileMenu() { if (nav) nav.classList.remove("mobile-open"); }
+    document.addEventListener("click", function(e) {
+      if (!nav) return;
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); }
+    });
+    window.addEventListener("scroll", closeMobileMenu);
+    document.querySelectorAll(".site-nav .nav-link").forEach(function(link) {
+      link.addEventListener("click", closeMobileMenu);
     });
 
     // --- Rapid Fire State ---
@@ -261,10 +338,6 @@
       } catch(e) {
         return { lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {} };
       }
-    }
-
-    function saveRfStats(stats) {
-      localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
     }
 
     // --- Initialize Dashboard ---
@@ -372,7 +445,7 @@
 
       // If all seen, reset (Cycle Complete logic)
       if (unseenPool.length === 0 && pool.length > 0) {
-        showToast("Cycle Complete! 🏆 Resetting questions...");
+        alert("Cycle Complete! 🏆 Resetting questions...");
         // Remove seen IDs for this subject only
         const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
@@ -388,9 +461,6 @@
       console.log("Starting RF with", unseenPool.length, "questions. Pace:", selectedPace);
       // Phase C will take over from here to build the UI
     }
-
-    // Simple toast for now (Phase C will have the full UI)
-    function showToast(msg) { alert(msg); }
 
     // Boot up
     initDashboard();
