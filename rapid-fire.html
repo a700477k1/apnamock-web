@@ -144,6 +144,73 @@
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: 1fr; }
     }
+
+    /* REELS OVERLAY ENGINE */
+    .reel-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000; 
+      background: #0f172a; height: 100vh; width: 100vw; overflow: hidden;
+      flex-direction: column; align-items: center;
+    }
+    .reel-overlay.active { display: flex; }
+    
+    .reel-header {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; align-items: center; gap: 16px; color: #fff;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 99px;
+    }
+    .reel-streak { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .reel-exit {
+      position: absolute; top: 20px; right: 20px; z-index: 10; color: #fff; 
+      background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
+      display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
+    }
+    .reel-mute {
+      position: absolute; top: 20px; left: 20px; z-index: 10; color: #fff; 
+      background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
+      display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+    }
+
+    .reel-container {
+      height: 100%; width: 100%; max-width: 500px; overflow-y: scroll; 
+      scroll-snap-type: y mandatory; scrollbar-width: none; padding-top: 80px; padding-bottom: 40px;
+    }
+    .reel-container::-webkit-scrollbar { display: none; }
+
+    .reel-card {
+      height: calc(100vh - 80px); width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+      display: flex; flex-direction: column; justify-content: center; padding: 24px; box-sizing: border-box;
+      color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .rf-question { font-size: 22px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+    .rf-question img { max-height: 150px; border-radius: 8px; margin: 10px 0; }
+    
+    .rf-options { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+    .rf-option {
+      padding: 14px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      border-radius: 12px; color: #fff; font-size: 15px; text-align: left; cursor: pointer; 
+      display: flex; align-items: center; gap: 12px; transition: all 0.2s;
+    }
+    .rf-option:active { transform: scale(0.98); }
+    .rf-option-letter { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .rf-option img { height: 40px; border-radius: 4px; }
+    
+    .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
+    .rf-option.correct .rf-option-letter { background: #16a34a; color: #fff; }
+    .rf-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); }
+    .rf-option.wrong .rf-option-letter { background: #dc2626; color: #fff; }
+    .rf-option.disabled { pointer-events: none; opacity: 0.7; }
+
+    .rf-explanation {
+      margin-top: 16px; padding: 12px; background: rgba(26, 86, 219, 0.2); border-left: 3px solid #1a56db;
+      border-radius: 4px; font-size: 13px; color: #cbd5e1; display: none;
+    }
+    .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
+    
+    .rf-swipe-hint { text-align: center; margin-top: 16px; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    
   </style>
 </head>
 <body>
@@ -248,6 +315,24 @@
     </div>
 
   </main>
+
+  <!-- RAPID FIRE REELS OVERLAY -->
+  <div class="reel-overlay" id="reelOverlay">
+    <div class="reel-mute" onclick="toggleMute()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
+    <div class="reel-header">
+      <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
+    </div>
+    <div class="reel-exit" onclick="exitRapidFire()"><i class="fa-solid fa-xmark"></i></div>
+    
+    <div class="reel-container" id="reelContainer">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+
+  <!-- Hidden Audio Element for Background Music -->
+  <audio id="bgMusic" loop>
+    <!-- We will add the audio source in Step 2 -->
+  </audio>
 
   <footer class="site-footer">
     <div class="footer-inner align-wrapper">
@@ -431,35 +516,255 @@
       selectedPace = pace;
     }
 
+    // --- Audio Engine (Web Audio API for SFX) ---
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSFX(isCorrect) {
+      if (isMuted) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (isCorrect) {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.2);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+        osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.15);
+      }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.volume = isMuted ? 0 : 0.1; // Keep bg music low
+    }
+
+    // --- Reels State ---
+    let reelPool = [];
+    let currentCardIndex = 0;
+    let currentStreak = 0;
+    let rfStats = getRfStats();
+
     function startRapidFire() {
-      // Hide dashboard, show reels
+      // Hide dashboard, show overlay
       document.getElementById('preQuizScreen').style.display = 'none';
-      document.getElementById('reelScreen').style.display = 'flex';
+      document.getElementById('reelOverlay').classList.add('active');
+      
+      // Start Music
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.volume = 0.1; // 10% volume
+      bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       // Filter questions
       let pool = selectedSubject === 'all' ? [...allQuestions] : allQuestions.filter(q => q.subject === selectedSubject);
       
       // Filter out seen questions (No-Repeat Logic)
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
-      let unseenPool = pool.filter(q => !seenIds.includes(q.id));
+      reelPool = pool.filter(q => !seenIds.includes(q.id));
 
-      // If all seen, reset (Cycle Complete logic)
-      if (unseenPool.length === 0 && pool.length > 0) {
-        alert("Cycle Complete! 🏆 Resetting questions...");
-        // Remove seen IDs for this subject only
+      // If all seen, reset
+      if (reelPool.length === 0 && pool.length > 0) {
         const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
-        unseenPool = pool;
+        reelPool = pool;
       }
 
       // Shuffle
-      for (let i = unseenPool.length - 1; i > 0; i--) {
+      for (let i = reelPool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [unseenPool[i], unseenPool[j]] = [unseenPool[j], unseenPool[i]];
+        [reelPool[i], reelPool[j]] = [reelPool[j], reelPool[i]];
       }
 
-      console.log("Starting RF with", unseenPool.length, "questions. Pace:", selectedPace);
-      // Phase C will take over from here to build the UI
+      currentCardIndex = 0;
+      currentStreak = 0;
+      document.getElementById('reelStreakCount').innerText = currentStreak;
+      
+      renderReelCards();
+    }
+
+    function renderReelCards() {
+      const container = document.getElementById('reelContainer');
+      container.innerHTML = '';
+      
+      // Render initial 5 cards
+      const initialBatch = reelPool.slice(currentCardIndex, currentCardIndex + 5);
+      initialBatch.forEach(q => {
+        container.appendChild(createReelCard(q));
+      });
+
+      // Scroll listener for infinite load
+      container.onscroll = function() {
+        if (container.scrollTop > (container.scrollHeight - container.clientHeight - 500)) {
+          loadMoreReels();
+        }
+      };
+    }
+
+    function loadMoreReels() {
+      const container = document.getElementById('reelContainer');
+      const nextBatch = reelPool.slice(currentCardIndex + 5, currentCardIndex + 10);
+      if (nextBatch.length > 0) {
+        nextBatch.forEach(q => container.appendChild(createReelCard(q)));
+        currentCardIndex += 5;
+      } else if (currentCardIndex >= reelPool.length) {
+        // Cycle complete!
+        const resetCard = document.createElement('div');
+        resetCard.className = 'reel-card';
+        resetCard.innerHTML = `
+          <div style="text-align:center; color:#fff;">
+            <div style="font-size:60px; margin-bottom:20px;">🏆</div>
+            <h2 style="font-size:28px; font-weight:800; margin-bottom:12px;">Cycle Complete!</h2>
+            <p style="font-size:16px; color:#cbd5e1; margin-bottom:30px;">You've conquered all questions in this subject. We're resetting the board.</p>
+            <button class="btn btn-primary" onclick="startRapidFire()" style="width:auto; padding:0 32px;">Start New Cycle</button>
+          </div>
+        `;
+        container.appendChild(resetCard);
+        container.onscroll = null; // Stop listening
+      }
+    }
+
+    function createReelCard(q) {
+      const card = document.createElement('div');
+      card.className = 'reel-card';
+      card.id = 'card-' + q.id;
+
+      let optionsHtml = '';
+      q.options.forEach((opt, index) => {
+        if (!opt && !q.option_images[index]) return; // Skip empty options
+        const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
+        // Strip HTML tags for display simplicity in options
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = opt;
+        const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+        
+        optionsHtml += `
+          <div class="rf-option" onclick="handleReelAnswer('${q.id}', ${index}, ${q.correct})">
+            <div class="rf-option-letter">${String.fromCharCode(65 + index)}</div>
+            <span style="flex:1;">${cleanText}</span>
+            ${imgHtml}
+          </div>
+        `;
+      });
+
+      // Strip HTML tags from question for clean display
+      const tempQDiv = document.createElement('div');
+      tempQDiv.innerHTML = q.question;
+      const cleanQuestion = tempQDiv.textContent || tempQDiv.innerText || "";
+      const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
+
+      card.innerHTML = `
+        <div class="rf-subject-tag">${q.subject}</div>
+        <div class="rf-question">${cleanQuestion} ${qImgHtml}</div>
+        <div class="rf-options">${optionsHtml}</div>
+        <div class="rf-explanation" id="expl-${q.id}">
+          <strong>Explanation:</strong><br>
+          ${(q.explanation || "").replace(/<[^>]+>/g, ' ')}
+          ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
+        </div>
+        <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
+      `;
+
+      return card;
+    }
+
+    function handleReelAnswer(cardId, selectedIndex, correctIndex) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card || card.querySelector('.rf-option.disabled')) return;
+
+      const options = card.querySelectorAll('.rf-option');
+      options.forEach(opt => opt.classList.add('disabled'));
+
+      const isCorrect = selectedIndex === correctIndex;
+      
+      if (isCorrect) {
+        options[selectedIndex].classList.add('correct');
+        currentStreak++;
+        document.getElementById('reelStreakCount').innerText = currentStreak;
+        playSFX(true);
+        
+        // Update Stats
+        rfStats.totalQuestionsAnswered++;
+        rfStats.correctAnswers++;
+        if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
+        updateTopicStats(cardId, true);
+        
+        // Auto-advance after 1.2s
+        setTimeout(() => {
+          const container = document.getElementById('reelContainer');
+          container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        }, 1200);
+      } else {
+        options[selectedIndex].classList.add('wrong');
+        options[correctIndex].classList.add('correct');
+        currentStreak = 0;
+        document.getElementById('reelStreakCount').innerText = currentStreak;
+        playSFX(false);
+        
+        // Show explanation
+        document.getElementById('expl-' + cardId).style.display = 'block';
+        
+        // Update Stats
+        rfStats.totalQuestionsAnswered++;
+        updateTopicStats(cardId, false);
+      }
+
+      // Mark as seen
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      if (!seenIds.includes(cardId)) {
+        seenIds.push(cardId);
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
+      }
+      
+      saveRfStats(rfStats);
+    }
+
+    function updateTopicStats(cardId, isCorrect) {
+      const question = allQuestions.find(q => q.id === cardId);
+      if (!question) return;
+      const subject = question.subject;
+      
+      if (!rfStats.topicPerformance[subject]) {
+        rfStats.topicPerformance[subject] = { correct: 0, wrong: 0 };
+      }
+      
+      if (isCorrect) {
+        rfStats.topicPerformance[subject].correct++;
+      } else {
+        rfStats.topicPerformance[subject].wrong++;
+      }
+    }
+
+    function exitRapidFire() {
+      document.getElementById('reelOverlay').classList.remove('active');
+      document.getElementById('preQuizScreen').style.display = 'block';
+      document.getElementById('bgMusic').pause();
+      
+      // Reset dashboard stats to show new data
+      rfStats.totalSessions++;
+      rfStats.lastPlayed = new Date().toISOString();
+      saveRfStats(rfStats);
+      initDashboard(); 
     }
 
     // Boot up
