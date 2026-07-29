@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- GOOGLE ANALYTICS -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DNVHG69MX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1DNVHG69MX');
+  </script>
+
+  <!-- PWA Setup -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a56db">
+
+  <title>Rapid Fire — ApnaMock</title>
+  <meta name="description" content="Practice rapid fire questions in a fun, addictive reels format." />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* DESIGN TOKENS */
+    :root {
+      --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
+      --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
+      --error: #dc2626; --error-light: #fee2e2; --warning: #f59e0b; --warning-light: #fef3c7;
+      --purple: #7c3aed; --purple-light: #ede9fe;
+      --bg-base: #f8fafc; --bg-card: #ffffff; --bg-muted: #f1f5f9;
+      --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.10); --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --header-height: 64px; --font-body: 'Inter', sans-serif; --font-heading: 'Poppins', sans-serif;
+    }
+    body.dark-mode {
+      --bg-base: #0f172a; --bg-card: #1e293b; --bg-muted: #334155;
+      --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+      --border: #334155; --border-strong: #475569; --primary-light: rgba(26, 86, 219, 0.2);
+      --success-light: rgba(22, 163, 74, 0.2); --warning-light: rgba(245, 158, 11, 0.2); --error-light: rgba(220, 38, 38, 0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--color-text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    .align-wrapper { max-width: 600px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+
+    /* HEADER */
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
+    body.dark-mode .site-header { background: rgba(30,41,59,0.95); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
+    .brand-tagline { font-size: 10px; color: var(--text-muted); }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+
+    /* PRE-QUIZ DASHBOARD */
+    .page-wrapper { padding-top: 32px; padding-bottom: 60px; flex: 1; }
+    .dashboard-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; }
+    .greeting-text { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .sub-greeting { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-box { background: var(--bg-muted); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .stat-icon { font-size: 20px; margin-bottom: 4px; }
+    .stat-value { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+    .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+    .insight-box { background: var(--primary-light); border: 1px solid rgba(26,86,219,0.1); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .insight-box i { color: var(--primary); font-size: 16px; margin-top: 2px; }
+
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
+    
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .filter-chip { padding: 10px 16px; border-radius: 99px; border: 1.5px solid var(--border); background: var(--bg-card); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
+
+    .pace-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 32px; }
+    .pace-card { padding: 16px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; transition: all 0.15s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .pace-card:hover { border-color: var(--primary); }
+    .pace-card.active { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 2px 8px rgba(26,86,219,0.1); }
+    .pace-icon { font-size: 18px; margin-bottom: 4px; }
+    .pace-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .pace-desc { font-size: 11px; color: var(--text-muted); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 48px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; width: 100%; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* REELS SCREEN (Hidden initially) */
+    #reelScreen { display: none; }
+    
+    /* FOOTER */
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Rapid Fire Mode</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper align-wrapper">
+    
+    <!-- PRE-QUIZ DASHBOARD -->
+    <div id="preQuizScreen">
+      <!-- Personal Message Card -->
+      <div class="dashboard-card">
+        <div class="greeting-text" id="greetingText">Welcome to Rapid Fire! 🚀</div>
+        <div class="sub-greeting" id="subGreeting">Let's see what you've got.</div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--primary);"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="stat-value" id="statAccuracy">0%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--error);"><i class="fa-solid fa-fire"></i></div>
+            <div class="stat-value" id="statStreak">0</div>
+            <div class="stat-label">Best Streak</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--success);"><i class="fa-solid fa-check-double"></i></div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">Answered</div>
+          </div>
+        </div>
+
+        <div class="insight-box" id="insightBox" style="display:none;">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span id="insightText"></span>
+        </div>
+      </div>
+
+      <!-- Subject Selection -->
+      <div class="section-title">Choose Subject</div>
+      <div class="chips-wrap" id="subjectChips">
+        <div class="filter-chip active" data-subject="all"><i class="fa-solid fa-shuffle"></i> Smart Mix</div>
+      </div>
+
+      <!-- Pace Selection -->
+      <div class="section-title">Choose Pace</div>
+      <div class="pace-grid" id="paceGrid">
+        <div class="pace-card active" data-pace="0">
+          <div class="pace-icon" style="color: var(--purple);"><i class="fa-solid fa-spa"></i></div>
+          <div class="pace-title">Zen Mode</div>
+          <div class="pace-desc">No Timer</div>
+        </div>
+        <div class="pace-card" data-pace="45">
+          <div class="pace-icon" style="color: var(--primary);"><i class="fa-solid fa-stopwatch"></i></div>
+          <div class="pace-title">Standard</div>
+          <div class="pace-desc">45 Secs</div>
+        </div>
+        <div class="pace-card" data-pace="20">
+          <div class="pace-icon" style="color: var(--error);"><i class="fa-solid fa-bolt"></i></div>
+          <div class="pace-title">Blitz</div>
+          <div class="pace-desc">20 Secs</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="startBtn" onclick="startRapidFire()">
+        <i class="fa-solid fa-play"></i> Start Rapid Fire
+      </button>
+    </div>
+
+    <!-- REELS SCREEN (Will be populated in Phase C) -->
+    <div id="reelScreen" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:70vh;">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size:32px; color:var(--primary); margin-bottom:16px;"></i>
+      <div style="font-size:16px; font-weight:600; color:var(--text-secondary);">Loading your questions...</div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/jobs.html" class="footer-link">Jobs</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom align-wrapper">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
+    </div>
+  </footer>
+
+  <script>
+    const CONFIG = { 
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
+    };
+
+    // --- Theme Toggle ---
+    const savedTheme = localStorage.getItem('apnamock_theme');
+    if (savedTheme === '"dark"') {
+      document.body.classList.add("dark-mode");
+      document.querySelector("#themeToggleBtn i").className = "fa-solid fa-sun";
+    }
+    document.getElementById("themeToggleBtn").addEventListener("click", function() {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      document.querySelector("#themeToggleBtn i").className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      localStorage.setItem('apnamock_theme', JSON.stringify(isDark ? "dark" : "light"));
+    });
+
+    // --- Rapid Fire State ---
+    let allQuestions = [];
+    let selectedSubject = "all";
+    let selectedPace = 0; // 0 = Zen, 45 = Standard, 20 = Blitz
+
+    // --- LocalStorage Stats Manager ---
+    function getRfStats() {
+      try {
+        const raw = localStorage.getItem('apnamock_rf_stats');
+        return raw ? JSON.parse(raw) : {
+          lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {}
+        };
+      } catch(e) {
+        return { lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {} };
+      }
+    }
+
+    function saveRfStats(stats) {
+      localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
+    }
+
+    // --- Initialize Dashboard ---
+    async function initDashboard() {
+      // 1. Load Stats
+      const stats = getRfStats();
+      const accuracy = stats.totalQuestionsAnswered > 0 ? Math.round((stats.correctAnswers / stats.totalQuestionsAnswered) * 100) : 0;
+      
+      document.getElementById('statAccuracy').innerText = accuracy + '%';
+      document.getElementById('statStreak').innerText = stats.bestStreak;
+      document.getElementById('statTotal').innerText = stats.totalQuestionsAnswered;
+
+      // Dynamic Greeting
+      const hour = new Date().getHours();
+      let greeting = "Welcome to Rapid Fire! 🚀";
+      let subGreeting = "Let's see what you've got.";
+
+      if (stats.totalSessions > 0) {
+        if (hour < 12) greeting = "Good morning! ☀️";
+        else if (hour < 17) greeting = "Good afternoon! 😊";
+        else greeting = "Good evening! 🌙";
+
+        subGreeting = `Ready to break your record of ${stats.bestStreak} correct in a row?`;
+      }
+
+      document.getElementById('greetingText').innerText = greeting;
+      document.getElementById('subGreeting').innerText = subGreeting;
+
+      // Personal Insight
+      if (stats.totalQuestionsAnswered > 10) {
+        let bestSubject = null, worstSubject = null;
+        let bestAcc = -1, worstAcc = 101;
+
+        for (const subject in stats.topicPerformance) {
+          const data = stats.topicPerformance[subject];
+          const total = data.correct + data.wrong;
+          if (total < 3) continue; // Need at least 3 attempts to judge
+          const acc = (data.correct / total) * 100;
+          if (acc > bestAcc) { bestAcc = acc; bestSubject = subject; }
+          if (acc < worstAcc) { worstAcc = acc; worstSubject = subject; }
+        }
+
+        if (bestSubject && worstSubject && bestSubject !== worstSubject) {
+          document.getElementById('insightBox').style.display = 'flex';
+          document.getElementById('insightText').innerText = `You're crushing it in ${bestSubject} (${Math.round(bestAcc)}% accuracy), but ${worstSubject} is pulling you down (${Math.round(worstAcc)}%). Try focusing on ${worstSubject} today!`;
+        }
+      }
+
+      // 2. Fetch Questions & Populate Subjects
+      try {
+        const res = await fetch(CONFIG.CDN_BASE + 'data/rapid-fire-bank.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to load');
+        allQuestions = await res.json();
+
+        // Populate subject chips based on available data
+        const subjects = [...new Set(allQuestions.map(q => q.subject))].sort();
+        const chipsWrap = document.getElementById('subjectChips');
+        
+        subjects.forEach(sub => {
+          const chip = document.createElement('div');
+          chip.className = 'filter-chip';
+          chip.dataset.subject = sub;
+          chip.innerText = sub;
+          chip.onclick = () => selectSubject(chip, sub);
+          chipsWrap.appendChild(chip);
+        });
+      } catch (err) {
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('startBtn').innerText = 'Failed to load questions';
+      }
+
+      // 3. Setup Selection Listeners
+      document.querySelectorAll('#subjectChips .filter-chip').forEach(chip => {
+        chip.onclick = () => selectSubject(chip, chip.dataset.subject);
+      });
+
+      document.querySelectorAll('#paceGrid .pace-card').forEach(card => {
+        card.onclick = () => selectPace(card, parseInt(card.dataset.pace));
+      });
+    }
+
+    function selectSubject(element, subject) {
+      document.querySelectorAll('#subjectChips .filter-chip').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      selectedSubject = subject;
+    }
+
+    function selectPace(element, pace) {
+      document.querySelectorAll('#paceGrid .pace-card').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      selectedPace = pace;
+    }
+
+    function startRapidFire() {
+      // Hide dashboard, show reels
+      document.getElementById('preQuizScreen').style.display = 'none';
+      document.getElementById('reelScreen').style.display = 'flex';
+
+      // Filter questions
+      let pool = selectedSubject === 'all' ? [...allQuestions] : allQuestions.filter(q => q.subject === selectedSubject);
+      
+      // Filter out seen questions (No-Repeat Logic)
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      let unseenPool = pool.filter(q => !seenIds.includes(q.id));
+
+      // If all seen, reset (Cycle Complete logic)
+      if (unseenPool.length === 0 && pool.length > 0) {
+        showToast("Cycle Complete! 🏆 Resetting questions...");
+        // Remove seen IDs for this subject only
+        const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
+        unseenPool = pool;
+      }
+
+      // Shuffle
+      for (let i = unseenPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [unseenPool[i], unseenPool[j]] = [unseenPool[j], unseenPool[i]];
+      }
+
+      console.log("Starting RF with", unseenPool.length, "questions. Pace:", selectedPace);
+      // Phase C will take over from here to build the UI
+    }
+
+    // Simple toast for now (Phase C will have the full UI)
+    function showToast(msg) { alert(msg); }
+
+    // Boot up
+    initDashboard();
+  </script>
+</body>
+</html>
