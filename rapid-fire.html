@@ -32,7 +32,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
   <style>
-    /* DESIGN TOKENS (Matching your exact design system) */
+
+    /* DESIGN TOKENS */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
       --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
@@ -59,7 +60,7 @@
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
     .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
 
-    /* HEADER & NAV (Exact copy from tests.html) */
+    /* HEADER & NAV */
     .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
     body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
@@ -80,7 +81,9 @@
     /* PAGE LAYOUT */
     .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
     .page-header { margin-bottom: 24px; }
-    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    
+    /* Fix 5: Title size matched to jobs.html */
+    .page-title { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
@@ -121,7 +124,7 @@
     /* REELS SCREEN (Hidden initially) */
     #reelScreen { display: none; }
     
-    /* FOOTER (Exact copy from tests.html) */
+    /* FOOTER */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
     body.dark-mode .site-footer { color: #0f172a; }
     body.dark-mode .footer-brand-name { color: #0f172a; }
@@ -141,15 +144,6 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .align-wrapper { padding-left: 12px; padding-right: 12px; }
-      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
-      .site-nav.mobile-open { display: flex; }
-      .mobile-menu-btn { display: flex; }
-      .pace-grid { grid-template-columns: 1fr; }
-    }
-
     /* REELS OVERLAY ENGINE */
     .reel-overlay {
       display: none; position: fixed; inset: 0; z-index: 2000; 
@@ -158,6 +152,7 @@
     }
     .reel-overlay.active { display: flex; }
     
+    /* Fix 4: Streak indicator no longer hides the question because we moved padding to the card */
     .reel-header {
       position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
       z-index: 10; display: flex; align-items: center; gap: 16px; color: #fff;
@@ -175,31 +170,37 @@
       display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
+    /* Fix 2: Removed padding from container to stop screen overlap */
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: scroll; 
-      scroll-snap-type: y mandatory; scrollbar-width: none; padding-top: 80px; padding-bottom: 40px;
+      scroll-snap-type: y mandatory; scrollbar-width: none;
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
+    /* Fix 2 & 4: Card is exactly 100vh and has internal padding so content doesn't hide behind header */
     .reel-card {
-      height: calc(100vh - 80px); width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
-      display: flex; flex-direction: column; justify-content: center; padding: 24px; box-sizing: border-box;
+      height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+      display: flex; flex-direction: column; justify-content: center; 
+      padding: 90px 24px 40px; box-sizing: border-box; /* 90px top padding clears the header */
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-    .rf-question { font-size: 22px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
-    .rf-question img { max-height: 150px; border-radius: 8px; margin: 10px 0; }
     
-    .rf-options { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+    /* Fix 4: Smaller question font */
+    .rf-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; }
+    .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
+    
+    /* Fix 4: Tighter options spacing */
+    .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .rf-option {
-      padding: 14px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
-      border-radius: 12px; color: #fff; font-size: 15px; text-align: left; cursor: pointer; 
-      display: flex; align-items: center; gap: 12px; transition: all 0.2s;
+      padding: 10px 12px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      border-radius: 10px; color: #fff; font-size: 14px; text-align: left; cursor: pointer; 
+      display: flex; align-items: center; gap: 10px; transition: all 0.2s;
     }
     .rf-option:active { transform: scale(0.98); }
-    .rf-option-letter { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-    .rf-option img { height: 40px; border-radius: 4px; }
+    .rf-option-letter { width: 24px; height: 24px; border-radius: 5px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .rf-option img { height: 35px; border-radius: 4px; }
     
     .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
     .rf-option.correct .rf-option-letter { background: #16a34a; color: #fff; }
@@ -208,13 +209,22 @@
     .rf-option.disabled { pointer-events: none; opacity: 0.7; }
 
     .rf-explanation {
-      margin-top: 16px; padding: 12px; background: rgba(26, 86, 219, 0.2); border-left: 3px solid #1a56db;
-      border-radius: 4px; font-size: 13px; color: #cbd5e1; display: none;
+      margin-top: 12px; padding: 10px; background: rgba(26, 86, 219, 0.2); border-left: 3px solid #1a56db;
+      border-radius: 4px; font-size: 12px; color: #cbd5e1; display: none;
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
-    .rf-swipe-hint { text-align: center; margin-top: 16px; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; }
+    .rf-swipe-hint { text-align: center; margin-top: 12px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .align-wrapper { padding-left: 12px; padding-right: 12px; }
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .pace-grid { grid-template-columns: 1fr; }
+    }
     
   </style>
 </head>
@@ -562,21 +572,21 @@
       gain.connect(audioCtx.destination);
 
       if (isCorrect) {
-        // Pleasant high-pitched chime (C5 to E5)
+        // Bright, pleasant high-pitched chime (E5 to A5)
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); // A5
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime); // Louder to sound superior
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
         osc.start(audioCtx.currentTime);
-        osc.stop(audioCtx.currentTime + 0.2);
+        osc.stop(audioCtx.currentTime + 0.25);
       } else {
-        // Soft, audible descending horn (Eb4 to Bb3)
+        // Soft, muted descending horn (Eb4 to Bb3)
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(311.13, audioCtx.currentTime); // Higher pitch so it's audible
-        osc.frequency.setValueAtTime(233.08, audioCtx.currentTime + 0.15); // Descends down
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime); // Slightly louder to cut through music
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(311.13, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(233.08, audioCtx.currentTime + 0.15); 
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime); // Slightly quieter
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime + 0.15);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
         osc.start(audioCtx.currentTime);
         osc.stop(audioCtx.currentTime + 0.35);
@@ -727,7 +737,7 @@
       if (isCorrect) {
         options[selectedIndex].classList.add('correct');
         currentStreak++;
-        document.getElementById('reelStreakCount').innerText = currentStreak;
+        document.getElementById('reelStreakCount').innerText = currentStreak; // Force DOM update
         playSFX(true);
         
         // Update Stats
@@ -745,7 +755,7 @@
         options[selectedIndex].classList.add('wrong');
         options[correctIndex].classList.add('correct');
         currentStreak = 0;
-        document.getElementById('reelStreakCount').innerText = currentStreak;
+        document.getElementById('reelStreakCount').innerText = currentStreak; // Force DOM update
         playSFX(false);
         
         // Show explanation
@@ -763,7 +773,7 @@
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
       }
       
-      saveRfStats(rfStats);
+      saveRfStats(rfStats); // Save stats immediately
     }
 
     function updateTopicStats(cardId, isCorrect) {
