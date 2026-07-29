@@ -26,6 +26,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
   <style>
     /* DESIGN TOKENS (Matching your exact design system) */
     :root {
@@ -380,6 +385,28 @@
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
     };
 
+    // KaTeX Math Renderer Helper
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+      function decodeEntities(str) {
+        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      }
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: true, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: true, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: false, throwOnError: false }); } catch (e) { return match; }
+      });
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
+        if (math.includes('</p>') || math.includes('<p')) return match; 
+        try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: false, throwOnError: false }); } catch (e) { return match; }
+      });
+      return htmlString;
+    }
+
     // --- Theme & Menu (Exact logic from your other pages) ---
     const savedTheme = localStorage.getItem('apnamock_theme');
     if (savedTheme === '"dark"') {
@@ -656,33 +683,30 @@
       q.options.forEach((opt, index) => {
         if (!opt && !q.option_images[index]) return; // Skip empty options
         const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
-        // Strip HTML tags for display simplicity in options
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = opt;
-        const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+        
+        // Render Math/HTML directly instead of stripping it
+        const renderedOpt = renderMathInString(opt || "");
         
         optionsHtml += `
           <div class="rf-option" onclick="handleReelAnswer('${q.id}', ${index}, ${q.correct})">
             <div class="rf-option-letter">${String.fromCharCode(65 + index)}</div>
-            <span style="flex:1;">${cleanText}</span>
+            <span style="flex:1; overflow-x: auto;">${renderedOpt}</span>
             ${imgHtml}
           </div>
         `;
       });
 
-      // Strip HTML tags from question for clean display
-      const tempQDiv = document.createElement('div');
-      tempQDiv.innerHTML = q.question;
-      const cleanQuestion = tempQDiv.textContent || tempQDiv.innerText || "";
+      // Render Math/HTML directly for the question
+      const renderedQuestion = renderMathInString(q.question || "");
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
 
       card.innerHTML = `
         <div class="rf-subject-tag">${q.subject}</div>
-        <div class="rf-question">${cleanQuestion} ${qImgHtml}</div>
+        <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
         <div class="rf-options">${optionsHtml}</div>
         <div class="rf-explanation" id="expl-${q.id}">
           <strong>Explanation:</strong><br>
-          ${(q.explanation || "").replace(/<[^>]+>/g, ' ')}
+          ${renderMathInString(q.explanation || "")}
           ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
         </div>
         <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
