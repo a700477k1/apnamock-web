@@ -170,7 +170,8 @@
 
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: scroll; 
-      scroll-snap-type: y mandatory; scrollbar-width: none;
+      scroll-snap-type: y proximity; /* Changed from mandatory to proximity */
+      scrollbar-width: none;
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
@@ -761,7 +762,14 @@
 
       let optionsHtml = '';
       q.options.forEach((opt, index) => {
-        if (!opt && !q.option_images[index]) return; // Skip empty options
+        // Strip HTML tags to check if the option actually has text
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = opt || "";
+        const cleanText = tempDiv.textContent.trim();
+        
+        // If there's no text AND no image, skip this option completely!
+        if (!cleanText && !q.option_images[index]) return; 
+        
         const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
         const renderedOpt = renderMathInString(opt || "");
         
