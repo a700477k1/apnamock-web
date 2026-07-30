@@ -144,65 +144,60 @@
     /* REELS OVERLAY ENGINE */
     .reel-overlay {
       display: none; position: fixed; inset: 0; z-index: 2000; 
-      background: linear-gradient(135deg, #1a56db, #f97316); /* Exact ApnaMock Logo Gradient */
-      height: 100vh; height: 100dvh; /* FIX: Dynamic viewport height for mobile address bar */
+      background: linear-gradient(135deg, #1a56db, #f97316); 
+      height: 100vh; height: 100dvh; 
       width: 100vw; overflow: hidden;
       flex-direction: column; align-items: center;
     }
     .reel-overlay.active { display: flex; }
     
+    /* NEW: Top Branding Bar (Sits behind functional buttons) */
+    .reel-top-bar {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 20px; opacity: 0.8; pointer-events: none;
+    }
+    .reel-top-bar .brand { gap: 8px; }
+    .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; border-radius: 6px; }
+    .reel-top-bar .brand-name { font-size: 14px; }
+    .reel-top-bar .brand-tagline { font-size: 8px; }
+    .reel-top-bar .promo-text { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); text-align: right; max-width: 40%; }
+
+    /* Functional Buttons (Higher Z-Index) */
     .reel-header {
       position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-      z-index: 10; display: flex; align-items: center; gap: 12px; color: #fff;
+      z-index: 15; display: flex; align-items: center; gap: 12px; color: #fff;
       background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 99px;
     }
     .reel-streak { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .reel-exit {
-      position: absolute; top: 20px; right: 20px; z-index: 10; color: #fff; 
+      position: absolute; top: 20px; right: 20px; z-index: 15; color: #fff; 
       background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
       display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
     }
-    /* Move mute button to the top right, next to exit */
     .reel-mute {
-      position: absolute; top: 20px; right: 70px; z-index: 10; color: #fff; 
+      position: absolute; top: 20px; left: 20px; z-index: 15; color: #fff; 
       background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
       display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
-    /* NEW: Transparent TV Watermark for Branding */
-    .reel-branding {
-      position: absolute; top: 20px; left: 20px; z-index: 10;
-      display: flex; align-items: center; gap: 8px; 
-      opacity: 0.7; pointer-events: none; /* Makes it look like a watermark */
-    }
-    .reel-branding .brand-icon { 
-      width: 28px; height: 28px; font-size: 14px; border-radius: 6px; 
-      background: linear-gradient(135deg, #1a56db, #f97316); 
-      display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-family: 'Poppins', sans-serif;
-    }
-    .reel-branding .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-    .reel-branding .brand-name { color: #fff; font-size: 14px; font-weight: 700; font-family: 'Poppins', sans-serif; }
-    .reel-branding .brand-tagline { color: rgba(255,255,255,0.8); font-size: 8px; font-weight: 500; }
-
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
-      scroll-snap-type: y proximity; 
+      scroll-snap-type: y mandatory; /* STRICT SNAP: No partial screens */
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* FIX: Card uses 100dvh, flex-column to push hint to bottom */
     .reel-card {
-      height: 100vh; height: 100dvh; /* FIX: Dynamic viewport height */
-      width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+      height: 100vh; height: 100dvh; 
+      width: 100%; scroll-snap-align: start; scroll-snap-stop: always; /* STRICT SNAP */
       display: flex; flex-direction: column; 
-      padding: 80px 24px 10px; box-sizing: border-box; 
+      padding: 90px 24px 10px; box-sizing: border-box; 
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
       background: transparent; position: relative; overflow: hidden;
     }
 
-    /* FIX: Inner content wrapper takes all available space, scrolls if too long */
     .rf-card-content {
       flex: 1; overflow-y: auto; padding-bottom: 20px; scrollbar-width: none;
       display: flex; flex-direction: column;
@@ -239,7 +234,6 @@
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
-    /* FIX: Hint is pinned to the bottom of the flex column, never hidden */
     .rf-swipe-hint { 
       text-align: center; font-size: 11px; color: rgba(255,255,255,0.8); 
       text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; 
@@ -257,20 +251,24 @@
       
       .reel-header { padding: 6px 12px; top: 12px; }
       .reel-streak { font-size: 14px; }
-      .reel-exit { top: 12px; width: 32px; height: 32px; font-size: 14px; }
-      .reel-mute { top: 12px; right: 56px; width: 32px; height: 32px; font-size: 14px; } /* Adjusted for mobile */
-      
-      .reel-branding { top: 12px; left: 12px; }
-      .reel-branding .brand-icon { width: 24px; height: 24px; font-size: 12px; }
-      .reel-branding .brand-name { font-size: 12px; }
-      .reel-branding .brand-tagline { font-size: 7px; }
+      .reel-exit, .reel-mute { top: 12px; width: 32px; height: 32px; font-size: 14px; }
 
-      .reel-card { padding-top: 65px; padding-bottom: 5px; }
+      .reel-top-bar { padding: 12px 12px; }
+      .reel-top-bar .brand-icon { width: 24px; height: 24px; font-size: 12px; }
+      .reel-top-bar .brand-name { font-size: 12px; }
+      .reel-top-bar .brand-tagline { font-size: 7px; }
+      .reel-top-bar .promo-text { font-size: 10px; max-width: 45%; }
+
+      .reel-card { padding-top: 70px; padding-bottom: 5px; }
       .rf-question { font-size: 17px; margin-bottom: 12px; }
       .rf-options { gap: 6px; }
       .rf-option { padding: 8px 10px; font-size: 13px; }
       .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
+    }
+    
+    @media (max-width: 380px) {
+      .reel-top-bar .promo-text { display: none; } /* Hide promo text on very narrow screens */
     }
   </style>
 </head>
@@ -289,7 +287,6 @@
         <a href="/index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
         <a href="/tests.html" class="nav-link"><i class="fa-solid fa-list-check"></i><span>Tests</span></a>
         <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
-        <!-- ADDED: Rapid Fire Nav Link (Active State) -->
         <a href="/rapid-fire.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
         <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
         <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
@@ -349,7 +346,6 @@
       <!-- Language Selection -->
       <div class="section-title">Choose Language</div>
       <div class="chips-wrap" id="langChips">
-        <!-- FIX: Added onclick handlers -->
         <div class="filter-chip active" data-lang="en" onclick="selectLanguage(this, 'en')"><i class="fa-solid fa-language"></i> English</div>
         <div class="filter-chip" data-lang="hi" onclick="selectLanguage(this, 'hi')"><i class="fa-solid fa-language"></i> Hindi</div>
         <div class="filter-chip" data-lang="bilingual" onclick="selectLanguage(this, 'bilingual')"><i class="fa-solid fa-language"></i> Bilingual</div>
@@ -396,25 +392,24 @@
   <!-- RAPID FIRE REELS OVERLAY -->
   <div class="reel-overlay" id="reelOverlay">
     
-    <!-- NEW: Top Left Branding Watermark -->
-    <div class="reel-branding">
-      <div class="brand-icon">A</div>
-      <div class="brand-text">
-        <span class="brand-name">ApnaMock</span>
-        <span class="brand-tagline">Practice. Improve. Succeed.</span>
+    <!-- NEW: Top Branding Bar (Behind functional buttons) -->
+    <div class="reel-top-bar">
+      <div class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
       </div>
+      <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
-    <!-- Mute Button moved to Top Right (next to exit) -->
+    <!-- Functional Buttons -->
     <div class="reel-mute" onclick="toggleMute()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
-    
-    <!-- Top Center Streak & Timer -->
     <div class="reel-header">
       <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
       <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
-    
-    <!-- Exit Button -->
     <div class="reel-exit" onclick="exitRapidFire()"><i class="fa-solid fa-xmark"></i></div>
     
     <div class="reel-container" id="reelContainer">
@@ -525,9 +520,9 @@
 
     // --- Rapid Fire State ---
     let allQuestions = [];
-    let selectedSubjects = ["all"]; // Default to Smart Mix
-    let selectedLanguage = "en"; // Default to English
-    let selectedPace = 0; // 0 = Zen, 45 = Standard, 20 = Blitz
+    let selectedSubjects = ["all"];
+    let selectedLanguage = "en";
+    let selectedPace = 0;
 
     // --- LocalStorage Stats Manager ---
     function getRfStats() {
@@ -675,8 +670,8 @@
 
       if (isCorrect) {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
-        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); // A5
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); 
         gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
         osc.start(audioCtx.currentTime);
@@ -707,7 +702,7 @@
     let rfStats = getRfStats();
     let activeTimer = null;
     let activeObserver = null;
-    let cardsRendered = 0; // Global tracker for how many cards are currently on the screen
+    let cardsRendered = 0;
 
     function startRapidFire() {
       const elem = document.documentElement;
@@ -745,7 +740,6 @@
       document.getElementById('reelStreakCount').innerText = currentStreak;
       document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
-      // Delay rendering by 300ms to allow Fullscreen API to resize screen
       setTimeout(() => {
         renderReelCards();
       }, 300);
@@ -756,14 +750,12 @@
       container.innerHTML = '';
       cardsRendered = 0;
       
-      // Render initial batch (up to 5, or fewer if the pool is small)
       const initialBatch = reelPool.slice(0, 5);
       initialBatch.forEach(q => {
         container.appendChild(createReelCard(q));
         cardsRendered++;
       });
 
-      // Setup Intersection Observer for Timers
       if (activeObserver) activeObserver.disconnect();
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -776,16 +768,11 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // If we already rendered all questions (e.g., only 4 exist), show Cycle Complete immediately
       if (cardsRendered >= reelPool.length) {
         appendCycleCompleteCard(container);
       } else {
-        // Only attach scroll listener if there are more questions to load
         container.onscroll = function() {
-          // If we've rendered everything, stop checking scroll
           if (cardsRendered >= reelPool.length) return;
-
-          // Check if user scrolled near the bottom
           if (container.scrollTop > (container.scrollHeight - container.clientHeight - 600)) {
             loadMoreReels();
           }
@@ -795,8 +782,6 @@
 
     function loadMoreReels() {
       const container = document.getElementById('reelContainer');
-      
-      // Slice the next batch starting from cardsRendered
       const nextBatch = reelPool.slice(cardsRendered, cardsRendered + 5);
       
       if (nextBatch.length > 0) {
@@ -807,20 +792,18 @@
           cardsRendered++;
         });
         
-        // If we just rendered the final batch, show Cycle Complete
         if (cardsRendered >= reelPool.length) {
           appendCycleCompleteCard(container);
         }
       }
     }
 
-    // Helper function to prevent duplicate Cycle Complete cards
     function appendCycleCompleteCard(container) {
-      if (document.getElementById('cycleCompleteCard')) return; // Already exists
+      if (document.getElementById('cycleCompleteCard')) return;
       
       const resetCard = document.createElement('div');
       resetCard.className = 'reel-card';
-      resetCard.style.justifyContent = 'center'; // Center the trophy
+      resetCard.style.justifyContent = 'center';
       resetCard.id = 'cycleCompleteCard';
       resetCard.innerHTML = `
         <div style="text-align:center; color:#fff;">
@@ -831,14 +814,13 @@
         </div>
       `;
       container.appendChild(resetCard);
-      container.onscroll = null; // Stop listening to scroll
+      container.onscroll = null;
     }
 
-    // Helper to get text based on selected language with fallback
     function getText(en, hi, lang) {
       if (lang === 'hi' && hi) return hi;
       if (lang === 'bilingual' && hi) return `${en || ""}<br><span style="color: #cbd5e1; font-size: 0.9em; display: block; margin-top: 4px;">${hi}</span>`;
-      return en || hi || ""; // Fallback to English (or Hindi if EN is missing)
+      return en || hi || "";
     }
 
     function createReelCard(q) {
@@ -848,16 +830,14 @@
 
       let optionsHtml = '';
       q.options.forEach((opt, index) => {
-        // Support new object format {en, hi} and old string format
         let optEn = "", optHi = "";
         if (typeof opt === 'object') {
           optEn = opt.en || "";
           optHi = opt.hi || "";
         } else {
-          optEn = opt || ""; // Fallback for old string format
+          optEn = opt || "";
         }
 
-        // Strip HTML tags to check if the option actually has text
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = optEn;
         const cleanTextEn = tempDiv.textContent.trim();
@@ -876,7 +856,6 @@
         `;
       });
 
-      // Support new object format {en, hi} and old string format for question/explanation
       let qEn = "", qHi = "", expEn = "", expHi = "";
       if (typeof q.question === 'object') {
         qEn = q.question.en || "";
@@ -893,8 +872,6 @@
 
       const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
-
-      // Source Exam Badge
       const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
 
       card.innerHTML = `
@@ -1011,22 +988,14 @@
       }
 
       document.getElementById('reelOverlay').classList.remove('active');
-      document.getElementById('preQuizScreen').style.display = 'block';
       document.getElementById('bgMusic').pause();
       
       rfStats.totalSessions++;
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
       
-      const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
-      document.getElementById('statAccuracy').innerText = accuracy + '%';
-      document.getElementById('statStreak').innerText = rfStats.bestStreak;
-      document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
-      
-      const subGreetingEl = document.getElementById('subGreeting');
-      if (subGreetingEl && rfStats.bestStreak > 0) {
-        subGreetingEl.innerText = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
-      }
+      // Hard refresh to reset DOM and show updated stats cleanly
+      window.location.reload();
     }
 
     // Simple HTML escape for tags
