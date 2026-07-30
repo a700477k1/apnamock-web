@@ -32,7 +32,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
   <style>
-
     /* DESIGN TOKENS */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
@@ -81,8 +80,6 @@
     /* PAGE LAYOUT */
     .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
     .page-header { margin-bottom: 24px; }
-    
-    /* Fix 5: Title size matched to jobs.html */
     .page-title { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
@@ -108,7 +105,7 @@
     .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
     .filter-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
 
-    .pace-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 32px; }
+    .pace-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
     .pace-card { padding: 16px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; transition: all 0.15s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .pace-card:hover { border-color: var(--primary); }
     .pace-card.active { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 2px 8px rgba(26,86,219,0.1); }
@@ -153,7 +150,6 @@
     }
     .reel-overlay.active { display: flex; }
     
-    /* Fix 4: Streak indicator no longer hides the question because we moved padding to the card */
     .reel-header {
       position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
       z-index: 10; display: flex; align-items: center; gap: 12px; color: #fff;
@@ -171,31 +167,32 @@
       display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
-    /* Fix 2: Removed padding from container to stop screen overlap */
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: scroll; 
       scroll-snap-type: y mandatory; scrollbar-width: none;
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* Fix Card Layout: Added position:relative and bottom padding for the hint */
+    /* FIX: Card is exactly 100vh, uses flex-column to push hint to bottom */
     .reel-card {
       height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
-      display: flex; flex-direction: column; justify-content: flex-start; 
-      padding: 80px 24px 60px; box-sizing: border-box; 
+      display: flex; flex-direction: column; 
+      padding: 80px 24px 10px; box-sizing: border-box; 
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: transparent; 
-      position: relative; /* CRITICAL: Anchors the swipe hint to the bottom of the card */
-      overflow: hidden; /* Prevents inner scroll from breaking the snap */
+      background: transparent; position: relative; overflow: hidden;
     }
 
+    /* FIX: Inner content wrapper takes all available space, scrolls if too long */
+    .rf-card-content {
+      flex: 1; overflow-y: auto; padding-bottom: 20px; scrollbar-width: none;
+      display: flex; flex-direction: column;
+    }
+    .rf-card-content::-webkit-scrollbar { display: none; }
+
     .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-    
-    /* Fix 4: Smaller question font */
     .rf-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; }
     .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
     
-    /* Fix 4: Tighter options spacing */
     .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .rf-option {
       padding: 10px 12px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
@@ -218,37 +215,33 @@
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
-    /* Fix Hint Position: Pin it to the bottom of the card */
+    /* FIX: Hint is pinned to the bottom of the flex column, never hidden */
     .rf-swipe-hint { 
-      position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
-      font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; 
-      letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none;
-      z-index: 5;
+      text-align: center; font-size: 11px; color: rgba(255,255,255,0.8); 
+      text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; 
+      pointer-events: none; z-index: 5; padding: 10px 0; flex-shrink: 0;
     }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* RESPONSIVE - Tighten sizes on mobile so everything fits */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
-      .pace-grid { grid-template-columns: repeat(2, 1fr); } /* 2 columns for pace on mobile */
+      .pace-grid { grid-template-columns: repeat(2, 1fr); }
       
-      /* Make streak pill smaller on mobile */
       .reel-header { padding: 6px 12px; top: 12px; }
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 12px; width: 32px; height: 32px; font-size: 14px; }
 
-      /* Shrink fonts/padding to ensure options fit above the hint */
-      .reel-card { padding-top: 65px; padding-bottom: 50px; }
+      .reel-card { padding-top: 65px; padding-bottom: 5px; }
       .rf-question { font-size: 17px; margin-bottom: 12px; }
       .rf-options { gap: 6px; }
       .rf-option { padding: 8px 10px; font-size: 13px; }
       .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
-    
   </style>
 </head>
 <body>
@@ -355,12 +348,6 @@
       <button class="btn btn-primary" id="startBtn" onclick="startRapidFire()">
         <i class="fa-solid fa-play"></i> Start Rapid Fire
       </button>
-    </div>
-
-    <!-- REELS SCREEN (Will be populated in Phase C) -->
-    <div id="reelScreen" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:70vh;">
-      <i class="fa-solid fa-spinner fa-spin" style="font-size:32px; color:var(--primary); margin-bottom:16px;"></i>
-      <div style="font-size:16px; font-weight:600; color:var(--text-secondary);">Loading your questions...</div>
     </div>
 
   </main>
@@ -495,6 +482,11 @@
       } catch(e) {
         return { lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {} };
       }
+    }
+
+    // FIX: Added the missing saveRfStats function so stats actually persist!
+    function saveRfStats(stats) {
+      localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
     }
 
     // --- Initialize Dashboard ---
@@ -643,7 +635,7 @@
       isMuted = !isMuted;
       document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = isMuted ? 0 : 0.1; // Keep bg music low
+      bgMusic.volume = isMuted ? 0 : 0.4; // Restore to 40% volume when unmuted
     }
 
     // --- Reels State ---
@@ -740,7 +732,7 @@
         const resetCard = document.createElement('div');
         resetCard.className = 'reel-card';
         resetCard.innerHTML = `
-          <div style="text-align:center; color:#fff;">
+          <div style="text-align:center; color:#fff; margin: auto;">
             <div style="font-size:60px; margin-bottom:20px;">🏆</div>
             <h2 style="font-size:28px; font-weight:800; margin-bottom:12px;">Cycle Complete!</h2>
             <p style="font-size:16px; color:#cbd5e1; margin-bottom:30px;">You've conquered all questions in this subject. We're resetting the board.</p>
@@ -775,14 +767,17 @@
       const renderedQuestion = renderMathInString(q.question || "");
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
 
+      // FIX: Wrapped content in rf-card-content so the hint stays pinned at the bottom
       card.innerHTML = `
-        <div class="rf-subject-tag">${q.subject}</div>
-        <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
-        <div class="rf-options">${optionsHtml}</div>
-        <div class="rf-explanation" id="expl-${q.id}">
-          <strong>Explanation:</strong><br>
-          ${renderMathInString(q.explanation || "")}
-          ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
+        <div class="rf-card-content">
+          <div class="rf-subject-tag">${q.subject}</div>
+          <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
+          <div class="rf-options">${optionsHtml}</div>
+          <div class="rf-explanation" id="expl-${q.id}">
+            <strong>Explanation:</strong><br>
+            ${renderMathInString(q.explanation || "")}
+            ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
+          </div>
         </div>
         <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
       `;
