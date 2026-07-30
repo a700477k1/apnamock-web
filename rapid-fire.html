@@ -145,7 +145,8 @@
     .reel-overlay {
       display: none; position: fixed; inset: 0; z-index: 2000; 
       background: linear-gradient(135deg, #1a56db, #f97316); /* Exact ApnaMock Logo Gradient */
-      height: 100vh; width: 100vw; overflow: hidden;
+      height: 100vh; height: 100dvh; /* FIX: Dynamic viewport height for mobile address bar */
+      width: 100vw; overflow: hidden;
       flex-direction: column; align-items: center;
     }
     .reel-overlay.active { display: flex; }
@@ -173,9 +174,10 @@
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* FIX: Card is exactly 100vh, uses flex-column to push hint to bottom */
+    /* FIX: Card uses 100dvh, flex-column to push hint to bottom */
     .reel-card {
-      height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+      height: 100vh; height: 100dvh; /* FIX: Dynamic viewport height */
+      width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
       display: flex; flex-direction: column; 
       padding: 80px 24px 10px; box-sizing: border-box; 
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -647,6 +649,14 @@
     let activeObserver = null;
 
     function startRapidFire() {
+      // FIX: Request Fullscreen to hide the mobile address bar
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log("Fullscreen denied"));
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      }
+
       // Hide dashboard, show overlay
       document.getElementById('preQuizScreen').style.display = 'none';
       document.getElementById('reelOverlay').classList.add('active');
@@ -879,6 +889,14 @@
 
     function exitRapidFire() {
       if (activeTimer) clearInterval(activeTimer);
+      
+      // FIX: Exit Fullscreen
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+
       document.getElementById('reelOverlay').classList.remove('active');
       document.getElementById('preQuizScreen').style.display = 'block';
       document.getElementById('bgMusic').pause();
