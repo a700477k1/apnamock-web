@@ -169,11 +169,12 @@
     }
 
     .reel-container {
-      height: 100%; width: 100%; max-width: 500px; overflow-y: scroll; 
-      scroll-snap-type: y proximity; /* Changed from mandatory to proximity */
+      height: 100vh; height: 100dvh; /* Strict height for mobile */
+      width: 100%; max-width: 500px; overflow-y: auto; /* 'auto' is sometimes smoother than 'scroll' on iOS */
+      scroll-snap-type: y proximity; 
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; /* Enables momentum scrolling on iOS */
     }
-    .reel-container::-webkit-scrollbar { display: none; }
 
     /* FIX: Card uses 100dvh, flex-column to push hint to bottom */
     .reel-card {
@@ -694,7 +695,11 @@
       // Show or hide timer display based on selected pace
       document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
-      renderReelCards();
+      // Wait 300ms for the Fullscreen API to finish resizing the screen
+      // before we calculate the scroll height and build the cards.
+      setTimeout(() => {
+        renderReelCards();
+      }, 300);
     }
 
     function renderReelCards() {
