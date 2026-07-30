@@ -178,13 +178,15 @@
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* Fix 2: Push content to the top on mobile so there's no gap below the streak counter */
+    /* Fix Card Layout: Added position:relative and bottom padding for the hint */
     .reel-card {
       height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
-      display: flex; flex-direction: column; justify-content: flex-start; /* Changed from center to flex-start */
-      padding: 80px 24px 40px; box-sizing: border-box; /* 80px clears the header nicely */
+      display: flex; flex-direction: column; justify-content: flex-start; 
+      padding: 80px 24px 60px; box-sizing: border-box; 
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
       background: transparent; 
+      position: relative; /* CRITICAL: Anchors the swipe hint to the bottom of the card */
+      overflow: hidden; /* Prevents inner scroll from breaking the snap */
     }
 
     .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
@@ -216,30 +218,35 @@
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
+    /* Fix Hint Position: Pin it to the bottom of the card */
     .rf-swipe-hint { 
       position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
       font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; 
       letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none;
+      z-index: 5;
     }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* RESPONSIVE */
+    /* RESPONSIVE - Tighten sizes on mobile so everything fits */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
-      .pace-grid { grid-template-columns: 1fr; }
+      .pace-grid { grid-template-columns: repeat(2, 1fr); } /* 2 columns for pace on mobile */
       
-      /* Make streak pill even smaller on mobile */
+      /* Make streak pill smaller on mobile */
       .reel-header { padding: 6px 12px; top: 12px; }
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 12px; width: 32px; height: 32px; font-size: 14px; }
 
-      /* Tighten the top padding on mobile so content is closer to the streak counter */
-      .reel-card {
-        padding-top: 65px; 
-      }
+      /* Shrink fonts/padding to ensure options fit above the hint */
+      .reel-card { padding-top: 65px; padding-bottom: 50px; }
+      .rf-question { font-size: 17px; margin-bottom: 12px; }
+      .rf-options { gap: 6px; }
+      .rf-option { padding: 8px 10px; font-size: 13px; }
+      .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
+      .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
     
   </style>
@@ -317,21 +324,32 @@
       <!-- Pace Selection -->
       <div class="section-title">Choose Pace</div>
       <div class="pace-grid" id="paceGrid">
-        <div class="pace-card active" data-pace="0">
+        <div class="pace-card active" data-pace="0" onclick="selectPace(this, 0)">
           <div class="pace-icon" style="color: var(--purple);"><i class="fa-solid fa-spa"></i></div>
           <div class="pace-title">Zen Mode</div>
           <div class="pace-desc">No Timer</div>
         </div>
-        <div class="pace-card" data-pace="45">
+        <div class="pace-card" data-pace="45" onclick="selectPace(this, 45)">
           <div class="pace-icon" style="color: var(--primary);"><i class="fa-solid fa-stopwatch"></i></div>
           <div class="pace-title">Standard</div>
           <div class="pace-desc">45 Secs</div>
         </div>
-        <div class="pace-card" data-pace="20">
+        <div class="pace-card" data-pace="20" onclick="selectPace(this, 20)">
           <div class="pace-icon" style="color: var(--error);"><i class="fa-solid fa-bolt"></i></div>
           <div class="pace-title">Blitz</div>
           <div class="pace-desc">20 Secs</div>
         </div>
+        <div class="pace-card" data-pace="custom" onclick="selectPace(this, 'custom')">
+          <div class="pace-icon" style="color: var(--accent);"><i class="fa-solid fa-sliders"></i></div>
+          <div class="pace-title">Custom</div>
+          <div class="pace-desc">Set Timer</div>
+        </div>
+      </div>
+
+      <!-- Custom Time Input (Hidden by default) -->
+      <div id="customPaceInput" style="display:none; margin-bottom: 24px; text-align: center;">
+        <input type="number" id="customTimeInput" min="5" max="120" value="30" style="width: 80px; padding: 8px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); margin-bottom: 8px;"> 
+        <span style="font-size: 12px; color: var(--text-muted); display: block;">Seconds per question</span>
       </div>
 
       <button class="btn btn-primary" id="startBtn" onclick="startRapidFire()">
@@ -481,39 +499,40 @@
 
     // --- Initialize Dashboard ---
     async function initDashboard() {
-      // 1. Load Stats
-      const stats = getRfStats();
-      const accuracy = stats.totalQuestionsAnswered > 0 ? Math.round((stats.correctAnswers / stats.totalQuestionsAnswered) * 100) : 0;
+      // 1. Load Stats fresh from localStorage
+      rfStats = getRfStats();
+      const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
       
+      // Force DOM update with loaded stats
       document.getElementById('statAccuracy').innerText = accuracy + '%';
-      document.getElementById('statStreak').innerText = stats.bestStreak;
-      document.getElementById('statTotal').innerText = stats.totalQuestionsAnswered;
+      document.getElementById('statStreak').innerText = rfStats.bestStreak;
+      document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
 
       // Dynamic Greeting
       const hour = new Date().getHours();
       let greeting = "Welcome to Rapid Fire! 🚀";
       let subGreeting = "Let's see what you've got.";
 
-      if (stats.totalSessions > 0) {
+      if (rfStats.totalSessions > 0) {
         if (hour < 12) greeting = "Good morning! ☀️";
         else if (hour < 17) greeting = "Good afternoon! 😊";
         else greeting = "Good evening! 🌙";
 
-        subGreeting = `Ready to break your record of ${stats.bestStreak} correct in a row?`;
+        subGreeting = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
       }
 
       document.getElementById('greetingText').innerText = greeting;
       document.getElementById('subGreeting').innerText = subGreeting;
 
       // Personal Insight
-      if (stats.totalQuestionsAnswered > 10) {
+      if (rfStats.totalQuestionsAnswered > 10) {
         let bestSubject = null, worstSubject = null;
         let bestAcc = -1, worstAcc = 101;
 
-        for (const subject in stats.topicPerformance) {
-          const data = stats.topicPerformance[subject];
+        for (const subject in rfStats.topicPerformance) {
+          const data = rfStats.topicPerformance[subject];
           const total = data.correct + data.wrong;
-          if (total < 3) continue; // Need at least 3 attempts to judge
+          if (total < 3) continue;
           const acc = (data.correct / total) * 100;
           if (acc > bestAcc) { bestAcc = acc; bestSubject = subject; }
           if (acc < worstAcc) { worstAcc = acc; worstSubject = subject; }
@@ -531,7 +550,6 @@
         if (!res.ok) throw new Error('Failed to load');
         allQuestions = await res.json();
 
-        // Populate subject chips based on available data
         const subjects = [...new Set(allQuestions.map(q => q.subject))].sort();
         const chipsWrap = document.getElementById('subjectChips');
         
@@ -552,10 +570,6 @@
       document.querySelectorAll('#subjectChips .filter-chip').forEach(chip => {
         chip.onclick = () => selectSubject(chip, chip.dataset.subject);
       });
-
-      document.querySelectorAll('#paceGrid .pace-card').forEach(card => {
-        card.onclick = () => selectPace(card, parseInt(card.dataset.pace));
-      });
     }
 
     function selectSubject(element, subject) {
@@ -567,8 +581,23 @@
     function selectPace(element, pace) {
       document.querySelectorAll('#paceGrid .pace-card').forEach(c => c.classList.remove('active'));
       element.classList.add('active');
-      selectedPace = pace;
+      
+      // Handle Custom Pace
+      if (pace === 'custom') {
+        document.getElementById('customPaceInput').style.display = 'block';
+        selectedPace = parseInt(document.getElementById('customTimeInput').value) || 30;
+      } else {
+        document.getElementById('customPaceInput').style.display = 'none';
+        selectedPace = pace;
+      }
     }
+
+    // Listen for changes to the custom input
+    document.getElementById('customTimeInput').addEventListener('input', function(e) {
+      if (document.querySelector('.pace-card.active').dataset.pace === 'custom') {
+        selectedPace = parseInt(e.target.value) || 30;
+      }
+    });
 
     // --- Audio Engine (Web Audio API for SFX) ---
     let audioCtx = null;
