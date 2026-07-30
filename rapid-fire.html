@@ -159,7 +159,7 @@
     .reel-top-bar {
       position: absolute; top: 0; left: 20%; right: 20%; z-index: 5; /* 20% margins on desktop */
       display: flex; justify-content: space-between; align-items: center; 
-      padding: 18px 0 30px 0; 
+      padding: 18px 0 15px 0; /* Reduced bottom padding to half (from 30px to 15px) */
       opacity: 0.9; pointer-events: none;
       border-bottom: 1px solid rgba(255,255,255,0.3); /* Horizontal line */
     }
@@ -285,8 +285,8 @@
       .rf-nav-buttons { display: none; }
       .desktop-instructions { display: none !important; }
 
-      /* Full width branding on mobile */
-      .reel-top-bar { left: 0; right: 0; padding: 12px 10px 25px 10px; }
+      /* 5% margins for branding and horizontal line on mobile */
+      .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
 
       .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-streak { font-size: 14px; }
