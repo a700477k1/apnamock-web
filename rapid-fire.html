@@ -169,12 +169,12 @@
     }
 
     .reel-container {
-      height: 100vh; height: 100dvh; /* Strict height for mobile */
-      width: 100%; max-width: 500px; overflow-y: auto; /* 'auto' is sometimes smoother than 'scroll' on iOS */
+      height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
       scroll-snap-type: y proximity; 
       scrollbar-width: none;
-      -webkit-overflow-scrolling: touch; /* Enables momentum scrolling on iOS */
+      -webkit-overflow-scrolling: touch;
     }
+    .reel-container::-webkit-scrollbar { display: none; }
 
     /* FIX: Card uses 100dvh, flex-column to push hint to bottom */
     .reel-card {
@@ -193,7 +193,11 @@
     }
     .rf-card-content::-webkit-scrollbar { display: none; }
 
-    .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    /* Tags Row */
+    .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+    .rf-subject-tag { font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .rf-source-exam-tag { font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; padding: 4px 10px; border-radius: 99px; font-weight: 700; }
+
     .rf-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; }
     .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
     
@@ -214,7 +218,7 @@
     .rf-option.disabled { pointer-events: none; opacity: 0.7; }
 
     .rf-explanation {
-      margin-top: 12px; padding: 10px; background: rgba(26, 86, 219, 0.2); border-left: 3px solid #1a56db;
+      margin-top: 12px; padding: 10px; background: rgba(0, 0, 0, 0.3); border-left: 3px solid #1a56db;
       border-radius: 4px; font-size: 12px; color: #cbd5e1; display: none;
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
@@ -316,6 +320,14 @@
       <div class="section-title">Choose Subject</div>
       <div class="chips-wrap" id="subjectChips">
         <div class="filter-chip active" data-subject="all"><i class="fa-solid fa-shuffle"></i> Smart Mix</div>
+      </div>
+
+      <!-- Language Selection -->
+      <div class="section-title">Choose Language</div>
+      <div class="chips-wrap" id="langChips">
+        <div class="filter-chip active" data-lang="en"><i class="fa-solid fa-language"></i> English</div>
+        <div class="filter-chip" data-lang="hi"><i class="fa-solid fa-language"></i> Hindi</div>
+        <div class="filter-chip" data-lang="bilingual"><i class="fa-solid fa-language"></i> Bilingual</div>
       </div>
 
       <!-- Pace Selection -->
@@ -473,7 +485,8 @@
 
     // --- Rapid Fire State ---
     let allQuestions = [];
-    let selectedSubject = "all";
+    let selectedSubjects = ["all"]; // Default to Smart Mix
+    let selectedLanguage = "en"; // Default to English
     let selectedPace = 0; // 0 = Zen, 45 = Standard, 20 = Blitz
 
     // --- LocalStorage Stats Manager ---
@@ -488,23 +501,19 @@
       }
     }
 
-    // FIX: Added the missing saveRfStats function so stats actually persist!
     function saveRfStats(stats) {
       localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
     }
 
     // --- Initialize Dashboard ---
     async function initDashboard() {
-      // 1. Load Stats fresh from localStorage
       rfStats = getRfStats();
       const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
       
-      // Force DOM update with loaded stats
       document.getElementById('statAccuracy').innerText = accuracy + '%';
       document.getElementById('statStreak').innerText = rfStats.bestStreak;
       document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
 
-      // Dynamic Greeting
       const hour = new Date().getHours();
       let greeting = "Welcome to Rapid Fire! 🚀";
       let subGreeting = "Let's see what you've got.";
@@ -513,14 +522,12 @@
         if (hour < 12) greeting = "Good morning! ☀️";
         else if (hour < 17) greeting = "Good afternoon! 😊";
         else greeting = "Good evening! 🌙";
-
         subGreeting = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
       }
 
       document.getElementById('greetingText').innerText = greeting;
       document.getElementById('subGreeting').innerText = subGreeting;
 
-      // Personal Insight
       if (rfStats.totalQuestionsAnswered > 10) {
         let bestSubject = null, worstSubject = null;
         let bestAcc = -1, worstAcc = 101;
@@ -540,7 +547,6 @@
         }
       }
 
-      // 2. Fetch Questions & Populate Subjects
       try {
         const res = await fetch(CONFIG.CDN_BASE + 'data/rapid-fire-bank.json?t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to load');
@@ -553,7 +559,7 @@
           const chip = document.createElement('div');
           chip.className = 'filter-chip';
           chip.dataset.subject = sub;
-          chip.innerText = sub;
+          chip.innerHTML = `<i class="fa-solid fa-book"></i> ${sub}`;
           chip.onclick = () => selectSubject(chip, sub);
           chipsWrap.appendChild(chip);
         });
@@ -561,24 +567,39 @@
         document.getElementById('startBtn').disabled = true;
         document.getElementById('startBtn').innerText = 'Failed to load questions';
       }
-
-      // 3. Setup Selection Listeners
-      document.querySelectorAll('#subjectChips .filter-chip').forEach(chip => {
-        chip.onclick = () => selectSubject(chip, chip.dataset.subject);
-      });
     }
 
+    // --- Selection Logic ---
     function selectSubject(element, subject) {
-      document.querySelectorAll('#subjectChips .filter-chip').forEach(c => c.classList.remove('active'));
+      const allChip = document.querySelector('#subjectChips .filter-chip[data-subject="all"]');
+      
+      if (subject === 'all') {
+        document.querySelectorAll('#subjectChips .filter-chip').forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
+        selectedSubjects = ['all'];
+      } else {
+        allChip.classList.remove('active');
+        element.classList.toggle('active');
+        
+        selectedSubjects = Array.from(document.querySelectorAll('#subjectChips .filter-chip.active')).map(c => c.dataset.subject);
+        
+        if (selectedSubjects.length === 0) {
+          allChip.classList.add('active');
+          selectedSubjects = ['all'];
+        }
+      }
+    }
+
+    function selectLanguage(element, lang) {
+      document.querySelectorAll('#langChips .filter-chip').forEach(c => c.classList.remove('active'));
       element.classList.add('active');
-      selectedSubject = subject;
+      selectedLanguage = lang;
     }
 
     function selectPace(element, pace) {
       document.querySelectorAll('#paceGrid .pace-card').forEach(c => c.classList.remove('active'));
       element.classList.add('active');
       
-      // Handle Custom Pace
       if (pace === 'custom') {
         document.getElementById('customPaceInput').style.display = 'block';
         selectedPace = parseInt(document.getElementById('customTimeInput').value) || 30;
@@ -588,14 +609,13 @@
       }
     }
 
-    // Listen for changes to the custom input
     document.getElementById('customTimeInput').addEventListener('input', function(e) {
       if (document.querySelector('.pace-card.active').dataset.pace === 'custom') {
         selectedPace = parseInt(e.target.value) || 30;
       }
     });
 
-    // --- Audio Engine (Web Audio API for SFX) ---
+    // --- Audio Engine ---
     let audioCtx = null;
     let isMuted = false;
 
@@ -614,20 +634,18 @@
       gain.connect(audioCtx.destination);
 
       if (isCorrect) {
-        // Bright, pleasant high-pitched chime (E5 to A5)
         osc.type = 'sine';
         osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
         osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); // A5
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime); // Louder to sound superior
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
         osc.start(audioCtx.currentTime);
         osc.stop(audioCtx.currentTime + 0.25);
       } else {
-        // Soft, muted descending horn (Eb4 to Bb3)
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(311.13, audioCtx.currentTime); 
         osc.frequency.setValueAtTime(233.08, audioCtx.currentTime + 0.15); 
-        gain.gain.setValueAtTime(0.25, audioCtx.currentTime); // Slightly quieter
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.25, audioCtx.currentTime + 0.15);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
         osc.start(audioCtx.currentTime);
@@ -639,7 +657,7 @@
       isMuted = !isMuted;
       document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = isMuted ? 0 : 0.4; // Restore to 40% volume when unmuted
+      bgMusic.volume = isMuted ? 0 : 0.4;
     }
 
     // --- Reels State ---
@@ -651,38 +669,31 @@
     let activeObserver = null;
 
     function startRapidFire() {
-      // FIX: Request Fullscreen to hide the mobile address bar
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => console.log("Fullscreen denied"));
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
+      } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
       }
 
-      // Hide dashboard, show overlay
       document.getElementById('preQuizScreen').style.display = 'none';
       document.getElementById('reelOverlay').classList.add('active');
       
-      // Start Music
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = 0.4; // 40% volume
+      bgMusic.volume = 0.4;
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
-      // Filter questions
-      let pool = selectedSubject === 'all' ? [...allQuestions] : allQuestions.filter(q => q.subject === selectedSubject);
+      let pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
       
-      // Filter out seen questions (No-Repeat Logic)
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       reelPool = pool.filter(q => !seenIds.includes(q.id));
 
-      // If all seen, reset
       if (reelPool.length === 0 && pool.length > 0) {
         const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
         reelPool = pool;
       }
 
-      // Shuffle
       for (let i = reelPool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [reelPool[i], reelPool[j]] = [reelPool[j], reelPool[i]];
@@ -691,12 +702,9 @@
       currentCardIndex = 0;
       currentStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
-      
-      // Show or hide timer display based on selected pace
       document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
-      // Wait 300ms for the Fullscreen API to finish resizing the screen
-      // before we calculate the scroll height and build the cards.
+      // Delay rendering by 300ms to allow Fullscreen API to resize screen
       setTimeout(() => {
         renderReelCards();
       }, 300);
@@ -706,13 +714,11 @@
       const container = document.getElementById('reelContainer');
       container.innerHTML = '';
       
-      // Render initial 5 cards
       const initialBatch = reelPool.slice(currentCardIndex, currentCardIndex + 5);
       initialBatch.forEach(q => {
         container.appendChild(createReelCard(q));
       });
 
-      // Setup Intersection Observer for Timers & Auto-advance
       if (activeObserver) activeObserver.disconnect();
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -721,11 +727,10 @@
             startCardTimer(cardId);
           }
         });
-      }, { threshold: 0.6 }); // 60% visible triggers timer
+      }, { threshold: 0.6 });
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // Scroll listener for infinite load
       container.onscroll = function() {
         if (container.scrollTop > (container.scrollHeight - container.clientHeight - 500)) {
           loadMoreReels();
@@ -744,7 +749,6 @@
         });
         currentCardIndex += 5;
       } else if (currentCardIndex + 5 >= reelPool.length) {
-        // Cycle complete!
         const resetCard = document.createElement('div');
         resetCard.className = 'reel-card';
         resetCard.innerHTML = `
@@ -756,8 +760,15 @@
           </div>
         `;
         container.appendChild(resetCard);
-        container.onscroll = null; // Stop listening
+        container.onscroll = null;
       }
+    }
+
+    // Helper to get text based on selected language with fallback
+    function getText(en, hi, lang) {
+      if (lang === 'hi' && hi) return hi;
+      if (lang === 'bilingual' && hi) return `${en || ""}<br><span style="color: #cbd5e1; font-size: 0.9em; display: block; margin-top: 4px;">${hi}</span>`;
+      return en || hi || ""; // Fallback to English (or Hindi if EN is missing)
     }
 
     function createReelCard(q) {
@@ -767,16 +778,24 @@
 
       let optionsHtml = '';
       q.options.forEach((opt, index) => {
+        // Support new object format {en, hi} and old string format
+        let optEn = "", optHi = "";
+        if (typeof opt === 'object') {
+          optEn = opt.en || "";
+          optHi = opt.hi || "";
+        } else {
+          optEn = opt || ""; // Fallback for old string format
+        }
+
         // Strip HTML tags to check if the option actually has text
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = opt || "";
-        const cleanText = tempDiv.textContent.trim();
+        tempDiv.innerHTML = optEn;
+        const cleanTextEn = tempDiv.textContent.trim();
         
-        // If there's no text AND no image, skip this option completely!
-        if (!cleanText && !q.option_images[index]) return; 
+        if (!cleanTextEn && !optHi && !q.option_images[index]) return; 
         
         const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
-        const renderedOpt = renderMathInString(opt || "");
+        const renderedOpt = renderMathInString(getText(optEn, optHi, selectedLanguage));
         
         optionsHtml += `
           <div class="rf-option" onclick="handleReelAnswer('${q.id}', ${index}, ${q.correct})">
@@ -787,18 +806,38 @@
         `;
       });
 
-      const renderedQuestion = renderMathInString(q.question || "");
+      // Support new object format {en, hi} and old string format for question/explanation
+      let qEn = "", qHi = "", expEn = "", expHi = "";
+      if (typeof q.question === 'object') {
+        qEn = q.question.en || "";
+        qHi = q.question.hi || "";
+      } else {
+        qEn = q.question || "";
+      }
+      if (typeof q.explanation === 'object') {
+        expEn = q.explanation.en || "";
+        expHi = q.explanation.hi || "";
+      } else {
+        expEn = q.explanation || "";
+      }
+
+      const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
 
-      // FIX: Wrapped content in rf-card-content so the hint stays pinned at the bottom
+      // Source Exam Badge
+      const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
+
       card.innerHTML = `
         <div class="rf-card-content">
-          <div class="rf-subject-tag">${q.subject}</div>
+          <div class="rf-tags-row">
+            <div class="rf-subject-tag">${escapeHtml(q.subject)}</div>
+            ${sourceExamHtml}
+          </div>
           <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
           <div class="rf-options">${optionsHtml}</div>
           <div class="rf-explanation" id="expl-${q.id}">
             <strong>Explanation:</strong><br>
-            ${renderMathInString(q.explanation || "")}
+            ${renderMathInString(getText(expEn, expHi, selectedLanguage))}
             ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
           </div>
         </div>
@@ -821,9 +860,8 @@
           
           if (timeLeft <= 0) {
             clearInterval(activeTimer);
-            // Auto-submit as wrong if time runs out
             const q = reelPool.find(item => item.id === cardId);
-            if (q) handleReelAnswer(cardId, -1, q.correct); // -1 means timeout
+            if (q) handleReelAnswer(cardId, -1, q.correct);
           }
         }, 1000);
       }
@@ -833,7 +871,6 @@
       const card = document.getElementById('card-' + cardId);
       if (!card || card.querySelector('.rf-option.disabled')) return;
 
-      // Stop the timer immediately
       if (activeTimer) clearInterval(activeTimer);
 
       const options = card.querySelectorAll('.rf-option');
@@ -847,13 +884,11 @@
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(true);
         
-        // Update Stats
         rfStats.totalQuestionsAnswered++;
         rfStats.correctAnswers++;
         if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
         updateTopicStats(cardId, true);
         
-        // Auto-advance after 1.2s
         setTimeout(() => {
           const container = document.getElementById('reelContainer');
           container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
@@ -865,22 +900,18 @@
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(false);
         
-        // Show explanation
         document.getElementById('expl-' + cardId).style.display = 'block';
         
-        // Update Stats
         rfStats.totalQuestionsAnswered++;
         updateTopicStats(cardId, false);
       }
 
-      // Mark as seen
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       if (!seenIds.includes(cardId)) {
         seenIds.push(cardId);
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
       }
       
-      // Force save stats immediately
       saveRfStats(rfStats);
     }
 
@@ -903,7 +934,6 @@
     function exitRapidFire() {
       if (activeTimer) clearInterval(activeTimer);
       
-      // FIX: Exit Fullscreen
       if (document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
@@ -914,22 +944,25 @@
       document.getElementById('preQuizScreen').style.display = 'block';
       document.getElementById('bgMusic').pause();
       
-      // Update Stats
       rfStats.totalSessions++;
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
       
-      // Instantly update the dashboard numbers without reloading the page
       const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
       document.getElementById('statAccuracy').innerText = accuracy + '%';
       document.getElementById('statStreak').innerText = rfStats.bestStreak;
       document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
       
-      // Update greeting text
       const subGreetingEl = document.getElementById('subGreeting');
       if (subGreetingEl && rfStats.bestStreak > 0) {
         subGreetingEl.innerText = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
       }
+    }
+
+    // Simple HTML escape for tags
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     // Boot up
