@@ -216,7 +216,11 @@
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
-    .rf-swipe-hint { text-align: center; margin-top: 12px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; }
+    .rf-swipe-hint { 
+      position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; 
+      font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; 
+      letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none;
+    }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
     /* RESPONSIVE */
@@ -348,6 +352,7 @@
     <div class="reel-mute" onclick="toggleMute()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
     <div class="reel-header">
       <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
+      <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
     <div class="reel-exit" onclick="exitRapidFire()"><i class="fa-solid fa-xmark"></i></div>
     
@@ -617,6 +622,8 @@
     let currentCardIndex = 0;
     let currentStreak = 0;
     let rfStats = getRfStats();
+    let activeTimer = null;
+    let activeObserver = null;
 
     function startRapidFire() {
       // Hide dashboard, show overlay
@@ -625,7 +632,7 @@
       
       // Start Music
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = 0.3; // Increased to 30% volume
+      bgMusic.volume = 0.4; // 40% volume
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       // Filter questions
@@ -652,6 +659,9 @@
       currentStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
       
+      // Show or hide timer display based on selected pace
+      document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
+      
       renderReelCards();
     }
 
@@ -665,6 +675,19 @@
         container.appendChild(createReelCard(q));
       });
 
+      // Setup Intersection Observer for Timers & Auto-advance
+      if (activeObserver) activeObserver.disconnect();
+      activeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const cardId = entry.target.id.replace('card-', '');
+            startCardTimer(cardId);
+          }
+        });
+      }, { threshold: 0.6 }); // 60% visible triggers timer
+
+      document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
+
       // Scroll listener for infinite load
       container.onscroll = function() {
         if (container.scrollTop > (container.scrollHeight - container.clientHeight - 500)) {
@@ -677,9 +700,13 @@
       const container = document.getElementById('reelContainer');
       const nextBatch = reelPool.slice(currentCardIndex + 5, currentCardIndex + 10);
       if (nextBatch.length > 0) {
-        nextBatch.forEach(q => container.appendChild(createReelCard(q)));
+        nextBatch.forEach(q => {
+          const newCard = createReelCard(q);
+          container.appendChild(newCard);
+          activeObserver.observe(newCard);
+        });
         currentCardIndex += 5;
-      } else if (currentCardIndex >= reelPool.length) {
+      } else if (currentCardIndex + 5 >= reelPool.length) {
         // Cycle complete!
         const resetCard = document.createElement('div');
         resetCard.className = 'reel-card';
@@ -705,8 +732,6 @@
       q.options.forEach((opt, index) => {
         if (!opt && !q.option_images[index]) return; // Skip empty options
         const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
-        
-        // Render Math/HTML directly instead of stripping it
         const renderedOpt = renderMathInString(opt || "");
         
         optionsHtml += `
@@ -718,7 +743,6 @@
         `;
       });
 
-      // Render Math/HTML directly for the question
       const renderedQuestion = renderMathInString(q.question || "");
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
 
@@ -737,9 +761,33 @@
       return card;
     }
 
+    // --- Timer Logic ---
+    function startCardTimer(cardId) {
+      if (activeTimer) clearInterval(activeTimer);
+      if (selectedPace > 0) {
+        let timeLeft = selectedPace;
+        document.getElementById('reelTimerCount').innerText = timeLeft;
+        
+        activeTimer = setInterval(() => {
+          timeLeft--;
+          document.getElementById('reelTimerCount').innerText = timeLeft;
+          
+          if (timeLeft <= 0) {
+            clearInterval(activeTimer);
+            // Auto-submit as wrong if time runs out
+            const q = reelPool.find(item => item.id === cardId);
+            if (q) handleReelAnswer(cardId, -1, q.correct); // -1 means timeout
+          }
+        }, 1000);
+      }
+    }
+
     function handleReelAnswer(cardId, selectedIndex, correctIndex) {
       const card = document.getElementById('card-' + cardId);
       if (!card || card.querySelector('.rf-option.disabled')) return;
+
+      // Stop the timer immediately
+      if (activeTimer) clearInterval(activeTimer);
 
       const options = card.querySelectorAll('.rf-option');
       options.forEach(opt => opt.classList.add('disabled'));
@@ -749,7 +797,7 @@
       if (isCorrect) {
         options[selectedIndex].classList.add('correct');
         currentStreak++;
-        document.getElementById('reelStreakCount').innerText = currentStreak; // Force DOM update
+        document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(true);
         
         // Update Stats
@@ -764,10 +812,10 @@
           container.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
         }, 1200);
       } else {
-        options[selectedIndex].classList.add('wrong');
+        if (selectedIndex >= 0) options[selectedIndex].classList.add('wrong');
         options[correctIndex].classList.add('correct');
         currentStreak = 0;
-        document.getElementById('reelStreakCount').innerText = currentStreak; // Force DOM update
+        document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(false);
         
         // Show explanation
@@ -785,7 +833,8 @@
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
       }
       
-      saveRfStats(rfStats); // Save stats immediately
+      // Force save stats immediately
+      saveRfStats(rfStats);
     }
 
     function updateTopicStats(cardId, isCorrect) {
@@ -805,6 +854,7 @@
     }
 
     function exitRapidFire() {
+      if (activeTimer) clearInterval(activeTimer);
       document.getElementById('reelOverlay').classList.remove('active');
       document.getElementById('preQuizScreen').style.display = 'block';
       document.getElementById('bgMusic').pause();
