@@ -116,7 +116,7 @@
     .pace-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
     .pace-desc { font-size: 11px; color: var(--text-muted); }
 
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 48px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; width: 100%; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 42px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; width: 100%; }
     .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
     .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -147,7 +147,8 @@
     /* REELS OVERLAY ENGINE */
     .reel-overlay {
       display: none; position: fixed; inset: 0; z-index: 2000; 
-      background: #0f172a; height: 100vh; width: 100vw; overflow: hidden;
+      background: linear-gradient(135deg, #1a56db, #1e293b); /* ApnaMock Gradient */
+      height: 100vh; width: 100vw; overflow: hidden;
       flex-direction: column; align-items: center;
     }
     .reel-overlay.active { display: flex; }
@@ -155,10 +156,10 @@
     /* Fix 4: Streak indicator no longer hides the question because we moved padding to the card */
     .reel-header {
       position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-      z-index: 10; display: flex; align-items: center; gap: 16px; color: #fff;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 99px;
+      z-index: 10; display: flex; align-items: center; gap: 12px; color: #fff;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 99px;
     }
-    .reel-streak { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .reel-streak { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .reel-exit {
       position: absolute; top: 20px; right: 20px; z-index: 10; color: #fff; 
       background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
@@ -181,8 +182,9 @@
     .reel-card {
       height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
       display: flex; flex-direction: column; justify-content: center; 
-      padding: 90px 24px 40px; box-sizing: border-box; /* 90px top padding clears the header */
+      padding: 90px 24px 40px; box-sizing: border-box;
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: transparent; /* Made transparent to show the gradient */
     }
 
     .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
@@ -224,6 +226,11 @@
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: 1fr; }
+      
+      /* Make streak pill even smaller on mobile */
+      .reel-header { padding: 6px 12px; top: 12px; }
+      .reel-streak { font-size: 14px; }
+      .reel-exit, .reel-mute { top: 12px; width: 32px; height: 32px; font-size: 14px; }
     }
     
   </style>
@@ -613,7 +620,7 @@
       
       // Start Music
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = 0.1; // 10% volume
+      bgMusic.volume = 0.4; // Increased to 40% volume
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       // Filter questions
@@ -797,11 +804,22 @@
       document.getElementById('preQuizScreen').style.display = 'block';
       document.getElementById('bgMusic').pause();
       
-      // Reset dashboard stats to show new data
+      // Update Stats
       rfStats.totalSessions++;
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
-      initDashboard(); 
+      
+      // Instantly update the dashboard numbers without reloading the page
+      const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
+      document.getElementById('statAccuracy').innerText = accuracy + '%';
+      document.getElementById('statStreak').innerText = rfStats.bestStreak;
+      document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
+      
+      // Update greeting text
+      const subGreetingEl = document.getElementById('subGreeting');
+      if (subGreetingEl && rfStats.bestStreak > 0) {
+        subGreetingEl.innerText = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
+      }
     }
 
     // Boot up
