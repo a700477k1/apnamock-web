@@ -710,15 +710,22 @@
       }, 300);
     }
 
+    // Global tracker for how many cards are currently on the screen
+    let cardsRendered = 0;
+
     function renderReelCards() {
       const container = document.getElementById('reelContainer');
       container.innerHTML = '';
+      cardsRendered = 0;
       
-      const initialBatch = reelPool.slice(currentCardIndex, currentCardIndex + 5);
+      // Render initial batch (up to 5, or fewer if the pool is small)
+      const initialBatch = reelPool.slice(0, 5);
       initialBatch.forEach(q => {
         container.appendChild(createReelCard(q));
+        cardsRendered++;
       });
 
+      // Setup Intersection Observer for Timers
       if (activeObserver) activeObserver.disconnect();
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -731,37 +738,62 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      container.onscroll = function() {
-        if (container.scrollTop > (container.scrollHeight - container.clientHeight - 500)) {
-          loadMoreReels();
-        }
-      };
+      // If we already rendered all questions (e.g., only 4 exist), show Cycle Complete immediately
+      if (cardsRendered >= reelPool.length) {
+        appendCycleCompleteCard(container);
+      } else {
+        // Only attach scroll listener if there are more questions to load
+        container.onscroll = function() {
+          // If we've rendered everything, stop checking scroll
+          if (cardsRendered >= reelPool.length) return;
+
+          // Check if user scrolled near the bottom
+          if (container.scrollTop > (container.scrollHeight - container.clientHeight - 600)) {
+            loadMoreReels();
+          }
+        };
+      }
     }
 
     function loadMoreReels() {
       const container = document.getElementById('reelContainer');
-      const nextBatch = reelPool.slice(currentCardIndex + 5, currentCardIndex + 10);
+      
+      // Slice the next batch starting from cardsRendered
+      const nextBatch = reelPool.slice(cardsRendered, cardsRendered + 5);
+      
       if (nextBatch.length > 0) {
         nextBatch.forEach(q => {
           const newCard = createReelCard(q);
           container.appendChild(newCard);
           activeObserver.observe(newCard);
+          cardsRendered++;
         });
-        currentCardIndex += 5;
-      } else if (currentCardIndex + 5 >= reelPool.length) {
-        const resetCard = document.createElement('div');
-        resetCard.className = 'reel-card';
-        resetCard.innerHTML = `
-          <div style="text-align:center; color:#fff; margin: auto;">
-            <div style="font-size:60px; margin-bottom:20px;">🏆</div>
-            <h2 style="font-size:28px; font-weight:800; margin-bottom:12px;">Cycle Complete!</h2>
-            <p style="font-size:16px; color:#cbd5e1; margin-bottom:30px;">You've conquered all questions in this subject. We're resetting the board.</p>
-            <button class="btn btn-primary" onclick="startRapidFire()" style="width:auto; padding:0 32px;">Start New Cycle</button>
-          </div>
-        `;
-        container.appendChild(resetCard);
-        container.onscroll = null;
+        
+        // If we just rendered the final batch, show Cycle Complete
+        if (cardsRendered >= reelPool.length) {
+          appendCycleCompleteCard(container);
+        }
       }
+    }
+
+    // Helper function to prevent duplicate Cycle Complete cards
+    function appendCycleCompleteCard(container) {
+      if (document.getElementById('cycleCompleteCard')) return; // Already exists
+      
+      const resetCard = document.createElement('div');
+      resetCard.className = 'reel-card';
+      resetCard.style.justifyContent = 'center'; // Center the trophy
+      resetCard.id = 'cycleCompleteCard';
+      resetCard.innerHTML = `
+        <div style="text-align:center; color:#fff;">
+          <div style="font-size:60px; margin-bottom:20px;">🏆</div>
+          <h2 style="font-size:28px; font-weight:800; margin-bottom:12px;">Cycle Complete!</h2>
+          <p style="font-size:16px; color:#cbd5e1; margin-bottom:30px;">You've conquered all questions in this subject. We're resetting the board.</p>
+          <button class="btn btn-primary" onclick="startRapidFire()" style="width:auto; padding:0 32px;">Start New Cycle</button>
+        </div>
+      `;
+      container.appendChild(resetCard);
+      container.onscroll = null; // Stop listening to scroll
     }
 
     // Helper to get text based on selected language with fallback
