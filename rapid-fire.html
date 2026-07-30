@@ -199,15 +199,16 @@
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* Increased top padding to clear the taller header band */
+    /* Reduced top padding to close the gap between header and question */
     .reel-card {
       height: 100vh; height: 100dvh; 
       width: 100%; scroll-snap-align: start; scroll-snap-stop: always; 
       display: flex; flex-direction: column; 
-      padding: 115px 24px 10px; box-sizing: border-box; /* Increased from 90px to 115px */
+      padding: 85px 24px 10px; box-sizing: border-box; /* Reduced from 115px to 85px */
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
       background: transparent; position: relative; overflow: hidden;
     }
+
 
     .rf-card-content {
       flex: 1; overflow-y: auto; padding-bottom: 20px; scrollbar-width: none;
@@ -217,7 +218,17 @@
 
     /* Tags Row */
     .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
-    .rf-subject-tag { font-size: 12px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    /* Capsule style for Subject Tag (matches Source Exam tag) */
+    .rf-subject-tag { 
+      font-size: 10px; /* Matched source exam size */
+      background: rgba(255,255,255,0.2); /* Frosted white background */
+      color: #fff; 
+      padding: 4px 10px; /* Matched source exam padding */
+      border-radius: 99px; /* Capsule shape */
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.5px; 
+    }
     .rf-source-exam-tag { font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; padding: 4px 10px; border-radius: 99px; font-weight: 700; }
 
     .rf-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; }
@@ -272,7 +283,7 @@
       .reel-top-bar .promo-text { font-size: 10px; max-width: 50%; line-height: 1.2; }
 
       /* Increased top padding for mobile to clear taller band */
-      .reel-card { padding-top: 95px; padding-bottom: 5px; }
+      .reel-card { padding-top: 70px; padding-bottom: 5px; } /* Reduced from 95px to 70px */
       .rf-question { font-size: 17px; margin-bottom: 12px; }
       .rf-options { gap: 6px; }
       .rf-option { padding: 8px 10px; font-size: 13px; }
