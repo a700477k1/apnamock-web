@@ -118,6 +118,10 @@
     .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
+    /* Desktop Instructions Card */
+    .desktop-instructions { display: none; background: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 24px; font-size: 13px; color: var(--text-secondary); text-align: center; }
+    .desktop-instructions kbd { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; box-shadow: 0 2px 0 var(--border); margin: 0 2px; }
+
     /* REELS SCREEN (Hidden initially) */
     #reelScreen { display: none; }
     
@@ -153,10 +157,11 @@
     
     /* Top Branding Bar */
     .reel-top-bar {
-      position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+      position: absolute; top: 0; left: 20%; right: 20%; z-index: 5; /* 20% margins on desktop */
       display: flex; justify-content: space-between; align-items: center; 
-      padding: 18px 12px 30px 12px; 
+      padding: 18px 0 30px 0; 
       opacity: 0.9; pointer-events: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3); /* Horizontal line */
     }
     .reel-top-bar .brand { gap: 8px; }
     .reel-top-bar .brand-icon { 
@@ -247,23 +252,24 @@
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
-    /* Desktop Navigation Buttons */
-    .rf-nav-buttons {
-      display: none; /* Hidden on mobile */
-      justify-content: center; gap: 16px; margin-top: 10px;
+    /* Bottom Hint Area (Swipe + Arrows) */
+    .rf-bottom-hint {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 10px 0; flex-shrink: 0; z-index: 5;
     }
+    .rf-nav-buttons { display: flex; gap: 8px; }
     .rf-nav-btn {
       background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      font-size: 14px; display: flex; align-items: center; justify-content: center;
       transition: background 0.2s;
     }
     .rf-nav-btn:hover { background: rgba(255,255,255,0.2); }
 
     .rf-swipe-hint { 
-      text-align: center; font-size: 11px; color: rgba(255,255,255,0.8); 
+      font-size: 11px; color: rgba(255,255,255,0.8); 
       text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; 
-      pointer-events: none; z-index: 5; padding: 10px 0; flex-shrink: 0;
+      pointer-events: none;
     }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
@@ -275,11 +281,17 @@
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: repeat(2, 1fr); }
       
+      /* Hide desktop nav buttons on mobile */
+      .rf-nav-buttons { display: none; }
+      .desktop-instructions { display: none !important; }
+
+      /* Full width branding on mobile */
+      .reel-top-bar { left: 0; right: 0; padding: 12px 10px 25px 10px; }
+
       .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
 
-      .reel-top-bar { padding: 12px 10px 25px 10px; }
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
       .reel-top-bar .brand-name { font-size: 14px; }
       .reel-top-bar .brand-tagline { font-size: 8px; }
@@ -293,9 +305,9 @@
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
 
-    /* Show desktop nav buttons only on larger screens */
+    /* Show desktop specific elements */
     @media (min-width: 769px) {
-      .rf-nav-buttons { display: flex; }
+      .desktop-instructions { display: block; }
     }
   </style>
 </head>
@@ -333,6 +345,11 @@
       <div class="page-header">
         <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Rapid Fire Mode</h1>
         <p class="page-subtitle">Practice rapid fire questions in a fun, addictive reels format.</p>
+      </div>
+
+      <!-- Desktop Instructions -->
+      <div class="desktop-instructions">
+        <i class="fa-solid fa-keyboard"></i> <strong>Keyboard Shortcuts:</strong> Use <kbd>↑</kbd> / <kbd>↓</kbd> to navigate. Press <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, or <kbd>D</kbd> to select an answer.
       </div>
 
       <!-- Personal Message Card -->
@@ -731,6 +748,7 @@
     let activeObserver = null;
     let cardsRendered = 0;
     let isScrolling = false; // Debounce flag for strict desktop scrolling
+    let activeCardEl = null; // Track the currently visible card for keyboard navigation
 
     function startRapidFire() {
       const elem = document.documentElement;
@@ -814,6 +832,7 @@
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
+            activeCardEl = entry.target; // Track active card
             const cardId = entry.target.id.replace('card-', '');
             startCardTimer(cardId);
           }
@@ -824,17 +843,17 @@
 
       // Desktop Strict Scroll Interception
       container.onwheel = function(e) {
-        e.preventDefault(); // Stop native scrolling
+        e.preventDefault(); 
         if (isScrolling) return;
         isScrolling = true;
         
         if (e.deltaY > 0) {
-          scrollReel(1); // Scroll down
+          scrollReel(1); 
         } else {
-          scrollReel(-1); // Scroll up
+          scrollReel(-1); 
         }
         
-        setTimeout(() => { isScrolling = false; }, 800); // Debounce to prevent skipping
+        setTimeout(() => { isScrolling = false; }, 800); 
       };
 
       if (cardsRendered >= reelPool.length) {
@@ -962,11 +981,13 @@
             ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
           </div>
         </div>
-        <div class="rf-nav-buttons">
-          <button class="rf-nav-btn" onclick="scrollReel(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
-          <button class="rf-nav-btn" onclick="scrollReel(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
+        <div class="rf-bottom-hint">
+          <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
+          <div class="rf-nav-buttons">
+            <button class="rf-nav-btn" onclick="scrollReel(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="rf-nav-btn" onclick="scrollReel(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
         </div>
-        <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
       `;
 
       return card;
@@ -1073,6 +1094,52 @@
       
       // Hard refresh to reset DOM and show updated stats cleanly
       window.location.reload();
+    }
+
+    // --- Keyboard Navigation Listeners ---
+    document.addEventListener('keydown', function(e) {
+      // Only trigger if the reel overlay is active
+      if (!document.getElementById('reelOverlay').classList.contains('active')) return;
+      
+      // Ignore if typing in an input field
+      if (e.target.tagName === 'INPUT') return;
+
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (isScrolling) return;
+          isScrolling = true;
+          scrollReel(-1);
+          setTimeout(() => { isScrolling = false; }, 800);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (isScrolling) return;
+          isScrolling = true;
+          scrollReel(1);
+          setTimeout(() => { isScrolling = false; }, 800);
+          break;
+        case 'a': case 'A':
+          clickOption(0);
+          break;
+        case 'b': case 'B':
+          clickOption(1);
+          break;
+        case 'c': case 'C':
+          clickOption(2);
+          break;
+        case 'd': case 'D':
+          clickOption(3);
+          break;
+      }
+    });
+
+    function clickOption(index) {
+      if (!activeCardEl) return;
+      const options = activeCardEl.querySelectorAll('.rf-option');
+      if (options[index] && !options[index].classList.contains('disabled')) {
+        options[index].click();
+      }
     }
 
     // Simple HTML escape for tags
