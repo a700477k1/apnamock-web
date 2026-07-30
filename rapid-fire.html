@@ -147,7 +147,7 @@
     /* REELS OVERLAY ENGINE */
     .reel-overlay {
       display: none; position: fixed; inset: 0; z-index: 2000; 
-      background: linear-gradient(135deg, #1a56db, #1e293b); /* ApnaMock Gradient */
+      background: linear-gradient(135deg, #1a56db, #f97316); /* Exact ApnaMock Logo Gradient */
       height: 100vh; width: 100vw; overflow: hidden;
       flex-direction: column; align-items: center;
     }
@@ -178,13 +178,13 @@
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
-    /* Fix 2 & 4: Card is exactly 100vh and has internal padding so content doesn't hide behind header */
+    /* Fix 2: Push content to the top on mobile so there's no gap below the streak counter */
     .reel-card {
       height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always;
-      display: flex; flex-direction: column; justify-content: center; 
-      padding: 90px 24px 40px; box-sizing: border-box;
+      display: flex; flex-direction: column; justify-content: flex-start; /* Changed from center to flex-start */
+      padding: 80px 24px 40px; box-sizing: border-box; /* 80px clears the header nicely */
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: transparent; /* Made transparent to show the gradient */
+      background: transparent; 
     }
 
     .rf-subject-tag { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
@@ -231,6 +231,11 @@
       .reel-header { padding: 6px 12px; top: 12px; }
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 12px; width: 32px; height: 32px; font-size: 14px; }
+
+      /* Tighten the top padding on mobile so content is closer to the streak counter */
+      .reel-card {
+        padding-top: 65px; 
+      }
     }
     
   </style>
@@ -620,7 +625,7 @@
       
       // Start Music
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = 0.4; // Increased to 40% volume
+      bgMusic.volume = 0.3; // Increased to 30% volume
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       // Filter questions
