@@ -265,7 +265,7 @@
       padding: 10px 16px; 
       border: 1px solid rgba(255,255,255,0.1); 
       background: rgba(15, 23, 42, 0.6); 
-      border-radius: 99px; /* Capsule Shape */
+      border-radius: 99px; 
       color: #fff; font-size: 16px; text-align: left; cursor: pointer; 
       display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
     }
@@ -277,7 +277,7 @@
     }
     .rf-option:active { transform: scale(0.98); }
     .rf-option-letter { 
-      width: 26px; height: 26px; border-radius: 50%; /* Circle Badge */
+      width: 26px; height: 26px; border-radius: 50%; 
       background: #1a56db; color: #ffffff; 
       display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; 
     }
@@ -879,9 +879,12 @@
     let activeTimer = null;
     let activeObserver = null;
     let cardsRendered = 0;
-    let isAnimating = false; // Blocks input while snapping
+    let isAnimating = false; 
     let activeCardEl = null; 
-    let lastBoundaryHitTime = 0; // Used for the Momentum Pause logic
+    
+    // Mouse Wheel State Machine Variables
+    let wheelState = 'IDLE'; // IDLE, BOUNDARY_LOCKED, READY_TO_SNAP, SNAPPING
+    let boundaryTimer = null;
 
     async function startRapidFire() {
       const elem = document.documentElement;
@@ -975,53 +978,69 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // --- Absolute Manual Scroll Control (Prevents skipping on high-magnitude scrolls) ---
+      // --- Bulletproof Mouse Wheel State Machine ---
       container.onwheel = function(e) {
-        e.preventDefault(); // ALWAYS prevent native container snap scroll. We handle it manually.
-        
-        if (isAnimating) return;
-        
         let el = e.target;
-        let innerScrolled = false;
-        
-        // Traverse up from the mouse target to find if we are inside the main content area
+        let hitBoundary = false;
+        let canScrollInner = false;
+
+        // 1. Find out if we are over the inner text area
         while (el && el !== container) {
-          if (el.classList.contains('rf-card-content')) {
+          if (el.classList.contains('rf-card-content') || el.classList.contains('rf-explanation')) {
             if (el.scrollHeight > el.clientHeight) {
               const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
               const atTop = el.scrollTop <= 0;
-              
-              // If scrolling down and not at bottom, manually scroll the inner text
-              if (e.deltaY > 0 && !atBottom) {
-                el.scrollTop += e.deltaY; 
-                innerScrolled = true;
-                break;
-              }
-              // If scrolling up and not at top, manually scroll the inner text
-              if (e.deltaY < 0 && !atTop) {
-                el.scrollTop += e.deltaY;
-                innerScrolled = true;
-                break;
+              if ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) {
+                hitBoundary = true; // We reached the end of the text
+              } else {
+                canScrollInner = true; // We are in the middle of the text
               }
             }
-            break; // Found the main content area, stop traversing
+            break;
           }
           el = el.parentElement;
         }
-        
-        if (innerScrolled) return; // We handled the inner scroll manually
-        
-        // We hit a boundary (top/bottom of inner text) OR there is no inner scrollable text.
-        const now = Date.now();
-        if (now - lastBoundaryHitTime < 350) {
-          // User scrolled again after pausing. TRIGGER SNAP!
-          lastBoundaryHitTime = 0;
-          isAnimating = true;
+
+        // 2. If we can scroll inner text natively, let the browser do it
+        if (canScrollInner) {
+          if (wheelState !== 'SNAPPING') {
+            wheelState = 'IDLE';
+            clearTimeout(boundaryTimer);
+          }
+          return; 
+        }
+
+        // 3. If we hit the boundary (or there is no inner scroll), we must block native snap
+        e.preventDefault();
+
+        if (wheelState === 'SNAPPING') return; // Animation in progress
+
+        if (wheelState === 'BOUNDARY_LOCKED') {
+          // User is still scrolling (momentum). Absorb it and keep resetting the timer.
+          clearTimeout(boundaryTimer);
+          boundaryTimer = setTimeout(() => { wheelState = 'READY_TO_SNAP'; }, 350);
+          return;
+        }
+
+        if (wheelState === 'READY_TO_SNAP') {
+          // User paused for 350ms and scrolled again. Execute snap!
+          wheelState = 'SNAPPING';
+          clearTimeout(boundaryTimer);
           scrollReel(e.deltaY > 0 ? 1 : -1);
-          setTimeout(() => { isAnimating = false; }, 800);
+          setTimeout(() => { wheelState = 'IDLE'; }, 800);
+          return;
+        }
+
+        // State: IDLE. We just hit the boundary.
+        if (hitBoundary) {
+          wheelState = 'BOUNDARY_LOCKED';
+          clearTimeout(boundaryTimer);
+          boundaryTimer = setTimeout(() => { wheelState = 'READY_TO_SNAP'; }, 350);
         } else {
-          // First time hitting boundary. Absorb momentum and start pause timer.
-          lastBoundaryHitTime = now;
+          // No inner scroll at all. Execute snap immediately.
+          wheelState = 'SNAPPING';
+          scrollReel(e.deltaY > 0 ? 1 : -1);
+          setTimeout(() => { wheelState = 'IDLE'; }, 800);
         }
       };
 
@@ -1037,11 +1056,9 @@
       }
     }
 
-    // --- Unified Navigation Handler (Used by Buttons and Keyboard) ---
+    // --- Unified Navigation for Buttons and Keys (No momentum pause) ---
     function handleNavigation(direction) {
       if (isAnimating) return;
-      
-      let hitBoundary = true;
       
       if (activeCardEl) {
         const content = activeCardEl.querySelector('.rf-card-content');
@@ -1049,12 +1066,10 @@
           const atBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 2;
           const atTop = content.scrollTop <= 0;
           
-          // If trying to go down and not at bottom, scroll text down by a page
           if (direction === 1 && !atBottom) {
             content.scrollBy({ top: content.clientHeight * 0.8, behavior: 'smooth' });
             return; 
           }
-          // If trying to go up and not at top, scroll text up by a page
           if (direction === -1 && !atTop) {
             content.scrollBy({ top: -content.clientHeight * 0.8, behavior: 'smooth' });
             return;
@@ -1062,18 +1077,10 @@
         }
       }
       
-      // If we reach here, we are at the boundary. Apply momentum pause logic.
-      const now = Date.now();
-      if (now - lastBoundaryHitTime < 350) {
-        // Second action at boundary. SNAP!
-        lastBoundaryHitTime = 0;
-        isAnimating = true;
-        scrollReel(direction);
-        setTimeout(() => { isAnimating = false; }, 800);
-      } else {
-        // First action at boundary. Absorb and set timer.
-        lastBoundaryHitTime = now;
-      }
+      // If we reach here, we are at the boundary. Snap immediately for discrete clicks.
+      isAnimating = true;
+      scrollReel(direction);
+      setTimeout(() => { isAnimating = false; }, 800);
     }
 
     function scrollReel(direction) {
@@ -1252,7 +1259,7 @@
         updateTopicStats(cardId, false);
       }
 
-      // Always show the explanation (for both correct and wrong answers)
+      // Always show the explanation
       document.getElementById('expl-' + cardId).style.display = 'block';
 
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
@@ -1302,7 +1309,6 @@
       window.location.reload();
     }
 
-    // --- Keyboard Navigation Listeners ---
     document.addEventListener('keydown', function(e) {
       if (!document.getElementById('reelOverlay').classList.contains('active')) return;
       if (e.target.tagName === 'INPUT') return;
