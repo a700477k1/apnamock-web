@@ -291,37 +291,86 @@
     .rf-option.wrong:hover { border-color: #dc2626; background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); transform: none; }
     .rf-option.disabled { pointer-events: none; opacity: 0.8; }
 
-    /* Explanation Box - Fixed padding & Top Border */
-    .rf-explanation {
-      margin-top: 12px; padding: 14px 16px 14px 20px; 
-      background: rgba(0, 0, 0, 0.3); 
-      border-top: 3px solid #1a56db; 
-      border-left: 4px solid #1a56db; 
-      border-radius: 4px; 
-      font-size: 14px; color: #cbd5e1; display: none; 
+    /* Explanation Prompt (Appears after answering) */
+    .rf-expl-prompt {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      text-align: center;
     }
-    .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
-    
-    /* Bottom Hint Area (Swipe + Arrows) */
-    .rf-bottom-hint {
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      padding: 10px 0; flex-shrink: 0; z-index: 5;
+    .rf-expl-btn {
+      background: #ffffff;
+      color: #1a56db;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-    .rf-nav-buttons { display: flex; gap: 8px; }
-    .rf-nav-btn {
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-      font-size: 14px; display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .rf-nav-btn:hover { background: rgba(255,255,255,0.2); }
-
+    .rf-expl-btn:hover { transform: scale(1.05); }
     .rf-swipe-hint { 
       font-size: 11px; color: rgba(255,255,255,0.8); 
       text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; 
       pointer-events: none;
     }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Explanation Modal (The Popup) */
+    .explanation-modal {
+      position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .explanation-modal.open { display: flex; }
+    .explanation-modal-content {
+      background: linear-gradient(135deg, #1a56db, #f97316);
+      width: 100%; max-width: 500px; max-height: 90vh;
+      border-radius: 24px;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .explanation-modal-header {
+      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .explanation-modal-body {
+      padding: 24px; overflow-y: auto; color: #fff; scrollbar-width: none;
+    }
+    .explanation-modal-body::-webkit-scrollbar { display: none; }
+    .explanation-modal-footer {
+      padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center;
+    }
+    .modal-close-btn {
+      background: #dc2626; color: #fff; border: none;
+      padding: 10px 20px; border-radius: 99px; font-weight: 700; cursor: pointer; width: 100%;
+    }
+    .modal-tags-row { display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
+    .modal-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+    .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .modal-option {
+      padding: 10px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      border-radius: 10px; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 12px;
+    }
+    .modal-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
+    .modal-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); }
+    .modal-option-letter { width: 26px; height: 26px; border-radius: 50%; background: #1a56db; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .modal-option.correct .modal-option-letter { background: #16a34a; }
+    .modal-option.wrong .modal-option-letter { background: #dc2626; }
+    .modal-explanation {
+      margin-top: 8px; padding: 14px 16px 14px 20px; 
+      background: rgba(0, 0, 0, 0.3); 
+      border-top: 3px solid #ffffff; 
+      border-left: 4px solid #ffffff; 
+      border-radius: 4px; 
+      font-size: 14px; color: #ffffff; line-height: 1.6;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
@@ -331,8 +380,8 @@
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: repeat(2, 1fr); }
       
-      .rf-nav-buttons { display: none; }
       .desktop-instructions { display: none !important; }
+      .rf-nav-buttons { display: none; } 
 
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
 
@@ -352,11 +401,12 @@
       .rf-option { padding: 8px 12px; font-size: 15px; } 
       .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
-      .rf-explanation { font-size: 13px; padding: 12px 14px 12px 16px; } 
     }
 
     @media (min-width: 769px) {
       .desktop-instructions { display: block; }
+      /* Hide swipe hint on desktop since we use modal + arrows */
+      .rf-swipe-hint { display: none; } 
     }
   </style>
 </head>
@@ -522,6 +572,28 @@
     </div>
     
     <div class="reel-container" id="reelContainer"></div>
+  </div>
+
+  <!-- Explanation Modal -->
+  <div class="explanation-modal" id="explanationModal">
+    <div class="explanation-modal-content">
+      <div class="explanation-modal-header">
+        <div class="brand">
+          <div class="brand-icon">A</div>
+          <div class="brand-text">
+            <span class="brand-name">ApnaMock</span>
+            <span class="brand-tagline">Practice. Improve. Succeed.</span>
+          </div>
+        </div>
+        <div class="reel-exit" onclick="closeExplanationModal()" style="position: relative; top: 0; right: 0; background: rgba(0,0,0,0.5);"><i class="fa-solid fa-xmark"></i></div>
+      </div>
+      <div class="explanation-modal-body" id="explModalBody">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="explanation-modal-footer">
+        <button class="modal-close-btn" onclick="closeExplanationModal()">Close and Move to Next Question</button>
+      </div>
+    </div>
   </div>
 
   <audio id="bgMusic" loop preload="auto">
@@ -879,12 +951,8 @@
     let activeTimer = null;
     let activeObserver = null;
     let cardsRendered = 0;
-    let isAnimating = false; 
+    let isScrolling = false; // Strict lock for snapping
     let activeCardEl = null; 
-    
-    // Mouse Wheel State Machine Variables
-    let wheelState = 'IDLE'; // IDLE, BOUNDARY_LOCKED, READY_TO_SNAP, SNAPPING
-    let boundaryTimer = null;
 
     async function startRapidFire() {
       const elem = document.documentElement;
@@ -978,70 +1046,17 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // --- Bulletproof Mouse Wheel State Machine ---
+      // --- Bulletproof Desktop Scroll Lock ---
+      // This completely prevents high-magnitude scrolls from skipping multiple questions.
+      // 800ms lock absorbs ALL mouse wheel momentum.
       container.onwheel = function(e) {
-        let el = e.target;
-        let hitBoundary = false;
-        let canScrollInner = false;
-
-        // 1. Find out if we are over the inner text area
-        while (el && el !== container) {
-          if (el.classList.contains('rf-card-content') || el.classList.contains('rf-explanation')) {
-            if (el.scrollHeight > el.clientHeight) {
-              const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-              const atTop = el.scrollTop <= 0;
-              if ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) {
-                hitBoundary = true; // We reached the end of the text
-              } else {
-                canScrollInner = true; // We are in the middle of the text
-              }
-            }
-            break;
-          }
-          el = el.parentElement;
-        }
-
-        // 2. If we can scroll inner text natively, let the browser do it
-        if (canScrollInner) {
-          if (wheelState !== 'SNAPPING') {
-            wheelState = 'IDLE';
-            clearTimeout(boundaryTimer);
-          }
-          return; 
-        }
-
-        // 3. If we hit the boundary (or there is no inner scroll), we must block native snap
-        e.preventDefault();
-
-        if (wheelState === 'SNAPPING') return; // Animation in progress
-
-        if (wheelState === 'BOUNDARY_LOCKED') {
-          // User is still scrolling (momentum). Absorb it and keep resetting the timer.
-          clearTimeout(boundaryTimer);
-          boundaryTimer = setTimeout(() => { wheelState = 'READY_TO_SNAP'; }, 350);
-          return;
-        }
-
-        if (wheelState === 'READY_TO_SNAP') {
-          // User paused for 350ms and scrolled again. Execute snap!
-          wheelState = 'SNAPPING';
-          clearTimeout(boundaryTimer);
-          scrollReel(e.deltaY > 0 ? 1 : -1);
-          setTimeout(() => { wheelState = 'IDLE'; }, 800);
-          return;
-        }
-
-        // State: IDLE. We just hit the boundary.
-        if (hitBoundary) {
-          wheelState = 'BOUNDARY_LOCKED';
-          clearTimeout(boundaryTimer);
-          boundaryTimer = setTimeout(() => { wheelState = 'READY_TO_SNAP'; }, 350);
-        } else {
-          // No inner scroll at all. Execute snap immediately.
-          wheelState = 'SNAPPING';
-          scrollReel(e.deltaY > 0 ? 1 : -1);
-          setTimeout(() => { wheelState = 'IDLE'; }, 800);
-        }
+        e.preventDefault(); // ALWAYS prevent native snap scroll. We control it manually.
+        
+        if (isScrolling) return; // If we are currently snapping, eat the event
+        
+        isScrolling = true;
+        scrollReel(e.deltaY > 0 ? 1 : -1);
+        setTimeout(() => { isScrolling = false; }, 800);
       };
 
       if (cardsRendered >= reelPool.length) {
@@ -1056,31 +1071,15 @@
       }
     }
 
-    // --- Unified Navigation for Buttons and Keys (No momentum pause) ---
+    // --- Unified Navigation for Buttons and Keys ---
     function handleNavigation(direction) {
-      if (isAnimating) return;
+      if (isScrolling) return;
       
-      if (activeCardEl) {
-        const content = activeCardEl.querySelector('.rf-card-content');
-        if (content && content.scrollHeight > content.clientHeight) {
-          const atBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 2;
-          const atTop = content.scrollTop <= 0;
-          
-          if (direction === 1 && !atBottom) {
-            content.scrollBy({ top: content.clientHeight * 0.8, behavior: 'smooth' });
-            return; 
-          }
-          if (direction === -1 && !atTop) {
-            content.scrollBy({ top: -content.clientHeight * 0.8, behavior: 'smooth' });
-            return;
-          }
-        }
-      }
-      
-      // If we reach here, we are at the boundary. Snap immediately for discrete clicks.
-      isAnimating = true;
+      // Since explanations are now in a modal, we don't need to check inner scroll boundaries.
+      // Any button press or key press simply snaps to the next/previous question.
+      isScrolling = true;
       scrollReel(direction);
-      setTimeout(() => { isAnimating = false; }, 800);
+      setTimeout(() => { isScrolling = false; }, 800);
     }
 
     function scrollReel(direction) {
@@ -1182,6 +1181,14 @@
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
       const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
 
+      // The Explanation Prompt that appears after answering
+      const promptHtml = `
+        <div class="rf-expl-prompt" id="prompt-${q.id}">
+          <button class="rf-expl-btn" onclick="openExplanationModal('${q.id}')">View Explanation</button>
+          <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
+        </div>
+      `;
+
       card.innerHTML = `
         <div class="rf-card-content">
           <div class="rf-tags-row">
@@ -1190,14 +1197,9 @@
           </div>
           <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
           <div class="rf-options">${optionsHtml}</div>
-          <div class="rf-explanation" id="expl-${q.id}">
-            <strong>Explanation:</strong><br>
-            ${renderMathInString(getText(expEn, expHi, selectedLanguage))}
-            ${q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg">` : ''}
-          </div>
+          ${promptHtml}
         </div>
         <div class="rf-bottom-hint">
-          <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
           <div class="rf-nav-buttons">
             <button class="rf-nav-btn" onclick="handleNavigation(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
             <button class="rf-nav-btn" onclick="handleNavigation(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
@@ -1206,6 +1208,57 @@
       `;
 
       return card;
+    }
+
+    // --- Explanation Modal Logic ---
+    function openExplanationModal(qid) {
+      const q = reelPool.find(item => item.id === qid);
+      if (!q) return;
+
+      let qEn = "", qHi = "", expEn = "", expHi = "";
+      if (typeof q.question === 'object') { qEn = q.question.en || ""; qHi = q.question.hi || ""; } else { qEn = q.question || ""; }
+      if (typeof q.explanation === 'object') { expEn = q.explanation.en || ""; expHi = q.explanation.hi || ""; } else { expEn = q.explanation || ""; }
+
+      const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
+      const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
+      
+      let modalOptionsHtml = '';
+      q.options.forEach((opt, index) => {
+        let optEn = "", optHi = "";
+        if (typeof opt === 'object') { optEn = opt.en || ""; optHi = opt.hi || ""; } else { optEn = opt || ""; }
+        const renderedOpt = renderMathInString(getText(optEn, optHi, selectedLanguage));
+        const cls = index === q.correct ? 'correct' : (index === q.selectedIndex ? 'wrong' : '');
+        modalOptionsHtml += `
+          <div class="modal-option ${cls}">
+            <div class="modal-option-letter">${String.fromCharCode(65 + index)}</div>
+            <span style="flex:1;">${renderedOpt}</span>
+          </div>
+        `;
+      });
+
+      const explHtml = renderMathInString(getText(expEn, expHi, selectedLanguage));
+      const explImgHtml = q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg" style="max-width:100%; border-radius:4px; margin-top:8px;">` : '';
+
+      document.getElementById('explModalBody').innerHTML = `
+        <div class="modal-tags-row">
+          <div class="rf-subject-tag">${escapeHtml(q.subject)}</div>
+          ${sourceExamHtml}
+        </div>
+        <div class="modal-question">${renderedQuestion}</div>
+        <div class="modal-options">${modalOptionsHtml}</div>
+        <div class="modal-explanation">
+          <strong>Explanation:</strong><br>
+          ${explHtml}
+          ${explImgHtml}
+        </div>
+      `;
+      
+      document.getElementById('explanationModal').classList.add('open');
+    }
+
+    function closeExplanationModal() {
+      document.getElementById('explanationModal').classList.remove('open');
+      handleNavigation(1); // Move to next question
     }
 
     function startCardTimer(cardId) {
@@ -1259,8 +1312,12 @@
         updateTopicStats(cardId, false);
       }
 
-      // Always show the explanation
-      document.getElementById('expl-' + cardId).style.display = 'block';
+      // Save the selected index so the modal can highlight it
+      const q = reelPool.find(item => item.id === cardId);
+      if(q) q.selectedIndex = selectedIndex;
+
+      // Show the Explanation Prompt
+      document.getElementById('prompt-' + cardId).style.display = 'flex';
 
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       if (!seenIds.includes(cardId)) {
