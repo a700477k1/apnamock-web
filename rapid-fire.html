@@ -195,25 +195,35 @@
       display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
-    /* Audio Settings Slide-Out Panel */
-    .audio-panel {
-      position: absolute; top: 75px; left: 20px; z-index: 20;
+    /* Backdrop for closing panels */
+    .panel-backdrop {
+      position: absolute; inset: 0; z-index: 12; display: none;
+    }
+    .panel-backdrop.active { display: block; }
+
+    /* Slide-Out Panels (Audio & Exit) */
+    .audio-panel, .exit-panel {
+      position: absolute; top: 75px; z-index: 20;
       background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 12px;
       display: none; flex-direction: column; gap: 8px; min-width: 180px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .audio-panel.open { display: flex; animation: slideIn 0.2s ease; }
+    .audio-panel { left: 20px; }
+    .exit-panel { right: 20px; }
+    .audio-panel.open, .exit-panel.open { display: flex; animation: slideIn 0.2s ease; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     .audio-panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
     .audio-toggle-row { display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 14px; }
     .audio-toggle-btn {
       background: rgba(255,255,255,0.1); border: none; color: #fff; 
-      padding: 4px 12px; border-radius: 99px; font-size: 12px; cursor: pointer;
-      transition: background 0.2s;
+      padding: 6px 14px; border-radius: 99px; font-size: 12px; cursor: pointer;
+      transition: background 0.2s; flex: 1; margin: 0 2px;
     }
     .audio-toggle-btn:hover { background: rgba(255,255,255,0.2); }
     .audio-toggle-btn.muted { background: rgba(220, 38, 38, 0.4); }
+    .audio-toggle-btn.confirm { background: #dc2626; }
+    .audio-toggle-btn.confirm:hover { background: #b91c1c; }
 
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
@@ -238,7 +248,7 @@
     }
     .rf-card-content::-webkit-scrollbar { display: none; }
 
-    /* Tags Row (Consistent Dark Capsule Theme) */
+    /* Tags Row */
     .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
     .rf-subject-tag, .rf-source-exam-tag { 
       font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; 
@@ -256,7 +266,7 @@
       border: 1px solid rgba(255,255,255,0.1); 
       background: rgba(15, 23, 42, 0.6); 
       border-radius: 99px; /* Capsule Shape */
-      color: #fff; font-size: 14px; text-align: left; cursor: pointer; 
+      color: #fff; font-size: 16px; text-align: left; cursor: pointer; /* Increased font size to 16px */
       display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
     }
     .rf-option:hover {
@@ -267,9 +277,9 @@
     }
     .rf-option:active { transform: scale(0.98); }
     .rf-option-letter { 
-      width: 24px; height: 24px; border-radius: 50%; /* Circle Badge */
+      width: 26px; height: 26px; border-radius: 50%; /* Circle Badge */
       background: #1a56db; color: #ffffff; 
-      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; 
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; 
     }
     .rf-option img { height: 35px; border-radius: 4px; }
     
@@ -324,7 +334,7 @@
       .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
-      .audio-panel { top: 60px; left: 12px; min-width: 160px; }
+      .audio-panel, .exit-panel { top: 60px; min-width: 160px; }
 
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
       .reel-top-bar .brand-name { font-size: 14px; }
@@ -334,9 +344,9 @@
       .reel-card { padding: 70px 10px 5px 10px; } 
       .rf-question { font-size: 16px; margin-bottom: 12px; } 
       .rf-options { gap: 6px; }
-      .rf-option { padding: 8px 12px; font-size: 13px; }
+      .rf-option { padding: 8px 12px; font-size: 15px; } /* Increased mobile font to 15px */
       .rf-option:hover { transform: none; box-shadow: none; } 
-      .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
+      .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
 
@@ -474,6 +484,9 @@
       <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
+    <!-- Backdrop for closing panels -->
+    <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()"></div>
+
     <!-- Mute Button & Audio Panel -->
     <div class="reel-mute" onclick="toggleAudioPanel()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
     <div class="audio-panel" id="audioPanel">
@@ -492,7 +505,16 @@
       <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
       <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
-    <div class="reel-exit" onclick="exitRapidFire()"><i class="fa-solid fa-xmark"></i></div>
+    
+    <!-- Exit Button & Confirmation Panel -->
+    <div class="reel-exit" onclick="toggleExitPanel()"><i class="fa-solid fa-xmark"></i></div>
+    <div class="exit-panel" id="exitPanel">
+      <div class="audio-panel-title">Quit Rapid Fire?</div>
+      <div style="display:flex; gap:8px;">
+        <button class="audio-toggle-btn" onclick="closeAllPanels()">No</button>
+        <button class="audio-toggle-btn confirm" onclick="exitRapidFire()">Quit</button>
+      </div>
+    </div>
     
     <div class="reel-container" id="reelContainer"></div>
   </div>
@@ -763,7 +785,31 @@
     }
 
     function toggleAudioPanel() {
-      document.getElementById('audioPanel').classList.toggle('open');
+      const panel = document.getElementById('audioPanel');
+      const exitP = document.getElementById('exitPanel');
+      const backdrop = document.getElementById('panelBackdrop');
+      
+      exitP.classList.remove('open');
+      
+      const isOpen = panel.classList.toggle('open');
+      backdrop.classList.toggle('active', isOpen);
+    }
+
+    function toggleExitPanel() {
+      const panel = document.getElementById('exitPanel');
+      const audioP = document.getElementById('audioPanel');
+      const backdrop = document.getElementById('panelBackdrop');
+      
+      audioP.classList.remove('open');
+      
+      const isOpen = panel.classList.toggle('open');
+      backdrop.classList.toggle('active', isOpen);
+    }
+
+    function closeAllPanels() {
+      document.getElementById('audioPanel').classList.remove('open');
+      document.getElementById('exitPanel').classList.remove('open');
+      document.getElementById('panelBackdrop').classList.remove('active');
     }
 
     function toggleMusic() {
@@ -799,6 +845,28 @@
       }
     }
 
+    // --- Screen Wake Lock ---
+    let wakeLock = null;
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+      } catch (err) {
+        console.log('Wake Lock request failed:', err);
+      }
+    }
+    async function releaseWakeLock() {
+      if (wakeLock !== null) {
+        await wakeLock.release();
+        wakeLock = null;
+      }
+    }
+    // Re-acquire wake lock if user switches tabs and comes back
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
+
     // --- Reels State ---
     let reelPool = [];
     let currentCardIndex = 0;
@@ -810,13 +878,16 @@
     let isScrolling = false; 
     let activeCardEl = null; 
 
-    function startRapidFire() {
+    async function startRapidFire() {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => console.log("Fullscreen denied"));
       } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
       }
+
+      // Request Screen Wake Lock
+      await requestWakeLock();
 
       document.getElementById('preQuizScreen').style.display = 'none';
       document.getElementById('reelOverlay').classList.add('active');
@@ -1133,8 +1204,12 @@
       }
     }
 
-    function exitRapidFire() {
+    async function exitRapidFire() {
+      closeAllPanels();
       if (activeTimer) clearInterval(activeTimer);
+      
+      // Release Screen Wake Lock
+      await releaseWakeLock();
       
       if (document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen();
