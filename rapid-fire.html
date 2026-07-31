@@ -879,7 +879,7 @@
     let activeTimer = null;
     let activeObserver = null;
     let cardsRendered = 0;
-    let isScrolling = false; 
+    let isAnimating = false; // Blocks input while snapping
     let activeCardEl = null; 
     let lastBoundaryHitTime = 0; // Used for the Momentum Pause logic
 
@@ -975,56 +975,54 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // Desktop Scroll Interception with Momentum Pause
+      // --- Absolute Manual Scroll Control (Prevents skipping on high-magnitude scrolls) ---
       container.onwheel = function(e) {
+        e.preventDefault(); // ALWAYS prevent native container snap scroll. We handle it manually.
+        
+        if (isAnimating) return;
+        
         let el = e.target;
-        let hitBoundary = false;
-
-        // Traverse up from the mouse target to find if we are inside a scrollable content area
+        let innerScrolled = false;
+        
+        // Traverse up from the mouse target to find if we are inside the main content area
         while (el && el !== container) {
-          if (el.classList.contains('rf-card-content') || el.classList.contains('rf-explanation')) {
-            const isScrollable = el.scrollHeight > el.clientHeight;
-            if (isScrollable) {
+          if (el.classList.contains('rf-card-content')) {
+            if (el.scrollHeight > el.clientHeight) {
               const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
               const atTop = el.scrollTop <= 0;
-              if ((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) {
-                hitBoundary = true; // We hit the top or bottom edge of inner content
-              } else {
-                // Normal inner scroll, let browser handle it natively
-                return; 
+              
+              // If scrolling down and not at bottom, manually scroll the inner text
+              if (e.deltaY > 0 && !atBottom) {
+                el.scrollTop += e.deltaY; 
+                innerScrolled = true;
+                break;
+              }
+              // If scrolling up and not at top, manually scroll the inner text
+              if (e.deltaY < 0 && !atTop) {
+                el.scrollTop += e.deltaY;
+                innerScrolled = true;
+                break;
               }
             }
+            break; // Found the main content area, stop traversing
           }
           el = el.parentElement;
         }
         
-        // If we reach here, either inner content isn't scrollable, OR we hit a boundary (top/bottom).
-        e.preventDefault(); // Prevent default page scroll or rubber banding
-
-        if (hitBoundary) {
-          const now = Date.now();
-          if (now - lastBoundaryHitTime < 350) {
-            // User scrolled again after pausing. TRIGGER SNAP!
-            lastBoundaryHitTime = 0; // Reset so we don't snap multiple times
-            // Fall through to snap logic below
-          } else {
-            // First time hitting boundary (or momentum scrolling into it). Absorb.
-            lastBoundaryHitTime = now; 
-            return; 
-          }
-        }
-
-        // Snap logic
-        if (isScrolling) return;
-        isScrolling = true;
+        if (innerScrolled) return; // We handled the inner scroll manually
         
-        if (e.deltaY > 0) {
-          scrollReel(1); 
+        // We hit a boundary (top/bottom of inner text) OR there is no inner scrollable text.
+        const now = Date.now();
+        if (now - lastBoundaryHitTime < 350) {
+          // User scrolled again after pausing. TRIGGER SNAP!
+          lastBoundaryHitTime = 0;
+          isAnimating = true;
+          scrollReel(e.deltaY > 0 ? 1 : -1);
+          setTimeout(() => { isAnimating = false; }, 800);
         } else {
-          scrollReel(-1); 
+          // First time hitting boundary. Absorb momentum and start pause timer.
+          lastBoundaryHitTime = now;
         }
-        
-        setTimeout(() => { isScrolling = false; }, 800); 
       };
 
       if (cardsRendered >= reelPool.length) {
@@ -1036,6 +1034,45 @@
             loadMoreReels();
           }
         };
+      }
+    }
+
+    // --- Unified Navigation Handler (Used by Buttons and Keyboard) ---
+    function handleNavigation(direction) {
+      if (isAnimating) return;
+      
+      let hitBoundary = true;
+      
+      if (activeCardEl) {
+        const content = activeCardEl.querySelector('.rf-card-content');
+        if (content && content.scrollHeight > content.clientHeight) {
+          const atBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 2;
+          const atTop = content.scrollTop <= 0;
+          
+          // If trying to go down and not at bottom, scroll text down by a page
+          if (direction === 1 && !atBottom) {
+            content.scrollBy({ top: content.clientHeight * 0.8, behavior: 'smooth' });
+            return; 
+          }
+          // If trying to go up and not at top, scroll text up by a page
+          if (direction === -1 && !atTop) {
+            content.scrollBy({ top: -content.clientHeight * 0.8, behavior: 'smooth' });
+            return;
+          }
+        }
+      }
+      
+      // If we reach here, we are at the boundary. Apply momentum pause logic.
+      const now = Date.now();
+      if (now - lastBoundaryHitTime < 350) {
+        // Second action at boundary. SNAP!
+        lastBoundaryHitTime = 0;
+        isAnimating = true;
+        scrollReel(direction);
+        setTimeout(() => { isAnimating = false; }, 800);
+      } else {
+        // First action at boundary. Absorb and set timer.
+        lastBoundaryHitTime = now;
       }
     }
 
@@ -1155,8 +1192,8 @@
         <div class="rf-bottom-hint">
           <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
           <div class="rf-nav-buttons">
-            <button class="rf-nav-btn" onclick="scrollReel(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
-            <button class="rf-nav-btn" onclick="scrollReel(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
+            <button class="rf-nav-btn" onclick="handleNavigation(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="rf-nav-btn" onclick="handleNavigation(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
           </div>
         </div>
       `;
@@ -1265,6 +1302,7 @@
       window.location.reload();
     }
 
+    // --- Keyboard Navigation Listeners ---
     document.addEventListener('keydown', function(e) {
       if (!document.getElementById('reelOverlay').classList.contains('active')) return;
       if (e.target.tagName === 'INPUT') return;
@@ -1272,17 +1310,11 @@
       switch(e.key) {
         case 'ArrowUp':
           e.preventDefault();
-          if (isScrolling) return;
-          isScrolling = true;
-          scrollReel(-1);
-          setTimeout(() => { isScrolling = false; }, 800);
+          handleNavigation(-1);
           break;
         case 'ArrowDown':
           e.preventDefault();
-          if (isScrolling) return;
-          isScrolling = true;
-          scrollReel(1);
-          setTimeout(() => { isScrolling = false; }, 800);
+          handleNavigation(1);
           break;
         case 'a': case 'A':
           clickOption(0);
