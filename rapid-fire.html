@@ -195,6 +195,26 @@
       display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
+    /* Audio Settings Slide-Out Panel */
+    .audio-panel {
+      position: absolute; top: 75px; left: 20px; z-index: 20;
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 12px;
+      display: none; flex-direction: column; gap: 8px; min-width: 180px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .audio-panel.open { display: flex; animation: slideIn 0.2s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .audio-panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .audio-toggle-row { display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 14px; }
+    .audio-toggle-btn {
+      background: rgba(255,255,255,0.1); border: none; color: #fff; 
+      padding: 4px 12px; border-radius: 99px; font-size: 12px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .audio-toggle-btn:hover { background: rgba(255,255,255,0.2); }
+    .audio-toggle-btn.muted { background: rgba(220, 38, 38, 0.4); }
+
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
       scroll-snap-type: y mandatory; 
@@ -218,14 +238,13 @@
     }
     .rf-card-content::-webkit-scrollbar { display: none; }
 
-    /* Tags Row */
+    /* Tags Row (Consistent Dark Capsule Theme) */
     .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
-    .rf-subject-tag { 
-      font-size: 10px; background: rgba(255,255,255,0.2); color: #fff; 
+    .rf-subject-tag, .rf-source-exam-tag { 
+      font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; 
       padding: 4px 10px; border-radius: 99px; font-weight: 700; 
       text-transform: uppercase; letter-spacing: 0.5px; 
     }
-    .rf-source-exam-tag { font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; padding: 4px 10px; border-radius: 99px; font-weight: 700; }
 
     .rf-question { font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; } 
     .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
@@ -233,11 +252,12 @@
     /* Options - Dark Pill + Hover Glow */
     .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .rf-option {
-      padding: 10px 12px; 
+      padding: 10px 16px; 
       border: 1px solid rgba(255,255,255,0.1); 
-      background: rgba(15, 23, 42, 0.6); /* Dark Pill Background */
-      border-radius: 10px; color: #fff; font-size: 14px; text-align: left; cursor: pointer; 
-      display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;
+      background: rgba(15, 23, 42, 0.6); 
+      border-radius: 99px; /* Capsule Shape */
+      color: #fff; font-size: 14px; text-align: left; cursor: pointer; 
+      display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
     }
     .rf-option:hover {
       border-color: #1a56db; 
@@ -247,8 +267,8 @@
     }
     .rf-option:active { transform: scale(0.98); }
     .rf-option-letter { 
-      width: 24px; height: 24px; border-radius: 5px; 
-      background: #1a56db; color: #ffffff; /* Solid Blue Badge */
+      width: 24px; height: 24px; border-radius: 50%; /* Circle Badge */
+      background: #1a56db; color: #ffffff; 
       display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; 
     }
     .rf-option img { height: 35px; border-radius: 4px; }
@@ -296,16 +316,15 @@
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: repeat(2, 1fr); }
       
-      /* Hide desktop nav buttons on mobile */
       .rf-nav-buttons { display: none; }
       .desktop-instructions { display: none !important; }
 
-      /* 5% margins for branding and horizontal line on mobile */
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
 
       .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
+      .audio-panel { top: 60px; left: 12px; min-width: 160px; }
 
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
       .reel-top-bar .brand-name { font-size: 14px; }
@@ -315,13 +334,12 @@
       .reel-card { padding: 70px 10px 5px 10px; } 
       .rf-question { font-size: 16px; margin-bottom: 12px; } 
       .rf-options { gap: 6px; }
-      .rf-option { padding: 8px 10px; font-size: 13px; }
-      .rf-option:hover { transform: none; box-shadow: none; } /* Disable hover lift on mobile */
+      .rf-option { padding: 8px 12px; font-size: 13px; }
+      .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
 
-    /* Show desktop specific elements */
     @media (min-width: 769px) {
       .desktop-instructions { display: block; }
     }
@@ -356,14 +374,12 @@
 
   <main class="page-wrapper align-wrapper">
     
-    <!-- PRE-QUIZ DASHBOARD -->
     <div id="preQuizScreen">
       <div class="page-header">
         <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Rapid Fire Mode</h1>
         <p class="page-subtitle">Practice rapid fire questions in a fun, addictive reels format.</p>
       </div>
 
-      <!-- Personal Message Card -->
       <div class="dashboard-card">
         <div class="greeting-text" id="greetingText">Welcome to Rapid Fire! 🚀</div>
         <div class="sub-greeting" id="subGreeting">Let's see what you've got.</div>
@@ -392,13 +408,11 @@
         </div>
       </div>
 
-      <!-- Subject Selection -->
       <div class="section-title">Choose Subject</div>
       <div class="chips-wrap" id="subjectChips">
         <div class="filter-chip active" data-subject="all" onclick="selectSubject(this, 'all')"><i class="fa-solid fa-shuffle"></i> Smart Mix</div>
       </div>
 
-      <!-- Language Selection -->
       <div class="section-title">Choose Language</div>
       <div class="chips-wrap" id="langChips">
         <div class="filter-chip active" data-lang="en" onclick="selectLanguage(this, 'en')"><i class="fa-solid fa-language"></i> English</div>
@@ -406,7 +420,6 @@
         <div class="filter-chip" data-lang="bilingual" onclick="selectLanguage(this, 'bilingual')"><i class="fa-solid fa-language"></i> Bilingual</div>
       </div>
 
-      <!-- Pace Selection -->
       <div class="section-title">Choose Pace</div>
       <div class="pace-grid" id="paceGrid">
         <div class="pace-card active" data-pace="0" onclick="selectPace(this, 0)">
@@ -431,13 +444,11 @@
         </div>
       </div>
 
-      <!-- Custom Time Input (Hidden by default) -->
       <div id="customPaceInput" style="display:none; margin-bottom: 24px; text-align: center;">
         <input type="number" id="customTimeInput" min="5" max="120" value="30" style="width: 80px; padding: 8px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); margin-bottom: 8px;"> 
         <span style="font-size: 12px; color: var(--text-muted); display: block;">Seconds per question</span>
       </div>
 
-      <!-- Desktop Instructions (Moved above Start button) -->
       <div class="desktop-instructions">
         <i class="fa-solid fa-keyboard"></i> <strong>Keyboard Shortcuts:</strong> Use <kbd>↑</kbd> / <kbd>↓</kbd> to navigate. Press <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, or <kbd>D</kbd> to select an answer.
       </div>
@@ -452,7 +463,6 @@
   <!-- RAPID FIRE REELS OVERLAY -->
   <div class="reel-overlay" id="reelOverlay">
     
-    <!-- Top Branding Bar -->
     <div class="reel-top-bar">
       <div class="brand">
         <div class="brand-icon">A</div>
@@ -464,20 +474,29 @@
       <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
-    <!-- Functional Buttons -->
-    <div class="reel-mute" onclick="toggleMute()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
+    <!-- Mute Button & Audio Panel -->
+    <div class="reel-mute" onclick="toggleAudioPanel()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
+    <div class="audio-panel" id="audioPanel">
+      <div class="audio-panel-title">Audio Controls</div>
+      <div class="audio-toggle-row">
+        <span>Music</span>
+        <button class="audio-toggle-btn" id="musicToggle" onclick="toggleMusic()">On</button>
+      </div>
+      <div class="audio-toggle-row">
+        <span>Effects</span>
+        <button class="audio-toggle-btn" id="sfxToggle" onclick="toggleSfx()">On</button>
+      </div>
+    </div>
+
     <div class="reel-header">
       <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
       <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
     <div class="reel-exit" onclick="exitRapidFire()"><i class="fa-solid fa-xmark"></i></div>
     
-    <div class="reel-container" id="reelContainer">
-      <!-- Cards injected by JS -->
-    </div>
+    <div class="reel-container" id="reelContainer"></div>
   </div>
 
-  <!-- Hidden Audio Element for Background Music (Hosted on your GitHub/jsDelivr CDN) -->
   <audio id="bgMusic" loop preload="auto">
     <source src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/assets/audio/lofi-bg.mp3" type="audio/mpeg">
   </audio>
@@ -528,7 +547,6 @@
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
     };
 
-    // KaTeX Math Renderer Helper
     function renderMathInString(htmlString) {
       if (!window.katex) return htmlString;
       function decodeEntities(str) {
@@ -550,7 +568,6 @@
       return htmlString;
     }
 
-    // --- Theme & Menu ---
     const savedTheme = localStorage.getItem('apnamock_theme');
     if (savedTheme === '"dark"') {
       document.body.classList.add("dark-mode");
@@ -578,13 +595,11 @@
       link.addEventListener("click", closeMobileMenu);
     });
 
-    // --- Rapid Fire State ---
     let allQuestions = [];
     let selectedSubjects = ["all"];
     let selectedLanguage = "en";
     let selectedPace = 0;
 
-    // --- LocalStorage Stats Manager ---
     function getRfStats() {
       try {
         const raw = localStorage.getItem('apnamock_rf_stats');
@@ -600,7 +615,6 @@
       localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
     }
 
-    // --- Initialize Dashboard ---
     async function initDashboard() {
       rfStats = getRfStats();
       const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
@@ -664,7 +678,6 @@
       }
     }
 
-    // --- Selection Logic ---
     function selectSubject(element, subject) {
       const allChip = document.querySelector('#subjectChips .filter-chip[data-subject="all"]');
       
@@ -710,9 +723,10 @@
       }
     });
 
-    // --- Audio Engine ---
+    // --- Audio Engine & Panel ---
     let audioCtx = null;
-    let isMuted = false;
+    let isMusicMuted = false;
+    let isSfxMuted = false;
 
     function initAudio() {
       if (!audioCtx) {
@@ -721,7 +735,7 @@
     }
 
     function playSFX(isCorrect) {
-      if (isMuted) return;
+      if (isSfxMuted) return;
       initAudio();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -748,11 +762,41 @@
       }
     }
 
-    function toggleMute() {
-      isMuted = !isMuted;
-      document.getElementById('muteIcon').className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+    function toggleAudioPanel() {
+      document.getElementById('audioPanel').classList.toggle('open');
+    }
+
+    function toggleMusic() {
+      isMusicMuted = !isMusicMuted;
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = isMuted ? 0 : 0.4;
+      bgMusic.volume = isMusicMuted ? 0 : 0.4;
+      
+      const btn = document.getElementById('musicToggle');
+      btn.textContent = isMusicMuted ? 'Off' : 'On';
+      btn.classList.toggle('muted', isMusicMuted);
+      
+      updateMuteIcon();
+    }
+
+    function toggleSfx() {
+      isSfxMuted = !isSfxMuted;
+      
+      const btn = document.getElementById('sfxToggle');
+      btn.textContent = isSfxMuted ? 'Off' : 'On';
+      btn.classList.toggle('muted', isSfxMuted);
+      
+      updateMuteIcon();
+    }
+
+    function updateMuteIcon() {
+      const icon = document.getElementById('muteIcon');
+      if (isMusicMuted && isSfxMuted) {
+        icon.className = "fa-solid fa-volume-xmark";
+      } else if (isMusicMuted || isSfxMuted) {
+        icon.className = "fa-solid fa-volume-low";
+      } else {
+        icon.className = "fa-solid fa-volume-high";
+      }
     }
 
     // --- Reels State ---
@@ -778,7 +822,7 @@
       document.getElementById('reelOverlay').classList.add('active');
       
       const bgMusic = document.getElementById('bgMusic');
-      bgMusic.volume = 0.4;
+      bgMusic.volume = isMusicMuted ? 0 : 0.4;
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       let pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
@@ -1007,7 +1051,6 @@
       return card;
     }
 
-    // --- Timer Logic ---
     function startCardTimer(cardId) {
       if (activeTimer) clearInterval(activeTimer);
       if (selectedPace > 0) {
@@ -1109,7 +1152,6 @@
       window.location.reload();
     }
 
-    // --- Keyboard Navigation Listeners ---
     document.addEventListener('keydown', function(e) {
       if (!document.getElementById('reelOverlay').classList.contains('active')) return;
       if (e.target.tagName === 'INPUT') return;
