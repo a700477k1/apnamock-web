@@ -230,21 +230,38 @@
     .rf-question { font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; } 
     .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
     
+    /* Options - Frosted Glass + Hover Glow */
     .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .rf-option {
-      padding: 10px 12px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      padding: 10px 12px; 
+      border: 1.5px solid rgba(255,255,255,0.4); 
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       border-radius: 10px; color: #fff; font-size: 14px; text-align: left; cursor: pointer; 
-      display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;
+    }
+    .rf-option:hover {
+      border-color: #1a56db; 
+      background: rgba(26, 86, 219, 0.2);
+      box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4);
+      transform: translateY(-2px);
     }
     .rf-option:active { transform: scale(0.98); }
-    .rf-option-letter { width: 24px; height: 24px; border-radius: 5px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .rf-option-letter { 
+      width: 24px; height: 24px; border-radius: 5px; 
+      background: #ffffff; color: #0f172a; /* Solid white badge with dark text */
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; 
+    }
     .rf-option img { height: 35px; border-radius: 4px; }
     
-    .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
+    .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); box-shadow: 0 0 15px rgba(22, 163, 74, 0.3); }
     .rf-option.correct .rf-option-letter { background: #16a34a; color: #fff; }
-    .rf-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); }
+    .rf-option.correct:hover { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); box-shadow: 0 0 15px rgba(22, 163, 74, 0.3); transform: none; }
+    .rf-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
     .rf-option.wrong .rf-option-letter { background: #dc2626; color: #fff; }
-    .rf-option.disabled { pointer-events: none; opacity: 0.7; }
+    .rf-option.wrong:hover { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); transform: none; }
+    .rf-option.disabled { pointer-events: none; opacity: 0.8; }
 
     .rf-explanation {
       margin-top: 12px; padding: 10px; background: rgba(0, 0, 0, 0.3); border-left: 3px solid #1a56db;
@@ -301,6 +318,7 @@
       .rf-question { font-size: 16px; margin-bottom: 12px; } 
       .rf-options { gap: 6px; }
       .rf-option { padding: 8px 10px; font-size: 13px; }
+      .rf-option:hover { transform: none; box-shadow: none; } /* Disable hover lift on mobile */
       .rf-option-letter { width: 22px; height: 22px; font-size: 11px; }
       .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
     }
@@ -461,7 +479,7 @@
     </div>
   </div>
 
-  <!-- Hidden Audio Element for Background Music -->
+  <!-- Hidden Audio Element for Background Music (Hosted on your GitHub/jsDelivr CDN) -->
   <audio id="bgMusic" loop preload="auto">
     <source src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/assets/audio/lofi-bg.mp3" type="audio/mpeg">
   </audio>
@@ -747,8 +765,8 @@
     let activeTimer = null;
     let activeObserver = null;
     let cardsRendered = 0;
-    let isScrolling = false; // Debounce flag for strict desktop scrolling
-    let activeCardEl = null; // Track the currently visible card for keyboard navigation
+    let isScrolling = false; 
+    let activeCardEl = null; 
 
     function startRapidFire() {
       const elem = document.documentElement;
@@ -791,7 +809,6 @@
       }, 300);
     }
 
-    // Dedicated function to restart the cycle without breaking fullscreen
     function restartCycle() {
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       const pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
@@ -832,7 +849,7 @@
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            activeCardEl = entry.target; // Track active card
+            activeCardEl = entry.target; 
             const cardId = entry.target.id.replace('card-', '');
             startCardTimer(cardId);
           }
@@ -841,7 +858,6 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // Desktop Strict Scroll Interception
       container.onwheel = function(e) {
         e.preventDefault(); 
         if (isScrolling) return;
@@ -1092,16 +1108,12 @@
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
       
-      // Hard refresh to reset DOM and show updated stats cleanly
       window.location.reload();
     }
 
     // --- Keyboard Navigation Listeners ---
     document.addEventListener('keydown', function(e) {
-      // Only trigger if the reel overlay is active
       if (!document.getElementById('reelOverlay').classList.contains('active')) return;
-      
-      // Ignore if typing in an input field
       if (e.target.tagName === 'INPUT') return;
 
       switch(e.key) {
@@ -1142,13 +1154,11 @@
       }
     }
 
-    // Simple HTML escape for tags
     function escapeHtml(str) {
       if (!str) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    // Boot up
     initDashboard();
   </script>
 </body>
