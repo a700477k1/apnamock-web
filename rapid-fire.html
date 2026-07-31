@@ -88,23 +88,18 @@
     .dashboard-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
     .greeting-text { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
     .sub-greeting { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
     .stat-box { background: var(--bg-muted); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .stat-icon { font-size: 20px; margin-bottom: 4px; }
     .stat-value { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1; }
     .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-
     .insight-box { background: var(--primary-light); border: 1px solid rgba(26,86,219,0.1); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
     .insight-box i { color: var(--primary); font-size: 16px; margin-top: 2px; }
-
     .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
-    
     .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
     .filter-chip { padding: 10px 16px; border-radius: 99px; border: 1.5px solid var(--border); background: var(--bg-card); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
     .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
     .filter-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
-
     .pace-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
     .pace-card { padding: 16px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; transition: all 0.15s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .pace-card:hover { border-color: var(--primary); }
@@ -112,7 +107,6 @@
     .pace-icon { font-size: 18px; margin-bottom: 4px; }
     .pace-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
     .pace-desc { font-size: 11px; color: var(--text-muted); }
-
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 42px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; width: 100%; }
     .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
     .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
@@ -155,6 +149,16 @@
     }
     .reel-overlay.active { display: flex; }
     
+    /* Desktop Left Keyboard Guide */
+    .desktop-key-guide {
+      position: absolute; top: 50%; left: 24px; transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
+      padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+      color: #fff; font-size: 13px; z-index: 15; display: none; flex-direction: column; gap: 12px; pointer-events: none;
+    }
+    .desktop-key-guide kbd { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 2px 6px; font-family: monospace; margin-right: 4px; }
+    @media (min-width: 769px) { .desktop-key-guide { display: flex; } }
+
     /* Top Branding Bar */
     .reel-top-bar {
       position: absolute; top: 0; left: 20%; right: 20%; z-index: 5; 
@@ -171,11 +175,7 @@
     }
     .reel-top-bar .brand-name { font-size: 16px; color: #ffffff; font-weight: 700; font-family: 'Poppins', sans-serif; } 
     .reel-top-bar .brand-tagline { font-size: 9px; color: rgba(255,255,255,0.8); font-weight: 500; } 
-    
-    .reel-top-bar .promo-text { 
-      font-size: 10px; font-weight: 600; color: #ffffff; 
-      text-align: right; max-width: 45%; line-height: 1.3; 
-    }
+    .reel-top-bar .promo-text { font-size: 10px; font-weight: 600; color: #ffffff; text-align: right; max-width: 45%; line-height: 1.3; }
 
     /* Functional Buttons */
     .reel-header {
@@ -196,9 +196,7 @@
     }
 
     /* Backdrop for closing panels */
-    .panel-backdrop {
-      position: absolute; inset: 0; z-index: 12; display: none;
-    }
+    .panel-backdrop { position: absolute; inset: 0; z-index: 12; display: none; }
     .panel-backdrop.active { display: block; }
 
     /* Slide-Out Panels (Audio & Exit) */
@@ -227,9 +225,7 @@
 
     .reel-container {
       height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
-      scroll-snap-type: y mandatory; 
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: y mandatory; scrollbar-width: none;
     }
     .reel-container::-webkit-scrollbar { display: none; }
 
@@ -255,25 +251,19 @@
       padding: 4px 10px; border-radius: 99px; font-weight: 700; 
       text-transform: uppercase; letter-spacing: 0.5px; 
     }
-
     .rf-question { font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; } 
     .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
     
-    /* Options - Dark Pill + Hover Glow */
+    /* Options */
     .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .rf-option {
-      padding: 10px 16px; 
-      border: 1px solid rgba(255,255,255,0.1); 
-      background: rgba(15, 23, 42, 0.6); 
-      border-radius: 99px; 
-      color: #fff; font-size: 16px; text-align: left; cursor: pointer; 
+      padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); 
+      border-radius: 99px; color: #fff; font-size: 16px; text-align: left; cursor: pointer; 
       display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
     }
     .rf-option:hover {
-      border-color: #1a56db; 
-      background: rgba(26, 86, 219, 0.2); 
-      box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4); 
-      transform: translateY(-2px);
+      border-color: #1a56db; background: rgba(26, 86, 219, 0.2); 
+      box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4); transform: translateY(-2px);
     }
     .rf-option:active { transform: scale(0.98); }
     .rf-option-letter { 
@@ -282,47 +272,33 @@
       display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; 
     }
     .rf-option img { height: 35px; border-radius: 4px; }
-    
     .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.4); box-shadow: 0 0 15px rgba(22, 163, 74, 0.3); }
     .rf-option.correct .rf-option-letter { background: #16a34a; color: #fff; }
-    .rf-option.correct:hover { border-color: #16a34a; background: rgba(22, 163, 74, 0.4); box-shadow: 0 0 15px rgba(22, 163, 74, 0.3); transform: none; }
     .rf-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
     .rf-option.wrong .rf-option-letter { background: #dc2626; color: #fff; }
-    .rf-option.wrong:hover { border-color: #dc2626; background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); transform: none; }
     .rf-option.disabled { pointer-events: none; opacity: 0.8; }
 
-    /* Explanation Prompt (Appears after answering) */
-    .rf-expl-prompt {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      margin-top: 16px;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 12px;
-      text-align: center;
-    }
-    .rf-expl-btn {
-      background: #ffffff;
-      color: #1a56db;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 99px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
+    /* Explanation Prompt */
+    .rf-expl-prompt { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 16px; padding: 12px; background: rgba(0, 0, 0, 0.4); border-radius: 12px; text-align: center; }
+    .rf-expl-btn { background: #ffffff; color: #1a56db; border: none; padding: 8px 20px; border-radius: 99px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
     .rf-expl-btn:hover { transform: scale(1.05); }
-    .rf-swipe-hint { 
-      font-size: 11px; color: rgba(255,255,255,0.8); 
-      text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; 
-      pointer-events: none;
+
+    /* Persistent Bottom Hint Area */
+    .rf-bottom-hint {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 10px 0; flex-shrink: 0; z-index: 5;
     }
+    .rf-nav-buttons { display: flex; gap: 8px; }
+    .rf-nav-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      font-size: 14px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .rf-nav-btn:hover { background: rgba(255,255,255,0.2); }
+    .rf-swipe-hint { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* Explanation Modal (The Popup) */
+    /* Explanation Modal */
     .explanation-modal {
       position: fixed; inset: 0; z-index: 3000;
       background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
@@ -331,45 +307,56 @@
     .explanation-modal.open { display: flex; }
     .explanation-modal-content {
       background: linear-gradient(135deg, #1a56db, #f97316);
-      width: 100%; max-width: 500px; max-height: 90vh;
-      border-radius: 24px;
-      display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 600px; max-height: 95vh; /* Increased height */
+      border-radius: 24px; display: flex; flex-direction: column; overflow: hidden;
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
     .explanation-modal-header {
       padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(15, 23, 42, 0.9); /* Solid dark background for branding visibility */
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     .explanation-modal-body {
-      padding: 24px; overflow-y: auto; color: #fff; scrollbar-width: none;
+      padding: 24px; overflow-y: auto; color: #fff; scrollbar-width: none; flex: 1;
     }
     .explanation-modal-body::-webkit-scrollbar { display: none; }
-    .explanation-modal-footer {
-      padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center;
+    .explanation-modal-nav {
+      padding: 10px 20px; display: flex; justify-content: center; gap: 16px;
+      background: rgba(15, 23, 42, 0.9); border-top: 1px solid rgba(255,255,255,0.2);
     }
+    .explanation-modal-footer {
+      padding: 16px 20px; display: flex; justify-content: center;
+      background: rgba(15, 23, 42, 0.9);
+    }
+    .modal-nav-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .modal-nav-btn:hover { background: rgba(255,255,255,0.2); }
     .modal-close-btn {
       background: #dc2626; color: #fff; border: none;
-      padding: 10px 20px; border-radius: 99px; font-weight: 700; cursor: pointer; width: 100%;
+      padding: 12px 24px; border-radius: 99px; font-weight: 700; cursor: pointer; width: 100%; font-size: 15px;
     }
     .modal-tags-row { display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
-    .modal-question { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+    .modal-question { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; } /* Smaller font */
     .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
     .modal-option {
       padding: 10px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
-      border-radius: 10px; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 12px;
+      border-radius: 10px; color: #fff; font-size: 14px; /* Smaller font */
+      display: flex; align-items: center; gap: 12px;
     }
     .modal-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
     .modal-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); }
-    .modal-option-letter { width: 26px; height: 26px; border-radius: 50%; background: #1a56db; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .modal-option-letter { width: 24px; height: 24px; border-radius: 50%; background: #1a56db; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
     .modal-option.correct .modal-option-letter { background: #16a34a; }
     .modal-option.wrong .modal-option-letter { background: #dc2626; }
     .modal-explanation {
       margin-top: 8px; padding: 14px 16px 14px 20px; 
       background: rgba(0, 0, 0, 0.3); 
-      border-top: 3px solid #ffffff; 
-      border-left: 4px solid #ffffff; 
+      border-top: 3px solid #ffffff; border-left: 4px solid #ffffff; 
       border-radius: 4px; 
-      font-size: 14px; color: #ffffff; line-height: 1.6;
+      font-size: 14px; color: #ffffff; line-height: 1.6; /* Kept same size */
     }
 
     /* RESPONSIVE */
@@ -379,17 +366,13 @@
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: repeat(2, 1fr); }
-      
       .desktop-instructions { display: none !important; }
-      .rf-nav-buttons { display: none; } 
 
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
-
       .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-streak { font-size: 14px; }
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
       .audio-panel, .exit-panel { top: 60px; min-width: 160px; }
-
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
       .reel-top-bar .brand-name { font-size: 14px; }
       .reel-top-bar .brand-tagline { font-size: 8px; }
@@ -401,12 +384,14 @@
       .rf-option { padding: 8px 12px; font-size: 15px; } 
       .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
+      
+      /* Mobile Modal Adjustments */
+      .explanation-modal { padding: 8px; }
+      .explanation-modal-content { width: calc(100% - 16px); max-width: none; max-height: 95vh; } /* Wider, taller */
     }
 
     @media (min-width: 769px) {
       .desktop-instructions { display: block; }
-      /* Hide swipe hint on desktop since we use modal + arrows */
-      .rf-swipe-hint { display: none; } 
     }
   </style>
 </head>
@@ -448,7 +433,6 @@
       <div class="dashboard-card">
         <div class="greeting-text" id="greetingText">Welcome to Rapid Fire! 🚀</div>
         <div class="sub-greeting" id="subGreeting">Let's see what you've got.</div>
-
         <div class="stats-grid">
           <div class="stat-box">
             <div class="stat-icon" style="color: var(--primary);"><i class="fa-solid fa-bullseye"></i></div>
@@ -466,7 +450,6 @@
             <div class="stat-label">Answered</div>
           </div>
         </div>
-
         <div class="insight-box" id="insightBox" style="display:none;">
           <i class="fa-solid fa-lightbulb"></i>
           <span id="insightText"></span>
@@ -477,14 +460,12 @@
       <div class="chips-wrap" id="subjectChips">
         <div class="filter-chip active" data-subject="all" onclick="selectSubject(this, 'all')"><i class="fa-solid fa-shuffle"></i> Smart Mix</div>
       </div>
-
       <div class="section-title">Choose Language</div>
       <div class="chips-wrap" id="langChips">
         <div class="filter-chip active" data-lang="en" onclick="selectLanguage(this, 'en')"><i class="fa-solid fa-language"></i> English</div>
         <div class="filter-chip" data-lang="hi" onclick="selectLanguage(this, 'hi')"><i class="fa-solid fa-language"></i> Hindi</div>
         <div class="filter-chip" data-lang="bilingual" onclick="selectLanguage(this, 'bilingual')"><i class="fa-solid fa-language"></i> Bilingual</div>
       </div>
-
       <div class="section-title">Choose Pace</div>
       <div class="pace-grid" id="paceGrid">
         <div class="pace-card active" data-pace="0" onclick="selectPace(this, 0)">
@@ -508,26 +489,30 @@
           <div class="pace-desc">Set Timer</div>
         </div>
       </div>
-
       <div id="customPaceInput" style="display:none; margin-bottom: 24px; text-align: center;">
         <input type="number" id="customTimeInput" min="5" max="120" value="30" style="width: 80px; padding: 8px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); margin-bottom: 8px;"> 
         <span style="font-size: 12px; color: var(--text-muted); display: block;">Seconds per question</span>
       </div>
-
       <div class="desktop-instructions">
-        <i class="fa-solid fa-keyboard"></i> <strong>Keyboard Shortcuts:</strong> Use <kbd>↑</kbd> / <kbd>↓</kbd> to navigate. Press <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, or <kbd>D</kbd> to select an answer.
+        <i class="fa-solid fa-keyboard"></i> <strong>Keyboard Shortcuts:</strong> Use <kbd>↑</kbd> / <kbd>↓</kbd> to navigate. Press <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, or <kbd>D</kbd> to select. Press <kbd>O</kbd> to open explanation.
       </div>
-
       <button class="btn btn-primary" id="startBtn" onclick="startRapidFire()">
         <i class="fa-solid fa-play"></i> Start Rapid Fire
       </button>
     </div>
-
   </main>
 
   <!-- RAPID FIRE REELS OVERLAY -->
   <div class="reel-overlay" id="reelOverlay">
     
+    <!-- Desktop Left Keyboard Guide -->
+    <div class="desktop-key-guide">
+      <div><kbd>↑</kbd> / <kbd>↓</kbd> Navigate</div>
+      <div><kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, <kbd>D</kbd> Select</div>
+      <div><kbd>O</kbd> Open Explanation</div>
+      <div><kbd>X</kbd> Close Explanation</div>
+    </div>
+
     <div class="reel-top-bar">
       <div class="brand">
         <div class="brand-icon">A</div>
@@ -539,10 +524,8 @@
       <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
-    <!-- Backdrop for closing panels -->
     <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()" ontouchstart="closeAllPanels()" onwheel="closeAllPanels()"></div>
 
-    <!-- Mute Button & Audio Panel -->
     <div class="reel-mute" onclick="toggleAudioPanel()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
     <div class="audio-panel" id="audioPanel">
       <div class="audio-panel-title">Audio Controls</div>
@@ -561,7 +544,6 @@
       <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
     
-    <!-- Exit Button & Confirmation Panel -->
     <div class="reel-exit" onclick="toggleExitPanel()"><i class="fa-solid fa-xmark"></i></div>
     <div class="exit-panel" id="exitPanel">
       <div class="audio-panel-title">Quit Rapid Fire?</div>
@@ -585,10 +567,12 @@
             <span class="brand-tagline">Practice. Improve. Succeed.</span>
           </div>
         </div>
-        <div class="reel-exit" onclick="closeExplanationModal()" style="position: relative; top: 0; right: 0; background: rgba(0,0,0,0.5);"><i class="fa-solid fa-xmark"></i></div>
+        <div class="reel-exit" onclick="closeExplanationModal()" style="position: relative; top: 0; right: 0; background: rgba(255,255,255,0.2);"><i class="fa-solid fa-xmark"></i></div>
       </div>
-      <div class="explanation-modal-body" id="explModalBody">
-        <!-- Populated dynamically -->
+      <div class="explanation-modal-body" id="explModalBody"></div>
+      <div class="explanation-modal-nav">
+        <button class="modal-nav-btn" onclick="scrollModal(-1)" title="Scroll Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button class="modal-nav-btn" onclick="scrollModal(1)" title="Scroll Down"><i class="fa-solid fa-chevron-down"></i></button>
       </div>
       <div class="explanation-modal-footer">
         <button class="modal-close-btn" onclick="closeExplanationModal()">Close and Move to Next Question</button>
@@ -779,7 +763,6 @@
 
     function selectSubject(element, subject) {
       const allChip = document.querySelector('#subjectChips .filter-chip[data-subject="all"]');
-      
       if (subject === 'all') {
         document.querySelectorAll('#subjectChips .filter-chip').forEach(c => c.classList.remove('active'));
         element.classList.add('active');
@@ -787,9 +770,7 @@
       } else {
         allChip.classList.remove('active');
         element.classList.toggle('active');
-        
         selectedSubjects = Array.from(document.querySelectorAll('#subjectChips .filter-chip.active')).map(c => c.dataset.subject);
-        
         if (selectedSubjects.length === 0) {
           allChip.classList.add('active');
           selectedSubjects = ['all'];
@@ -806,7 +787,6 @@
     function selectPace(element, pace) {
       document.querySelectorAll('#paceGrid .pace-card').forEach(c => c.classList.remove('active'));
       element.classList.add('active');
-      
       if (pace === 'custom') {
         document.getElementById('customPaceInput').style.display = 'block';
         selectedPace = parseInt(document.getElementById('customTimeInput').value) || 30;
@@ -865,9 +845,7 @@
       const panel = document.getElementById('audioPanel');
       const exitP = document.getElementById('exitPanel');
       const backdrop = document.getElementById('panelBackdrop');
-      
       exitP.classList.remove('open');
-      
       const isOpen = panel.classList.toggle('open');
       backdrop.classList.toggle('active', isOpen);
     }
@@ -876,9 +854,7 @@
       const panel = document.getElementById('exitPanel');
       const audioP = document.getElementById('audioPanel');
       const backdrop = document.getElementById('panelBackdrop');
-      
       audioP.classList.remove('open');
-      
       const isOpen = panel.classList.toggle('open');
       backdrop.classList.toggle('active', isOpen);
     }
@@ -893,21 +869,17 @@
       isMusicMuted = !isMusicMuted;
       const bgMusic = document.getElementById('bgMusic');
       bgMusic.volume = isMusicMuted ? 0 : 0.4;
-      
       const btn = document.getElementById('musicToggle');
       btn.textContent = isMusicMuted ? 'Off' : 'On';
       btn.classList.toggle('muted', isMusicMuted);
-      
       updateMuteIcon();
     }
 
     function toggleSfx() {
       isSfxMuted = !isSfxMuted;
-      
       const btn = document.getElementById('sfxToggle');
       btn.textContent = isSfxMuted ? 'Off' : 'On';
       btn.classList.toggle('muted', isSfxMuted);
-      
       updateMuteIcon();
     }
 
@@ -951,7 +923,7 @@
     let activeTimer = null;
     let activeObserver = null;
     let cardsRendered = 0;
-    let isScrolling = false; // Strict lock for snapping
+    let isScrolling = false; 
     let activeCardEl = null; 
 
     async function startRapidFire() {
@@ -972,7 +944,6 @@
       bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
       let pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
-      
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       reelPool = pool.filter(q => !seenIds.includes(q.id));
 
@@ -1002,23 +973,18 @@
       const pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
       const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
       localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
-      
       reelPool = pool;
       for (let i = reelPool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [reelPool[i], reelPool[j]] = [reelPool[j], reelPool[i]];
       }
-
       currentCardIndex = 0;
       currentStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
-      
       const container = document.getElementById('reelContainer');
       container.scrollTo(0, 0);
-      
       const cycleCard = document.getElementById('cycleCompleteCard');
       if (cycleCard) cycleCard.remove();
-      
       renderReelCards();
     }
 
@@ -1026,7 +992,6 @@
       const container = document.getElementById('reelContainer');
       container.innerHTML = '';
       cardsRendered = 0;
-      
       const initialBatch = reelPool.slice(0, 5);
       initialBatch.forEach(q => {
         container.appendChild(createReelCard(q));
@@ -1046,14 +1011,9 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      // --- Bulletproof Desktop Scroll Lock ---
-      // This completely prevents high-magnitude scrolls from skipping multiple questions.
-      // 800ms lock absorbs ALL mouse wheel momentum.
       container.onwheel = function(e) {
-        e.preventDefault(); // ALWAYS prevent native snap scroll. We control it manually.
-        
-        if (isScrolling) return; // If we are currently snapping, eat the event
-        
+        e.preventDefault(); 
+        if (isScrolling) return;
         isScrolling = true;
         scrollReel(e.deltaY > 0 ? 1 : -1);
         setTimeout(() => { isScrolling = false; }, 800);
@@ -1071,12 +1031,8 @@
       }
     }
 
-    // --- Unified Navigation for Buttons and Keys ---
     function handleNavigation(direction) {
       if (isScrolling) return;
-      
-      // Since explanations are now in a modal, we don't need to check inner scroll boundaries.
-      // Any button press or key press simply snaps to the next/previous question.
       isScrolling = true;
       scrollReel(direction);
       setTimeout(() => { isScrolling = false; }, 800);
@@ -1090,7 +1046,6 @@
     function loadMoreReels() {
       const container = document.getElementById('reelContainer');
       const nextBatch = reelPool.slice(cardsRendered, cardsRendered + 5);
-      
       if (nextBatch.length > 0) {
         nextBatch.forEach(q => {
           const newCard = createReelCard(q);
@@ -1098,7 +1053,6 @@
           activeObserver.observe(newCard);
           cardsRendered++;
         });
-        
         if (cardsRendered >= reelPool.length) {
           appendCycleCompleteCard(container);
         }
@@ -1107,7 +1061,6 @@
 
     function appendCycleCompleteCard(container) {
       if (document.getElementById('cycleCompleteCard')) return;
-      
       const resetCard = document.createElement('div');
       resetCard.className = 'reel-card';
       resetCard.style.justifyContent = 'center';
@@ -1138,22 +1091,13 @@
       let optionsHtml = '';
       q.options.forEach((opt, index) => {
         let optEn = "", optHi = "";
-        if (typeof opt === 'object') {
-          optEn = opt.en || "";
-          optHi = opt.hi || "";
-        } else {
-          optEn = opt || "";
-        }
-
+        if (typeof opt === 'object') { optEn = opt.en || ""; optHi = opt.hi || ""; } else { optEn = opt || ""; }
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = optEn;
         const cleanTextEn = tempDiv.textContent.trim();
-        
         if (!cleanTextEn && !optHi && !q.option_images[index]) return; 
-        
         const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
         const renderedOpt = renderMathInString(getText(optEn, optHi, selectedLanguage));
-        
         optionsHtml += `
           <div class="rf-option" onclick="handleReelAnswer('${q.id}', ${index}, ${q.correct})">
             <div class="rf-option-letter">${String.fromCharCode(65 + index)}</div>
@@ -1164,28 +1108,28 @@
       });
 
       let qEn = "", qHi = "", expEn = "", expHi = "";
-      if (typeof q.question === 'object') {
-        qEn = q.question.en || "";
-        qHi = q.question.hi || "";
-      } else {
-        qEn = q.question || "";
-      }
-      if (typeof q.explanation === 'object') {
-        expEn = q.explanation.en || "";
-        expHi = q.explanation.hi || "";
-      } else {
-        expEn = q.explanation || "";
-      }
+      if (typeof q.question === 'object') { qEn = q.question.en || ""; qHi = q.question.hi || ""; } else { qEn = q.question || ""; }
+      if (typeof q.explanation === 'object') { expEn = q.explanation.en || ""; expHi = q.explanation.hi || ""; } else { expEn = q.explanation || ""; }
 
       const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
       const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
 
-      // The Explanation Prompt that appears after answering
+      // Explanation Prompt that appears after answering
       const promptHtml = `
         <div class="rf-expl-prompt" id="prompt-${q.id}">
           <button class="rf-expl-btn" onclick="openExplanationModal('${q.id}')">View Explanation</button>
+        </div>
+      `;
+
+      // Persistent Bottom Hint
+      const bottomHintHtml = `
+        <div class="rf-bottom-hint">
           <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
+          <div class="rf-nav-buttons">
+            <button class="rf-nav-btn" onclick="handleNavigation(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="rf-nav-btn" onclick="handleNavigation(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
         </div>
       `;
 
@@ -1199,14 +1143,8 @@
           <div class="rf-options">${optionsHtml}</div>
           ${promptHtml}
         </div>
-        <div class="rf-bottom-hint">
-          <div class="rf-nav-buttons">
-            <button class="rf-nav-btn" onclick="handleNavigation(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
-            <button class="rf-nav-btn" onclick="handleNavigation(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
-          </div>
-        </div>
+        ${bottomHintHtml}
       `;
-
       return card;
     }
 
@@ -1261,16 +1199,19 @@
       handleNavigation(1); // Move to next question
     }
 
+    function scrollModal(direction) {
+      const body = document.getElementById('explModalBody');
+      body.scrollBy({ top: body.clientHeight * 0.8 * direction, behavior: 'smooth' });
+    }
+
     function startCardTimer(cardId) {
       if (activeTimer) clearInterval(activeTimer);
       if (selectedPace > 0) {
         let timeLeft = selectedPace;
         document.getElementById('reelTimerCount').innerText = timeLeft;
-        
         activeTimer = setInterval(() => {
           timeLeft--;
           document.getElementById('reelTimerCount').innerText = timeLeft;
-          
           if (timeLeft <= 0) {
             clearInterval(activeTimer);
             const q = reelPool.find(item => item.id === cardId);
@@ -1283,20 +1224,17 @@
     function handleReelAnswer(cardId, selectedIndex, correctIndex) {
       const card = document.getElementById('card-' + cardId);
       if (!card || card.querySelector('.rf-option.disabled')) return;
-
       if (activeTimer) clearInterval(activeTimer);
 
       const options = card.querySelectorAll('.rf-option');
       options.forEach(opt => opt.classList.add('disabled'));
 
       const isCorrect = selectedIndex === correctIndex;
-      
       if (isCorrect) {
         options[selectedIndex].classList.add('correct');
         currentStreak++;
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(true);
-        
         rfStats.totalQuestionsAnswered++;
         rfStats.correctAnswers++;
         if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
@@ -1307,12 +1245,10 @@
         currentStreak = 0;
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(false);
-        
         rfStats.totalQuestionsAnswered++;
         updateTopicStats(cardId, false);
       }
 
-      // Save the selected index so the modal can highlight it
       const q = reelPool.find(item => item.id === cardId);
       if(q) q.selectedIndex = selectedIndex;
 
@@ -1324,7 +1260,6 @@
         seenIds.push(cardId);
         localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
       }
-      
       saveRfStats(rfStats);
     }
 
@@ -1332,11 +1267,9 @@
       const question = allQuestions.find(q => q.id === cardId);
       if (!question) return;
       const subject = question.subject;
-      
       if (!rfStats.topicPerformance[subject]) {
         rfStats.topicPerformance[subject] = { correct: 0, wrong: 0 };
       }
-      
       if (isCorrect) {
         rfStats.topicPerformance[subject].correct++;
       } else {
@@ -1347,49 +1280,57 @@
     async function exitRapidFire() {
       closeAllPanels();
       if (activeTimer) clearInterval(activeTimer);
-      
       await releaseWakeLock();
-      
       if (document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
       }
-
       document.getElementById('reelOverlay').classList.remove('active');
       document.getElementById('bgMusic').pause();
-      
       rfStats.totalSessions++;
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
-      
       window.location.reload();
     }
 
+    // --- Unified Keyboard Listener ---
     document.addEventListener('keydown', function(e) {
       if (!document.getElementById('reelOverlay').classList.contains('active')) return;
       if (e.target.tagName === 'INPUT') return;
 
+      const isModalOpen = document.getElementById('explanationModal').classList.contains('open');
+
       switch(e.key) {
         case 'ArrowUp':
           e.preventDefault();
-          handleNavigation(-1);
+          if (isModalOpen) scrollModal(-1);
+          else handleNavigation(-1);
           break;
         case 'ArrowDown':
           e.preventDefault();
-          handleNavigation(1);
+          if (isModalOpen) scrollModal(1);
+          else handleNavigation(1);
+          break;
+        case 'o': case 'O':
+          if (!isModalOpen && activeCardEl && activeCardEl.querySelector('.rf-expl-prompt')) {
+            openExplanationModal(activeCardEl.id.replace('card-', ''));
+          }
+          break;
+        case 'x': case 'X':
+          if (isModalOpen) closeExplanationModal();
           break;
         case 'a': case 'A':
-          clickOption(0);
+          if (!isModalOpen) clickOption(0);
           break;
         case 'b': case 'B':
-          clickOption(1);
+          if (!isModalOpen) clickOption(1);
           break;
         case 'c': case 'C':
-          clickOption(2);
+          if (!isModalOpen) clickOption(2);
           break;
         case 'd': case 'D':
-          clickOption(3);
+          if (!isModalOpen) clickOption(3);
           break;
       }
     });
