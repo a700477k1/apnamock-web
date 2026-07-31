@@ -291,9 +291,14 @@
     .rf-option.wrong:hover { border-color: #dc2626; background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); transform: none; }
     .rf-option.disabled { pointer-events: none; opacity: 0.8; }
 
+    /* Explanation Box - Fixed padding & Top Border */
     .rf-explanation {
-      margin-top: 12px; padding: 12px; background: rgba(0, 0, 0, 0.3); border-left: 3px solid #1a56db;
-      border-radius: 4px; font-size: 14px; color: #cbd5e1; display: none; /* Increased font to 14px */
+      margin-top: 12px; padding: 14px 16px 14px 20px; /* Increased left padding to clear text from border */
+      background: rgba(0, 0, 0, 0.3); 
+      border-top: 3px solid #1a56db; /* Added top border */
+      border-left: 4px solid #1a56db; /* Slightly thicker left border */
+      border-radius: 4px; 
+      font-size: 14px; color: #cbd5e1; display: none; 
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
@@ -344,10 +349,10 @@
       .reel-card { padding: 70px 10px 5px 10px; } 
       .rf-question { font-size: 16px; margin-bottom: 12px; } 
       .rf-options { gap: 6px; }
-      .rf-option { padding: 8px 12px; font-size: 15px; } /* Increased mobile font to 15px */
+      .rf-option { padding: 8px 12px; font-size: 15px; } 
       .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
-      .rf-explanation { font-size: 13px; padding: 10px; margin-top: 8px; } /* Increased mobile font to 13px */
+      .rf-explanation { font-size: 13px; padding: 12px 14px 12px 16px; } 
     }
 
     @media (min-width: 769px) {
@@ -484,7 +489,7 @@
       <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
-    <!-- Backdrop for closing panels (Added ontouchstart and onwheel for mobile scroll/click dismissal) -->
+    <!-- Backdrop for closing panels -->
     <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()" ontouchstart="closeAllPanels()" onwheel="closeAllPanels()"></div>
 
     <!-- Mute Button & Audio Panel -->
@@ -969,8 +974,27 @@
 
       document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
+      // Desktop Strict Scroll Interception (with Inner Content Check)
       container.onwheel = function(e) {
-        e.preventDefault(); 
+        let el = e.target;
+        // Traverse up from the mouse target to find if we are inside a scrollable content area
+        while (el && el !== container) {
+          if (el.classList.contains('rf-card-content') || el.classList.contains('rf-explanation')) {
+            const isScrollable = el.scrollHeight > el.clientHeight;
+            if (isScrollable) {
+              const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+              const atTop = el.scrollTop <= 0;
+              // If scrolling down and not at bottom, let inner div scroll naturally
+              if (e.deltaY > 0 && !atBottom) return;
+              // If scrolling up and not at top, let inner div scroll naturally
+              if (e.deltaY < 0 && !atTop) return;
+            }
+          }
+          el = el.parentElement;
+        }
+        
+        // If we reach here, inner content is fully scrolled (or not scrollable). Snap the container.
+        e.preventDefault();
         if (isScrolling) return;
         isScrolling = true;
         
