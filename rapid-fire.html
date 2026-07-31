@@ -292,8 +292,8 @@
     .rf-option.disabled { pointer-events: none; opacity: 0.8; }
 
     .rf-explanation {
-      margin-top: 12px; padding: 10px; background: rgba(0, 0, 0, 0.3); border-left: 3px solid #1a56db;
-      border-radius: 4px; font-size: 12px; color: #cbd5e1; display: none;
+      margin-top: 12px; padding: 12px; background: rgba(0, 0, 0, 0.3); border-left: 3px solid #1a56db;
+      border-radius: 4px; font-size: 14px; color: #cbd5e1; display: none; /* Increased font to 14px */
     }
     .rf-explanation img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     
@@ -347,7 +347,7 @@
       .rf-option { padding: 8px 12px; font-size: 15px; } /* Increased mobile font to 15px */
       .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
-      .rf-explanation { font-size: 11px; padding: 8px; margin-top: 8px; }
+      .rf-explanation { font-size: 13px; padding: 10px; margin-top: 8px; } /* Increased mobile font to 13px */
     }
 
     @media (min-width: 769px) {
@@ -484,8 +484,8 @@
       <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
     </div>
 
-    <!-- Backdrop for closing panels -->
-    <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()"></div>
+    <!-- Backdrop for closing panels (Added ontouchstart and onwheel for mobile scroll/click dismissal) -->
+    <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()" ontouchstart="closeAllPanels()" onwheel="closeAllPanels()"></div>
 
     <!-- Mute Button & Audio Panel -->
     <div class="reel-mute" onclick="toggleAudioPanel()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
@@ -860,7 +860,6 @@
         wakeLock = null;
       }
     }
-    // Re-acquire wake lock if user switches tabs and comes back
     document.addEventListener('visibilitychange', async () => {
       if (wakeLock !== null && document.visibilityState === 'visible') {
         await requestWakeLock();
@@ -886,7 +885,6 @@
         elem.webkitRequestFullscreen();
       }
 
-      // Request Screen Wake Lock
       await requestWakeLock();
 
       document.getElementById('preQuizScreen').style.display = 'none';
@@ -1162,10 +1160,6 @@
         rfStats.correctAnswers++;
         if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
         updateTopicStats(cardId, true);
-        
-        setTimeout(() => {
-          scrollReel(1);
-        }, 1200);
       } else {
         if (selectedIndex >= 0) options[selectedIndex].classList.add('wrong');
         options[correctIndex].classList.add('correct');
@@ -1173,11 +1167,12 @@
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(false);
         
-        document.getElementById('expl-' + cardId).style.display = 'block';
-        
         rfStats.totalQuestionsAnswered++;
         updateTopicStats(cardId, false);
       }
+
+      // Always show the explanation (for both correct and wrong answers)
+      document.getElementById('expl-' + cardId).style.display = 'block';
 
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
       if (!seenIds.includes(cardId)) {
@@ -1208,7 +1203,6 @@
       closeAllPanels();
       if (activeTimer) clearInterval(activeTimer);
       
-      // Release Screen Wake Lock
       await releaseWakeLock();
       
       if (document.fullscreenElement && document.exitFullscreen) {
