@@ -17,18 +17,9 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a56db">
 
-  <!-- SEO OPTIMIZED META TAGS -->
-  <title>Latest Govt Jobs 2024 Notification | Free Job Alert — ApnaMock</title>
-  <meta name="description" content="Looking for the latest government jobs? Get free job alerts, exam dates, and eligibility criteria for SSC, Banking, Railway, and State exams. Apply online directly on ApnaMock." />
-  
-  <!-- Open Graph Tags for WhatsApp/Telegram Sharing -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Latest Govt Jobs & Free Job Alerts — ApnaMock" />
-  <meta property="og:description" content="Stay updated with the latest government job vacancies, exam dates, and eligibility criteria for SSC, Banking, Railways, and more. Apply online today!" />
-  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data/icon-512.png" />
-  <meta property="og:url" content="https://apnamock-web.apnamock.workers.dev/jobs.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-  
+  <title>Rapid Fire — ApnaMock</title>
+  <meta name="description" content="Practice rapid fire questions in a fun, addictive reels format." />
+
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,10 +29,8 @@
   <!-- KaTeX for Math Rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-  <!-- html2canvas for Image Generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
   <style>
     /* DESIGN TOKENS */
     :root {
@@ -68,6 +57,8 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    
+    /* Updated to match jobs.html layout width */
     .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
 
     /* HEADER & NAV */
@@ -95,239 +86,44 @@
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
-        /* SCROLLABLE CATEGORY CHIPS */
-    .category-chips-wrap {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .category-chips-wrap::-webkit-scrollbar { display: none; }
-    .cat-chip {
-      padding: 8px 16px;
-      border-radius: 99px;
-      border: 1.5px solid var(--border);
-      background: var(--bg-card);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all 0.15s;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .cat-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .cat-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .cat-chip i { font-size: 12px; }
+    /* DASHBOARD CARDS */
+    .dashboard-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .greeting-text { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .sub-greeting { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-box { background: var(--bg-muted); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .stat-icon { font-size: 20px; margin-bottom: 4px; }
+    .stat-value { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+    .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .insight-box { background: var(--primary-light); border: 1px solid rgba(26,86,219,0.1); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .insight-box i { color: var(--primary); font-size: 16px; margin-top: 2px; }
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .filter-chip { padding: 10px 16px; border-radius: 99px; border: 1.5px solid var(--border); background: var(--bg-card); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(26,86,219,0.25); }
+    .pace-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+    .pace-card { padding: 16px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-card); cursor: pointer; transition: all 0.15s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .pace-card:hover { border-color: var(--primary); }
+    .pace-card.active { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 2px 8px rgba(26,86,219,0.1); }
+    .pace-icon { font-size: 18px; margin-bottom: 4px; }
+    .pace-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .pace-desc { font-size: 11px; color: var(--text-muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 42px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; border: 1.5px solid transparent; width: 100%; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(26,86,219,0.25); }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* ACTIVE FILTERS ROW */
-    .active-filters {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .active-filters:empty { display: none; }
-    .filter-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--primary-light);
-      color: var(--primary);
-      border: 1px solid rgba(26,86,219,0.2);
-      border-radius: 99px;
-      padding: 4px 10px 4px 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .filter-chip-remove {
-      width: 16px; height: 16px; border-radius: 50%;
-      background: rgba(26,86,219,0.15); color: var(--primary);
-      font-size: 10px; display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s; cursor: pointer; border: none;
-    }
-    .filter-chip-remove:hover { background: rgba(26,86,219,0.30); }
-    .clear-all-btn {
-      font-size: 12px; color: var(--error); font-weight: 600;
-      padding: 4px 8px; border-radius: 99px; transition: background 0.15s;
-      cursor: pointer; border: none; background: none;
-    }
-    .clear-all-btn:hover { background: var(--error-light); }
+    /* Desktop Instructions Card */
+    .desktop-instructions { display: none; background: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-top: 24px; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); text-align: center; }
+    .desktop-instructions kbd { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; box-shadow: 0 2px 0 var(--border); margin: 0 2px; }
 
-    /* IMAGE SHARE MODAL & TEMPLATE */
-    .image-share-overlay { z-index: 300; }
-    #shareImageTemplate {
-      position: relative; top: 0; left: 0;
-      width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
-      font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
-    }
-    .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
+    /* REELS SCREEN (Hidden initially) */
+    #reelScreen { display: none; }
     
-    /* 1. Alert Bar */
-    .tpl-alert-bar { background: #ffffff; color: #1a56db; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 12px 20px; border-radius: 12px; font-size: 33px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .tpl-alert-bell { font-size: 1.2em; color: #facc15; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
-    
-    /* 2. Header (Split Layout) */
-    .tpl-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; gap: 20px; }
-    .tpl-header-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
-    .tpl-logo { width: 70px; height: 70px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; }
-    .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
-    .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
-    .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
-    .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
-    
-    /* 2. Promo Card (Now a Capsule) */
-    .tpl-promo-card { 
-      align-self: center;
-      background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px;
-      font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none;
-    }
-    
-    /* 3. Frosted Glass Info Card */
-    .tpl-job-info { 
-      background: rgba(255, 255, 255, 0.15); /* Frosted glass effect */
-      border-radius: 20px; padding: 35px; border: 1px solid rgba(255,255,255,0.3); 
-    }
-    .tpl-tags-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-    .tpl-category { 
-      display: inline-block; background: rgba(15, 23, 42, 0.4); color: #fff; padding: 8px 18px; 
-      border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
-    }
-    .tpl-urgency { 
-      display: inline-block; background: rgba(220, 38, 38, 0.6); color: #fff; padding: 8px 18px; 
-      border-radius: 99px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
-    }
-    .tpl-title { margin: 0 0 15px 0; font-size: 30px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; }
-    .tpl-company { font-size: 20px; color: rgba(255,255,255,0.9); margin-bottom: 30px; font-weight: 500; }
-    
-    /* 4. Details Grid */
-    .tpl-grid { 
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; 
-    }
-    .tpl-grid-item { 
-      background: rgba(15, 23, 42, 0.3); padding: 18px; border-radius: 12px; 
-    }
-    .tpl-grid-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
-    .tpl-grid-value { font-size: 20px; font-weight: 600; color: #ffffff; line-height: 1.2; }
-    
-    /* 5. Footer with Highlighted URL Box */
-    .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .tpl-footer-text { color: #fff; font-size: 18px; font-weight: 600; }
-    .tpl-footer-box { background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-
-    /* CONTROLS BAR */
-    .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .search-wrap { flex: 1; min-width: 220px; position: relative; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
-    .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 0 38px; font-size: 14px; color: var(--text-primary); background: var(--bg-card); outline: none; transition: border-color 0.15s; }
-    .search-input:focus { border-color: var(--primary); }
-    .ctrl-btn { height: 42px; padding: 0 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 7px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); transition: all 0.15s; white-space: nowrap; }
-    .ctrl-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .ctrl-btn.active { border-color: var(--primary); color: var(--primary); font-weight: 600; }
-    .ctrl-btn .badge { background: var(--primary); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 600; min-width: 20px; text-align: center; display: none; }
-    .ctrl-btn .badge.show { display: inline-block; }
-
-    /* Urgency Tags */
-    .urgency-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .urgency-chip.last-day { background: #fee2e2; color: #dc2626; animation: pulse 1.5s infinite; }
-    .urgency-chip.closing-soon { background: #fef3c7; color: #d97706; }
-    .urgency-chip.days-left { background: #e8f0fe; color: #1a56db; }
-    body.dark-mode .urgency-chip.last-day { background: rgba(220, 38, 38, 0.2); color: #fca5a5; }
-    body.dark-mode .urgency-chip.closing-soon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    body.dark-mode .urgency-chip.days-left { background: rgba(26, 86, 219, 0.2); color: #93c5fd; }
-    
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-
-    /* JOB CARDS */
-    .jobs-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; }
-    .job-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(15,23,42,.06); transition: .28s ease; display: flex; flex-direction: column; }
-    .job-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 18px 40px rgba(26,86,219,.15); }
-    .job-image { width: 100%; height: 220px; object-fit: cover; display: block; }
-    .job-content { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-    .job-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-    .category-chip { background: var(--primary-light); color: var(--primary); padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .status-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .status-chip.active { background: #dcfce7; color: #15803d; }
-    .status-chip.expired { background: #fee2e2; color: #dc2626; }
-    .job-title { font-size: 18px; font-weight: 700; line-height: 1.35; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .job-company { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; }
-    .job-company i { color: var(--primary); }
-    .job-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: var(--bg-muted); border-radius: 14px; padding: 14px; }
-    .job-meta { display: flex; gap: 10px; }
-    .job-meta i { color: var(--primary); margin-top: 3px; }
-    .job-meta small { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
-    .job-meta strong { font-size: 14px; color: var(--text-primary); font-weight: 600; }
-    .job-preview { color: var(--text-secondary); line-height: 1.7; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-    .job-actions { display: flex; gap: 10px; margin-top: auto; }
-    .job-actions .btn { flex: 1; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; height: 40px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; transition: all 0.2s; border: 1.5px solid transparent; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
-    .btn-outline:hover { background: var(--primary-light); }
-
-    /* POPUPS (Overlays) */
-    .overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-    .overlay.open { opacity: 1; pointer-events: all; }
-    .popup { background: var(--bg-card); border-radius: var(--radius-xl); width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); transform: scale(0.95) translateY(12px); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); overflow: hidden; display: flex; flex-direction: column;}
-    .overlay.open .popup { transform: scale(1) translateY(0); }
-    .popup-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;}
-    .popup-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); }
-    .popup-close { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); transition: all 0.15s; }
-    .popup-close:hover { background: var(--bg-muted); color: var(--text-primary); }
-    .popup-body { padding: 20px; overflow-y: auto; max-height: 65vh; }
-    .popup-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0;}
-    .filter-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-    .filter-chip-select { padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
-    .filter-chip-select:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .filter-chip-select.selected { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
-    .sort-options { display: flex; flex-direction: column; gap: 4px; }
-    .sort-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); cursor: pointer; transition: all 0.15s; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-    .sort-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-    .sort-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
-    .sort-option .sort-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-muted); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); }
-    .sort-option.selected .sort-icon { background: rgba(26,86,219,0.15); color: var(--primary); }
-
-    /* TOAST */
-    .toast-container {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
-    }
-    .toast {
-      display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff;
-      padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500;
-      box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 340px; text-align: center;
-    }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .toast.success { background: var(--success); }
-    .toast.error { background: var(--error); }
-    .toast.warning { background: var(--warning); }
-    .toast.info { background: var(--primary); color: #fff; } /* Makes info toasts blue */
-    
-    /* Fix default toast in dark mode so it isn't a white box */
-    body.dark-mode .toast:not(.success):not(.error):not(.warning):not(.info) {
-      background: #1e293b; 
-      color: #f8fafc; 
-      border: 1px solid var(--border);
-    }
-
-    /* SEO CONTENT BLOCK */
-    .seo-content { margin-top: 60px; padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); border-radius: 18px; }
-    .seo-content h2 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; line-height: 1.4; }
-    .seo-content h3 { font-family: var(--font-heading); font-size: 15px; font-weight: 600; color: var(--text-primary); margin-top: 18px; margin-bottom: 8px; line-height: 1.4; }
-    .seo-content p { font-size: 13.5px; line-height: 1.85; color: var(--text-secondary); text-align: justify; margin-bottom: 12px; }
-    .seo-content strong { color: var(--primary); font-weight: 600; }
-
     /* FOOTER */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
     body.dark-mode .footer-brand-name { color: #0f172a; }
     body.dark-mode .footer-brand-desc { color: rgba(15,23,42,.75); }
     body.dark-mode .footer-col-title { color: rgba(15,23,42,.75); }
@@ -345,33 +141,313 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    /* REELS OVERLAY ENGINE */
+    .reel-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000; 
+      background: linear-gradient(135deg, #1a56db, #f97316); 
+      height: 100vh; height: 100dvh; 
+      width: 100vw; overflow: hidden;
+      flex-direction: column; align-items: center;
+    }
+    .reel-overlay.active { display: flex; }
+    
+    /* Desktop Left Keyboard Guide */
+    .desktop-key-guide {
+      position: absolute; top: 50%; left: 24px; transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
+      padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+      color: #fff; font-size: 13px; z-index: 15; display: none; flex-direction: column; gap: 12px; pointer-events: none;
+    }
+    .desktop-key-guide kbd { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 2px 6px; font-family: monospace; margin-right: 4px; }
+    @media (min-width: 769px) { .desktop-key-guide { display: flex; } }
+
+    /* Top Branding Bar */
+    .reel-top-bar {
+      position: absolute; top: 0; left: 20%; right: 20%; z-index: 5; 
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 18px 0 15px 0; 
+      opacity: 0.9; pointer-events: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3); 
+    }
+    .reel-top-bar .brand { gap: 8px; }
+    .reel-top-bar .brand-icon { 
+      width: 32px; height: 32px; font-size: 16px; border-radius: 6px; 
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
+      display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-family: 'Poppins', sans-serif;
+    }
+    .reel-top-bar .brand-name { font-size: 16px; color: #ffffff; font-weight: 700; font-family: 'Poppins', sans-serif; } 
+    .reel-top-bar .brand-tagline { font-size: 9px; color: rgba(255,255,255,0.8); font-weight: 500; } 
+    .reel-top-bar .promo-text { font-size: 10px; font-weight: 600; color: #ffffff; text-align: right; max-width: 45%; line-height: 1.3; }
+
+    /* Functional Buttons & Capsule Timer */
+    .reel-header {
+      position: absolute; top: 28px; left: 50%; transform: translateX(-50%); 
+      z-index: 15; display: flex; align-items: center; gap: 12px; color: #fff;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 99px;
+      border: 2px solid rgba(255,255,255,0.3); transition: border-color 0.5s, box-shadow 0.5s;
+    }
+    .reel-header.timer-urgent {
+      border-color: #dc2626;
+      animation: urgentPulse 0.8s infinite;
+    }
+    @keyframes urgentPulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+      50% { box-shadow: 0 0 15px 3px rgba(220, 38, 38, 0.3); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+    }
+    .reel-streak { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .reel-timer-display { font-size: 16px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 4px; }
+    
+    @keyframes pulseStreak {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); color: #fbbf24; }
+      100% { transform: scale(1); }
+    }
+    .streak-pulse { animation: pulseStreak 0.5s ease; }
+
+    .reel-exit {
+      position: absolute; top: 28px; right: 20px; z-index: 15; color: #fff; 
+      background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
+      display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
+    }
+    .reel-mute {
+      position: absolute; top: 28px; left: 20px; z-index: 15; color: #fff; 
+      background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
+      display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+    }
+
+    /* Backdrop for closing panels */
+    .panel-backdrop { position: absolute; inset: 0; z-index: 12; display: none; }
+    .panel-backdrop.active { display: block; }
+
+    /* Slide-Out Panels (Audio & Exit) */
+    .audio-panel, .exit-panel {
+      position: absolute; top: 75px; z-index: 20;
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 12px;
+      display: none; flex-direction: column; gap: 8px; min-width: 180px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .audio-panel { left: 20px; }
+    .exit-panel { right: 20px; }
+    .audio-panel.open, .exit-panel.open { display: flex; animation: slideIn 0.2s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .audio-panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .audio-toggle-row { display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 14px; }
+    .audio-toggle-btn {
+      background: rgba(255,255,255,0.1); border: none; color: #fff; 
+      padding: 6px 14px; border-radius: 99px; font-size: 12px; cursor: pointer;
+      transition: background 0.2s; flex: 1; margin: 0 2px;
+    }
+    .audio-toggle-btn:hover { background: rgba(255,255,255,0.2); }
+    .audio-toggle-btn.muted { background: rgba(220, 38, 38, 0.4); }
+    .audio-toggle-btn.confirm { background: #dc2626; }
+    .audio-toggle-btn.confirm:hover { background: #b91c1c; }
+
+    .reel-container {
+      height: 100%; width: 100%; max-width: 500px; overflow-y: auto; 
+      scroll-snap-type: y mandatory; scrollbar-width: none;
+    }
+    .reel-container::-webkit-scrollbar { display: none; }
+
+    .reel-card {
+      height: 100vh; height: 100dvh; 
+      width: 100%; scroll-snap-align: start; scroll-snap-stop: always; 
+      display: flex; flex-direction: column; 
+      padding: 100px 16px 10px; box-sizing: border-box; 
+      color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: transparent; position: relative; overflow: hidden;
+    }
+    
+    @keyframes flashRed {
+      0% { background: transparent; }
+      30% { background: rgba(220, 38, 38, 0.5); } 
+      100% { background: transparent; }
+    }
+    .timeout-flash { animation: flashRed 0.8s ease; }
+
+    .rf-card-content {
+      flex: 1; overflow-y: auto; padding-bottom: 20px; scrollbar-width: none;
+      display: flex; flex-direction: column; position: relative;
+    }
+    .rf-card-content::-webkit-scrollbar { display: none; }
+
+    /* Time Out Badge */
+    .time-out-badge {
+      display: none; position: absolute; top: 100px; left: 50%; transform: translateX(-50%); 
+      background: #dc2626; color: #fff; font-size: 16px; font-weight: 800; text-transform: uppercase;
+      padding: 8px 24px; border-radius: 99px; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      letter-spacing: 1px; animation: popIn 0.3s ease;
+    }
+    @keyframes popIn { from { transform: translateX(-50%) scale(0.5); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+
+    /* Tags Row */
+    .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+    .rf-subject-tag, .rf-source-exam-tag { 
+      font-size: 10px; background: rgba(0,0,0,0.4); color: #fff; 
+      padding: 4px 10px; border-radius: 99px; font-weight: 700; 
+      text-transform: uppercase; letter-spacing: 0.5px; 
+    }
+    .rf-question { font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 16px; } 
+    .rf-question img { max-height: 120px; border-radius: 8px; margin: 10px 0; }
+    
+    /* Options */
+    .rf-options { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+    .rf-option {
+      padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); 
+      border-radius: 99px; color: #fff; font-size: 16px; text-align: left; cursor: pointer; 
+      display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
+    }
+    .rf-option:hover {
+      border-color: #1a56db; background: rgba(26, 86, 219, 0.2); 
+      box-shadow: 0 4px 15px rgba(26, 86, 219, 0.4); transform: translateY(-2px);
+    }
+    .rf-option:active { transform: scale(0.98); }
+    .rf-option-letter { 
+      width: 26px; height: 26px; border-radius: 50%; 
+      background: #1a56db; color: #ffffff; 
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; 
+    }
+    .rf-option img { height: 35px; border-radius: 4px; }
+    .rf-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.4); box-shadow: 0 0 15px rgba(22, 163, 74, 0.3); }
+    .rf-option.correct .rf-option-letter { background: #16a34a; color: #fff; }
+    .rf-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.4); box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
+    .rf-option.wrong .rf-option-letter { background: #dc2626; color: #fff; }
+    .rf-option.disabled { pointer-events: none; opacity: 0.8; }
+
+    /* Explanation Prompt (Standalone Button) */
+    .rf-expl-prompt { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 16px; text-align: center; }
+    .rf-expl-btn { background: #ffffff; color: #1a56db; border: none; padding: 8px 20px; border-radius: 99px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
+    .rf-expl-btn:hover { transform: scale(1.05); }
+
+    /* Persistent Bottom Hint Area */
+    .rf-bottom-hint {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 10px 0; flex-shrink: 0; z-index: 5;
+    }
+    .rf-nav-buttons { display: flex; gap: 8px; }
+    .rf-nav-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      font-size: 14px; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .rf-nav-btn:hover { background: rgba(255,255,255,0.2); }
+    .rf-swipe-hint { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Confetti Pieces */
+    .confetti-piece { position: absolute; width: 8px; height: 8px; z-index: 25; border-radius: 2px; pointer-events: none; }
+
+    /* Cycle Summary Card */
+    .cycle-summary-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; margin: 0 auto 30px; display: flex; justify-content: space-around; max-width: 350px; }
+    .cycle-stat-item { text-align: center; color: #fff; }
+    .cycle-stat-val { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; }
+    .cycle-stat-lbl { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+    /* Explanation Modal */
+    .explanation-modal {
+      position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .explanation-modal.open { display: flex; }
+    .explanation-modal-content {
+      background: linear-gradient(135deg, #1a56db, #f97316);
+      width: 100%; max-width: 600px; max-height: 95vh; 
+      border-radius: 24px; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .explanation-modal-header {
+      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .explanation-modal-header .brand { gap: 8px; }
+    .explanation-modal-header .brand-icon { width: 32px; height: 32px; font-size: 16px; border-radius: 6px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-family: 'Poppins', sans-serif; }
+    .explanation-modal-header .brand-name { font-size: 16px; color: #ffffff; font-weight: 700; font-family: 'Poppins', sans-serif; } 
+    .explanation-modal-header .brand-tagline { font-size: 9px; color: rgba(255,255,255,0.8); font-weight: 500; } 
+    
+    .explanation-modal-body {
+      padding: 24px; overflow-y: auto; color: #fff; scrollbar-width: none; flex: 1;
+    }
+    .explanation-modal-body::-webkit-scrollbar { display: none; }
+    
+    .explanation-modal-footer {
+      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .explanation-modal-nav { display: flex; gap: 8px; align-items: center; }
+    .modal-nav-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0;
+    }
+    .modal-nav-btn:hover { background: rgba(255,255,255,0.2); }
+    .modal-close-btn {
+      background: #dc2626; color: #fff; border: none;
+      padding: 12px 24px; border-radius: 99px; font-weight: 700; cursor: pointer; flex: 1; font-size: 15px;
+      white-space: nowrap; 
+    }
+    .modal-tags-row { display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
+    .modal-question { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; } 
+    .modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .modal-option {
+      padding: 10px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      border-radius: 10px; color: #fff; font-size: 14px; 
+      display: flex; align-items: center; gap: 12px;
+    }
+    .modal-option.correct { border-color: #16a34a; background: rgba(22, 163, 74, 0.3); }
+    .modal-option.wrong { border-color: #dc2626; background: rgba(220, 38, 38, 0.3); }
+    .modal-option-letter { width: 24px; height: 24px; border-radius: 50%; background: #1a56db; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .modal-option.correct .modal-option-letter { background: #16a34a; }
+    .modal-option.wrong .modal-option-letter { background: #dc2626; }
+    .modal-explanation {
+      margin-top: 8px; padding: 14px 16px 14px 20px; 
+      background: rgba(0, 0, 0, 0.3); 
+      border-top: 3px solid #ffffff; border-left: 4px solid #ffffff; 
+      border-radius: 4px; 
+      font-size: 14px; color: #ffffff; line-height: 1.6; 
+    }
+
+    /* RESPONSIVE - Matches jobs.html structure */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
-      
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
-      
-      .page-title { font-size: 22px; }
-      .seo-content { padding: 22px; }
-      .seo-content h2 { font-size: 17px; }
-      .seo-content h3 { font-size: 14px; }
-      .seo-content p { font-size: 13px; text-align: left; }
+      .pace-grid { grid-template-columns: repeat(2, 1fr); }
+      .desktop-instructions { display: none !important; }
 
-      .jobs-list { display: block; }
-      .job-card { width: 100%; margin-bottom: 18px; border-radius: 20px; overflow: hidden; }
-      .job-image { height: 220px; }
-      .job-content { padding: 14px; }
-      .job-title { font-size: 18px; }
-      .job-meta-grid { grid-template-columns: 1fr; padding: 14px; }
-      .job-actions { flex-direction: column; }
-      .job-actions .btn { flex: 1; width: 100%; height: 40px; min-height: 40px; padding: 0 16px; font-size: 13px; font-weight: 600; line-height: 1; gap: 6px; }
+      .page-title { font-size: 22px; }
+
+      .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
+      .reel-header { padding: 6px 12px; top: 20px; } 
+      .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
+      .audio-panel, .exit-panel { top: 60px; min-width: 160px; }
+      .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
+      .reel-top-bar .brand-name { font-size: 14px; }
+      .reel-top-bar .brand-tagline { font-size: 8px; }
+      .reel-top-bar .promo-text { font-size: 9px; max-width: 50%; line-height: 1.2; }
+
+      .reel-card { padding: 90px 10px 5px 10px; } 
+      .rf-question { font-size: 16px; margin-bottom: 12px; } 
+      .rf-options { gap: 6px; }
+      .rf-option { padding: 8px 12px; font-size: 15px; } 
+      .rf-option:hover { transform: none; box-shadow: none; } 
+      .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
       
-      .controls-bar { flex-wrap: nowrap; }
-      .search-wrap { min-width: 0; flex: 1; }
-      .ctrl-btn span:not(.badge) { display: none; }
-      .ctrl-btn { padding: 0 12px; flex-shrink: 0; }
+      .rf-nav-buttons { display: none; }
+
+      /* Wider Explanation Modal on Mobile */
+      .explanation-modal { padding: 4px; } 
+      .explanation-modal-content { width: calc(100% - 8px); max-width: none; max-height: 96vh; } 
+      .explanation-modal-body { padding: 20px 12px; }
+      .explanation-modal-nav { display: none; }
+      .explanation-modal-footer { justify-content: center; }
+      .modal-close-btn { width: 100%; flex: none; font-size: 13px; padding: 12px 16px; }
+    }
+
+    @media (min-width: 769px) {
+      .desktop-instructions { display: block; }
     }
   </style>
 </head>
@@ -392,8 +468,8 @@
         <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
         <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
         <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
-        <a href="/jobs.html" class="nav-link active"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
-        <a href="/rapid-fire.html" class="nav-link"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
+        <a href="/jobs.html" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
+        <a href="/rapid-fire.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
       </nav>
       <div class="header-actions">
         <button class="btn-icon" id="themeToggleBtn"><i class="fa-solid fa-moon"></i></button>
@@ -403,229 +479,166 @@
   </header>
 
   <main class="page-wrapper align-wrapper">
-    <div class="page-header">
-      <h1 class="page-title"><i class="fa-solid fa-briefcase"></i> Latest Job Notifications</h1>
-      <p class="page-subtitle">Stay updated with the latest government job vacancies, exam dates, and eligibility criteria.</p>
-    </div>
-
-    <!-- DYNAMIC SCROLLABLE CATEGORY CHIPS -->
-    <div class="category-chips-wrap" id="categoryChipsWrap">
-      <div class="cat-chip" style="opacity: 0.5;">Loading categories...</div>
-    </div>
-
-    <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
-    <div style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1;">
-    <div id="shareImageTemplate" style="opacity: 1;">
-      <div class="tpl-content-wrapper">
-        
-        <!-- Top Alert Bar -->
-        <div class="tpl-alert-bar">
-          <span class="tpl-alert-bell">🔔</span>
-          New Govt. Job Alert
-          <span class="tpl-alert-bell">🔔</span>
-        </div>
-
-        <!-- Header (Split Layout) -->
-        <div class="tpl-header">
-          <div class="tpl-header-left">
-            <div class="tpl-logo">A</div>
-            <div>
-              <div class="tpl-brand-name">ApnaMock</div>
-              <div class="tpl-tagline">Practice. Improve. Succeed.</div>
-            </div>
-          </div>
-          <div class="tpl-header-right">
-            <div class="tpl-header-promo">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
-          </div>
-        </div>
-
-        <!-- Promo Text Card -->
-        <div class="tpl-promo-card" id="tplPromoText"></div>
-
-        <!-- Job Info Card -->
-        <div class="tpl-job-info">
-          <div class="tpl-tags-row">
-            <div id="templateCategory" class="tpl-category"></div>
-            <div id="templateUrgency" class="tpl-urgency" style="display: none;"></div>
-          </div>
-          <h2 id="templateTitle" class="tpl-title"></h2>
-          <div id="templateCompany" class="tpl-company"></div>
-          
-          <div class="tpl-grid">
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Start Date</div><div id="templatePostDate" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Last Date</div><div id="templateLastDate" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Extended To</div><div id="templateExtDate" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Total Posts</div><div id="templateTotalPosts" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Application Fee</div><div id="templateAppFee" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Eligibility</div><div id="templateEligibility" class="tpl-grid-value"></div></div>
-            <div class="tpl-grid-item"><div class="tpl-grid-label">Age Limit</div><div id="templateAgeLimit" class="tpl-grid-value"></div></div>
-          </div>
-        </div>
-
-        <!-- Footer with Highlighted Box -->
-        <div class="tpl-footer">
-          <div class="tpl-footer-text">Visit ApnaMock for more details</div>
-          <div id="templateFooterUrl" class="tpl-footer-box"></div>
-        </div>
-
-      </div>
-    </div>
-    </div> <!-- End of hidden wrapper -->
-
-    <!-- IMAGE SHARE POPUP -->
-    <div class="overlay image-share-overlay" id="imageShareOverlay">
-      <div class="popup">
-        <div class="popup-header">
-          <div style="display:flex; flex-direction:column; gap:4px;">
-            <span class="popup-title">Share Job Info</span>
-            <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">The job details and link will be shared automatically along with this image.</span>
-          </div>
-          <button class="popup-close" onclick="closeOverlay('imageShareOverlay')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="popup-body" style="text-align: center;">
-          <img id="generatedImagePreview" src="" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 0;">
-        </div>
-        <div class="popup-footer">
-          <a id="downloadImageBtn" class="btn btn-outline" style="flex:1; text-decoration: none;" download="apnamock_job.jpg"><i class="fa-solid fa-download"></i> Download</a>
-          <button id="nativeImageShareBtn" class="btn btn-primary" style="flex:1;"><i class="fa-solid fa-share-nodes"></i> Share</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATE SELECTION POPUP -->
-    <div class="overlay" id="statePopupOverlay">
-      <div class="popup">
-        <div class="popup-header">
-          <span class="popup-title">Select State</span>
-          <button class="popup-close" onclick="closeOverlay('statePopupOverlay')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="popup-body">
-          <div class="filter-chips-wrap" id="stateListContainer"></div>
-        </div>
-        <div class="popup-footer">
-          <button class="btn btn-outline" style="flex:1" onclick="clearStateFilter()">Clear State Filter</button>
-          <button class="btn btn-primary" style="flex:1" onclick="closeOverlay('statePopupOverlay')">Done</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTROLS BAR -->
-    <div class="controls-bar">
-      <div class="search-wrap">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" class="search-input" id="searchInput" placeholder="Search by title, company, or exam..." />
-      </div>
-      <button class="ctrl-btn" id="filterBtn">
-        <i class="fa-solid fa-filter"></i>
-        <span>Filter</span>
-        <span class="badge" id="filterBadge">0</span>
-      </button>
-      <button class="ctrl-btn" id="sortBtn">
-        <i class="fa-solid fa-arrow-up-wide-short"></i>
-        <span>Sort By</span>
-      </button>
-    </div>
-
-    <!-- ACTIVE FILTERS ROW -->
-    <div class="active-filters" id="activeFilters"></div>
-
-    <div class="jobs-list" id="jobsList">
-      <div style="text-align:center;padding:40px;color:var(--text-muted)">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px"></i>
-        <div>Loading jobs...</div>
-      </div>
-    </div>
-
-    <!-- Load More Pagination Button -->
-    <div class="load-more-wrap" id="loadMoreWrap" style="display:none; flex-direction:column; align-items:center; gap:10px; margin-top:32px;">
-      <span class="load-more-text" id="loadMoreText" style="font-size:13px; color:var(--text-muted);"></span>
-      <button class="btn btn-outline" id="loadMoreBtn" style="height:40px;">
-        <i class="fa-solid fa-arrow-down"></i> Load More Jobs
-      </button>
-    </div>
-
-    <!-- SEO CONTENT BLOCK FOR GOOGLE -->
-    <section class="seo-content">
-      <h2>Free Job Alert - Latest Government Jobs Notifications</h2>
-      <p>Are you looking for the latest government jobs in India? ApnaMock provides a comprehensive and updated list of all upcoming government job notifications. Whether you are preparing for <strong>SSC (CGL, CHSL, MTS)</strong>, <strong>Banking (IBPS, SBI)</strong>, <strong>Railway (RRB NTPC, Group D)</strong>, or State level exams, our free job alert keeps you one step ahead. We update our job portal daily with new vacancies, eligibility criteria, important dates, and direct apply links so you never miss an opportunity.</p>
-      
-      <h3>Why Choose ApnaMock for Government Job Updates?</h3>
-      <p>Finding the right government job can be overwhelming. At ApnaMock, we categorize all job notifications neatly so you can filter by exam group, status (active/expired), and closing dates. Along with job alerts, we also provide high-quality <strong>mock tests and previous year papers</strong> to help you crack these exams. Check our detailed eligibility criteria, download official PDF notifications, and apply online directly through our platform.</p>
-
-      <h3>How to Apply for Latest Govt Jobs?</h3>
-      <p>To apply for any government job listed on ApnaMock, simply click on the "View Notification" button to read the official PDF. Ensure you meet the eligibility criteria, age limit, and educational qualification required. Once verified, click the "Apply Link" button to be redirected to the official application portal. Start your preparation today with our free mock tests and secure your government job!</p>
-    </section>
     
+    <div id="preQuizScreen">
+      <div class="page-header">
+        <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Rapid Fire Mode</h1>
+        <p class="page-subtitle">Practice rapid fire questions in a fun, addictive reels format.</p>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="greeting-text" id="greetingText">Welcome to Rapid Fire! 🚀</div>
+        <div class="sub-greeting" id="subGreeting">Let's see what you've got.</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--primary);"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="stat-value" id="statAccuracy">0%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--error);"><i class="fa-solid fa-fire"></i></div>
+            <div class="stat-value" id="statStreak">0</div>
+            <div class="stat-label">Best Streak</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon" style="color: var(--success);"><i class="fa-solid fa-check-double"></i></div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">Answered</div>
+          </div>
+        </div>
+        <div class="insight-box" id="insightBox" style="display:none;">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span id="insightText"></span>
+        </div>
+      </div>
+
+      <div class="section-title">Choose Subject</div>
+      <div class="chips-wrap" id="subjectChips">
+        <div class="filter-chip active" data-subject="all" onclick="selectSubject(this, 'all')"><i class="fa-solid fa-shuffle"></i> Smart Mix</div>
+      </div>
+      <div class="section-title">Choose Language</div>
+      <div class="chips-wrap" id="langChips">
+        <div class="filter-chip active" data-lang="en" onclick="selectLanguage(this, 'en')"><i class="fa-solid fa-language"></i> English</div>
+        <div class="filter-chip" data-lang="hi" onclick="selectLanguage(this, 'hi')"><i class="fa-solid fa-language"></i> Hindi</div>
+        <div class="filter-chip" data-lang="bilingual" onclick="selectLanguage(this, 'bilingual')"><i class="fa-solid fa-language"></i> Bilingual</div>
+      </div>
+      <div class="section-title">Choose Pace</div>
+      <div class="pace-grid" id="paceGrid">
+        <div class="pace-card active" data-pace="0" onclick="selectPace(this, 0)">
+          <div class="pace-icon" style="color: var(--purple);"><i class="fa-solid fa-spa"></i></div>
+          <div class="pace-title">Zen Mode</div>
+          <div class="pace-desc">No Timer</div>
+        </div>
+        <div class="pace-card" data-pace="45" onclick="selectPace(this, 45)">
+          <div class="pace-icon" style="color: var(--primary);"><i class="fa-solid fa-stopwatch"></i></div>
+          <div class="pace-title">Standard</div>
+          <div class="pace-desc">45 Secs</div>
+        </div>
+        <div class="pace-card" data-pace="20" onclick="selectPace(this, 20)">
+          <div class="pace-icon" style="color: var(--error);"><i class="fa-solid fa-bolt"></i></div>
+          <div class="pace-title">Blitz</div>
+          <div class="pace-desc">20 Secs</div>
+        </div>
+        <div class="pace-card" data-pace="custom" onclick="selectPace(this, 'custom')">
+          <div class="pace-icon" style="color: var(--accent);"><i class="fa-solid fa-sliders"></i></div>
+          <div class="pace-title">Custom</div>
+          <div class="pace-desc">Set Timer</div>
+        </div>
+      </div>
+      <div id="customPaceInput" style="display:none; margin-bottom: 24px; text-align: center;">
+        <input type="number" id="customTimeInput" min="5" max="120" value="30" style="width: 80px; padding: 8px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-primary); margin-bottom: 8px;"> 
+        <span style="font-size: 12px; color: var(--text-muted); display: block;">Seconds per question</span>
+      </div>
+      <div class="desktop-instructions">
+        <i class="fa-solid fa-keyboard"></i> <strong>Keyboard Shortcuts:</strong> Use <kbd>↑</kbd> / <kbd>↓</kbd> to navigate. Press <kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, or <kbd>D</kbd> to select option. Press <kbd>V</kbd> to open explanation.
+      </div>
+      <button class="btn btn-primary" id="startBtn" onclick="startRapidFire()">
+        <i class="fa-solid fa-play"></i> Start Rapid Fire
+      </button>
+    </div>
   </main>
 
-  <!-- FILTER POPUP -->
-  <div class="overlay" id="filterOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <span class="popup-title">Filter Jobs</span>
-        <button class="popup-close" onclick="closeOverlay('filterOverlay')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body">
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Status</div>
-        <div class="filter-chips-wrap" id="filterStatus" style="margin-bottom:20px;">
-          <button class="filter-chip-select" data-type="status" data-value="active">Active</button>
-          <button class="filter-chip-select" data-type="status" data-value="expired">Expired</button>
+  <!-- RAPID FIRE REELS OVERLAY -->
+  <div class="reel-overlay" id="reelOverlay">
+    
+    <div class="desktop-key-guide">
+      <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">Use Keyboard for this Quiz</div>
+      <div><kbd>↑</kbd> / <kbd>↓</kbd> Navigate</div>
+      <div><kbd>A</kbd>, <kbd>B</kbd>, <kbd>C</kbd>, <kbd>D</kbd> Select Option</div>
+      <div><kbd>V</kbd> Open Explanation</div>
+      <div><kbd>X</kbd> Close Explanation</div>
+    </div>
+
+    <div class="reel-top-bar">
+      <div class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
         </div>
-        
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Category</div>
-        <div class="filter-chips-wrap" id="filterCategories" style="margin-bottom:20px;"></div>
-        
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By State</div>
-        <div class="filter-chips-wrap" id="filterStates"></div>
-      </div> 
-      
-      <div class="popup-footer">
-        <button class="btn btn-outline" style="flex:1" onclick="clearAllFilters()">Clear All</button>
-        <button class="btn btn-primary" style="flex:1" onclick="applyFilters()">Apply Filters</button>
+      </div>
+      <div class="promo-text">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
+    </div>
+
+    <div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()" ontouchstart="closeAllPanels()" onwheel="closeAllPanels()"></div>
+
+    <div class="reel-mute" onclick="toggleAudioPanel()"><i class="fa-solid fa-volume-high" id="muteIcon"></i></div>
+    <div class="audio-panel" id="audioPanel">
+      <div class="audio-panel-title">Audio Controls</div>
+      <div class="audio-toggle-row">
+        <span>Music</span>
+        <button class="audio-toggle-btn" id="musicToggle" onclick="toggleMusic()">On</button>
+      </div>
+      <div class="audio-toggle-row">
+        <span>Effects</span>
+        <button class="audio-toggle-btn" id="sfxToggle" onclick="toggleSfx()">On</button>
+      </div>
+    </div>
+
+    <div class="reel-header" id="reelHeader">
+      <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
+      <div class="reel-timer-display" id="reelTimerDisplay" style="display:none;">⏱️ <span id="reelTimerCount">0</span>s</div>
+    </div>
+    
+    <div class="reel-exit" onclick="toggleExitPanel()"><i class="fa-solid fa-xmark"></i></div>
+    <div class="exit-panel" id="exitPanel">
+      <div class="audio-panel-title">Quit Rapid Fire?</div>
+      <div style="display:flex; gap:8px;">
+        <button class="audio-toggle-btn" onclick="closeAllPanels()">No</button>
+        <button class="audio-toggle-btn confirm" onclick="exitRapidFire()">Quit</button>
+      </div>
+    </div>
+    
+    <div class="reel-container" id="reelContainer"></div>
+  </div>
+
+  <!-- Explanation Modal -->
+  <div class="explanation-modal" id="explanationModal">
+    <div class="explanation-modal-content">
+      <div class="explanation-modal-header">
+        <div class="brand">
+          <div class="brand-icon">A</div>
+          <div class="brand-text">
+            <span class="brand-name">ApnaMock</span>
+            <span class="brand-tagline">Practice. Improve. Succeed.</span>
+          </div>
+        </div>
+        <div class="reel-exit" onclick="closeExplanationModal()" style="position: relative; top: 0; right: 0; background: rgba(255,255,255,0.2);"><i class="fa-solid fa-xmark"></i></div>
+      </div>
+      <div class="explanation-modal-body" id="explModalBody"></div>
+      <div class="explanation-modal-footer">
+        <button class="modal-close-btn" onclick="closeExplanationModal()">Close and Move to Next Question</button>
+        <div class="explanation-modal-nav">
+          <button class="modal-nav-btn" onclick="scrollModal(-1)" title="Scroll Up"><i class="fa-solid fa-chevron-up"></i></button>
+          <button class="modal-nav-btn" onclick="scrollModal(1)" title="Scroll Down"><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- SORT POPUP -->
-  <div class="overlay" id="sortOverlay">
-    <div class="popup">
-      <div class="popup-header">
-        <span class="popup-title">Sort Jobs</span>
-        <button class="popup-close" onclick="closeOverlay('sortOverlay')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="popup-body">
-        <div class="sort-options" id="sortOptions">
-          
-          <!-- NEW DEFAULT OPTION -->
-          <div class="sort-option selected" data-sort="expiry-asc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-hourglass-end"></i></div><span>Closing Soon First</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:block;font-size:12px"></i>
-          </div>
-
-          <div class="sort-option" data-sort="date-desc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar-days"></i></div><span>Latest Posted First</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-
-          <div class="sort-option" data-sort="date-asc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-calendar"></i></div><span>Oldest Posted First</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-
-          <div class="sort-option" data-sort="last-date-asc">
-            <div style="display:flex;align-items:center;gap:12px;"><div class="sort-icon"><i class="fa-solid fa-hourglass-ending"></i></div><span>Closing Soon (Last Date)</span></div>
-            <i class="fa-solid fa-check" style="color:var(--primary);display:none;font-size:12px"></i>
-          </div>
-
-        </div>
-      </div>
-      <div class="popup-footer">
-        <button class="btn btn-primary" style="width:100%" onclick="applySort()">Apply Sort</button>
-      </div>
-    </div>
-  </div>
+  <audio id="bgMusic" loop preload="auto">
+    <source src="https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/assets/audio/lofi-bg.mp3" type="audio/mpeg">
+  </audio>
 
   <footer class="site-footer">
     <div class="footer-inner align-wrapper">
@@ -670,108 +683,9 @@
 
   <script>
     const CONFIG = { 
-      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/', 
-      ITEMS_PER_PAGE: 20 // Loads 20 jobs at a time
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/'
     };
-const State = {
-  allJobs: [],
-  filteredJobs: [],
-  displayedCount: 0,
-  search: '',
-  filters: { status: [], category: [], state: [] }, // <--- ADD state array here
-  sort: 'expiry-asc'
-};
 
-    // Theme & Menu Logic
-    function storageGet(key){
-      try {
-        return JSON.parse(localStorage.getItem("apnamock_"+key));
-      } catch(e) {
-        return null;
-      }
-    }
-
-    function storageSet(key,value){
-      localStorage.setItem("apnamock_"+key, JSON.stringify(value));
-    }
-
-    const savedTheme = storageGet("theme");
-
-    if(savedTheme==="dark"){
-      document.body.classList.add("dark-mode");
-      document.querySelector("#themeToggleBtn i").className = "fa-solid fa-sun";
-    }
-
-    document.getElementById("themeToggleBtn").addEventListener("click",function(){
-      document.body.classList.toggle("dark-mode");
-      const isDark = document.body.classList.contains("dark-mode");
-      document.querySelector("#themeToggleBtn i").className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
-      storageSet("theme", isDark ? "dark" : "light");
-    });
-
-    document.getElementById("mobileMenuBtn").addEventListener("click",function(){
-      document.querySelector(".site-nav").classList.toggle("mobile-open");
-    });
-
-    function closeMobileMenu(){
-      document.querySelector(".site-nav").classList.remove("mobile-open");
-    }
-
-    document.addEventListener("click",function(e){
-      const nav = document.querySelector(".site-nav");
-      const btn = document.getElementById("mobileMenuBtn");
-      if(!nav.contains(e.target) && !btn.contains(e.target)){
-        closeMobileMenu();
-      }
-    });
-
-    window.addEventListener("scroll", closeMobileMenu);
-
-    document.querySelectorAll(".site-nav .nav-link").forEach(function(link){
-      link.addEventListener("click", closeMobileMenu);
-    });
-
-    // XSS Utility
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    // Toast Notification Helper
-    function showToast(message, type = 'info', duration = 3000) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `<i class="fa-solid ${
-        type === 'success' ? 'fa-circle-check' :
-        type === 'error' ? 'fa-circle-xmark' :
-        type === 'warning' ? 'fa-triangle-exclamation' :
-        'fa-circle-info'
-      }"></i> ${message}`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), duration);
-    }
-
-    // Date Formatter (DD-MM-YYYY)
-    function formatDateDDMMYYYY(dateStr) {
-      if (!dateStr) return "—";
-      const parts = dateStr.split('-'); // Splits "2026-07-31"
-      if (parts.length === 3) {
-        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Flips to "31-07-2026"
-      }
-      return dateStr; // Fallback
-    }
-
-    // Popup Helpers
-    function openOverlay(id) { document.getElementById(id).classList.add('open'); }
-    function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
-
-    // KaTeX Math Renderer Helper (Quill Compatible)
     function renderMathInString(htmlString) {
       if (!window.katex) return htmlString;
       function decodeEntities(str) {
@@ -793,658 +707,918 @@ const State = {
       return htmlString;
     }
 
-    // Helper to calculate days left and urgency tags
-    function getJobUrgency(job) {
-      // Use extended_last_date if it exists, otherwise use lastDate
-      const lastDateStr = job.extendedLastDate || job.lastDate;
-      if (!lastDateStr) return { isExpired: false, tag: "", class: "" };
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const lastDate = new Date(lastDateStr);
-      if (isNaN(lastDate.getTime())) return { isExpired: false, tag: "", class: "" };
-      lastDate.setHours(23, 59, 59, 999); // End of the last day
+    const savedTheme = localStorage.getItem('apnamock_theme');
+    if (savedTheme === '"dark"') {
+      document.body.classList.add("dark-mode");
+      document.querySelector("#themeToggleBtn i").className = "fa-solid fa-sun";
+    }
+    document.getElementById("themeToggleBtn").addEventListener("click", function() {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      document.querySelector("#themeToggleBtn i").className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      localStorage.setItem('apnamock_theme', JSON.stringify(isDark ? "dark" : "light"));
+    });
+
+    const nav = document.querySelector(".site-nav");
+    const menuBtn = document.getElementById("mobileMenuBtn");
+    if (menuBtn) {
+      menuBtn.addEventListener("click", function() { nav.classList.toggle("mobile-open"); });
+    }
+    function closeMobileMenu() { if (nav) nav.classList.remove("mobile-open"); }
+    document.addEventListener("click", function(e) {
+      if (!nav) return;
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); }
+    });
+    window.addEventListener("scroll", closeMobileMenu);
+    document.querySelectorAll(".site-nav .nav-link").forEach(function(link) {
+      link.addEventListener("click", closeMobileMenu);
+    });
+
+    let allQuestions = [];
+    let selectedSubjects = ["all"];
+    let selectedLanguage = "en";
+    let selectedPace = 0;
+
+    function getRfStats() {
+      try {
+        const raw = localStorage.getItem('apnamock_rf_stats');
+        return raw ? JSON.parse(raw) : {
+          lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {}
+        };
+      } catch(e) {
+        return { lastPlayed: null, totalSessions: 0, totalQuestionsAnswered: 0, correctAnswers: 0, bestStreak: 0, topicPerformance: {} };
+      }
+    }
+
+    function saveRfStats(stats) {
+      localStorage.setItem('apnamock_rf_stats', JSON.stringify(stats));
+    }
+
+    async function initDashboard() {
+      rfStats = getRfStats();
+      const accuracy = rfStats.totalQuestionsAnswered > 0 ? Math.round((rfStats.correctAnswers / rfStats.totalQuestionsAnswered) * 100) : 0;
       
-      const diffTime = lastDate - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays < 0) {
-        return { isExpired: true, tag: "Expired", class: "status-chip expired" };
-      } else if (diffDays === 0) {
-        return { isExpired: false, tag: "Last Day!", class: "urgency-chip last-day" };
-      } else if (diffDays <= 3) {
-        return { isExpired: false, tag: "Closing Soon", class: "urgency-chip closing-soon" };
+      document.getElementById('statAccuracy').innerText = accuracy + '%';
+      document.getElementById('statStreak').innerText = rfStats.bestStreak;
+      document.getElementById('statTotal').innerText = rfStats.totalQuestionsAnswered;
+
+      const hour = new Date().getHours();
+      let greeting = "Welcome to Rapid Fire! 🚀";
+      let subGreeting = "Let's see what you've got.";
+
+      if (rfStats.totalSessions > 0) {
+        if (hour < 12) greeting = "Good morning! ☀️";
+        else if (hour < 17) greeting = "Good afternoon! 😊";
+        else greeting = "Good evening! 🌙";
+        subGreeting = `Ready to break your record of ${rfStats.bestStreak} correct in a row?`;
+      }
+
+      document.getElementById('greetingText').innerText = greeting;
+      document.getElementById('subGreeting').innerText = subGreeting;
+
+      if (rfStats.totalQuestionsAnswered > 10) {
+        let bestSubject = null, worstSubject = null;
+        let bestAcc = -1, worstAcc = 101;
+
+        for (const subject in rfStats.topicPerformance) {
+          const data = rfStats.topicPerformance[subject];
+          const total = data.correct + data.wrong;
+          if (total < 3) continue;
+          const acc = (data.correct / total) * 100;
+          if (acc > bestAcc) { bestAcc = acc; bestSubject = subject; }
+          if (acc < worstAcc) { worstAcc = acc; worstSubject = subject; }
+        }
+
+        if (bestSubject && worstSubject && bestSubject !== worstSubject) {
+          document.getElementById('insightBox').style.display = 'flex';
+          document.getElementById('insightText').innerText = `You're crushing it in ${bestSubject} (${Math.round(bestAcc)}% accuracy), but ${worstSubject} is pulling you down (${Math.round(worstAcc)}%). Try focusing on ${worstSubject} today!`;
+        }
+      }
+
+      try {
+        const res = await fetch(CONFIG.CDN_BASE + 'data/rapid-fire-bank.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to load');
+        allQuestions = await res.json();
+
+        const subjects = [...new Set(allQuestions.map(q => q.subject))].sort();
+        const chipsWrap = document.getElementById('subjectChips');
+        
+        subjects.forEach(sub => {
+          const chip = document.createElement('div');
+          chip.className = 'filter-chip';
+          chip.dataset.subject = sub;
+          chip.innerHTML = `<i class="fa-solid fa-book"></i> ${sub}`;
+          chip.onclick = () => selectSubject(chip, sub);
+          chipsWrap.appendChild(chip);
+        });
+      } catch (err) {
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('startBtn').innerText = 'Failed to load questions';
+      }
+    }
+
+    function selectSubject(element, subject) {
+      const allChip = document.querySelector('#subjectChips .filter-chip[data-subject="all"]');
+      if (subject === 'all') {
+        document.querySelectorAll('#subjectChips .filter-chip').forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
+        selectedSubjects = ['all'];
       } else {
-        return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-chip days-left" };
+        allChip.classList.remove('active');
+        element.classList.toggle('active');
+        selectedSubjects = Array.from(document.querySelectorAll('#subjectChips .filter-chip.active')).map(c => c.dataset.subject);
+        if (selectedSubjects.length === 0) {
+          allChip.classList.add('active');
+          selectedSubjects = ['all'];
+        }
       }
     }
 
-        // Renders the horizontal chips
-    function renderCategoryChips() {
-      const wrap = document.getElementById('categoryChipsWrap');
-      if (!wrap) return;
-      
-      const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))].sort();
-      
-      // Active if NO category or state filters are applied
-      const isAllActive = State.filters.category.length === 0 && State.filters.state.length === 0;
-      let html = `<div class="cat-chip ${isAllActive ? 'active' : ''}" onclick="clearAllInstantFilters()">All Jobs</div>`;
-      
-      // Force the "State" button to be the first chip
-      const hasStates = State.allJobs.some(j => j.stateName);
-      if (hasStates) {
-        const isStateActive = State.filters.state.length === 1 && State.filters.category.length === 0;
-        html += `<div class="cat-chip ${isStateActive ? 'active' : ''}" onclick="openStatePopup()"><i class="fa-solid fa-map-location-dot"></i> State Jobs</div>`;
+    function selectLanguage(element, lang) {
+      document.querySelectorAll('#langChips .filter-chip').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      selectedLanguage = lang;
+    }
+
+    function selectPace(element, pace) {
+      document.querySelectorAll('#paceGrid .pace-card').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      if (pace === 'custom') {
+        document.getElementById('customPaceInput').style.display = 'block';
+        selectedPace = parseInt(document.getElementById('customTimeInput').value) || 30;
+      } else {
+        document.getElementById('customPaceInput').style.display = 'none';
+        selectedPace = pace;
       }
-      
-      categories.forEach(cat => {
-        // Active if this is the ONLY category selected
-        const isActive = State.filters.category.length === 1 && State.filters.category[0] === cat;
-        html += `<div class="cat-chip ${isActive ? 'active' : ''}" onclick="setActiveCategory('${cat.replace(/'/g, "\\'")}')">${cat}</div>`;
+    }
+
+    document.getElementById('customTimeInput').addEventListener('input', function(e) {
+      if (document.querySelector('.pace-card.active').dataset.pace === 'custom') {
+        selectedPace = parseInt(e.target.value) || 30;
+      }
+    });
+
+    // --- Audio Engine & Panel ---
+    let audioCtx = null;
+    let isMusicMuted = false;
+    let isSfxMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSFX(isCorrect) {
+      if (isSfxMuted) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (isCorrect) {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); 
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.25);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(311.13, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(233.08, audioCtx.currentTime + 0.15); 
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.35);
+      }
+    }
+
+    function playMilestoneSFX() {
+      if (isSfxMuted) return;
+      initAudio();
+      const now = audioCtx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.50]; 
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        gain.gain.setValueAtTime(0.3, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.18);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.18);
       });
+    }
+
+    function toggleAudioPanel() {
+      const panel = document.getElementById('audioPanel');
+      const exitP = document.getElementById('exitPanel');
+      const backdrop = document.getElementById('panelBackdrop');
+      exitP.classList.remove('open');
+      const isOpen = panel.classList.toggle('open');
+      backdrop.classList.toggle('active', isOpen);
+    }
+
+    function toggleExitPanel() {
+      const panel = document.getElementById('exitPanel');
+      const audioP = document.getElementById('audioPanel');
+      const backdrop = document.getElementById('panelBackdrop');
+      audioP.classList.remove('open');
+      const isOpen = panel.classList.toggle('open');
+      backdrop.classList.toggle('active', isOpen);
+    }
+
+    function closeAllPanels() {
+      document.getElementById('audioPanel').classList.remove('open');
+      document.getElementById('exitPanel').classList.remove('open');
+      document.getElementById('panelBackdrop').classList.remove('active');
+    }
+
+    function toggleMusic() {
+      isMusicMuted = !isMusicMuted;
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.volume = isMusicMuted ? 0 : 0.4;
+      const btn = document.getElementById('musicToggle');
+      btn.textContent = isMusicMuted ? 'Off' : 'On';
+      btn.classList.toggle('muted', isMusicMuted);
+      updateMuteIcon();
+    }
+
+    function toggleSfx() {
+      isSfxMuted = !isSfxMuted;
+      const btn = document.getElementById('sfxToggle');
+      btn.textContent = isSfxMuted ? 'Off' : 'On';
+      btn.classList.toggle('muted', isSfxMuted);
+      updateMuteIcon();
+    }
+
+    function updateMuteIcon() {
+      const icon = document.getElementById('muteIcon');
+      if (isMusicMuted && isSfxMuted) {
+        icon.className = "fa-solid fa-volume-xmark";
+      } else if (isMusicMuted || isSfxMuted) {
+        icon.className = "fa-solid fa-volume-low";
+      } else {
+        icon.className = "fa-solid fa-volume-high";
+      }
+    }
+
+    // --- Confetti Engine ---
+    function triggerConfetti() {
+      const overlay = document.getElementById('reelOverlay');
+      const colors = ['#f97316', '#1a56db', '#16a34a', '#fbbf24', '#ffffff'];
+      for (let i = 0; i < 25; i++) { 
+        const conf = document.createElement('div');
+        conf.className = 'confetti-piece';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.left = '50%';
+        conf.style.top = '8%'; 
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 60 + Math.random() * 100;
+        const tx = Math.cos(angle) * velocity + 'px';
+        const ty = Math.sin(angle) * velocity + 80 + 'px'; 
+        conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+        overlay.appendChild(conf);
+        
+        setTimeout(() => {
+          conf.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          conf.style.transform = `translate(${tx}, ${ty}) rotate(${Math.random() * 720}deg)`;
+          conf.style.opacity = '0';
+        }, 10);
+        
+        setTimeout(() => conf.remove(), 1300);
+      }
+    }
+
+    // --- Screen Wake Lock ---
+    let wakeLock = null;
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+      } catch (err) {
+        console.log('Wake Lock request failed:', err);
+      }
+    }
+    async function releaseWakeLock() {
+      if (wakeLock !== null) {
+        await wakeLock.release();
+        wakeLock = null;
+      }
+    }
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
+
+    // --- Reels State ---
+    let reelPool = [];
+    let currentCardIndex = 0;
+    let currentStreak = 0;
+    let rfStats = getRfStats();
+    let activeTimer = null;
+    let activeObserver = null;
+    let cardsRendered = 0;
+    let isScrolling = false; 
+    let activeCardEl = null;
+    
+    // Session Stats for Cycle Summary
+    let sessionCorrect = 0;
+    let sessionTotal = 0;
+    let sessionBestStreak = 0;
+
+    async function startRapidFire() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log("Fullscreen denied"));
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      }
+
+      await requestWakeLock();
+
+      document.getElementById('preQuizScreen').style.display = 'none';
+      document.getElementById('reelOverlay').classList.add('active');
       
-      wrap.innerHTML = html;
-    }
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.volume = isMusicMuted ? 0 : 0.4;
+      bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
-    // Clears all instant filters (when "All Jobs" is clicked)
-    function clearAllInstantFilters() {
-      State.filters.category = [];
-      State.filters.state = [];
-      renderCategoryChips();
-      buildFilterOptions(); // Sync the advanced popup UI
-      applyFiltersAndSort();
-    }
+      let pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      reelPool = pool.filter(q => !seenIds.includes(q.id));
 
-    // Filters by a specific category (SSC, Bank, etc.) and clears any state filter
-    function setActiveCategory(cat) {
-      State.filters.category = [cat];
-      State.filters.state = []; // Clear state if clicking a normal category
-      renderCategoryChips();
-      buildFilterOptions(); // Sync the advanced popup UI
-      applyFiltersAndSort();
-    }
+      if (reelPool.length === 0 && pool.length > 0) {
+        const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
+        reelPool = pool;
+      }
 
-    // Populates and opens the State popup modal
-    function openStatePopup() {
-      const container = document.getElementById('stateListContainer');
-      const states = [...new Set(State.allJobs.map(j => j.stateName).filter(Boolean))].sort();
+      for (let i = reelPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [reelPool[i], reelPool[j]] = [reelPool[j], reelPool[i]];
+      }
+
+      currentCardIndex = 0;
+      currentStreak = 0;
+      sessionCorrect = 0;
+      sessionTotal = 0;
+      sessionBestStreak = 0;
+      document.getElementById('reelStreakCount').innerText = currentStreak;
+      document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
-      let html = '';
-      states.forEach(state => {
-        const isSelected = State.filters.state.includes(state);
-        html += `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" onclick="setActiveState('${state.replace(/'/g, "\\'")}')">${state}</button>`;
+      setTimeout(() => {
+        renderReelCards();
+      }, 300);
+    }
+
+    function restartCycle() {
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      const pool = selectedSubjects.includes('all') ? [...allQuestions] : allQuestions.filter(q => selectedSubjects.includes(q.subject));
+      const newSeen = seenIds.filter(id => !pool.some(q => q.id === id));
+      localStorage.setItem('apnamock_rf_seen', JSON.stringify(newSeen));
+      reelPool = pool;
+      for (let i = reelPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [reelPool[i], reelPool[j]] = [reelPool[j], reelPool[i]];
+      }
+      currentCardIndex = 0;
+      currentStreak = 0;
+      sessionCorrect = 0;
+      sessionTotal = 0;
+      sessionBestStreak = 0;
+      document.getElementById('reelStreakCount').innerText = currentStreak;
+      const container = document.getElementById('reelContainer');
+      container.scrollTo(0, 0);
+      const cycleCard = document.getElementById('cycleCompleteCard');
+      if (cycleCard) cycleCard.remove();
+      renderReelCards();
+    }
+
+    function renderReelCards() {
+      const container = document.getElementById('reelContainer');
+      container.innerHTML = '';
+      cardsRendered = 0;
+      const initialBatch = reelPool.slice(0, 5);
+      initialBatch.forEach(q => {
+        container.appendChild(createReelCard(q));
+        cardsRendered++;
       });
-      
-      container.innerHTML = html;
-      openOverlay('statePopupOverlay');
-    }
 
-    // Filters by a specific state and clears any category filter
-    function setActiveState(state) {
-      State.filters.state = [state];
-      State.filters.category = []; // Clear category if clicking a state
-      closeOverlay('statePopupOverlay');
-      renderCategoryChips();
-      buildFilterOptions(); // Sync the advanced popup UI
-      applyFiltersAndSort();
-    }
+      if (activeObserver) activeObserver.disconnect();
+      activeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Check if the active card is the Cycle Complete Card
+            if (entry.target.id === 'cycleCompleteCard') {
+              activeCardEl = entry.target;
+              
+              // Inject real-time stats when the user actually views the cycle summary
+              const acc = sessionTotal > 0 ? Math.round((sessionCorrect / sessionTotal) * 100) : 0;
+              const accEl = document.getElementById('cycleAccVal');
+              const scoreEl = document.getElementById('cycleScoreVal');
+              const streakEl = document.getElementById('cycleStreakVal');
+              
+              if (accEl) accEl.innerText = acc + '%';
+              if (scoreEl) scoreEl.innerText = sessionCorrect + '/' + sessionTotal;
+              if (streakEl) streakEl.innerText = '🔥 ' + sessionBestStreak;
+              
+              if (activeTimer) clearInterval(activeTimer);
+              return; 
+            }
 
-    // Clears the state filter
-    function clearStateFilter() {
-      State.filters.state = [];
-      closeOverlay('statePopupOverlay');
-      renderCategoryChips();
-      buildFilterOptions(); // Sync the advanced popup UI
-      applyFiltersAndSort();
-    }
+            const newCardId = entry.target.id.replace('card-', '');
+            
+            // Check if we are moving forward to a new card
+            if (activeCardEl && activeCardEl.id !== entry.target.id) {
+              // Only penalize if moving forward (skipping)
+              if (entry.target.offsetTop > activeCardEl.offsetTop) {
+                const oldCardId = activeCardEl.id.replace('card-', '');
+                handleSkip(oldCardId);
+              }
+            }
+            
+            activeCardEl = entry.target; 
+            startCardTimer(newCardId);
+          }
+        });
+      }, { threshold: 0.6 });
 
-    // Renders the active filter tags below the search bar
-    function renderActiveFilters() {
-      const container = document.getElementById('activeFilters');
-      if (!container) return;
-      const chips = [];
+      document.querySelectorAll('.reel-card').forEach(card => activeObserver.observe(card));
 
-      const typeLabels = {
-        status: 'Status',
-        category: 'Category',
-        state: 'State'
+      container.onwheel = function(e) {
+        e.preventDefault(); 
+        if (isScrolling) return;
+        isScrolling = true;
+        scrollReel(e.deltaY > 0 ? 1 : -1);
+        setTimeout(() => { isScrolling = false; }, 800);
       };
 
-      ['status', 'category', 'state'].forEach(type => {
-        (State.filters[type] || []).forEach(value => {
-          chips.push(`
-            <div class="filter-chip">
-              <span>${typeLabels[type]}: ${escapeHtml(value)}</span>
-              <button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHtml(value)}')">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-          `);
-        });
-      });
-
-      if (chips.length) {
-        chips.push(`
-          <button class="clear-all-btn" onclick="clearAllFilters()">
-            Clear All
-          </button>
-        `);
-      }
-
-      container.innerHTML = chips.join('');
-
-      const totalFilters = chips.length - (chips.length > 0 ? 1 : 0);
-      const badge = document.getElementById('filterBadge');
-      const filterBtn = document.getElementById('filterBtn');
-      
-      if (totalFilters > 0) {
-        badge.textContent = totalFilters;
-        badge.classList.add('show');
-        filterBtn.classList.add('active');
+      if (cardsRendered >= reelPool.length) {
+        appendCycleCompleteCard(container);
       } else {
-        badge.classList.remove('show');
-        filterBtn.classList.remove('active');
-      }
-    }
-
-    // Helper to clear instant filters from the active tags
-    function removeInstantFilter(type) {
-      State[type] = null; // Sets activeCategory or activeState to null
-      renderCategoryChips(); // Update the horizontal chips active state
-      renderActiveFilters(); // Update the tags
-      applyFiltersAndSort(); // Re-filter the grid
-    }
-
-    // Helper to remove advanced popup filters from the active tags
-    // Helper to remove advanced popup filters from the active tags
-    function removeFilter(type, value) {
-      if (State.filters[type]) {
-        State.filters[type] = State.filters[type].filter(v => v !== value);
-        // Sync UI based on type
-        if (type === 'category' || type === 'state') {
-          buildFilterOptions();
-          renderCategoryChips();
-        } else if (type === 'status') {
-           const chipToDeselect = document.querySelector(`#filterStatus .filter-chip-select[data-value="${value}"]`);
-           if (chipToDeselect) chipToDeselect.classList.remove('selected');
-        }
-      }
-      renderActiveFilters();
-      applyFiltersAndSort();
-    }
-
-    // Builds the advanced filter popup UI and syncs selected states
-    function buildFilterOptions() {
-      // Categories
-      const catContainer = document.getElementById('filterCategories');
-      const categories = [...new Set(State.allJobs.map(j => j.category).filter(Boolean))];
-      catContainer.innerHTML = categories.map(cat => {
-        const isSelected = State.filters.category.includes(cat);
-        return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="category" data-value="${cat}">${cat}</button>`;
-      }).join('');
-      
-      // States
-      const stateContainer = document.getElementById('filterStates');
-      const states = [...new Set(State.allJobs.map(j => j.stateName).filter(Boolean))];
-      stateContainer.innerHTML = states.map(st => {
-        const isSelected = State.filters.state.includes(st);
-        return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="state" data-value="${st}">${st}</button>`;
-      }).join('');
-
-      // Attach listeners
-      document.querySelectorAll('#filterStatus .filter-chip-select, #filterCategories .filter-chip-select, #filterStates .filter-chip-select').forEach(btn => {
-        btn.addEventListener('click', () => btn.classList.toggle('selected'));
-      });
-    }
-
-    // Global variable to hold the current job's share text
-    let _currentImageShareText = "";
-
-    // Generates the job image and opens the preview popup
-    async function generateJobImage(title, encodedImageUrl, category, company, postDate, lastDate, extDate, totalPosts, appFee, eligibility, ageLimit, encodedJobSlug) {
-      showToast("Preparing job details...", "info");
-      
-      const jobSlug = decodeURIComponent(encodedJobSlug);
-      const imageUrl = decodeURIComponent(encodedImageUrl);
-      const shareUrl = `${window.location.origin}/job.html?job=${jobSlug}`;
-      _currentImageShareText = `Check out this job: ${title} on ApnaMock.\nApply here: ${shareUrl}`;
-
-      // 1. Populate the hidden template
-      document.getElementById('templateTitle').innerText = title;
-      document.getElementById('templateCategory').innerText = category;
-      document.getElementById('templateCompany').innerText = company;
-      
-      // Clean the domain and force "www." in front of it
-      const cleanDomain = window.location.hostname.replace(/^www\./i, '');
-      const displayDomain = "www." + cleanDomain;
-
-      document.getElementById('templateFooterUrl').innerText = displayDomain;
-      document.getElementById('tplPromoText').innerText = "Visit: " + displayDomain;
-      
-      // Calculate and inject "Days Left" tag
-      const urgencyEl = document.getElementById('templateUrgency');
-      const u = getJobUrgency({ lastDate: lastDate, extendedLastDate: extDate });
-      if (!u.isExpired && u.tag) {
-        urgencyEl.innerText = u.tag;
-        urgencyEl.style.display = 'inline-block';
-      } else {
-        urgencyEl.style.display = 'none';
-      }
-
-      // Helper function to hide empty grid items in the image
-      function setTplVal(id, value) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (value && value !== "—") {
-          el.innerText = value;
-          el.parentElement.style.display = 'block'; // Show the grid item
-        } else {
-          el.parentElement.style.display = 'none'; // Hide the grid item completely
-        }
-      }
-
-      setTplVal('templatePostDate', postDate);
-      setTplVal('templateLastDate', lastDate);
-      setTplVal('templateExtDate', extDate);
-      setTplVal('templateTotalPosts', totalPosts);
-      setTplVal('templateAppFee', appFee);
-      setTplVal('templateEligibility', eligibility);
-      setTplVal('templateAgeLimit', ageLimit);
-      
-      // Wait 300ms to ensure DOM updates layout
-      await new Promise(r => setTimeout(r, 300));
-
-      // 3. Generate Canvas
-      const template = document.getElementById('shareImageTemplate');
-      
-      try {
-        const canvas = await html2canvas(template, { 
-          useCORS: true, 
-          backgroundColor: null, 
-          scale: 2,
-          width: template.scrollWidth,
-          height: template.scrollHeight,
-          windowWidth: 800
-        });
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-
-        // 4. Show Preview
-        document.getElementById('generatedImagePreview').src = dataUrl;
-        document.getElementById('downloadImageBtn').href = dataUrl;
-        
-        // Attach Share Logic
-        const shareBtn = document.getElementById('nativeImageShareBtn');
-        shareBtn.onclick = async () => {
-          try {
-            const blob = await (await fetch(dataUrl)).blob();
-            const file = new File([blob], "apnamock_job.jpg", { type: blob.type });
-
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({
-                title: "ApnaMock Job Alert",
-                text: _currentImageShareText,
-                files: [file]
-              });
-            } else {
-              navigator.clipboard.writeText(_currentImageShareText);
-              showToast("Link copied. Image is downloading...", "success");
-              document.getElementById('downloadImageBtn').click();
-            }
-          } catch (err) {
-            console.error("Share failed", err);
+        container.onscroll = function() {
+          if (cardsRendered >= reelPool.length) return;
+          if (container.scrollTop > (container.scrollHeight - container.clientHeight - 600)) {
+            loadMoreReels();
           }
         };
-
-        openOverlay('imageShareOverlay');
-      } catch (err) {
-        console.error("html2canvas error", err);
-        showToast("Could not generate image.", "error");
       }
     }
 
-    // Fetch Jobs
-    async function loadJobs() {
-      try {
-        const res = await fetch(`${CONFIG.CDN_BASE}data/jobs-index.json?t=${Date.now()}`, { cache: "no-cache" });
-        if (!res.ok) throw new Error('Failed to load');
-        const json = await res.json();
-
-        State.allJobs = json.jobs || [];
-        renderCategoryChips();
-        
-      buildFilterOptions(); // Build the advanced popup dynamically
-
-        applyFiltersAndSort();
-      } catch (err) {
-        document.getElementById('jobsList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">Failed to load jobs.</div>`;
-      }
+    function handleNavigation(direction) {
+      if (isScrolling) return;
+      isScrolling = true;
+      scrollReel(direction);
+      setTimeout(() => { isScrolling = false; }, 800);
     }
 
-    function applyFiltersAndSort() {
-      let filtered = [...State.allJobs];
+    function scrollReel(direction) {
+      const container = document.getElementById('reelContainer');
+      container.scrollBy({ top: window.innerHeight * direction, behavior: 'smooth' });
+    }
 
-      // Search
-      if (State.search) {
-        const q = State.search.toLowerCase();
-        filtered = filtered.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
-      }
-
-      // Filters
-      if (State.filters.status.length > 0) {
-        filtered = filtered.filter(j => State.filters.status.includes(j.status));
-      }
-      if (State.filters.category.length > 0) {
-        filtered = filtered.filter(j => State.filters.category.includes(j.category));
-      }
-      if (State.filters.state.length > 0) {
-        filtered = filtered.filter(j => State.filters.state.includes(j.stateName));
-      }
-
-      // Sort
-      filtered.sort((a, b) => {
-        // 1. Always push Expired jobs to the very bottom
-        const uA = getJobUrgency(a).isExpired ? 1 : 0;
-        const uB = getJobUrgency(b).isExpired ? 1 : 0;
-        if (uA !== uB) return uA - uB; 
-
-        // 2. If sorting by Closing Soon (Expiry Ascending)
-        if (State.sort === 'expiry-asc') {
-          const lastA = new Date(a.extendedLastDate || a.lastDate || "9999-12-31").getTime();
-          const lastB = new Date(b.extendedLastDate || b.lastDate || "9999-12-31").getTime();
-          return lastA - lastB;
+    function loadMoreReels() {
+      const container = document.getElementById('reelContainer');
+      const nextBatch = reelPool.slice(cardsRendered, cardsRendered + 5);
+      if (nextBatch.length > 0) {
+        nextBatch.forEach(q => {
+          const newCard = createReelCard(q);
+          container.appendChild(newCard);
+          activeObserver.observe(newCard);
+          cardsRendered++;
+        });
+        if (cardsRendered >= reelPool.length) {
+          appendCycleCompleteCard(container);
         }
-
-        // 3. Manual Sorting options
-        const dateA = new Date(a.postDate || 0).getTime();
-        const dateB = new Date(b.postDate || 0).getTime();
-        const lastA = new Date(a.lastDate || 9999999999999).getTime();
-        const lastB = new Date(b.lastDate || 9999999999999).getTime();
-        
-        if (State.sort === 'date-desc') return dateB - dateA;
-        if (State.sort === 'date-asc') return dateA - dateB;
-        if (State.sort === 'last-date-asc') return lastA - lastB;
-        return 0;
-      });
-
-      State.filteredJobs = filtered;
-      renderActiveFilters();
-      renderJobs(filtered);
-    }
-
-    function renderJobs(jobs) {
-      State.filteredJobs = jobs;
-      State.displayedCount = 0; 
-      
-      const list = document.getElementById('jobsList');
-      list.innerHTML = ''; 
-      
-      loadMoreJobs(); 
-
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
-      loadMoreBtn.onclick = loadMoreJobs;
-      
-      injectSeoSchema(jobs); // Call the SEO function safely
-    }
-
-    function loadMoreJobs() {
-      const list = document.getElementById('jobsList');
-      const start = State.displayedCount;
-      const end = Math.min(start + CONFIG.ITEMS_PER_PAGE, State.filteredJobs.length);
-      const batch = State.filteredJobs.slice(start, end); 
-
-      if (batch.length === 0 && start === 0) {
-        list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">No jobs found matching your criteria.</div>`;
-        document.getElementById('loadMoreWrap').style.display = 'none';
-        return;
       }
+    }
 
-      list.insertAdjacentHTML('beforeend', batch.map(job => `
-        <div class="job-card">
-          ${job.imageUrl ? `<img class="job-image" src="${job.imageUrl}" loading="lazy" alt="${job.title}">` : ""}
-          <div class="job-content">
-            <div class="job-top">
-              <span class="category-chip">${job.category || "General"}</span>
-              ${(() => {
-                const u = getJobUrgency(job); // <-- UPDATED TO PASS WHOLE OBJECT
-                const displayStatus = u.isExpired ? 'expired' : job.status;
-                return `
-                  <span class="status-chip ${displayStatus}">${displayStatus}</span>
-                  ${u.tag && !u.isExpired ? `<span class="${u.class}">${u.tag}</span>` : ''}
-                `;
-              })()}
+    function appendCycleCompleteCard(container) {
+      if (document.getElementById('cycleCompleteCard')) return;
+      
+      const resetCard = document.createElement('div');
+      resetCard.className = 'reel-card';
+      resetCard.style.justifyContent = 'center';
+      resetCard.id = 'cycleCompleteCard';
+      // Used placeholder IDs that will be updated dynamically when the user scrolls to this card
+      resetCard.innerHTML = `
+        <div style="text-align:center; color:#fff;">
+          <div style="font-size:60px; margin-bottom:20px;">🏆</div>
+          <h2 style="font-size:28px; font-weight:800; margin-bottom:8px;">Cycle Complete!</h2>
+          <p style="font-size:14px; color:rgba(255,255,255,0.8); margin-bottom:24px;">You've conquered all questions in this subject.</p>
+          
+          <div class="cycle-summary-box">
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val" id="cycleAccVal">0%</div>
+              <div class="cycle-stat-lbl">Accuracy</div>
             </div>
-            <div class="job-title">${job.title}</div>
-            <div class="job-company">
-              <i class="fa-solid fa-building"></i>
-              ${job.company || "Government"}
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val" id="cycleScoreVal">0/0</div>
+              <div class="cycle-stat-lbl">Score</div>
             </div>
-                <div class="job-meta-grid">
-                 <div class="job-meta">
-                <i class="fa-solid fa-calendar-days"></i>
-                <div>
-                  <small>Start Date</small>
-                  <strong>${formatDateDDMMYYYY(job.postDate)}</strong>
-                </div>
-              </div>
-              <div class="job-meta">
-                <i class="fa-solid fa-hourglass-end"></i>
-                <div>
-                  <small>Last Date</small>
-                  <strong>${formatDateDDMMYYYY(job.lastDate)}</strong>
-                </div>
-              </div>
-              ${job.extendedLastDate ? `
-              <div class="job-meta">
-                <i class="fa-solid fa-calendar-plus"></i>
-                <div>
-                  <small>Extended To</small>
-                  <strong>${formatDateDDMMYYYY(job.extendedLastDate)}</strong>
-                </div>
-              </div>
-              ` : ""}
-              <div class="job-meta">
-                <i class="fa-solid fa-user-graduate"></i>
-                <div>
-                  <small>Eligibility</small>
-                  <strong>${job.eligibility || "Check Notice"}</strong>
-                </div>
-              </div>
-              ${job.ageLimit ? `
-              <div class="job-meta">
-                <i class="fa-solid fa-hourglass-half"></i>
-                <div>
-                  <small>Age Limit</small>
-                  <strong>${job.ageLimit}</strong>
-                </div>
-              </div>
-              ` : ""}
-              ${job.totalPosts ? `
-              <div class="job-meta">
-                <i class="fa-solid fa-users"></i>
-                <div>
-                  <small>Total Posts</small>
-                  <strong>${job.totalPosts}</strong>
-                </div>
-              </div>
-              ` : ""}
-              ${job.applicationFee ? `
-                <div class="job-meta">
-                <i class="fa-solid fa-indian-rupee-sign"></i>
-                <div>
-                  <small>Application Fee</small>
-                  <strong>${job.applicationFee}</strong>
-                </div>
-              </div>
-              ` : ""}
-            </div>
-            <div class="job-preview">
-              ${job.description ? job.description.replace(/<[^>]+>/g," ").substring(0,220) + "..." : ""}
-            </div>
-            <div class="job-actions">
-              <a href="job.html?job=${encodeURIComponent(job.file_name.replace(".json",""))}" class="btn btn-primary">
-                <i class="fa-solid fa-eye"></i>
-                View Details
-              </a>
-              ${job.pdfUrl ? `<a href="${job.pdfUrl}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : ""}
-              <button onclick="generateJobImage('${escapeHtml(job.title)}', '${encodeURIComponent(job.imageUrl || "")}', '${escapeHtml(job.category || "")}', '${escapeHtml(job.company || "")}', '${escapeHtml(job.postDate || "")}', '${escapeHtml(job.lastDate || "")}', '${escapeHtml(job.extendedLastDate || "")}', '${escapeHtml(job.totalPosts || "")}', '${escapeHtml(job.applicationFee || "")}', '${escapeHtml(job.eligibility || "")}', '${escapeHtml(job.ageLimit || "")}', '${encodeURIComponent(job.file_name.replace('.json',''))}')" class="btn btn-outline" style="color:var(--primary); border-color:var(--primary);">
-                <i class="fa-solid fa-share-nodes"></i> Share Job
-              </button>
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val" id="cycleStreakVal">🔥 0</div>
+              <div class="cycle-stat-lbl">Best Streak</div>
             </div>
           </div>
+          
+          <button class="btn btn-primary" onclick="restartCycle()" style="width:auto; padding:0 32px;">Start New Cycle</button>
         </div>
-      `).join(""));
-
-      State.displayedCount = end; 
-      
-      const wrap = document.getElementById('loadMoreWrap');
-      const text = document.getElementById('loadMoreText');
-      const remaining = State.filteredJobs.length - State.displayedCount;
-      
-      if (remaining > 0) {
-        wrap.style.display = 'flex';
-        text.textContent = `${remaining} more job${remaining !== 1 ? 's' : ''} remaining`;
-      } else {
-        wrap.style.display = 'none'; 
-      }
+      `;
+      container.appendChild(resetCard);
+      activeObserver.observe(resetCard); // CRITICAL: Ensure the summary card is observed so stats update on view
+      container.onscroll = null;
     }
 
-    // === SEO: Inject JobPosting Schema.org Data ===
-    function injectSeoSchema(jobs) {
-      const schema = {
-        "@context": "https://schema.org/",
-        "@type": "ItemList",
-        "itemListElement": jobs.map((job, index) => ({
-          "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "JobPosting",
-            "title": job.title,
-            "description": job.description ? job.description.replace(/<[^>]+>/g, ' ') : job.title,
-            "datePosted": job.postDate,
-            "validThrough": job.lastDate,
-            "hiringOrganization": {
-              "@type": "Organization",
-              "name": job.company || "Government of India"
-            },
-            "jobLocation": {
-              "@type": "Place",
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "IN"
-              }
-            }
-          }
-        }))
-      };
-      
-      let schemaScript = document.getElementById('jobSchema');
-      if (!schemaScript) {
-        schemaScript = document.createElement('script');
-        schemaScript.id = 'jobSchema';
-        schemaScript.type = 'application/ld+json';
-        document.head.appendChild(schemaScript);
-      }
-      schemaScript.textContent = JSON.stringify(schema);
+    function getText(en, hi, lang) {
+      if (lang === 'hi' && hi) return hi;
+      if (lang === 'bilingual' && hi) return `${en || ""}<br><span style="color: #cbd5e1; font-size: 0.9em; display: block; margin-top: 4px;">${hi}</span>`;
+      return en || hi || "";
     }
 
-    // Native Share API for sharing image + text to any app
-    async function shareJobCard(title, encodedImageUrl, encodedJobSlug) {
-      const jobTitle = decodeURIComponent(title);
-      const imageUrl = decodeURIComponent(encodedImageUrl);
-      const jobSlug = decodeURIComponent(encodedJobSlug);
-      
-      const shareUrl = `${window.location.origin}/job.html?job=${jobSlug}`;
-      const shareText = `Check out this job: ${jobTitle} on ApnaMock.\nApply here: ${shareUrl}`;
+    function createReelCard(q) {
+      const card = document.createElement('div');
+      card.className = 'reel-card';
+      card.id = 'card-' + q.id;
 
-      // 1. Check if the Native Share API is supported (Mobile/Modern Browsers)
-      if (navigator.share) {
-        try {
-          // If there's an image, try to fetch it and share it as a file
-          if (imageUrl && imageUrl !== "undefined") {
-            try {
-              const response = await fetch(imageUrl);
-              const blob = await response.blob();
-              const file = new File([blob], "job.jpg", { type: blob.type });
-
-              // Check if the device supports sharing actual files
-              if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                  title: "ApnaMock Job Alert",
-                  text: shareText,
-                  files: [file]
-                });
-                return; // Success, stop here
-              }
-            } catch (imgErr) {
-              console.error("Image fetch failed, falling back to text share.", imgErr);
-            }
-          }
-
-          // Fallback if no image, or if device can't share files: Share text + URL
-          await navigator.share({
-            title: "ApnaMock Job Alert",
-            text: shareText,
-            url: shareUrl
-          });
-
-        } catch (err) {
-          console.error("Native share failed:", err);
-        }
-      } else {
-        // 2. Fallback for Desktop/Older browsers: Open WhatsApp text link
-        window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
-      }
-    }
-
-    // Search Event
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      State.search = e.target.value;
-      applyFiltersAndSort();
-    });
-
-    // Filter Logic
-    document.getElementById('filterBtn').addEventListener('click', () => openOverlay('filterOverlay'));
-    
-    function applyFilters() {
-      State.filters.status = Array.from(document.querySelectorAll('#filterStatus .selected')).map(b => b.dataset.value);
-      State.filters.category = Array.from(document.querySelectorAll('#filterCategories .selected')).map(b => b.dataset.value);
-      State.filters.state = Array.from(document.querySelectorAll('#filterStates .selected')).map(b => b.dataset.value);
-      
-      closeOverlay('filterOverlay');
-      renderCategoryChips(); // Sync instant chips
-      renderActiveFilters(); // Sync tags
-      applyFiltersAndSort();
-    }
-
-    function clearAllFilters() {
-      document.querySelectorAll('.filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      State.filters = { status: [], category: [], state: [] };
-      renderCategoryChips(); 
-      renderActiveFilters();
-      applyFiltersAndSort();
-    }
-
-    // Sort Logic
-    document.getElementById('sortBtn').addEventListener('click', () => openOverlay('sortOverlay'));
-    
-    document.querySelectorAll('.sort-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.sort-option').forEach(o => {
-          o.classList.remove('selected');
-          o.querySelector('i.fa-check').style.display = 'none';
-        });
-        opt.classList.add('selected');
-        opt.querySelector('i.fa-check').style.display = 'block';
+      let optionsHtml = '';
+      q.options.forEach((opt, index) => {
+        let optEn = "", optHi = "";
+        if (typeof opt === 'object') { optEn = opt.en || ""; optHi = opt.hi || ""; } else { optEn = opt || ""; }
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = optEn;
+        const cleanTextEn = tempDiv.textContent.trim();
+        if (!cleanTextEn && !optHi && !q.option_images[index]) return; 
+        const imgHtml = q.option_images[index] ? `<img src="${q.option_images[index]}" alt="img">` : '';
+        const renderedOpt = renderMathInString(getText(optEn, optHi, selectedLanguage));
+        optionsHtml += `
+          <div class="rf-option" onclick="handleReelAnswer('${q.id}', ${index}, ${q.correct})">
+            <div class="rf-option-letter">${String.fromCharCode(65 + index)}</div>
+            <span style="flex:1; overflow-x: auto;">${renderedOpt}</span>
+            ${imgHtml}
+          </div>
+        `;
       });
-    });
 
-    function applySort() {
-      const selected = document.querySelector('.sort-option.selected');
-      State.sort = selected ? selected.dataset.sort : 'date-desc';
-      closeOverlay('sortOverlay');
-      applyFiltersAndSort();
+      let qEn = "", qHi = "", expEn = "", expHi = "";
+      if (typeof q.question === 'object') { qEn = q.question.en || ""; qHi = q.question.hi || ""; } else { qEn = q.question || ""; }
+      if (typeof q.explanation === 'object') { expEn = q.explanation.en || ""; expHi = q.explanation.hi || ""; } else { expEn = q.explanation || ""; }
+
+      const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
+      const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
+      const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
+
+      const promptHtml = `
+        <div class="rf-expl-prompt" id="prompt-${q.id}">
+          <button class="rf-expl-btn" onclick="openExplanationModal('${q.id}')">View Explanation</button>
+        </div>
+      `;
+
+      const bottomHintHtml = `
+        <div class="rf-bottom-hint">
+          <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
+          <div class="rf-nav-buttons">
+            <button class="rf-nav-btn" onclick="handleNavigation(-1)" title="Previous"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="rf-nav-btn" onclick="handleNavigation(1)" title="Next"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
+        </div>
+      `;
+
+      card.innerHTML = `
+        <div class="rf-card-content">
+          <div class="time-out-badge" id="timeout-${q.id}">Time's Up!</div>
+          <div class="rf-tags-row">
+            <div class="rf-subject-tag">${escapeHtml(q.subject)}</div>
+            ${sourceExamHtml}
+          </div>
+          <div class="rf-question">${renderedQuestion} ${qImgHtml}</div>
+          <div class="rf-options">${optionsHtml}</div>
+          ${promptHtml}
+        </div>
+        ${bottomHintHtml}
+      `;
+      return card;
     }
 
-    loadJobs();
+    // --- Explanation Modal Logic ---
+    function openExplanationModal(qid) {
+      const q = reelPool.find(item => item.id === qid);
+      if (!q) return;
+
+      let qEn = "", qHi = "", expEn = "", expHi = "";
+      if (typeof q.question === 'object') { qEn = q.question.en || ""; qHi = q.question.hi || ""; } else { qEn = q.question || ""; }
+      if (typeof q.explanation === 'object') { expEn = q.explanation.en || ""; expHi = q.explanation.hi || ""; } else { expEn = q.explanation || ""; }
+
+      const renderedQuestion = renderMathInString(getText(qEn, qHi, selectedLanguage));
+      const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
+      
+      let modalOptionsHtml = '';
+      q.options.forEach((opt, index) => {
+        let optEn = "", optHi = "";
+        if (typeof opt === 'object') { optEn = opt.en || ""; optHi = opt.hi || ""; } else { optEn = opt || ""; }
+        const renderedOpt = renderMathInString(getText(optEn, optHi, selectedLanguage));
+        const cls = index === q.correct ? 'correct' : (index === q.selectedIndex ? 'wrong' : '');
+        modalOptionsHtml += `
+          <div class="modal-option ${cls}">
+            <div class="modal-option-letter">${String.fromCharCode(65 + index)}</div>
+            <span style="flex:1;">${renderedOpt}</span>
+          </div>
+        `;
+      });
+
+      const explHtml = renderMathInString(getText(expEn, expHi, selectedLanguage));
+      const explImgHtml = q.explanation_image ? `<br><img src="${q.explanation_image}" alt="explimg" style="max-width:100%; border-radius:4px; margin-top:8px;">` : '';
+
+      document.getElementById('explModalBody').innerHTML = `
+        <div class="modal-tags-row">
+          <div class="rf-subject-tag">${escapeHtml(q.subject)}</div>
+          ${sourceExamHtml}
+        </div>
+        <div class="modal-question">${renderedQuestion}</div>
+        <div class="modal-options">${modalOptionsHtml}</div>
+        <div class="modal-explanation">
+          <strong>Explanation:</strong><br>
+          ${explHtml}
+          ${explImgHtml}
+        </div>
+      `;
+      
+      document.getElementById('explanationModal').classList.add('open');
+    }
+
+    function closeExplanationModal() {
+      document.getElementById('explanationModal').classList.remove('open');
+      handleNavigation(1); 
+    }
+
+    function scrollModal(direction) {
+      const body = document.getElementById('explModalBody');
+      body.scrollBy({ top: body.clientHeight * 0.8 * direction, behavior: 'smooth' });
+    }
+
+    // --- Capsule Border Timer Logic ---
+    function startCardTimer(cardId) {
+      if (activeTimer) clearInterval(activeTimer);
+      const header = document.getElementById('reelHeader');
+      const timerDisplay = document.getElementById('reelTimerDisplay');
+      const timerCount = document.getElementById('reelTimerCount');
+      const card = document.getElementById('card-' + cardId);
+      const isAnswered = card && card.querySelector('.rf-option.disabled');
+      
+      // Reset border classes for the new active card
+      header.classList.remove('timer-urgent');
+      header.style.borderColor = 'rgba(255,255,255,0.3)';
+      
+      if (selectedPace > 0 && !isAnswered) {
+        let timeLeft = selectedPace;
+        timerDisplay.style.display = 'flex';
+        timerCount.innerText = timeLeft;
+        
+        activeTimer = setInterval(() => {
+          timeLeft--;
+          timerCount.innerText = timeLeft;
+          
+          if (timeLeft <= selectedPace * 0.2) {
+            header.style.borderColor = '#dc2626';
+            header.classList.add('timer-urgent');
+          } else if (timeLeft <= selectedPace * 0.5) {
+            header.style.borderColor = '#f59e0b';
+          } else {
+            header.style.borderColor = 'rgba(255,255,255,0.3)';
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(activeTimer);
+            if (card && !card.querySelector('.rf-option.disabled')) {
+              triggerTimeOut(cardId);
+            }
+          }
+        }, 1000);
+      } else {
+        // Zen mode or already answered
+        timerDisplay.style.display = 'none';
+      }
+    }
+
+    function triggerTimeOut(cardId) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card) return;
+      
+      const badge = document.getElementById('timeout-' + cardId);
+      card.classList.add('timeout-flash');
+      
+      if (badge) {
+        badge.style.display = 'block';
+        badge.style.opacity = '1';
+        // Hide after 3 seconds
+        setTimeout(() => {
+          badge.style.transition = 'opacity 0.5s ease';
+          badge.style.opacity = '0';
+          setTimeout(() => { 
+            badge.style.display = 'none'; 
+            badge.style.transition = ''; 
+            badge.style.opacity = '1'; 
+          }, 500);
+        }, 3000);
+      }
+      
+      setTimeout(() => {
+        card.classList.remove('timeout-flash');
+      }, 800);
+      
+      const q = reelPool.find(item => item.id === cardId);
+      if (q) handleReelAnswer(cardId, -1, q.correct);
+    }
+
+    // --- Handle Skipping ---
+    function handleSkip(cardId) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card) return;
+      
+      // If already answered, timed out, or skipped, do nothing
+      if (card.querySelector('.rf-option.disabled')) return;
+
+      const options = card.querySelectorAll('.rf-option');
+      options.forEach(opt => opt.classList.add('disabled'));
+
+      const q = reelPool.find(item => item.id === cardId);
+      if (q) {
+        options[q.correct].classList.add('correct');
+        q.selectedIndex = -2; // -2 indicates skipped
+      }
+
+      // Update session stats
+      sessionTotal++;
+      currentStreak = 0;
+      document.getElementById('reelStreakCount').innerText = currentStreak;
+      
+      // Update global stats
+      rfStats.totalQuestionsAnswered++;
+      updateTopicStats(cardId, false);
+      
+      // Show explanation prompt if they scroll back
+      const prompt = document.getElementById('prompt-' + cardId);
+      if (prompt) prompt.style.display = 'flex';
+
+      // Mark as seen
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      if (!seenIds.includes(cardId)) {
+        seenIds.push(cardId);
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
+      }
+      saveRfStats(rfStats);
+    }
+
+    function handleReelAnswer(cardId, selectedIndex, correctIndex) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card || card.querySelector('.rf-option.disabled')) return;
+      if (activeTimer) clearInterval(activeTimer);
+
+      const options = card.querySelectorAll('.rf-option');
+      options.forEach(opt => opt.classList.add('disabled'));
+
+      const isCorrect = selectedIndex === correctIndex;
+      const streakEl = document.getElementById('reelStreakCount');
+      
+      sessionTotal++; 
+
+      if (isCorrect) {
+        options[selectedIndex].classList.add('correct');
+        currentStreak++;
+        sessionCorrect++; 
+        if (currentStreak > sessionBestStreak) sessionBestStreak = currentStreak;
+        
+        streakEl.innerText = currentStreak;
+        playSFX(true);
+        
+        // Milestone Celebration (Every 5 streaks)
+        if (currentStreak > 0 && currentStreak % 5 === 0) {
+          triggerConfetti();
+          playMilestoneSFX();
+          streakEl.classList.add('streak-pulse');
+          setTimeout(() => streakEl.classList.remove('streak-pulse'), 500);
+        }
+
+        rfStats.totalQuestionsAnswered++;
+        rfStats.correctAnswers++;
+        if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
+        updateTopicStats(cardId, true);
+      } else {
+        if (selectedIndex >= 0) options[selectedIndex].classList.add('wrong');
+        options[correctIndex].classList.add('correct'); // Reveal correct answer even on timeout
+        currentStreak = 0;
+        streakEl.innerText = currentStreak;
+        playSFX(false);
+        rfStats.totalQuestionsAnswered++;
+        updateTopicStats(cardId, false);
+      }
+
+      const q = reelPool.find(item => item.id === cardId);
+      if(q) q.selectedIndex = selectedIndex;
+
+      document.getElementById('prompt-' + cardId).style.display = 'flex';
+
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      if (!seenIds.includes(cardId)) {
+        seenIds.push(cardId);
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
+      }
+      saveRfStats(rfStats);
+    }
+
+    function updateTopicStats(cardId, isCorrect) {
+      const question = allQuestions.find(q => q.id === cardId);
+      if (!question) return;
+      const subject = question.subject;
+      if (!rfStats.topicPerformance[subject]) {
+        rfStats.topicPerformance[subject] = { correct: 0, wrong: 0 };
+      }
+      if (isCorrect) {
+        rfStats.topicPerformance[subject].correct++;
+      } else {
+        rfStats.topicPerformance[subject].wrong++;
+      }
+    }
+
+    async function exitRapidFire() {
+      closeAllPanels();
+      if (activeTimer) clearInterval(activeTimer);
+      await releaseWakeLock();
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      document.getElementById('reelOverlay').classList.remove('active');
+      document.getElementById('bgMusic').pause();
+      rfStats.totalSessions++;
+      rfStats.lastPlayed = new Date().toISOString();
+      saveRfStats(rfStats);
+      window.location.reload();
+    }
+
+    // --- Unified Keyboard Listener ---
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('reelOverlay').classList.contains('active')) return;
+      if (e.target.tagName === 'INPUT') return;
+
+      const isModalOpen = document.getElementById('explanationModal').classList.contains('open');
+
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (isModalOpen) scrollModal(-1);
+          else handleNavigation(-1);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (isModalOpen) scrollModal(1);
+          else handleNavigation(1);
+          break;
+        case 'v': case 'V':
+          if (!isModalOpen && activeCardEl && activeCardEl.querySelector('.rf-expl-prompt')) {
+            openExplanationModal(activeCardEl.id.replace('card-', ''));
+          }
+          break;
+        case 'x': case 'X':
+          if (isModalOpen) closeExplanationModal();
+          break;
+        case 'a': case 'A':
+          if (!isModalOpen) clickOption(0);
+          break;
+        case 'b': case 'B':
+          if (!isModalOpen) clickOption(1);
+          break;
+        case 'c': case 'C':
+          if (!isModalOpen) clickOption(2);
+          break;
+        case 'd': case 'D':
+          if (!isModalOpen) clickOption(3);
+          break;
+      }
+    });
+
+    function clickOption(index) {
+      if (!activeCardEl) return;
+      const options = activeCardEl.querySelectorAll('.rf-option');
+      if (options[index] && !options[index].classList.contains('disabled')) {
+        options[index].click();
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    initDashboard();
   </script>
 </body>
 </html>
