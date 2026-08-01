@@ -57,7 +57,9 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
-    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+    
+    /* Updated to match jobs.html layout width */
+    .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
 
     /* HEADER & NAV */
     .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
@@ -80,7 +82,7 @@
     /* PAGE LAYOUT */
     .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
     .page-header { margin-bottom: 24px; }
-    .page-title { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
@@ -406,14 +408,16 @@
       font-size: 14px; color: #ffffff; line-height: 1.6; 
     }
 
-    /* RESPONSIVE */
+    /* RESPONSIVE - Matches jobs.html structure */
     @media (max-width: 768px) {
-      .align-wrapper { padding-left: 12px; padding-right: 12px; }
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .pace-grid { grid-template-columns: repeat(2, 1fr); }
       .desktop-instructions { display: none !important; }
+
+      .page-title { font-size: 22px; }
 
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
       .reel-header { padding: 6px 12px; top: 20px; } 
@@ -462,10 +466,10 @@
         <a href="/index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
         <a href="/tests.html" class="nav-link"><i class="fa-solid fa-list-check"></i><span>Tests</span></a>
         <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
-        <a href="/rapid-fire.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
         <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
         <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
         <a href="/jobs.html" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
+        <a href="/rapid-fire.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
       </nav>
       <div class="header-actions">
         <button class="btn-icon" id="themeToggleBtn"><i class="fa-solid fa-moon"></i></button>
