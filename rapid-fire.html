@@ -968,7 +968,7 @@
     function triggerConfetti() {
       const overlay = document.getElementById('reelOverlay');
       const colors = ['#f97316', '#1a56db', '#16a34a', '#fbbf24', '#ffffff'];
-      for (let i = 0; i < 25; i++) { // slightly fewer pieces for 5-streaks to avoid fatigue
+      for (let i = 0; i < 25; i++) { 
         const conf = document.createElement('div');
         conf.className = 'confetti-piece';
         conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
@@ -1110,9 +1110,19 @@
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
+            const newCardId = entry.target.id.replace('card-', '');
+            
+            // Check if we are moving forward to a new card
+            if (activeCardEl && activeCardEl.id !== entry.target.id) {
+              // Only penalize if moving forward (skipping)
+              if (entry.target.offsetTop > activeCardEl.offsetTop) {
+                const oldCardId = activeCardEl.id.replace('card-', '');
+                handleSkip(oldCardId);
+              }
+            }
+            
             activeCardEl = entry.target; 
-            const cardId = entry.target.id.replace('card-', '');
-            startCardTimer(cardId);
+            startCardTimer(newCardId);
           }
         });
       }, { threshold: 0.6 });
@@ -1336,12 +1346,14 @@
       const header = document.getElementById('reelHeader');
       const timerDisplay = document.getElementById('reelTimerDisplay');
       const timerCount = document.getElementById('reelTimerCount');
+      const card = document.getElementById('card-' + cardId);
+      const isAnswered = card && card.querySelector('.rf-option.disabled');
       
-      // Reset classes and styles for the new card
+      // Reset border classes for the new active card
       header.classList.remove('timer-urgent');
       header.style.borderColor = 'rgba(255,255,255,0.3)';
       
-      if (selectedPace > 0) {
+      if (selectedPace > 0 && !isAnswered) {
         let timeLeft = selectedPace;
         timerDisplay.style.display = 'flex';
         timerCount.innerText = timeLeft;
@@ -1361,14 +1373,13 @@
 
           if (timeLeft <= 0) {
             clearInterval(activeTimer);
-            const card = document.getElementById('card-' + cardId);
             if (card && !card.querySelector('.rf-option.disabled')) {
               triggerTimeOut(cardId);
             }
           }
         }, 1000);
       } else {
-        // Zen mode
+        // Zen mode or already answered
         timerDisplay.style.display = 'none';
       }
     }
@@ -1390,7 +1401,7 @@
           setTimeout(() => { 
             badge.style.display = 'none'; 
             badge.style.transition = ''; 
-            badge.style.opacity = '1'; // reset for next time it might be used
+            badge.style.opacity = '1'; 
           }, 500);
         }, 3000);
       }
@@ -1401,6 +1412,45 @@
       
       const q = reelPool.find(item => item.id === cardId);
       if (q) handleReelAnswer(cardId, -1, q.correct);
+    }
+
+    // --- Handle Skipping ---
+    function handleSkip(cardId) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card) return;
+      
+      // If already answered, timed out, or skipped, do nothing
+      if (card.querySelector('.rf-option.disabled')) return;
+
+      const options = card.querySelectorAll('.rf-option');
+      options.forEach(opt => opt.classList.add('disabled'));
+
+      const q = reelPool.find(item => item.id === cardId);
+      if (q) {
+        options[q.correct].classList.add('correct');
+        q.selectedIndex = -2; // -2 indicates skipped
+      }
+
+      // Update session stats
+      sessionTotal++;
+      currentStreak = 0;
+      document.getElementById('reelStreakCount').innerText = currentStreak;
+      
+      // Update global stats
+      rfStats.totalQuestionsAnswered++;
+      updateTopicStats(cardId, false);
+      
+      // Show explanation prompt if they scroll back
+      const prompt = document.getElementById('prompt-' + cardId);
+      if (prompt) prompt.style.display = 'flex';
+
+      // Mark as seen
+      const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
+      if (!seenIds.includes(cardId)) {
+        seenIds.push(cardId);
+        localStorage.setItem('apnamock_rf_seen', JSON.stringify(seenIds));
+      }
+      saveRfStats(rfStats);
     }
 
     function handleReelAnswer(cardId, selectedIndex, correctIndex) {
