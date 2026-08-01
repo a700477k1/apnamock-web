@@ -259,7 +259,7 @@
     
     @keyframes flashRed {
       0% { background: transparent; }
-      30% { background: rgba(220, 38, 38, 0.5); } /* Deeper red flash */
+      30% { background: rgba(220, 38, 38, 0.5); } 
       100% { background: transparent; }
     }
     .timeout-flash { animation: flashRed 0.8s ease; }
@@ -272,7 +272,7 @@
 
     /* Time Out Badge */
     .time-out-badge {
-      display: none; position: absolute; top: 100px; left: 50%; transform: translateX(-50%); /* Moved down */
+      display: none; position: absolute; top: 100px; left: 50%; transform: translateX(-50%); 
       background: #dc2626; color: #fff; font-size: 16px; font-weight: 800; text-transform: uppercase;
       padding: 8px 24px; border-radius: 99px; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       letter-spacing: 1px; animation: popIn 0.3s ease;
@@ -433,8 +433,9 @@
       
       .rf-nav-buttons { display: none; }
 
-      .explanation-modal { padding: 8px; }
-      .explanation-modal-content { width: calc(100% - 16px); max-width: none; max-height: 95vh; } 
+      /* Wider Explanation Modal on Mobile */
+      .explanation-modal { padding: 4px; } 
+      .explanation-modal-content { width: calc(100% - 8px); max-width: none; max-height: 96vh; } 
       .explanation-modal-body { padding: 20px 12px; }
       .explanation-modal-nav { display: none; }
       .explanation-modal-footer { justify-content: center; }
