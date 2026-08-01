@@ -1110,6 +1110,24 @@
       activeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
+            // Check if the active card is the Cycle Complete Card
+            if (entry.target.id === 'cycleCompleteCard') {
+              activeCardEl = entry.target;
+              
+              // Inject real-time stats when the user actually views the cycle summary
+              const acc = sessionTotal > 0 ? Math.round((sessionCorrect / sessionTotal) * 100) : 0;
+              const accEl = document.getElementById('cycleAccVal');
+              const scoreEl = document.getElementById('cycleScoreVal');
+              const streakEl = document.getElementById('cycleStreakVal');
+              
+              if (accEl) accEl.innerText = acc + '%';
+              if (scoreEl) scoreEl.innerText = sessionCorrect + '/' + sessionTotal;
+              if (streakEl) streakEl.innerText = '🔥 ' + sessionBestStreak;
+              
+              if (activeTimer) clearInterval(activeTimer);
+              return; 
+            }
+
             const newCardId = entry.target.id.replace('card-', '');
             
             // Check if we are moving forward to a new card
@@ -1180,12 +1198,11 @@
     function appendCycleCompleteCard(container) {
       if (document.getElementById('cycleCompleteCard')) return;
       
-      const acc = sessionTotal > 0 ? Math.round((sessionCorrect / sessionTotal) * 100) : 0;
-      
       const resetCard = document.createElement('div');
       resetCard.className = 'reel-card';
       resetCard.style.justifyContent = 'center';
       resetCard.id = 'cycleCompleteCard';
+      // Used placeholder IDs that will be updated dynamically when the user scrolls to this card
       resetCard.innerHTML = `
         <div style="text-align:center; color:#fff;">
           <div style="font-size:60px; margin-bottom:20px;">🏆</div>
@@ -1194,15 +1211,15 @@
           
           <div class="cycle-summary-box">
             <div class="cycle-stat-item">
-              <div class="cycle-stat-val">${acc}%</div>
+              <div class="cycle-stat-val" id="cycleAccVal">0%</div>
               <div class="cycle-stat-lbl">Accuracy</div>
             </div>
             <div class="cycle-stat-item">
-              <div class="cycle-stat-val">${sessionCorrect}/${sessionTotal}</div>
+              <div class="cycle-stat-val" id="cycleScoreVal">0/0</div>
               <div class="cycle-stat-lbl">Score</div>
             </div>
             <div class="cycle-stat-item">
-              <div class="cycle-stat-val">🔥 ${sessionBestStreak}</div>
+              <div class="cycle-stat-val" id="cycleStreakVal">🔥 0</div>
               <div class="cycle-stat-lbl">Best Streak</div>
             </div>
           </div>
@@ -1211,6 +1228,7 @@
         </div>
       `;
       container.appendChild(resetCard);
+      activeObserver.observe(resetCard); // CRITICAL: Ensure the summary card is observed so stats update on view
       container.onscroll = null;
     }
 
