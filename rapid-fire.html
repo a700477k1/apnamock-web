@@ -177,18 +177,24 @@
     .reel-top-bar .brand-tagline { font-size: 9px; color: rgba(255,255,255,0.8); font-weight: 500; } 
     .reel-top-bar .promo-text { font-size: 10px; font-weight: 600; color: #ffffff; text-align: right; max-width: 45%; line-height: 1.3; }
 
-    /* Functional Buttons & Circular Timer */
+    /* Functional Buttons & Capsule Timer */
     .reel-header {
-      position: absolute; top: 24px; left: 50%; transform: translateX(-50%); 
-      z-index: 15; display: flex; align-items: center; justify-content: center; color: #fff;
+      position: absolute; top: 28px; left: 50%; transform: translateX(-50%); 
+      z-index: 15; display: flex; align-items: center; gap: 12px; color: #fff;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 99px;
+      border: 2px solid rgba(255,255,255,0.3); transition: border-color 0.5s, box-shadow 0.5s;
     }
-    .reel-timer-ring { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
-    .reel-timer-ring svg { transform: rotate(-90deg); position: absolute; top: 0; left: 0; }
-    .ring-bg { fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 4; }
-    .ring-progress { fill: none; stroke: #ffffff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 163.36; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.5s linear; }
-    .reel-streak-content { font-size: 16px; font-weight: 700; display: flex; flex-direction: column; align-items: center; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-    .reel-streak-content i { font-size: 12px; margin-bottom: 2px; }
-    .reel-streak-content span { font-size: 16px; }
+    .reel-header.timer-urgent {
+      border-color: #dc2626;
+      animation: urgentPulse 0.8s infinite;
+    }
+    @keyframes urgentPulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+      50% { box-shadow: 0 0 15px 3px rgba(220, 38, 38, 0.3); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+    }
+    .reel-streak { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .reel-timer-display { font-size: 16px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 4px; }
     
     @keyframes pulseStreak {
       0% { transform: scale(1); }
@@ -253,7 +259,7 @@
     
     @keyframes flashRed {
       0% { background: transparent; }
-      30% { background: rgba(220, 38, 38, 0.3); }
+      30% { background: rgba(220, 38, 38, 0.5); } /* Deeper red flash */
       100% { background: transparent; }
     }
     .timeout-flash { animation: flashRed 0.8s ease; }
@@ -266,7 +272,7 @@
 
     /* Time Out Badge */
     .time-out-badge {
-      display: none; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+      display: none; position: absolute; top: 100px; left: 50%; transform: translateX(-50%); /* Moved down */
       background: #dc2626; color: #fff; font-size: 16px; font-weight: 800; text-transform: uppercase;
       padding: 8px 24px; border-radius: 99px; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       letter-spacing: 1px; animation: popIn 0.3s ease;
@@ -410,8 +416,7 @@
       .desktop-instructions { display: none !important; }
 
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
-      .reel-header { padding: 6px 12px; top: 18px; } 
-      .reel-timer-ring { width: 56px; height: 56px; }
+      .reel-header { padding: 6px 12px; top: 20px; } 
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
       .audio-panel, .exit-panel { top: 60px; min-width: 160px; }
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
@@ -585,17 +590,9 @@
       </div>
     </div>
 
-    <div class="reel-header">
-      <div class="reel-timer-ring">
-        <svg width="64" height="64">
-          <circle class="ring-bg" cx="32" cy="32" r="26"></circle>
-          <circle class="ring-progress" cx="32" cy="32" r="26" id="ringProgress"></circle>
-        </svg>
-        <div class="reel-streak-content" id="reelStreakContent">
-          <i class="fa-solid fa-fire"></i>
-          <span id="reelStreakCount">0</span>
-        </div>
-      </div>
+    <div class="reel-header" id="reelHeader">
+      <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
+      <div class="reel-timer-display" id="reelTimerDisplay" style="display:none;">⏱️ <span id="reelTimerCount">0</span>s</div>
     </div>
     
     <div class="reel-exit" onclick="toggleExitPanel()"><i class="fa-solid fa-xmark"></i></div>
@@ -899,18 +896,18 @@
       if (isSfxMuted) return;
       initAudio();
       const now = audioCtx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.50]; 
       notes.forEach((freq, i) => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, now + i * 0.1);
-        gain.gain.setValueAtTime(0.3, now + i * 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
-        osc.start(now + i * 0.1);
-        osc.stop(now + i * 0.1 + 0.2);
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        gain.gain.setValueAtTime(0.3, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.18);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.18);
       });
     }
 
@@ -971,20 +968,19 @@
     function triggerConfetti() {
       const overlay = document.getElementById('reelOverlay');
       const colors = ['#f97316', '#1a56db', '#16a34a', '#fbbf24', '#ffffff'];
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 25; i++) { // slightly fewer pieces for 5-streaks to avoid fatigue
         const conf = document.createElement('div');
         conf.className = 'confetti-piece';
         conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         conf.style.left = '50%';
-        conf.style.top = '12%'; // Erupt from the timer/streak area
+        conf.style.top = '8%'; 
         const angle = Math.random() * Math.PI * 2;
-        const velocity = 80 + Math.random() * 120;
+        const velocity = 60 + Math.random() * 100;
         const tx = Math.cos(angle) * velocity + 'px';
-        const ty = Math.sin(angle) * velocity + 100 + 'px'; // Add gravity bias
+        const ty = Math.sin(angle) * velocity + 80 + 'px'; 
         conf.style.transform = `rotate(${Math.random() * 360}deg)`;
         overlay.appendChild(conf);
         
-        // Animate
         setTimeout(() => {
           conf.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
           conf.style.transform = `translate(${tx}, ${ty}) rotate(${Math.random() * 720}deg)`;
@@ -1070,6 +1066,7 @@
       sessionTotal = 0;
       sessionBestStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
+      document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
       setTimeout(() => {
         renderReelCards();
@@ -1333,29 +1330,34 @@
       body.scrollBy({ top: body.clientHeight * 0.8 * direction, behavior: 'smooth' });
     }
 
-    // --- Circular Timer Logic ---
-    const timerCircumference = 2 * Math.PI * 26;
-    document.getElementById('ringProgress').style.strokeDasharray = timerCircumference;
-
+    // --- Capsule Border Timer Logic ---
     function startCardTimer(cardId) {
       if (activeTimer) clearInterval(activeTimer);
-      const ring = document.getElementById('ringProgress');
+      const header = document.getElementById('reelHeader');
+      const timerDisplay = document.getElementById('reelTimerDisplay');
+      const timerCount = document.getElementById('reelTimerCount');
+      
+      // Reset classes and styles for the new card
+      header.classList.remove('timer-urgent');
+      header.style.borderColor = 'rgba(255,255,255,0.3)';
       
       if (selectedPace > 0) {
         let timeLeft = selectedPace;
-        ring.style.transition = 'none';
-        ring.style.strokeDashoffset = 0;
-        ring.style.stroke = '#ffffff';
-        void ring.offsetWidth; // Trigger reflow
-        ring.style.transition = 'stroke-dashoffset 1s linear, stroke 0.5s linear';
+        timerDisplay.style.display = 'flex';
+        timerCount.innerText = timeLeft;
         
         activeTimer = setInterval(() => {
           timeLeft--;
-          const progress = timeLeft / selectedPace;
-          ring.style.strokeDashoffset = timerCircumference * (1 - progress);
+          timerCount.innerText = timeLeft;
           
-          if (timeLeft <= selectedPace * 0.2) ring.style.stroke = '#dc2626';
-          else if (timeLeft <= selectedPace * 0.5) ring.style.stroke = '#f59e0b';
+          if (timeLeft <= selectedPace * 0.2) {
+            header.style.borderColor = '#dc2626';
+            header.classList.add('timer-urgent');
+          } else if (timeLeft <= selectedPace * 0.5) {
+            header.style.borderColor = '#f59e0b';
+          } else {
+            header.style.borderColor = 'rgba(255,255,255,0.3)';
+          }
 
           if (timeLeft <= 0) {
             clearInterval(activeTimer);
@@ -1367,9 +1369,7 @@
         }, 1000);
       } else {
         // Zen mode
-        ring.style.transition = 'none';
-        ring.style.strokeDashoffset = 0;
-        ring.style.stroke = '#ffffff';
+        timerDisplay.style.display = 'none';
       }
     }
 
@@ -1379,7 +1379,21 @@
       
       const badge = document.getElementById('timeout-' + cardId);
       card.classList.add('timeout-flash');
-      if (badge) badge.style.display = 'block';
+      
+      if (badge) {
+        badge.style.display = 'block';
+        badge.style.opacity = '1';
+        // Hide after 3 seconds
+        setTimeout(() => {
+          badge.style.transition = 'opacity 0.5s ease';
+          badge.style.opacity = '0';
+          setTimeout(() => { 
+            badge.style.display = 'none'; 
+            badge.style.transition = ''; 
+            badge.style.opacity = '1'; // reset for next time it might be used
+          }, 500);
+        }, 3000);
+      }
       
       setTimeout(() => {
         card.classList.remove('timeout-flash');
@@ -1398,21 +1412,21 @@
       options.forEach(opt => opt.classList.add('disabled'));
 
       const isCorrect = selectedIndex === correctIndex;
-      const streakEl = document.getElementById('reelStreakContent');
+      const streakEl = document.getElementById('reelStreakCount');
       
-      sessionTotal++; // Track cycle stat
+      sessionTotal++; 
 
       if (isCorrect) {
         options[selectedIndex].classList.add('correct');
         currentStreak++;
-        sessionCorrect++; // Track cycle stat
+        sessionCorrect++; 
         if (currentStreak > sessionBestStreak) sessionBestStreak = currentStreak;
         
-        document.getElementById('reelStreakCount').innerText = currentStreak;
+        streakEl.innerText = currentStreak;
         playSFX(true);
         
-        // Milestone Celebration
-        if (currentStreak > 0 && currentStreak % 10 === 0) {
+        // Milestone Celebration (Every 5 streaks)
+        if (currentStreak > 0 && currentStreak % 5 === 0) {
           triggerConfetti();
           playMilestoneSFX();
           streakEl.classList.add('streak-pulse');
@@ -1425,9 +1439,9 @@
         updateTopicStats(cardId, true);
       } else {
         if (selectedIndex >= 0) options[selectedIndex].classList.add('wrong');
-        options[correctIndex].classList.add('correct');
+        options[correctIndex].classList.add('correct'); // Reveal correct answer even on timeout
         currentStreak = 0;
-        document.getElementById('reelStreakCount').innerText = currentStreak;
+        streakEl.innerText = currentStreak;
         playSFX(false);
         rfStats.totalQuestionsAnswered++;
         updateTopicStats(cardId, false);
