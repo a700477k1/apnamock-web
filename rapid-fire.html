@@ -1565,6 +1565,11 @@
       rfStats.totalSessions++;
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
+      // Tell the browser NOT to restore the old scroll position on mobile
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0); // Force scroll to top
       window.location.reload();
     }
 
