@@ -177,13 +177,26 @@
     .reel-top-bar .brand-tagline { font-size: 9px; color: rgba(255,255,255,0.8); font-weight: 500; } 
     .reel-top-bar .promo-text { font-size: 10px; font-weight: 600; color: #ffffff; text-align: right; max-width: 45%; line-height: 1.3; }
 
-    /* Functional Buttons */
+    /* Functional Buttons & Circular Timer */
     .reel-header {
-      position: absolute; top: 28px; left: 50%; transform: translateX(-50%); 
-      z-index: 15; display: flex; align-items: center; gap: 12px; color: #fff;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 99px;
+      position: absolute; top: 24px; left: 50%; transform: translateX(-50%); 
+      z-index: 15; display: flex; align-items: center; justify-content: center; color: #fff;
     }
-    .reel-streak { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .reel-timer-ring { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+    .reel-timer-ring svg { transform: rotate(-90deg); position: absolute; top: 0; left: 0; }
+    .ring-bg { fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 4; }
+    .ring-progress { fill: none; stroke: #ffffff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 163.36; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.5s linear; }
+    .reel-streak-content { font-size: 16px; font-weight: 700; display: flex; flex-direction: column; align-items: center; line-height: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+    .reel-streak-content i { font-size: 12px; margin-bottom: 2px; }
+    .reel-streak-content span { font-size: 16px; }
+    
+    @keyframes pulseStreak {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); color: #fbbf24; }
+      100% { transform: scale(1); }
+    }
+    .streak-pulse { animation: pulseStreak 0.5s ease; }
+
     .reel-exit {
       position: absolute; top: 28px; right: 20px; z-index: 15; color: #fff; 
       background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; 
@@ -233,16 +246,32 @@
       height: 100vh; height: 100dvh; 
       width: 100%; scroll-snap-align: start; scroll-snap-stop: always; 
       display: flex; flex-direction: column; 
-      padding: 85px 16px 10px; box-sizing: border-box; 
+      padding: 100px 16px 10px; box-sizing: border-box; 
       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1);
       background: transparent; position: relative; overflow: hidden;
     }
+    
+    @keyframes flashRed {
+      0% { background: transparent; }
+      30% { background: rgba(220, 38, 38, 0.3); }
+      100% { background: transparent; }
+    }
+    .timeout-flash { animation: flashRed 0.8s ease; }
 
     .rf-card-content {
       flex: 1; overflow-y: auto; padding-bottom: 20px; scrollbar-width: none;
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: column; position: relative;
     }
     .rf-card-content::-webkit-scrollbar { display: none; }
+
+    /* Time Out Badge */
+    .time-out-badge {
+      display: none; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+      background: #dc2626; color: #fff; font-size: 16px; font-weight: 800; text-transform: uppercase;
+      padding: 8px 24px; border-radius: 99px; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      letter-spacing: 1px; animation: popIn 0.3s ease;
+    }
+    @keyframes popIn { from { transform: translateX(-50%) scale(0.5); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
 
     /* Tags Row */
     .rf-tags-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
@@ -298,6 +327,15 @@
     .rf-swipe-hint { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; animation: bounce 1.5s infinite; pointer-events: none; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
+    /* Confetti Pieces */
+    .confetti-piece { position: absolute; width: 8px; height: 8px; z-index: 25; border-radius: 2px; pointer-events: none; }
+
+    /* Cycle Summary Card */
+    .cycle-summary-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 20px; margin: 0 auto 30px; display: flex; justify-content: space-around; max-width: 350px; }
+    .cycle-stat-item { text-align: center; color: #fff; }
+    .cycle-stat-val { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; }
+    .cycle-stat-lbl { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
     /* Explanation Modal */
     .explanation-modal {
       position: fixed; inset: 0; z-index: 3000;
@@ -315,7 +353,6 @@
       padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
-    /* White branding for modal header */
     .explanation-modal-header .brand { gap: 8px; }
     .explanation-modal-header .brand-icon { width: 32px; height: 32px; font-size: 16px; border-radius: 6px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-family: 'Poppins', sans-serif; }
     .explanation-modal-header .brand-name { font-size: 16px; color: #ffffff; font-weight: 700; font-family: 'Poppins', sans-serif; } 
@@ -326,7 +363,6 @@
     }
     .explanation-modal-body::-webkit-scrollbar { display: none; }
     
-    /* Footer integrated with Nav Arrows */
     .explanation-modal-footer {
       padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
       border-top: 1px solid rgba(255,255,255,0.2);
@@ -341,7 +377,7 @@
     .modal-close-btn {
       background: #dc2626; color: #fff; border: none;
       padding: 12px 24px; border-radius: 99px; font-weight: 700; cursor: pointer; flex: 1; font-size: 15px;
-      white-space: nowrap; /* Prevents text wrapping to multiple lines */
+      white-space: nowrap; 
     }
     .modal-tags-row { display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
     .modal-question { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 20px; } 
@@ -374,8 +410,8 @@
       .desktop-instructions { display: none !important; }
 
       .reel-top-bar { left: 5%; right: 5%; padding: 12px 0 12px 0; }
-      .reel-header { padding: 6px 12px; top: 20px; } 
-      .reel-streak { font-size: 14px; }
+      .reel-header { padding: 6px 12px; top: 18px; } 
+      .reel-timer-ring { width: 56px; height: 56px; }
       .reel-exit, .reel-mute { top: 20px; width: 32px; height: 32px; font-size: 14px; } 
       .audio-panel, .exit-panel { top: 60px; min-width: 160px; }
       .reel-top-bar .brand-icon { width: 28px; height: 28px; font-size: 14px; }
@@ -383,22 +419,18 @@
       .reel-top-bar .brand-tagline { font-size: 8px; }
       .reel-top-bar .promo-text { font-size: 9px; max-width: 50%; line-height: 1.2; }
 
-      .reel-card { padding: 70px 10px 5px 10px; } 
+      .reel-card { padding: 90px 10px 5px 10px; } 
       .rf-question { font-size: 16px; margin-bottom: 12px; } 
       .rf-options { gap: 6px; }
       .rf-option { padding: 8px 12px; font-size: 15px; } 
       .rf-option:hover { transform: none; box-shadow: none; } 
       .rf-option-letter { width: 24px; height: 24px; font-size: 12px; }
       
-      /* Hide navigation arrows on mobile */
       .rf-nav-buttons { display: none; }
 
-      /* Mobile Modal Adjustments */
       .explanation-modal { padding: 8px; }
       .explanation-modal-content { width: calc(100% - 16px); max-width: none; max-height: 95vh; } 
-      /* Reduced left/right margin for text */
       .explanation-modal-body { padding: 20px 12px; }
-      /* Hide nav arrows on mobile */
       .explanation-modal-nav { display: none; }
       .explanation-modal-footer { justify-content: center; }
       .modal-close-btn { width: 100%; flex: none; font-size: 13px; padding: 12px 16px; }
@@ -519,7 +551,6 @@
   <!-- RAPID FIRE REELS OVERLAY -->
   <div class="reel-overlay" id="reelOverlay">
     
-    <!-- Desktop Left Keyboard Guide -->
     <div class="desktop-key-guide">
       <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">Use Keyboard for this Quiz</div>
       <div><kbd>↑</kbd> / <kbd>↓</kbd> Navigate</div>
@@ -555,8 +586,16 @@
     </div>
 
     <div class="reel-header">
-      <div class="reel-streak">🔥 <span id="reelStreakCount">0</span></div>
-      <div id="reelTimerDisplay" style="display:none; font-size:16px; font-weight:700; color:#fbbf24;">⏱️ <span id="reelTimerCount">0</span>s</div>
+      <div class="reel-timer-ring">
+        <svg width="64" height="64">
+          <circle class="ring-bg" cx="32" cy="32" r="26"></circle>
+          <circle class="ring-progress" cx="32" cy="32" r="26" id="ringProgress"></circle>
+        </svg>
+        <div class="reel-streak-content" id="reelStreakContent">
+          <i class="fa-solid fa-fire"></i>
+          <span id="reelStreakCount">0</span>
+        </div>
+      </div>
     </div>
     
     <div class="reel-exit" onclick="toggleExitPanel()"><i class="fa-solid fa-xmark"></i></div>
@@ -856,6 +895,25 @@
       }
     }
 
+    function playMilestoneSFX() {
+      if (isSfxMuted) return;
+      initAudio();
+      const now = audioCtx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+        gain.gain.setValueAtTime(0.3, now + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+        osc.start(now + i * 0.1);
+        osc.stop(now + i * 0.1 + 0.2);
+      });
+    }
+
     function toggleAudioPanel() {
       const panel = document.getElementById('audioPanel');
       const exitP = document.getElementById('exitPanel');
@@ -909,6 +967,34 @@
       }
     }
 
+    // --- Confetti Engine ---
+    function triggerConfetti() {
+      const overlay = document.getElementById('reelOverlay');
+      const colors = ['#f97316', '#1a56db', '#16a34a', '#fbbf24', '#ffffff'];
+      for (let i = 0; i < 30; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'confetti-piece';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.left = '50%';
+        conf.style.top = '12%'; // Erupt from the timer/streak area
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 80 + Math.random() * 120;
+        const tx = Math.cos(angle) * velocity + 'px';
+        const ty = Math.sin(angle) * velocity + 100 + 'px'; // Add gravity bias
+        conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+        overlay.appendChild(conf);
+        
+        // Animate
+        setTimeout(() => {
+          conf.style.transition = 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          conf.style.transform = `translate(${tx}, ${ty}) rotate(${Math.random() * 720}deg)`;
+          conf.style.opacity = '0';
+        }, 10);
+        
+        setTimeout(() => conf.remove(), 1300);
+      }
+    }
+
     // --- Screen Wake Lock ---
     let wakeLock = null;
     async function requestWakeLock() {
@@ -939,7 +1025,12 @@
     let activeObserver = null;
     let cardsRendered = 0;
     let isScrolling = false; 
-    let activeCardEl = null; 
+    let activeCardEl = null;
+    
+    // Session Stats for Cycle Summary
+    let sessionCorrect = 0;
+    let sessionTotal = 0;
+    let sessionBestStreak = 0;
 
     async function startRapidFire() {
       const elem = document.documentElement;
@@ -975,8 +1066,10 @@
 
       currentCardIndex = 0;
       currentStreak = 0;
+      sessionCorrect = 0;
+      sessionTotal = 0;
+      sessionBestStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
-      document.getElementById('reelTimerDisplay').style.display = selectedPace > 0 ? 'flex' : 'none';
       
       setTimeout(() => {
         renderReelCards();
@@ -995,6 +1088,9 @@
       }
       currentCardIndex = 0;
       currentStreak = 0;
+      sessionCorrect = 0;
+      sessionTotal = 0;
+      sessionBestStreak = 0;
       document.getElementById('reelStreakCount').innerText = currentStreak;
       const container = document.getElementById('reelContainer');
       container.scrollTo(0, 0);
@@ -1076,6 +1172,9 @@
 
     function appendCycleCompleteCard(container) {
       if (document.getElementById('cycleCompleteCard')) return;
+      
+      const acc = sessionTotal > 0 ? Math.round((sessionCorrect / sessionTotal) * 100) : 0;
+      
       const resetCard = document.createElement('div');
       resetCard.className = 'reel-card';
       resetCard.style.justifyContent = 'center';
@@ -1083,8 +1182,24 @@
       resetCard.innerHTML = `
         <div style="text-align:center; color:#fff;">
           <div style="font-size:60px; margin-bottom:20px;">🏆</div>
-          <h2 style="font-size:28px; font-weight:800; margin-bottom:12px;">Cycle Complete!</h2>
-          <p style="font-size:16px; color:#cbd5e1; margin-bottom:30px;">You've conquered all questions in this subject. We're resetting the board.</p>
+          <h2 style="font-size:28px; font-weight:800; margin-bottom:8px;">Cycle Complete!</h2>
+          <p style="font-size:14px; color:rgba(255,255,255,0.8); margin-bottom:24px;">You've conquered all questions in this subject.</p>
+          
+          <div class="cycle-summary-box">
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val">${acc}%</div>
+              <div class="cycle-stat-lbl">Accuracy</div>
+            </div>
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val">${sessionCorrect}/${sessionTotal}</div>
+              <div class="cycle-stat-lbl">Score</div>
+            </div>
+            <div class="cycle-stat-item">
+              <div class="cycle-stat-val">🔥 ${sessionBestStreak}</div>
+              <div class="cycle-stat-lbl">Best Streak</div>
+            </div>
+          </div>
+          
           <button class="btn btn-primary" onclick="restartCycle()" style="width:auto; padding:0 32px;">Start New Cycle</button>
         </div>
       `;
@@ -1130,14 +1245,12 @@
       const qImgHtml = q.question_image ? `<img src="${q.question_image}" alt="qimg">` : '';
       const sourceExamHtml = q.source_exam ? `<div class="rf-source-exam-tag">${escapeHtml(q.source_exam)}</div>` : '';
 
-      // Explanation Prompt that appears after answering (Standalone Button)
       const promptHtml = `
         <div class="rf-expl-prompt" id="prompt-${q.id}">
           <button class="rf-expl-btn" onclick="openExplanationModal('${q.id}')">View Explanation</button>
         </div>
       `;
 
-      // Persistent Bottom Hint
       const bottomHintHtml = `
         <div class="rf-bottom-hint">
           <div class="rf-swipe-hint">Swipe up for next ⬆️</div>
@@ -1150,6 +1263,7 @@
 
       card.innerHTML = `
         <div class="rf-card-content">
+          <div class="time-out-badge" id="timeout-${q.id}">Time's Up!</div>
           <div class="rf-tags-row">
             <div class="rf-subject-tag">${escapeHtml(q.subject)}</div>
             ${sourceExamHtml}
@@ -1211,7 +1325,7 @@
 
     function closeExplanationModal() {
       document.getElementById('explanationModal').classList.remove('open');
-      handleNavigation(1); // Move to next question
+      handleNavigation(1); 
     }
 
     function scrollModal(direction) {
@@ -1219,21 +1333,60 @@
       body.scrollBy({ top: body.clientHeight * 0.8 * direction, behavior: 'smooth' });
     }
 
+    // --- Circular Timer Logic ---
+    const timerCircumference = 2 * Math.PI * 26;
+    document.getElementById('ringProgress').style.strokeDasharray = timerCircumference;
+
     function startCardTimer(cardId) {
       if (activeTimer) clearInterval(activeTimer);
+      const ring = document.getElementById('ringProgress');
+      
       if (selectedPace > 0) {
         let timeLeft = selectedPace;
-        document.getElementById('reelTimerCount').innerText = timeLeft;
+        ring.style.transition = 'none';
+        ring.style.strokeDashoffset = 0;
+        ring.style.stroke = '#ffffff';
+        void ring.offsetWidth; // Trigger reflow
+        ring.style.transition = 'stroke-dashoffset 1s linear, stroke 0.5s linear';
+        
         activeTimer = setInterval(() => {
           timeLeft--;
-          document.getElementById('reelTimerCount').innerText = timeLeft;
+          const progress = timeLeft / selectedPace;
+          ring.style.strokeDashoffset = timerCircumference * (1 - progress);
+          
+          if (timeLeft <= selectedPace * 0.2) ring.style.stroke = '#dc2626';
+          else if (timeLeft <= selectedPace * 0.5) ring.style.stroke = '#f59e0b';
+
           if (timeLeft <= 0) {
             clearInterval(activeTimer);
-            const q = reelPool.find(item => item.id === cardId);
-            if (q) handleReelAnswer(cardId, -1, q.correct);
+            const card = document.getElementById('card-' + cardId);
+            if (card && !card.querySelector('.rf-option.disabled')) {
+              triggerTimeOut(cardId);
+            }
           }
         }, 1000);
+      } else {
+        // Zen mode
+        ring.style.transition = 'none';
+        ring.style.strokeDashoffset = 0;
+        ring.style.stroke = '#ffffff';
       }
+    }
+
+    function triggerTimeOut(cardId) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card) return;
+      
+      const badge = document.getElementById('timeout-' + cardId);
+      card.classList.add('timeout-flash');
+      if (badge) badge.style.display = 'block';
+      
+      setTimeout(() => {
+        card.classList.remove('timeout-flash');
+      }, 800);
+      
+      const q = reelPool.find(item => item.id === cardId);
+      if (q) handleReelAnswer(cardId, -1, q.correct);
     }
 
     function handleReelAnswer(cardId, selectedIndex, correctIndex) {
@@ -1245,11 +1398,27 @@
       options.forEach(opt => opt.classList.add('disabled'));
 
       const isCorrect = selectedIndex === correctIndex;
+      const streakEl = document.getElementById('reelStreakContent');
+      
+      sessionTotal++; // Track cycle stat
+
       if (isCorrect) {
         options[selectedIndex].classList.add('correct');
         currentStreak++;
+        sessionCorrect++; // Track cycle stat
+        if (currentStreak > sessionBestStreak) sessionBestStreak = currentStreak;
+        
         document.getElementById('reelStreakCount').innerText = currentStreak;
         playSFX(true);
+        
+        // Milestone Celebration
+        if (currentStreak > 0 && currentStreak % 10 === 0) {
+          triggerConfetti();
+          playMilestoneSFX();
+          streakEl.classList.add('streak-pulse');
+          setTimeout(() => streakEl.classList.remove('streak-pulse'), 500);
+        }
+
         rfStats.totalQuestionsAnswered++;
         rfStats.correctAnswers++;
         if (currentStreak > rfStats.bestStreak) rfStats.bestStreak = currentStreak;
@@ -1267,7 +1436,6 @@
       const q = reelPool.find(item => item.id === cardId);
       if(q) q.selectedIndex = selectedIndex;
 
-      // Show the Explanation Prompt
       document.getElementById('prompt-' + cardId).style.display = 'flex';
 
       const seenIds = JSON.parse(localStorage.getItem('apnamock_rf_seen') || '[]');
