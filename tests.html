@@ -1090,6 +1090,7 @@
     .footer-inner {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 0 20px; /* Added side padding to match layout */
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 32px;
@@ -1122,8 +1123,8 @@
     .footer-bottom {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 20px 20px 0; /* Added side padding to match layout */
       border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1135,7 +1136,7 @@
  
     /* RESPONSIVE - Reduced padding to maximize content width on mobile */
     @media (max-width: 768px) {
-      .align-wrapper { padding-left: 8px; padding-right: 8px; }
+      .align-wrapper, .header-inner, .page-wrapper, .footer-inner, .footer-bottom { padding-left: 8px; padding-right: 8px; }
       
       .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
       .site-nav.mobile-open { display: flex; }
@@ -1157,7 +1158,7 @@
 
      
     @media (max-width: 480px) {
-      .page-wrapper { padding: 20px 16px 48px; }
+      .page-wrapper { padding: 20px 8px 48px; } /* Kept horizontal padding at 8px */
       .card-stats { grid-template-columns: repeat(3, 1fr); }
     }
 
@@ -1486,7 +1487,7 @@
           <a href="/tests.html" class="footer-link">All Tests</a>
           <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
           <a href="/favorites.html" class="footer-link">Favorites</a>
-          <a href
+          <a href="/history.html" class="footer-link">History</a>
           <a href="/jobs.html" class="footer-link">Jobs</a>
         </div>
       </div>
@@ -1989,7 +1990,7 @@ if (State.filters.actualExam.length) {
       const examTag = escapeHTML(test.exam_group || test.exam || 'Exam');
       const typeTag = escapeHTML(test.category || test.subject || 'Full Test');
  
-      const attemptBadgeHtml = attempt ? `
+      const attemptBadgeHtml = attempt ? ``
         <div class="attempt-badge">
           <i class="fa-solid fa-circle-check"></i>
           <div class="attempt-info">
@@ -2125,7 +2126,7 @@ if (State.filters.actualExam.length) {
  
       // 1. Instant Chips Filters (Exam Group, Exam, Subject)
       if (State.activeExamGroup) {
-        chips.push(`
+        chips.push(``
           <div class="filter-chip">
             <span>Exam Group: ${escapeHTML(State.activeExamGroup)}</span>
             <button class="filter-chip-remove" onclick="removeInstantFilter('activeExamGroup')">
@@ -2135,7 +2136,7 @@ if (State.filters.actualExam.length) {
         `);
       }
       if (State.activeExam) {
-        chips.push(`
+        chips.push(``
           <div class="filter-chip">
             <span>Exam: ${escapeHTML(State.activeExam)}</span>
             <button class="filter-chip-remove" onclick="removeInstantFilter('activeExam')">
@@ -2145,7 +2146,7 @@ if (State.filters.actualExam.length) {
         `);
       }
       if (State.activeSubject) {
-        chips.push(`
+        chips.push(``
           <div class="filter-chip">
             <span>Subject: ${escapeHTML(State.activeSubject)}</span>
             <button class="filter-chip-remove" onclick="removeInstantFilter('activeSubject')">
@@ -2168,7 +2169,7 @@ if (State.filters.actualExam.length) {
  
       ['exam', 'actualExam', 'year', 'subject', 'paperType', 'difficulty'].forEach(type => {
         (State.filters[type] || []).forEach(value => {
-          chips.push(`
+          chips.push(``
             <div class="filter-chip">
               <span>${typeLabels[type]}: ${escapeHTML(value)}</span>
               <button class="filter-chip-remove" onclick="removeFilter('${type}','${escapeHTML(value)}')">
@@ -2180,7 +2181,7 @@ if (State.filters.actualExam.length) {
       });
  
       if (State.filters.attempt) {
-        chips.push(`
+        chips.push(``
           <div class="filter-chip">
             <span>${State.filters.attempt === 'attempted' ? 'Attempted' : 'Not Attempted'}</span>
             <button class="filter-chip-remove" onclick="removeFilter('attempt',null)">
@@ -2192,7 +2193,7 @@ if (State.filters.actualExam.length) {
  
       // 3. Add Clear All button if any chips exist
       if (chips.length) {
-        chips.push(`
+        chips.push(``
           <button class="clear-all-btn" onclick="clearAllFilters()">
             Clear All
           </button>
