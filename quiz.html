@@ -535,8 +535,8 @@
     .marks-positive { color: var(--success); font-weight: 700; }
     .marks-negative { color: var(--error); font-weight: 700; }
     
-    /* Reduced horizontal padding to fit more text */
-    .question-card-body { padding: 16px 14px; }
+    /* Tighter horizontal padding for desktop */
+    .question-card-body { padding: 16px 12px; }
 
     /* Question Image */
     .question-image {
@@ -1080,10 +1080,10 @@
        RESPONSIVE
     ============================================================ */
     @media (max-width: 768px) {
-      .align-wrapper { padding-left: 12px; padding-right: 12px; }
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
 
-      /* Tighter spacing for headers */
-      :root { --header-height: 50px; --title-bar-height: 40px; }
+      /* Ultra-compact spacing for headers */
+      :root { --header-height: 48px; --title-bar-height: 32px; }
       
       /* Hide Desktop Title, Show Mobile Title Bar */
       .quiz-title-desktop { display: none; }
@@ -1104,7 +1104,7 @@
       }
       .quiz-title-mobile {
         font-family: var(--font-heading);
-        font-size: 14px;
+        font-size: 13px; /* Smaller font */
         font-weight: 700;
         color: var(--text-primary);
         white-space: nowrap;
@@ -1114,9 +1114,22 @@
         text-align: center;
       }
 
-      /* Adjust Section Tabs sticky position for mobile */
+      /* Compact Section Tabs */
       .section-tabs-wrap {
         top: calc(var(--header-height) + var(--title-bar-height));
+        padding: 6px 0; /* Reduced padding */
+        border-bottom: 1px solid var(--border);
+      }
+      .section-tabs {
+        gap: 8px; /* Reduced gap */
+      }
+      .section-tab {
+        padding: 5px 12px; /* More compact padding */
+        font-size: 12px; /* Smaller font */
+      }
+      .tab-answered-count {
+        font-size: 9px;
+        padding: 0px 5px;
       }
 
       .quiz-timer {
@@ -1128,10 +1141,25 @@
       
       .quiz-body {
         grid-template-columns: 1fr;
-        padding-top: 16px;
-        padding-bottom: 220px; /* Increased padding to clear 3-row bottom bar */
+        padding-top: 12px; /* Reduced top padding */
+        padding-bottom: 220px;
       }
       .palette-panel { position: static; }
+
+      /* Even tighter padding for question card body on mobile */
+      .question-card-body { padding: 12px 8px; } 
+
+      .question-text { 
+        font-size: 15px; /* Slightly smaller for better fit */
+        padding: 0 2px;
+      }
+      .options-list {
+        padding-top: 12px; /* Reduced padding */
+        gap: 8px; /* Reduced gap */
+      }
+      .option-item {
+        padding: 10px 10px; /* Tighter padding */
+      }
 
       /* Mobile 2x3 Grid for Navigation Buttons */
       .quiz-bottombar-inner {
@@ -1141,11 +1169,11 @@
         padding-bottom: 10px;
       }
       .qbtn {
-        height: 40px;
+        height: 38px; /* Slightly shorter buttons */
         font-size: 13px;
         padding: 0 8px;
       }
-      .qbtn span { display: block !important; } /* Force text visible */
+      .qbtn span { display: block !important; }
     }
 
     @media (max-width: 480px) {
