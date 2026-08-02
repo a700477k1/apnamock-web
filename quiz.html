@@ -53,7 +53,8 @@
       --radius-lg: 14px;
       --radius-xl: 20px;
       
-      --header-height: 64px;
+      --header-height: 50px;
+      --title-bar-height: 44px;
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -116,9 +117,13 @@
     }
 
     /* ============================================================
-       BRANDING HEADER
+       BRANDING HEADER (STICKY)
     ============================================================ */
     .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      height: var(--header-height);
       background: var(--bg-card);
       border-bottom: 1px solid var(--border);
     }
@@ -126,8 +131,9 @@
     .site-header-inner {
       display: flex;
       align-items: center;
-      padding-top: 6px; 
-      padding-bottom: 6px; 
+      justify-content: space-between;
+      gap: 16px;
+      height: 100%;
     }
 
     .brand {
@@ -165,6 +171,129 @@
       color: var(--text-muted);
       font-weight: 500;
       letter-spacing: 0.3px;
+    }
+
+    /* Timer (Placed in Header) */
+    .quiz-timer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 6px 14px;
+      flex-shrink: 0;
+    }
+    .timer-icon { font-size: 14px; color: var(--primary); }
+    .timer-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .timer-value {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      color: var(--primary);
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .quiz-timer.warning { background: var(--warning-light); border-color: var(--warning); }
+    .quiz-timer.warning .timer-icon,
+    .quiz-timer.warning .timer-label,
+    .quiz-timer.warning .timer-value { color: var(--warning); }
+
+    .quiz-timer.danger {
+      background: var(--error-light);
+      border-color: var(--error);
+      animation: timer-pulse 1s infinite;
+    }
+    .quiz-timer.danger .timer-icon,
+    .quiz-timer.danger .timer-label,
+    .quiz-timer.danger .timer-value { color: var(--error); }
+
+    @keyframes timer-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+
+    /* ============================================================
+       TEST TITLE BAR (STICKY)
+    ============================================================ */
+    .quiz-title-bar {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 50;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      height: var(--title-bar-height);
+    }
+
+    .quiz-title-bar-inner {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .quiz-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    /* ============================================================
+       SECTION TABS (STICKY)
+    ============================================================ */
+    .section-tabs-wrap {
+      position: sticky;
+      top: calc(var(--header-height) + var(--title-bar-height));
+      z-index: 40;
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .section-tabs {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .section-tabs::-webkit-scrollbar { display: none; }
+
+    .section-tab {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 2.5px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+    .section-tab:hover { color: var(--text-primary); }
+    .section-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab-answered-count {
+      background: var(--success-light);
+      color: var(--success);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 99px;
     }
 
     /* ============================================================
@@ -346,153 +475,6 @@
     .consent-text { font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; }
 
     /* ============================================================
-       SCREEN 2 — LIVE QUIZ
-    ============================================================ */
-    
-    /* Quiz Details Bar */
-    .quiz-topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(var(--bg-card), 0.97);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1.5px solid var(--border);
-      box-shadow: var(--shadow-sm);
-    }
-    body:not(.dark-mode) .quiz-topbar { background: rgba(255,255,255,0.97); }
-    body.dark-mode .quiz-topbar { background: rgba(30, 41, 59, 0.97); }
-
-    .quiz-topbar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding-top: 6px; 
-      padding-bottom: 6px; 
-    }
-
-    .quiz-title-wrap {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .quiz-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 0px; 
-      width: 100%;
-    }
-
-    .quiz-topbar-meta { display: flex; gap: 12px; }
-    .topbar-meta-item {
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Timer */
-    .quiz-timer {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--primary-light);
-      border: 1.5px solid var(--primary);
-      border-radius: var(--radius-md);
-      padding: 6px 14px;
-      flex-shrink: 0;
-    }
-    .timer-icon { font-size: 14px; color: var(--primary); }
-    .timer-label {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .timer-value {
-      font-size: 16px;
-      font-weight: 700;
-      font-family: 'Courier New', monospace;
-      color: var(--primary);
-      letter-spacing: 1px;
-      line-height: 1;
-    }
-
-    .quiz-timer.warning { background: var(--warning-light); border-color: var(--warning); }
-    .quiz-timer.warning .timer-icon,
-    .quiz-timer.warning .timer-label,
-    .quiz-timer.warning .timer-value { color: var(--warning); }
-
-    .quiz-timer.danger {
-      background: var(--error-light);
-      border-color: var(--error);
-      animation: timer-pulse 1s infinite;
-    }
-    .quiz-timer.danger .timer-icon,
-    .quiz-timer.danger .timer-label,
-    .quiz-timer.danger .timer-value { color: var(--error); }
-
-    @keyframes timer-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.75; }
-    }
-
-    /* ============================================================
-       SECTION TABS
-    ============================================================ */
-    .section-tabs-wrap {
-      background: var(--bg-card);
-      border-bottom: 1.5px solid var(--border);
-    }
-
-    .section-tabs {
-      display: flex;
-      gap: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .section-tabs::-webkit-scrollbar { display: none; }
-
-    .section-tab {
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      border-bottom: 2.5px solid transparent;
-      white-space: nowrap;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-shrink: 0;
-    }
-    .section-tab:hover { color: var(--text-primary); }
-    .section-tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-      font-weight: 600;
-    }
-
-    .tab-answered-count {
-      background: var(--success-light);
-      color: var(--success);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 99px;
-    }
-
-    /* ============================================================
        QUIZ BODY
     ============================================================ */
     .quiz-body {
@@ -563,19 +545,16 @@
       border: 1px solid var(--border);
     }
 
-    /* Question Text - Made distinct with a background and left border */
+    /* Question Text - Removed box, kept clean for max width */
     .question-text {
       font-size: 16px;
       font-weight: 500;
       color: var(--text-primary);
       line-height: 1.8;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      padding: 0 2px;
       overflow-x: auto;
       word-break: break-word;
-      background: var(--bg-muted);
-      border-left: 4px solid var(--primary);
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
     }
 
     /* Fix KaTeX display math from breaking the layout */
@@ -593,8 +572,14 @@
       margin-top: 4px;
     }
 
-    /* Options - Made distinct from the question by keeping them white with stronger borders */
-    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    /* Options - Distinct via dashed border separator instead of question box */
+    .options-list { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      padding-top: 20px;
+      border-top: 1px dashed var(--border-strong); 
+    }
     .option-item {
       display: flex;
       align-items: flex-start;
@@ -664,7 +649,7 @@
       flex-direction: column;
       gap: 16px;
       position: sticky;
-      top: 80px;
+      top: calc(var(--header-height) + var(--title-bar-height) + 60px);
     }
     .palette-card {
       background: var(--bg-card);
@@ -1096,22 +1081,8 @@
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
 
       /* Tighter spacing for headers */
-      .site-header-inner { padding-top: 4px; padding-bottom: 4px; }
+      :root { --header-height: 48px; --title-bar-height: 40px; }
       
-      /* Keep Timer on the Right Side */
-      .quiz-topbar-inner { 
-        padding-top: 4px; 
-        padding-bottom: 4px; 
-        flex-wrap: nowrap; 
-        gap: 8px;
-      }
-      
-      .quiz-title-wrap {
-        margin-top: 0;
-        align-items: flex-start;
-        text-align: left;
-      }
-
       .quiz-timer {
         padding: 4px 8px;
       }
@@ -1321,20 +1292,6 @@
             <span class="brand-tagline">Practice. Improve. Succeed.</span>
           </div>
         </a>
-      </div>
-    </header>
-
-    <div class="quiz-topbar">
-      <div class="quiz-topbar-inner align-wrapper">
-        <div class="quiz-title-wrap">
-          <div class="quiz-title" id="quiz-title">Loading...</div>
-          <div class="quiz-topbar-meta">
-            <span class="topbar-meta-item"><i class="fa-solid fa-list-ol"></i><span id="topbar-questions">—</span> Qs</span>
-            <span class="topbar-meta-item"><i class="fa-solid fa-clock"></i><span id="topbar-duration">—</span> min</span>
-            <span class="topbar-meta-item"><i class="fa-solid fa-star"></i><span id="topbar-marks">—</span> Marks</span>
-          </div>
-        </div>
-
         <div class="quiz-timer" id="quizTimer">
           <i class="fa-solid fa-stopwatch timer-icon"></i>
           <div>
@@ -1342,6 +1299,12 @@
             <div class="timer-value" id="timerValue">00:00</div>
           </div>
         </div>
+      </div>
+    </header>
+
+    <div class="quiz-title-bar">
+      <div class="quiz-title-bar-inner align-wrapper">
+        <div class="quiz-title" id="quiz-title">Loading...</div>
       </div>
     </div>
 
@@ -1854,11 +1817,6 @@
       enterFullscreen();
 
       document.getElementById('quiz-title').textContent = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
-      document.getElementById('topbar-questions').textContent = Quiz.testData.totalQuestions || Quiz.questions.length;
-      document.getElementById('topbar-duration').textContent = Quiz.testData.duration || '—';
-      
-      const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
-      document.getElementById('topbar-marks').textContent = calculatedMarks;
 
       orderQuestionsBySection();
 
