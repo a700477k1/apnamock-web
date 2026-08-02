@@ -549,7 +549,9 @@
     }
     .marks-positive { color: var(--success); font-weight: 700; }
     .marks-negative { color: var(--error); font-weight: 700; }
-    .question-card-body { padding: 20px; }
+    
+    /* Reduced horizontal padding to fit more text */
+    .question-card-body { padding: 16px 14px; }
 
     /* Question Image */
     .question-image {
@@ -561,15 +563,19 @@
       border: 1px solid var(--border);
     }
 
-    /* Question Text */
+    /* Question Text - Made distinct with a background and left border */
     .question-text {
       font-size: 16px;
       font-weight: 500;
       color: var(--text-primary);
-      line-height: 1.7;
-      margin-bottom: 20px;
-      overflow-x: auto; /* ADD THIS */
-      word-break: break-word; /* ADD THIS */
+      line-height: 1.8;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      word-break: break-word;
+      background: var(--bg-muted);
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
     }
 
     /* Fix KaTeX display math from breaking the layout */
@@ -587,14 +593,14 @@
       margin-top: 4px;
     }
 
-    /* Options */
+    /* Options - Made distinct from the question by keeping them white with stronger borders */
     .options-list { display: flex; flex-direction: column; gap: 10px; }
     .option-item {
       display: flex;
       align-items: flex-start;
       gap: 12px;
       padding: 13px 14px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--border-strong);
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: all 0.15s;
@@ -608,12 +614,13 @@
     .option-item:hover {
       border-color: var(--primary);
       background: var(--primary-light);
-      color: var(--primary);
+      color: var(--primary-dark);
     }
     .option-item.selected {
       border-color: var(--primary);
       background: var(--primary-light);
       color: var(--primary-dark);
+      box-shadow: 0 2px 8px rgba(26,86,219,0.1);
     }
     .option-letter {
       width: 26px;
@@ -1616,7 +1623,10 @@
       selectedLanguagePending: null,
       questions: [], currentIndex: 0, currentSection: 0, answers: {}, marked: new Set(),
       visited: new Set(), timeLeft: 0, timerInterval: null, autoSaveTimeout: null,
-      isStarted: false, startTime: null, submitTime: null, historyPushed: false
+      isStarted: false, startTime: null, submitTime: null, historyPushed: false,
+      // Per-question time tracking state
+      questionTimes: {},
+      currentQStartTime: null
     };
 
     /* ============================================================
@@ -1646,6 +1656,26 @@
 
     function getQId(q, index) {
       return String(q.id || q.question_id || 'q_' + index);
+    }
+
+    /* ============================================================
+       FULLSCREEN API
+    ============================================================ */
+    function enterFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log("Fullscreen request failed"));
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      }
+    }
+
+    function exitFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      }
     }
 
     /* ============================================================
@@ -1798,6 +1828,7 @@ const indexRes = await fetch(
         Quiz.timeLeft = saved.timeLeft || Quiz.testData.duration * 60;
         Quiz.language = saved.language || Quiz.language; 
         Quiz.startTime = saved.startTime || Date.now();
+        Quiz.questionTimes = saved.questionTimes || {}; // Restore per-question times
       }
       closeOverlay('resumeOverlay'); 
       beginQuiz(true);
@@ -1833,7 +1864,14 @@ const indexRes = await fetch(
       if (!isResume) {
         Quiz.answers = {}; Quiz.marked = new Set(); Quiz.visited = new Set(); Quiz.currentIndex = 0;
         Quiz.timeLeft = (Quiz.testData.duration || 60) * 60; Quiz.startTime = Date.now();
+        Quiz.questionTimes = {}; // Reset times for fresh start
       }
+      
+      // Initialize timer for the very first question
+      Quiz.currentQStartTime = Date.now();
+
+      // Trigger Fullscreen API for distraction-free mode
+      enterFullscreen();
 
       document.getElementById('quiz-title').textContent = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
       document.getElementById('topbar-questions').textContent = Quiz.testData.totalQuestions || Quiz.questions.length;
@@ -1975,7 +2013,18 @@ function updateActiveSectionFromQuestion(index) {
     ============================================================ */
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
-      Quiz.currentIndex = index; Quiz.visited.add(index);
+
+      // 1. Record time spent on the previous question
+      if (Quiz.currentQStartTime !== null && Quiz.currentIndex !== index) {
+        const timeSpent = Math.floor((Date.now() - Quiz.currentQStartTime) / 1000);
+        const prevQId = getQId(Quiz.questions[Quiz.currentIndex], Quiz.currentIndex);
+        Quiz.questionTimes[prevQId] = (Quiz.questionTimes[prevQId] || 0) + timeSpent;
+      }
+      
+      Quiz.currentIndex = index; 
+      Quiz.visited.add(index);
+      Quiz.currentQStartTime = Date.now(); // Start timer for the new question
+      
       updateActiveSectionFromQuestion(index);
       const q = Quiz.questions[index]; const lang = Quiz.language;
 
@@ -2018,6 +2067,9 @@ function updateActiveSectionFromQuestion(index) {
 
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
       }).join('');
+
+      // Auto-scroll to top smoothly when a new question loads
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       updatePaletteGrid(); updateSummary(); autoSave();
     }
@@ -2076,7 +2128,7 @@ function buildPaletteGrid() {
     container.innerHTML =
       `<div class="palette-grid">
         ${
-          Quiz.questions.map((q, i) => `
+          Quiz.questions.map((q, i) => ``
             <button
               class="palette-btn"
               id="palette-${i}"
@@ -2125,7 +2177,7 @@ function buildPaletteGrid() {
       <div class="palette-grid">
 
         ${
-          sectionQuestions.map(item => `
+          sectionQuestions.map(item => ``
             <button
               class="palette-btn"
               id="palette-${item.i}"
@@ -2193,7 +2245,18 @@ function buildPaletteGrid() {
     function autoSave() {
       clearTimeout(Quiz.autoSaveTimeout);
       Quiz.autoSaveTimeout = setTimeout(() => {
-        storageSet(`quiz_progress_${Quiz.testId}`, { testId: Quiz.testId, language: Quiz.language, answers: Quiz.answers, marked: [...Quiz.marked], visited: [...Quiz.visited], currentIndex: Quiz.currentIndex, timeLeft: Quiz.timeLeft, startTime: Quiz.startTime, savedAt: Date.now() });
+        storageSet(`quiz_progress_${Quiz.testId}`, { 
+          testId: Quiz.testId, 
+          language: Quiz.language, 
+          answers: Quiz.answers, 
+          marked: [...Quiz.marked], 
+          visited: [...Quiz.visited], 
+          currentIndex: Quiz.currentIndex, 
+          timeLeft: Quiz.timeLeft, 
+          startTime: Quiz.startTime, 
+          savedAt: Date.now(),
+          questionTimes: Quiz.questionTimes // Save per-question times
+        });
       }, CONFIG.AUTO_SAVE_DELAY);
     }
 
@@ -2202,6 +2265,15 @@ function buildPaletteGrid() {
     ============================================================ */
     function submitQuiz(autoSubmit = false) {
       clearInterval(Quiz.timerInterval); Quiz.submitTime = Date.now();
+
+      // Record time spent on the final question before submitting
+      if (Quiz.currentQStartTime !== null) {
+        const timeSpent = Math.floor((Date.now() - Quiz.currentQStartTime) / 1000);
+        const qId = getQId(Quiz.questions[Quiz.currentIndex], Quiz.currentIndex);
+        Quiz.questionTimes[qId] = (Quiz.questionTimes[qId] || 0) + timeSpent;
+        Quiz.currentQStartTime = null;
+      }
+
       let score = 0; let correct = 0; let wrong = 0; let skipped = 0; const results = [];
       Quiz.questions.forEach((q, i) => {
         const uAns = Quiz.answers[getQId(q, i)]; const cAns = q.correct; const marks = q.marks || 1; const nMarks = q.negativeMarks || Quiz.testData.negativeMarking || 0;
@@ -2227,19 +2299,11 @@ function buildPaletteGrid() {
         testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
         score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
         correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
-        timeTaken:
-
-(
-  (
-    Quiz.testData.duration || 60
-  ) * 60
-)
--
-Quiz.timeLeft, submittedAt: Quiz.submitTime, questionResults: results,
-       testData: {
-  ...Quiz.testData,
-  questions: Quiz.questions
-}
+        timeTaken: ((Quiz.testData.duration || 60) * 60) - Quiz.timeLeft, 
+        submittedAt: Quiz.submitTime, 
+        questionResults: results,
+        questionTimes: Quiz.questionTimes, // Pass per-question times to result page
+        testData: { ...Quiz.testData, questions: Quiz.questions }
       };
 
       storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
@@ -2248,11 +2312,23 @@ Quiz.timeLeft, submittedAt: Quiz.submitTime, questionResults: results,
       storageSet('attempt_history', history); storageRemove(`quiz_progress_${Quiz.testId}`);
       
       closeOverlay('submitOverlay'); showToast('Test submitted! Loading results...', 'success');
+      
+      // Exit fullscreen before redirecting
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        exitFullscreen();
+      }
+
       setTimeout(() => { window.location.href = `/result.html?test=${Quiz.testId}&t=${Quiz.submitTime}`; }, 1200);
     }
 
     function quitQuiz() {
       clearInterval(Quiz.timerInterval); autoSave(); closeOverlay('quitOverlay');
+      
+      // Exit fullscreen before leaving
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        exitFullscreen();
+      }
+
       if (Quiz.historyPushed) history.back();
       setTimeout(() => { window.location.href = '/tests.html'; }, 100);
     }
