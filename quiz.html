@@ -694,34 +694,34 @@
       gap: 6px;
     }
     .palette-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-top: 10px;
-  margin-bottom: 6px;
-}
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
 
-.palette-section-label:first-child {
-  margin-top: 0;
-}
+    .palette-section-label:first-child {
+      margin-top: 0;
+    }
     /* Section-wise palette grouping */
 
-.palette-section {
-  margin-bottom: 16px;
-}
+    .palette-section {
+      margin-bottom: 16px;
+    }
 
-.palette-section:last-child {
-  margin-bottom: 0;
-}
+    .palette-section:last-child {
+      margin-bottom: 0;
+    }
 
-.palette-section-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border);
-}
+    .palette-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
     .palette-btn {
       width: 100%;
       aspect-ratio: 1;
@@ -1705,40 +1705,23 @@
       try {
         let buildId = "main";
 
-try {
+        try {
+          const versionRes = await fetch(`${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`, { cache: "no-store" });
+          if(versionRes.ok){
+            const versionData = await versionRes.json();
+            buildId = versionData.build_id || "main";
+          }
+        } catch(err){}
 
-  const versionRes = await fetch(
-    `${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`,
-    {
-      cache: "no-store"
-    }
-  );
-
-  if(versionRes.ok){
-
-    const versionData =
-      await versionRes.json();
-
-    buildId =
-      versionData.build_id || "main";
-  }
-
-} catch(err){}
-
-const indexRes = await fetch(
-  `${CONFIG.CDN_BASE}data/tests-index.json?v=${encodeURIComponent(buildId)}`,
-  {
-    cache: "no-store"
-  }
-);
+        const indexRes = await fetch(`${CONFIG.CDN_BASE}data/tests-index.json?v=${encodeURIComponent(buildId)}`, { cache: "no-store" });
         const indexData = await indexRes.json();
         const tests = Array.isArray(indexData.tests) ? indexData.tests : (Array.isArray(indexData) ? indexData : []);
         const testMeta = tests.find(t => getQId(t, '') === Quiz.testId || t.test_id === Quiz.testId);
 
-        const dataUrl =
-  testMeta?.file
-    ? `${CONFIG.CDN_BASE}${testMeta.file}?v=${encodeURIComponent(buildId)}`
-    : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json?v=${encodeURIComponent(buildId)}`;
+        const dataUrl = testMeta?.file
+          ? `${CONFIG.CDN_BASE}${testMeta.file}?v=${encodeURIComponent(buildId)}`
+          : `${CONFIG.CDN_BASE}data/tests/${Quiz.testId}.json?v=${encodeURIComponent(buildId)}`;
+          
         const testRes = await fetch(dataUrl, { cache: 'no-cache' });
         if (!testRes.ok) throw new Error(`HTTP ${testRes.status}`);
 
@@ -1773,12 +1756,10 @@ const indexRes = await fetch(
     }
 
     function showScreen1Error(message) {
-
-  // Track the error in Analytics
-  gtag('event', 'exception', {
-    'description': `Quiz Load Error: ${message} (Test ID: ${Quiz.testId})`,
-    'fatal': true
-  });
+      gtag('event', 'exception', {
+        'description': `Quiz Load Error: ${message} (Test ID: ${Quiz.testId})`,
+        'fatal': true
+      });
       
       document.getElementById('preq-title').textContent = 'Error Loading Test';
       document.getElementById('startTestBtn').textContent = message;
@@ -1850,7 +1831,6 @@ const indexRes = await fetch(
     }
 
     function beginQuiz(isResume = false) {
-
       gtag('event', 'start_test', {
         'test_id': Quiz.testId,
         'test_title': Quiz.testData.title || 'Unknown',
@@ -1882,8 +1862,13 @@ const indexRes = await fetch(
 
       orderQuestionsBySection();
 
-      buildSectionTabs(); buildPaletteGrid(); renderQuestion(Quiz.currentIndex); startTimer();
-      document.getElementById('screen1').classList.remove('active'); document.getElementById('screen2').classList.add('active');
+      buildSectionTabs(); 
+      buildPaletteGrid(); 
+      renderQuestion(Quiz.currentIndex); 
+      startTimer();
+      
+      document.getElementById('screen1').classList.remove('active'); 
+      document.getElementById('screen2').classList.add('active');
       autoSave();
     }
 
@@ -1894,54 +1879,23 @@ const indexRes = await fetch(
       }
     });
 
-/* ============================================================
- SECTION QUESTION ORDERING
- ============================================================ */
-function orderQuestionsBySection() {
+    /* ============================================================
+       SECTION QUESTION ORDERING
+    ============================================================ */
+    function orderQuestionsBySection() {
+      const sections = Quiz.testData.sections || [];
+      if (!sections.length || !Quiz.questions.length) return;
 
-  const sections =
-    Quiz.testData.sections || [];
-
-  if (
-    !sections.length ||
-    !Quiz.questions.length
-  ) {
-    return;
-  }
-
-  const ordered = [];
-
-  sections.forEach(section => {
-
-    Quiz.questions
-      .filter(
-        q =>
-          String(q.sectionId) ===
-          String(section.section_id)
-      )
-      .forEach(q => {
-
-        ordered.push(q);
-
+      const ordered = [];
+      sections.forEach(section => {
+        Quiz.questions.filter(q => String(q.sectionId) === String(section.section_id)).forEach(q => ordered.push(q));
       });
 
-  });
+      const remaining = Quiz.questions.filter(q => !sections.some(s => String(s.section_id) === String(q.sectionId)));
+      ordered.push(...remaining);
 
-  const remaining =
-    Quiz.questions.filter(q =>
-
-      !sections.some(
-        s =>
-          String(s.section_id) ===
-          String(q.sectionId)
-      )
-
-    );
-
-  ordered.push(...remaining);
-
-  Quiz.questions = ordered;
-}
+      Quiz.questions = ordered;
+    }
     
     /* ============================================================
        SECTION TABS
@@ -1949,7 +1903,10 @@ function orderQuestionsBySection() {
     function buildSectionTabs() {
       const sections = Quiz.testData.sections || [];
       const tabsContainer = document.getElementById('sectionTabs');
-      if (!sections.length) { tabsContainer.innerHTML = `<button class="section-tab active" data-section="0">All Questions</button>`; return; }
+      if (!sections.length) { 
+        tabsContainer.innerHTML = `<button class="section-tab active" data-section="0">All Questions</button>`; 
+        return; 
+      }
       tabsContainer.innerHTML = sections.map((sec, i) => `
         <button class="section-tab ${i === 0 ? 'active' : ''}" data-section="${i}" onclick="switchSection(${i})">
           ${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)} <span class="tab-answered-count" id="tab-count-${i}">0</span>
@@ -1971,42 +1928,21 @@ function orderQuestionsBySection() {
     function updateSectionTabCounts() {
       (Quiz.testData.sections || []).forEach((sec, i) => {
         const count = Quiz.questions.filter((q, qIndex) => q.sectionId === sec.section_id && Quiz.answers[getQId(q, qIndex)] !== undefined).length;
-        const el = document.getElementById(`tab-count-${i}`); if (el) el.textContent = count;
+        const el = document.getElementById(`tab-count-${i}`); 
+        if (el) el.textContent = count;
       });
     }
 
-function updateActiveSectionFromQuestion(index) {
-
-  const q = Quiz.questions[index];
-
-  if (!q) return;
-
-  const sectionIndex =
-    (Quiz.testData.sections || [])
-      .findIndex(
-        s =>
-          String(s.section_id) ===
-          String(q.sectionId)
-      );
-
-  if (sectionIndex === -1) return;
-
-  Quiz.currentSection =
-    sectionIndex;
-
-  document
-    .querySelectorAll('.section-tab')
-    .forEach(tab => {
-
-      tab.classList.toggle(
-        'active',
-        Number(tab.dataset.section) ===
-        sectionIndex
-      );
-
-    });
-
-}
+    function updateActiveSectionFromQuestion(index) {
+      const q = Quiz.questions[index];
+      if (!q) return;
+      const sectionIndex = (Quiz.testData.sections || []).findIndex(s => String(s.section_id) === String(q.sectionId));
+      if (sectionIndex === -1) return;
+      Quiz.currentSection = sectionIndex;
+      document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.classList.toggle('active', Number(tab.dataset.section) === sectionIndex);
+      });
+    }
     
     /* ============================================================
        QUESTION RENDERING
@@ -2071,7 +2007,9 @@ function updateActiveSectionFromQuestion(index) {
       // Auto-scroll to top smoothly when a new question loads
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      updatePaletteGrid(); updateSummary(); autoSave();
+      updatePaletteGrid(); 
+      updateSummary(); 
+      autoSave();
     }
 
     function selectOption(optionIndex) {
@@ -2115,94 +2053,37 @@ function updateActiveSectionFromQuestion(index) {
     /* ============================================================
        PALETTE GRID
     ============================================================ */
-function buildPaletteGrid() {
+    function buildPaletteGrid() {
+      const container = document.getElementById('paletteGrid');
+      const sections = Quiz.testData.sections || [];
 
-  const container =
-    document.getElementById('paletteGrid');
+      if (!sections.length) {
+        container.innerHTML = `<div class="palette-grid">${Quiz.questions.map((q, i) => `<button class="palette-btn" id="palette-${i}" onclick="renderQuestion(${i})">${i + 1}</button>`).join('')}</div>`;
+        updatePaletteGrid();
+        return;
+      }
 
-  const sections =
-    Quiz.testData.sections || [];
+      let html = '';
+      sections.forEach(section => {
+        const sectionQuestions = Quiz.questions.map((q, i) => ({ q, i })).filter(item => String(item.q.sectionId) === String(section.section_id));
+        if (!sectionQuestions.length) return;
+        
+        html += `
+          <div class="palette-section-label">${escapeHTML(section.title?.[Quiz.language] || section.title?.en || section.section_id)}</div>
+          <div class="palette-grid">
+            ${sectionQuestions.map(item => `<button class="palette-btn" id="palette-${item.i}" onclick="renderQuestion(${item.i})">${item.i + 1}</button>`).join('')}
+          </div>
+        `;
+      });
 
-  if (!sections.length) {
-
-    container.innerHTML =
-      `<div class="palette-grid">
-        ${
-          Quiz.questions.map((q, i) => ``
-            <button
-              class="palette-btn"
-              id="palette-${i}"
-              onclick="renderQuestion(${i})">
-
-              ${i + 1}
-
-            </button>
-          `).join('')
-        }
-      </div>`;
-
-    updatePaletteGrid();
-    return;
-  }
-
-  let html = '';
-
-  sections.forEach(section => {
-
-    const sectionQuestions =
-      Quiz.questions
-        .map((q, i) => ({ q, i }))
-        .filter(
-          item =>
-            String(item.q.sectionId) ===
-            String(section.section_id)
-        );
-
-    if (!sectionQuestions.length) return;
-
-    html += `
-
-      <div class="palette-section-label">
-
-        ${
-          escapeHTML(
-            section.title?.[Quiz.language] ||
-            section.title?.en ||
-            section.section_id
-          )
-        }
-
-      </div>
-
-      <div class="palette-grid">
-
-        ${
-          sectionQuestions.map(item => ``
-            <button
-              class="palette-btn"
-              id="palette-${item.i}"
-              onclick="renderQuestion(${item.i})">
-
-              ${item.i + 1}
-
-            </button>
-          `).join('')
-        }
-
-      </div>
-
-    `;
-
-  });
-
-  container.innerHTML = html;
-
-  updatePaletteGrid();
-}
+      container.innerHTML = html;
+      updatePaletteGrid();
+    }
 
     function updatePaletteGrid() {
       Quiz.questions.forEach((q, i) => {
-        const btn = document.getElementById(`palette-${i}`); if (!btn) return;
+        const btn = document.getElementById(`palette-${i}`); 
+        if (!btn) return;
         const isAns = Quiz.answers[getQId(q, i)] !== undefined; 
         const isMrk = Quiz.marked.has(i); 
         const isVis = Quiz.visited.has(i);
@@ -2217,10 +2098,15 @@ function buildPaletteGrid() {
     }
 
     function updateSummary() {
-      const ans = Object.keys(Quiz.answers).length; const mrk = Quiz.marked.size; const tot = Quiz.questions.length;
-      document.getElementById('sum-answered').textContent = ans; document.getElementById('sum-marked').textContent = mrk;
-      document.getElementById('sum-skipped').textContent = tot - ans; document.getElementById('sum-total').textContent = tot;
-      document.getElementById('submit-answered').textContent = ans; document.getElementById('submit-unanswered').textContent = tot - ans;
+      const ans = Object.keys(Quiz.answers).length; 
+      const mrk = Quiz.marked.size; 
+      const tot = Quiz.questions.length;
+      document.getElementById('sum-answered').textContent = ans; 
+      document.getElementById('sum-marked').textContent = mrk;
+      document.getElementById('sum-skipped').textContent = tot - ans; 
+      document.getElementById('sum-total').textContent = tot;
+      document.getElementById('submit-answered').textContent = ans; 
+      document.getElementById('submit-unanswered').textContent = tot - ans;
       document.getElementById('submit-marked').textContent = mrk;
     }
 
@@ -2231,7 +2117,11 @@ function buildPaletteGrid() {
       updateTimerDisplay();
       Quiz.timerInterval = setInterval(() => {
         Quiz.timeLeft--; updateTimerDisplay(); autoSave();
-        if (Quiz.timeLeft <= 0) { clearInterval(Quiz.timerInterval); showToast('Time is up! Submitting your test...', 'warning'); setTimeout(() => submitQuiz(true), 2000); }
+        if (Quiz.timeLeft <= 0) { 
+          clearInterval(Quiz.timerInterval); 
+          showToast('Time is up! Submitting your test...', 'warning'); 
+          setTimeout(() => submitQuiz(true), 2000); 
+        }
       }, 1000);
     }
 
@@ -2264,7 +2154,8 @@ function buildPaletteGrid() {
        SUBMIT & QUIT
     ============================================================ */
     function submitQuiz(autoSubmit = false) {
-      clearInterval(Quiz.timerInterval); Quiz.submitTime = Date.now();
+      clearInterval(Quiz.timerInterval); 
+      Quiz.submitTime = Date.now();
 
       // Record time spent on the final question before submitting
       if (Quiz.currentQStartTime !== null) {
@@ -2286,7 +2177,7 @@ function buildPaletteGrid() {
 
       const calculatedMarks = Quiz.testData.totalMarks || Quiz.questions.reduce((sum, q) => sum + (q.marks || 1), 0);
 
-        gtag('event', 'submit_test', {
+      gtag('event', 'submit_test', {
         'test_id': Quiz.testId,
         'test_title': Quiz.testData.title || 'Unknown',
         'score': Math.max(0, Math.round(score * 100) / 100),
@@ -2296,9 +2187,13 @@ function buildPaletteGrid() {
       });
 
       const resObj = {
-        testId: Quiz.testId, testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, language: Quiz.language,
-        score: Math.max(0, Math.round(score * 100) / 100), totalMarks: calculatedMarks,
-        correct, wrong, skipped, totalQuestions: Quiz.questions.length, accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
+        testId: Quiz.testId, 
+        testTitle: Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title, 
+        language: Quiz.language,
+        score: Math.max(0, Math.round(score * 100) / 100), 
+        totalMarks: calculatedMarks,
+        correct, wrong, skipped, totalQuestions: Quiz.questions.length, 
+        accuracy: correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0,
         timeTaken: ((Quiz.testData.duration || 60) * 60) - Quiz.timeLeft, 
         submittedAt: Quiz.submitTime, 
         questionResults: results,
@@ -2306,12 +2201,22 @@ function buildPaletteGrid() {
         testData: { ...Quiz.testData, questions: Quiz.questions }
       };
 
-      storageSet(`result_${Quiz.testId}`, resObj); storageSet(`latest_result`, resObj);
-      const history = storageGet('attempt_history') || {};
-      history[Quiz.testId] = { date: new Date(Quiz.submitTime).toLocaleDateString('en-IN'), time: new Date(Quiz.submitTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }), score: `${resObj.score}/${resObj.totalMarks}`, accuracy: resObj.accuracy };
-      storageSet('attempt_history', history); storageRemove(`quiz_progress_${Quiz.testId}`);
+      storageSet(`result_${Quiz.testId}`, resObj); 
+      storageSet(`latest_result`, resObj);
       
-      closeOverlay('submitOverlay'); showToast('Test submitted! Loading results...', 'success');
+      const history = storageGet('attempt_history') || {};
+      history[Quiz.testId] = { 
+        date: new Date(Quiz.submitTime).toLocaleDateString('en-IN'), 
+        time: new Date(Quiz.submitTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }), 
+        score: `${resObj.score}/${resObj.totalMarks}`, 
+        accuracy: resObj.accuracy 
+      };
+      
+      storageSet('attempt_history', history); 
+      storageRemove(`quiz_progress_${Quiz.testId}`);
+      
+      closeOverlay('submitOverlay'); 
+      showToast('Test submitted! Loading results...', 'success');
       
       // Exit fullscreen before redirecting
       if (document.fullscreenElement || document.webkitFullscreenElement) {
@@ -2322,7 +2227,9 @@ function buildPaletteGrid() {
     }
 
     function quitQuiz() {
-      clearInterval(Quiz.timerInterval); autoSave(); closeOverlay('quitOverlay');
+      clearInterval(Quiz.timerInterval); 
+      autoSave(); 
+      closeOverlay('quitOverlay');
       
       // Exit fullscreen before leaving
       if (document.fullscreenElement || document.webkitFullscreenElement) {
