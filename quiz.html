@@ -53,8 +53,8 @@
       --radius-lg: 14px;
       --radius-xl: 20px;
       
-      --header-height: 50px;
-      --title-bar-height: 44px;
+      --header-height: 60px;
+      --title-bar-height: 40px;
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -173,6 +173,26 @@
       letter-spacing: 0.3px;
     }
 
+    /* Desktop Test Title (Centered in Header) */
+    .quiz-title-desktop {
+      flex: 1;
+      text-align: center;
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 20px;
+      display: block;
+    }
+
+    /* Mobile Test Title Bar (Below Header) */
+    .quiz-title-bar {
+      display: none; /* Hidden on desktop */
+    }
+
     /* Timer (Placed in Header) */
     .quiz-timer {
       display: flex;
@@ -221,79 +241,62 @@
     }
 
     /* ============================================================
-       TEST TITLE BAR (STICKY)
-    ============================================================ */
-    .quiz-title-bar {
-      position: sticky;
-      top: var(--header-height);
-      z-index: 50;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
-      height: var(--title-bar-height);
-    }
-
-    .quiz-title-bar-inner {
-      display: flex;
-      align-items: center;
-      height: 100%;
-    }
-
-    .quiz-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-    }
-
-    /* ============================================================
-       SECTION TABS (STICKY)
+       SECTION TABS (STICKY CAPSULES)
     ============================================================ */
     .section-tabs-wrap {
       position: sticky;
-      top: calc(var(--header-height) + var(--title-bar-height));
+      top: var(--header-height);
       z-index: 40;
       background: var(--bg-card);
-      border-bottom: 1.5px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
     }
 
     .section-tabs {
       display: flex;
-      gap: 0;
+      gap: 10px;
       overflow-x: auto;
       scrollbar-width: none;
     }
     .section-tabs::-webkit-scrollbar { display: none; }
 
     .section-tab {
-      padding: 10px 18px;
+      padding: 7px 16px;
       font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      border-bottom: 2.5px solid transparent;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: 99px; /* Capsule shape */
       white-space: nowrap;
-      transition: all 0.15s;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 7px;
       flex-shrink: 0;
     }
-    .section-tab:hover { color: var(--text-primary); }
+    .section-tab:hover { 
+      border-color: var(--primary); 
+      color: var(--primary); 
+    }
     .section-tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-      font-weight: 600;
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,86,219,0.2);
     }
 
     .tab-answered-count {
-      background: var(--success-light);
-      color: var(--success);
+      background: var(--bg-card);
+      color: var(--text-muted);
       font-size: 10px;
       font-weight: 700;
       padding: 1px 6px;
       border-radius: 99px;
+    }
+    .section-tab.active .tab-answered-count {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
     }
 
     /* ============================================================
@@ -545,7 +548,7 @@
       border: 1px solid var(--border);
     }
 
-    /* Question Text - Removed box, kept clean for max width */
+    /* Question Text - Clean for max width */
     .question-text {
       font-size: 16px;
       font-weight: 500;
@@ -572,7 +575,7 @@
       margin-top: 4px;
     }
 
-    /* Options - Distinct via dashed border separator instead of question box */
+    /* Options - Distinct via dashed border separator */
     .options-list { 
       display: flex; 
       flex-direction: column; 
@@ -649,7 +652,7 @@
       flex-direction: column;
       gap: 16px;
       position: sticky;
-      top: calc(var(--header-height) + var(--title-bar-height) + 60px);
+      top: calc(var(--header-height) + 60px);
     }
     .palette-card {
       background: var(--bg-card);
@@ -689,7 +692,6 @@
     .palette-section-label:first-child {
       margin-top: 0;
     }
-    /* Section-wise palette grouping */
 
     .palette-section {
       margin-bottom: 16px;
@@ -1081,8 +1083,42 @@
       .align-wrapper { padding-left: 12px; padding-right: 12px; }
 
       /* Tighter spacing for headers */
-      :root { --header-height: 48px; --title-bar-height: 40px; }
+      :root { --header-height: 50px; --title-bar-height: 40px; }
       
+      /* Hide Desktop Title, Show Mobile Title Bar */
+      .quiz-title-desktop { display: none; }
+      .quiz-title-bar {
+        display: block;
+        position: sticky;
+        top: var(--header-height);
+        z-index: 55;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        height: var(--title-bar-height);
+      }
+      .quiz-title-bar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+      .quiz-title-mobile {
+        font-family: var(--font-heading);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Adjust Section Tabs sticky position for mobile */
+      .section-tabs-wrap {
+        top: calc(var(--header-height) + var(--title-bar-height));
+      }
+
       .quiz-timer {
         padding: 4px 8px;
       }
@@ -1292,6 +1328,7 @@
             <span class="brand-tagline">Practice. Improve. Succeed.</span>
           </div>
         </a>
+        <div class="quiz-title-desktop" id="quiz-title-desktop">Loading...</div>
         <div class="quiz-timer" id="quizTimer">
           <i class="fa-solid fa-stopwatch timer-icon"></i>
           <div>
@@ -1304,7 +1341,7 @@
 
     <div class="quiz-title-bar">
       <div class="quiz-title-bar-inner align-wrapper">
-        <div class="quiz-title" id="quiz-title">Loading...</div>
+        <div class="quiz-title-mobile" id="quiz-title-mobile">Loading...</div>
       </div>
     </div>
 
@@ -1816,7 +1853,9 @@
       // Trigger Fullscreen API for distraction-free mode
       enterFullscreen();
 
-      document.getElementById('quiz-title').textContent = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
+      const titleText = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
+      document.getElementById('quiz-title-desktop').textContent = titleText;
+      document.getElementById('quiz-title-mobile').textContent = titleText;
 
       orderQuestionsBySection();
 
