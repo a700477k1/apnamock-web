@@ -53,8 +53,8 @@
       --radius-lg: 14px;
       --radius-xl: 20px;
       
-      --header-height: 60px;
-      --title-bar-height: 40px;
+      --header-height: 48px; /* Compact header */
+      --title-bar-height: 36px; /* Compact mobile title bar */
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -63,9 +63,9 @@
       --palette-answered: #16a34a;
       --palette-wrong: #dc2626;
       --palette-marked: #f59e0b;
-      --palette-visited: #94a3b8;
+      --palette-visited: #dc2626; /* Changed to Red for "Visited but Not Answered" */
       --palette-current: #1a56db;
-      --palette-unattempted: #e2e8f0;
+      --palette-unattempted: #e2e8f0; /* Neutral Grey for "Not Visited" */
     }
 
     /* Dark Mode Compatibility */
@@ -117,7 +117,7 @@
     }
 
     /* ============================================================
-       BRANDING HEADER (STICKY)
+       BRANDING HEADER (STICKY & COMPACT)
     ============================================================ */
     .site-header {
       position: sticky;
@@ -132,27 +132,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       height: 100%;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 28px; /* Smaller logo */
+      height: 28px;
       background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       font-family: var(--font-heading);
     }
     .brand-text {
@@ -162,12 +162,12 @@
     }
     .brand-name {
       font-family: var(--font-heading);
-      font-size: 16px;
+      font-size: 14px; /* Smaller text */
       font-weight: 700;
       color: var(--primary);
     }
     .brand-tagline {
-      font-size: 9px;
+      font-size: 8px; /* Smaller text */
       color: var(--text-muted);
       font-weight: 500;
       letter-spacing: 0.3px;
@@ -178,13 +178,13 @@
       flex: 1;
       text-align: center;
       font-family: var(--font-heading);
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding: 0 20px;
+      padding: 0 16px;
       display: block;
     }
 
@@ -197,23 +197,23 @@
     .quiz-timer {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: var(--primary-light);
-      border: 1.5px solid var(--primary);
-      border-radius: var(--radius-md);
-      padding: 6px 14px;
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px; /* Compact padding */
       flex-shrink: 0;
     }
-    .timer-icon { font-size: 14px; color: var(--primary); }
+    .timer-icon { font-size: 12px; color: var(--primary); }
     .timer-label {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 600;
       color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .timer-value {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       font-family: 'Courier New', monospace;
       color: var(--primary);
@@ -241,7 +241,7 @@
     }
 
     /* ============================================================
-       SECTION TABS (STICKY CAPSULES)
+       SECTION TABS (STICKY SLIM CAPSULES)
     ============================================================ */
     .section-tabs-wrap {
       position: sticky;
@@ -249,20 +249,20 @@
       z-index: 40;
       background: var(--bg-card);
       border-bottom: 1px solid var(--border);
-      padding: 10px 0;
+      padding: 6px 0; /* Tighter padding */
     }
 
     .section-tabs {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       overflow-x: auto;
       scrollbar-width: none;
     }
     .section-tabs::-webkit-scrollbar { display: none; }
 
     .section-tab {
-      padding: 7px 16px;
-      font-size: 13px;
+      padding: 4px 12px; /* Slimmer capsules */
+      font-size: 12px; /* Smaller font */
       font-weight: 600;
       color: var(--text-secondary);
       background: var(--bg-muted);
@@ -272,7 +272,7 @@
       transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       flex-shrink: 0;
     }
     .section-tab:hover { 
@@ -283,15 +283,15 @@
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(26,86,219,0.2);
+      box-shadow: 0 2px 6px rgba(26,86,219,0.2);
     }
 
     .tab-answered-count {
       background: var(--bg-card);
       color: var(--text-muted);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 1px 6px;
+      padding: 1px 5px;
       border-radius: 99px;
     }
     .section-tab.active .tab-answered-count {
@@ -446,13 +446,13 @@
     .palette-legend-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0; }
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
     .legend-dot {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       color: #fff;
       flex-shrink: 0;
@@ -481,11 +481,11 @@
        QUIZ BODY
     ============================================================ */
     .quiz-body {
-      padding-top: 24px;
+      padding-top: 16px;
       padding-bottom: 140px;
       display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 24px;
+      grid-template-columns: 1fr 280px; /* Slightly narrower palette panel */
+      gap: 20px;
       align-items: start;
     }
 
@@ -504,7 +504,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       background: var(--bg-muted);
     }
@@ -512,21 +512,21 @@
     .question-number-tag {
       background: var(--primary);
       color: #fff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 3px 8px;
       border-radius: 99px;
     }
     .question-section-tag {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
       font-weight: 500;
       background: var(--border);
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 99px;
     }
     .question-marks-info {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       display: flex;
       align-items: center;
@@ -662,12 +662,12 @@
       box-shadow: var(--shadow-sm);
     }
     .palette-card-header {
-      padding: 12px 14px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border);
       background: var(--bg-muted);
     }
     .palette-card-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -675,14 +675,14 @@
     }
     .palette-card-body { padding: 12px; }
 
-    /* Palette grid */
+    /* Palette grid - 10 columns for half-size squares */
     .palette-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(10, 1fr); /* 10 columns */
+      gap: 4px; /* Tighter gap */
     }
     .palette-section-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--text-secondary);
       margin-top: 10px;
@@ -702,22 +702,24 @@
     }
 
     .palette-section-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 8px;
       padding-bottom: 4px;
       border-bottom: 1px solid var(--border);
     }
+    
+    /* Palette Buttons - Compact and distinct */
     .palette-btn {
       width: 100%;
-      aspect-ratio: 1;
-      border-radius: 6px;
-      font-size: 12px;
+      height: 24px; /* Fixed compact height instead of aspect-ratio */
+      border-radius: 4px;
+      font-size: 10px; /* Smaller font */
       font-weight: 700;
       background: var(--palette-unattempted);
       color: var(--text-muted);
-      border: 1.5px solid transparent;
+      border: 1px solid transparent;
       transition: all 0.15s;
       display: flex;
       align-items: center;
@@ -731,10 +733,11 @@
       color: #fff;
       border-color: var(--primary-dark);
     }
+    
+    /* Half Green / Half Orange for Answered & Marked */
     .palette-btn.answered-marked {
-      background: var(--palette-answered);
+      background: linear-gradient(to bottom, var(--palette-answered) 50%, var(--palette-marked) 50%);
       color: #fff;
-      border-bottom: 4px solid var(--palette-marked);
     }
     .palette-btn.answered { background: var(--palette-answered); color: #fff; }
     .palette-btn.wrong { background: var(--palette-wrong); color: #fff; }
@@ -743,8 +746,9 @@
 
     /* Legend */
     .legend-list { display: flex; flex-direction: column; gap: 6px; }
-    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
-    .legend-box { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
+    .legend-box { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+    .legend-box.split { background: linear-gradient(to bottom, var(--palette-answered) 50%, var(--palette-marked) 50%); }
 
     /* Summary */
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -755,14 +759,14 @@
       text-align: center;
     }
     .summary-value {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--text-primary);
       line-height: 1;
       margin-bottom: 3px;
     }
     .summary-label {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -789,7 +793,7 @@
 
     .quiz-bottombar-inner {
       display: grid;
-      grid-template-columns: repeat(6, 1fr); /* 6 perfectly uniform columns */
+      grid-template-columns: repeat(6, 1fr); 
       gap: 12px;
       padding-top: 12px;
       padding-bottom: 12px;
@@ -1035,6 +1039,50 @@
     .btn-full { width: 100%; }
 
     /* ============================================================
+       MOBILE SECTION SWITCH DROPDOWN
+    ============================================================ */
+    .mobile-section-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mobile-section-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      z-index: 60;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .mobile-section-menu.open { display: block; }
+    .mobile-section-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+    .mobile-section-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .mobile-section-item:last-child { border-bottom: none; }
+
+    /* ============================================================
        TOAST
     ============================================================ */
     .toast-container {
@@ -1082,8 +1130,7 @@
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
 
-      /* Ultra-compact spacing for headers */
-      :root { --header-height: 48px; --title-bar-height: 32px; }
+      :root { --header-height: 44px; --title-bar-height: 36px; }
       
       /* Hide Desktop Title, Show Mobile Title Bar */
       .quiz-title-desktop { display: none; }
@@ -1099,69 +1146,54 @@
       .quiz-title-bar-inner {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         height: 100%;
+        position: relative; /* For dropdown positioning */
       }
       .quiz-title-mobile {
         font-family: var(--font-heading);
-        font-size: 13px; /* Smaller font */
+        font-size: 12px;
         font-weight: 700;
         color: var(--text-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 100%;
-        text-align: center;
+        flex: 1;
+        margin-right: 8px;
       }
 
-      /* Compact Section Tabs */
-      .section-tabs-wrap {
-        top: calc(var(--header-height) + var(--title-bar-height));
-        padding: 6px 0; /* Reduced padding */
-        border-bottom: 1px solid var(--border);
-      }
-      .section-tabs {
-        gap: 8px; /* Reduced gap */
-      }
-      .section-tab {
-        padding: 5px 12px; /* More compact padding */
-        font-size: 12px; /* Smaller font */
-      }
-      .tab-answered-count {
-        font-size: 9px;
-        padding: 0px 5px;
-      }
+      /* Hide horizontal section tabs on mobile */
+      .section-tabs-wrap { display: none; }
 
       .quiz-timer {
-        padding: 4px 8px;
+        padding: 3px 6px;
+        gap: 4px;
       }
-      .timer-value {
-        font-size: 14px;
-      }
+      .timer-label { display: none; } /* Hide label to save space */
+      .timer-value { font-size: 13px; }
+      .timer-icon { font-size: 11px; }
       
       .quiz-body {
         grid-template-columns: 1fr;
-        padding-top: 12px; /* Reduced top padding */
+        padding-top: 12px;
         padding-bottom: 220px;
       }
       .palette-panel { position: static; }
 
-      /* Even tighter padding for question card body on mobile */
       .question-card-body { padding: 12px 8px; } 
 
       .question-text { 
-        font-size: 15px; /* Slightly smaller for better fit */
+        font-size: 15px;
         padding: 0 2px;
       }
       .options-list {
-        padding-top: 12px; /* Reduced padding */
-        gap: 8px; /* Reduced gap */
+        padding-top: 12px;
+        gap: 8px;
       }
       .option-item {
-        padding: 10px 10px; /* Tighter padding */
+        padding: 10px 10px;
       }
 
-      /* Mobile 2x3 Grid for Navigation Buttons */
       .quiz-bottombar-inner {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
@@ -1169,7 +1201,7 @@
         padding-bottom: 10px;
       }
       .qbtn {
-        height: 38px; /* Slightly shorter buttons */
+        height: 38px;
         font-size: 13px;
         padding: 0 8px;
       }
@@ -1309,9 +1341,9 @@
                 <div class="palette-legend-row">
                   <div class="legend-item"><div class="legend-dot" style="background:var(--palette-answered)">1</div><span>Answered</span></div>
                   <div class="legend-item"><div class="legend-dot" style="background:var(--palette-marked)">2</div><span>Marked for Review</span></div>
-                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-visited)">3</div><span>Visited</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-visited)">3</div><span>Visited (Not Answered)</span></div>
                   <div class="legend-item"><div class="legend-dot" style="background:var(--palette-current)">4</div><span>Current</span></div>
-                  <div class="legend-item"><div class="legend-dot" style="background:var(--border);color:var(--text-muted)">5</div><span>Not Visited</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:var(--palette-unattempted);color:var(--text-muted)">5</div><span>Not Visited</span></div>
                 </div>
               </div>
               <div class="instruction-item highlight">
@@ -1370,6 +1402,10 @@
     <div class="quiz-title-bar">
       <div class="quiz-title-bar-inner align-wrapper">
         <div class="quiz-title-mobile" id="quiz-title-mobile">Loading...</div>
+        <button class="mobile-section-switch" onclick="toggleMobileSectionMenu()">
+          <span id="mobileCurrentSectionName">Section</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="mobile-section-menu" id="mobileSectionMenu"></div>
       </div>
     </div>
 
@@ -1412,9 +1448,10 @@
             <div class="legend-list">
               <div class="legend-row"><div class="legend-box" style="background:var(--palette-answered)"></div><span>Answered</span></div>
               <div class="legend-row"><div class="legend-box" style="background:var(--palette-marked)"></div><span>Marked for Review</span></div>
-              <div class="legend-row"><div class="legend-box" style="background:var(--palette-visited)"></div><span>Visited</span></div>
+              <div class="legend-row"><div class="legend-box split"></div><span>Answered & Marked</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-visited)"></div><span>Visited (Not Answered)</span></div>
               <div class="legend-row"><div class="legend-box" style="background:var(--palette-current)"></div><span>Current Question</span></div>
-              <div class="legend-row"><div class="legend-box" style="background:var(--palette-unattempted);border:1.5px solid var(--border)"></div><span>Not Visited</span></div>
+              <div class="legend-row"><div class="legend-box" style="background:var(--palette-unattempted);border:1px solid var(--border)"></div><span>Not Visited</span></div>
             </div>
           </div>
         </div>
@@ -1425,7 +1462,7 @@
             <div class="summary-grid">
               <div class="summary-item"><div class="summary-value" id="sum-answered" style="color:var(--success)">0</div><div class="summary-label">Answered</div></div>
               <div class="summary-item"><div class="summary-value" id="sum-marked" style="color:var(--warning)">0</div><div class="summary-label">Marked</div></div>
-              <div class="summary-item"><div class="summary-value" id="sum-skipped" style="color:var(--text-muted)">0</div><div class="summary-label">Skipped</div></div>
+              <div class="summary-item"><div class="summary-value" id="sum-skipped" style="color:var(--error)">0</div><div class="summary-label">Skipped</div></div>
               <div class="summary-item"><div class="summary-value" id="sum-total" style="color:var(--primary)">0</div><div class="summary-label">Total</div></div>
             </div>
           </div>
@@ -1593,7 +1630,6 @@
         return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
       }
 
-      // 1. Replace $$ ... $$ (display math)
       htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
         try {
           let cleanMath = math.replace(/<[^>]+>/g, '');
@@ -1602,7 +1638,6 @@
         } catch (e) { return match; }
       });
 
-      // 2. Replace \[ ... \] (display math)
       htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
         try {
           let cleanMath = math.replace(/<[^>]+>/g, '');
@@ -1611,7 +1646,6 @@
         } catch (e) { return match; }
       });
 
-      // 3. Replace \( ... \) (inline math)
       htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
         try {
           let cleanMath = math.replace(/<[^>]+>/g, '');
@@ -1620,7 +1654,6 @@
         } catch (e) { return match; }
       });
 
-      // 4. Replace $ ... $ (inline math)
       htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
         if (math.includes('</p>') || math.includes('<p')) return match; 
         try {
@@ -1652,7 +1685,6 @@
       questions: [], currentIndex: 0, currentSection: 0, answers: {}, marked: new Set(),
       visited: new Set(), timeLeft: 0, timerInterval: null, autoSaveTimeout: null,
       isStarted: false, startTime: null, submitTime: null, historyPushed: false,
-      // Per-question time tracking state
       questionTimes: {},
       currentQStartTime: null
     };
@@ -1693,7 +1725,7 @@
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => console.log("Fullscreen request failed"));
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
+      } else if (elem.webkitRequestFullscreen) { 
         elem.webkitRequestFullscreen();
       }
     }
@@ -1701,7 +1733,7 @@
     function exitFullscreen() {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { /* Safari */
+      } else if (document.webkitExitFullscreen) { 
         document.webkitExitFullscreen();
       }
     }
@@ -1716,7 +1748,6 @@
       Quiz.testId = getParam('test');
       if (!Quiz.testId) return showScreen1Error('No test ID specified. Please go back and select a test.');
 
-      // --- CUSTOM TEST INTERCEPTOR ---
       if (Quiz.testId === 'custom') {
         const customDataRaw = localStorage.getItem('apnamock_active_custom_test');
         if (!customDataRaw) return showScreen1Error('Custom test data not found or expired.');
@@ -1728,11 +1759,9 @@
         checkResumeState();
         return; 
       }
-      // -------------------------------
 
       try {
         let buildId = "main";
-
         try {
           const versionRes = await fetch(`${CONFIG.CDN_BASE}meta/version.json?t=${Date.now()}`, { cache: "no-store" });
           if(versionRes.ok){
@@ -1837,7 +1866,7 @@
         Quiz.timeLeft = saved.timeLeft || Quiz.testData.duration * 60;
         Quiz.language = saved.language || Quiz.language; 
         Quiz.startTime = saved.startTime || Date.now();
-        Quiz.questionTimes = saved.questionTimes || {}; // Restore per-question times
+        Quiz.questionTimes = saved.questionTimes || {}; 
       }
       closeOverlay('resumeOverlay'); 
       beginQuiz(true);
@@ -1872,13 +1901,10 @@
       if (!isResume) {
         Quiz.answers = {}; Quiz.marked = new Set(); Quiz.visited = new Set(); Quiz.currentIndex = 0;
         Quiz.timeLeft = (Quiz.testData.duration || 60) * 60; Quiz.startTime = Date.now();
-        Quiz.questionTimes = {}; // Reset times for fresh start
+        Quiz.questionTimes = {}; 
       }
       
-      // Initialize timer for the very first question
       Quiz.currentQStartTime = Date.now();
-
-      // Trigger Fullscreen API for distraction-free mode
       enterFullscreen();
 
       const titleText = Quiz.testData.title_i18n?.[Quiz.language] || Quiz.testData.title || '';
@@ -1923,26 +1949,60 @@
     }
     
     /* ============================================================
-       SECTION TABS
+       SECTION TABS & MOBILE DROPDOWN
     ============================================================ */
     function buildSectionTabs() {
       const sections = Quiz.testData.sections || [];
       const tabsContainer = document.getElementById('sectionTabs');
+      const mobileMenu = document.getElementById('mobileSectionMenu');
+      const mobileCurrent = document.getElementById('mobileCurrentSectionName');
+      
       if (!sections.length) { 
         tabsContainer.innerHTML = `<button class="section-tab active" data-section="0">All Questions</button>`; 
+        if(mobileCurrent) mobileCurrent.textContent = "All Questions";
+        if(mobileMenu) mobileMenu.innerHTML = "";
         return; 
       }
+      
+      // Desktop Tabs
       tabsContainer.innerHTML = sections.map((sec, i) => `
         <button class="section-tab ${i === 0 ? 'active' : ''}" data-section="${i}" onclick="switchSection(${i})">
           ${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)} <span class="tab-answered-count" id="tab-count-${i}">0</span>
         </button>
       `).join('');
+      
+      // Mobile Dropdown Menu Items
+      mobileMenu.innerHTML = sections.map((sec, i) => `
+        <div class="mobile-section-item ${i === 0 ? 'active' : ''}" id="mobile-sec-${i}" onclick="switchSection(${i}); toggleMobileSectionMenu();">
+          <span>${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)}</span>
+          <span class="tab-answered-count" id="mobile-tab-count-${i}">0</span>
+        </div>
+      `).join('');
+      
+      if(mobileCurrent) mobileCurrent.textContent = sections[0].title?.[Quiz.language] || sections[0].title?.en || `Section 1`;
+      
       updateSectionTabCounts();
+    }
+
+    function toggleMobileSectionMenu() {
+      const menu = document.getElementById('mobileSectionMenu');
+      if (menu) menu.classList.toggle('open');
     }
 
     function switchSection(index) {
       Quiz.currentSection = index;
       document.querySelectorAll('.section-tab').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.section) === index));
+      
+      // Update mobile active state
+      document.querySelectorAll('.mobile-section-item').forEach(item => {
+        item.classList.toggle('active', Number(item.id.replace('mobile-sec-', '')) === index);
+      });
+      const mobileCurrent = document.getElementById('mobileCurrentSectionName');
+      if (mobileCurrent) {
+        const sections = Quiz.testData.sections || [];
+        mobileCurrent.textContent = sections[index]?.title?.[Quiz.language] || sections[index]?.title?.en || `Section ${index + 1}`;
+      }
+
       const sectionId = Quiz.testData.sections?.[index]?.section_id;
       if (sectionId) {
         const firstQIndex = Quiz.questions.findIndex(q => q.sectionId === sectionId);
@@ -1955,6 +2015,8 @@
         const count = Quiz.questions.filter((q, qIndex) => q.sectionId === sec.section_id && Quiz.answers[getQId(q, qIndex)] !== undefined).length;
         const el = document.getElementById(`tab-count-${i}`); 
         if (el) el.textContent = count;
+        const mobileEl = document.getElementById(`mobile-tab-count-${i}`);
+        if (mobileEl) mobileEl.textContent = count;
       });
     }
 
@@ -1964,9 +2026,21 @@
       const sectionIndex = (Quiz.testData.sections || []).findIndex(s => String(s.section_id) === String(q.sectionId));
       if (sectionIndex === -1) return;
       Quiz.currentSection = sectionIndex;
+      
+      // Desktop
       document.querySelectorAll('.section-tab').forEach(tab => {
         tab.classList.toggle('active', Number(tab.dataset.section) === sectionIndex);
       });
+      
+      // Mobile
+      document.querySelectorAll('.mobile-section-item').forEach(item => {
+        item.classList.toggle('active', Number(item.id.replace('mobile-sec-', '')) === sectionIndex);
+      });
+      const mobileCurrent = document.getElementById('mobileCurrentSectionName');
+      if (mobileCurrent) {
+        const sections = Quiz.testData.sections || [];
+        mobileCurrent.textContent = sections[sectionIndex]?.title?.[Quiz.language] || sections[sectionIndex]?.title?.en || `Section ${sectionIndex + 1}`;
+      }
     }
     
     /* ============================================================
@@ -1975,7 +2049,6 @@
     function renderQuestion(index) {
       if (index < 0 || index >= Quiz.questions.length) return;
 
-      // 1. Record time spent on the previous question
       if (Quiz.currentQStartTime !== null && Quiz.currentIndex !== index) {
         const timeSpent = Math.floor((Date.now() - Quiz.currentQStartTime) / 1000);
         const prevQId = getQId(Quiz.questions[Quiz.currentIndex], Quiz.currentIndex);
@@ -1984,7 +2057,7 @@
       
       Quiz.currentIndex = index; 
       Quiz.visited.add(index);
-      Quiz.currentQStartTime = Date.now(); // Start timer for the new question
+      Quiz.currentQStartTime = Date.now(); 
       
       updateActiveSectionFromQuestion(index);
       const q = Quiz.questions[index]; const lang = Quiz.language;
@@ -2029,7 +2102,6 @@
         return `<button class="option-item ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})"><span class="option-letter">${['A','B','C','D','E'][i]}</span><span class="option-text">${optTextHtml}</span></button>`;
       }).join('');
 
-      // Auto-scroll to top smoothly when a new question loads
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       updatePaletteGrid(); 
@@ -2170,7 +2242,7 @@
           timeLeft: Quiz.timeLeft, 
           startTime: Quiz.startTime, 
           savedAt: Date.now(),
-          questionTimes: Quiz.questionTimes // Save per-question times
+          questionTimes: Quiz.questionTimes 
         });
       }, CONFIG.AUTO_SAVE_DELAY);
     }
@@ -2182,7 +2254,6 @@
       clearInterval(Quiz.timerInterval); 
       Quiz.submitTime = Date.now();
 
-      // Record time spent on the final question before submitting
       if (Quiz.currentQStartTime !== null) {
         const timeSpent = Math.floor((Date.now() - Quiz.currentQStartTime) / 1000);
         const qId = getQId(Quiz.questions[Quiz.currentIndex], Quiz.currentIndex);
@@ -2222,7 +2293,7 @@
         timeTaken: ((Quiz.testData.duration || 60) * 60) - Quiz.timeLeft, 
         submittedAt: Quiz.submitTime, 
         questionResults: results,
-        questionTimes: Quiz.questionTimes, // Pass per-question times to result page
+        questionTimes: Quiz.questionTimes, 
         testData: { ...Quiz.testData, questions: Quiz.questions }
       };
 
@@ -2243,7 +2314,6 @@
       closeOverlay('submitOverlay'); 
       showToast('Test submitted! Loading results...', 'success');
       
-      // Exit fullscreen before redirecting
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         exitFullscreen();
       }
@@ -2256,7 +2326,6 @@
       autoSave(); 
       closeOverlay('quitOverlay');
       
-      // Exit fullscreen before leaving
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         exitFullscreen();
       }
