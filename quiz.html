@@ -149,7 +149,7 @@
       flex-shrink: 0;
     }
     .brand-icon {
-      width: 28px; /* Smaller logo */
+      width: 28px; 
       height: 28px;
       background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-sm);
@@ -168,12 +168,12 @@
     }
     .brand-name {
       font-family: var(--font-heading);
-      font-size: 14px; /* Smaller text */
+      font-size: 14px; 
       font-weight: 700;
       color: var(--primary);
     }
     .brand-tagline {
-      font-size: 8px; /* Smaller text */
+      font-size: 8px; 
       color: var(--text-muted);
       font-weight: 500;
       letter-spacing: 0.3px;
@@ -196,7 +196,7 @@
 
     /* Mobile Test Title Bar (Below Header - DARK STRIP) */
     .quiz-title-bar {
-      display: none; /* Hidden on desktop */
+      display: none; 
     }
 
     /* Timer (Placed in Header) */
@@ -207,7 +207,7 @@
       background: var(--primary-light);
       border: 1px solid var(--primary);
       border-radius: var(--radius-sm);
-      padding: 4px 10px; /* Compact padding */
+      padding: 4px 10px; 
       flex-shrink: 0;
     }
     .timer-icon { font-size: 12px; color: var(--primary); }
@@ -217,6 +217,7 @@
       color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      line-height: 1;
     }
     .timer-value {
       font-size: 14px;
@@ -226,6 +227,7 @@
       letter-spacing: 1px;
       line-height: 1;
     }
+    .timer-content { display: flex; flex-direction: column; gap: 2px; }
 
     .quiz-timer.warning { background: var(--warning-light); border-color: var(--warning); }
     .quiz-timer.warning .timer-icon,
@@ -253,9 +255,9 @@
       position: sticky;
       top: var(--header-height);
       z-index: 40;
-      background: var(--dark-bar-bg); /* Dark Bar Background */
+      background: var(--dark-bar-bg); 
       border-bottom: 1px solid var(--border);
-      padding: 6px 0; /* Tighter padding */
+      padding: 6px 0; 
     }
 
     .section-tabs {
@@ -267,13 +269,13 @@
     .section-tabs::-webkit-scrollbar { display: none; }
 
     .section-tab {
-      padding: 4px 12px; /* Slimmer capsules */
-      font-size: 12px; /* Smaller font */
+      padding: 4px 12px; 
+      font-size: 12px; 
       font-weight: 600;
-      color: #cbd5e1; /* Light grey text for dark bg */
-      background: var(--dark-bar-bg-hover); /* Slightly lighter dark bg */
-      border: 1px solid #475569;
-      border-radius: 99px; /* Capsule shape */
+      color: #ffffff; /* White text */
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+      border: 1px solid rgba(255, 255, 255, 0.4); /* White border */
+      border-radius: 99px; 
       white-space: nowrap;
       transition: all 0.2s;
       display: flex;
@@ -282,8 +284,8 @@
       flex-shrink: 0;
     }
     .section-tab:hover { 
-      border-color: var(--primary); 
-      color: #fff; 
+      border-color: #ffffff; 
+      background: rgba(255, 255, 255, 0.2); 
     }
     .section-tab.active {
       background: var(--primary);
@@ -293,8 +295,8 @@
     }
 
     .tab-answered-count {
-      background: var(--dark-bar-bg); /* Dark bg for badge */
-      color: #94a3b8;
+      background: rgba(0, 0, 0, 0.3); 
+      color: #fff;
       font-size: 9px;
       font-weight: 700;
       padding: 1px 5px;
@@ -490,7 +492,7 @@
       padding-top: 16px;
       padding-bottom: 140px;
       display: grid;
-      grid-template-columns: 1fr 280px; /* Slightly narrower palette panel */
+      grid-template-columns: 1fr 280px; 
       gap: 20px;
       align-items: start;
     }
@@ -541,10 +543,8 @@
     .marks-positive { color: var(--success); font-weight: 700; }
     .marks-negative { color: var(--error); font-weight: 700; }
     
-    /* Tighter horizontal padding for desktop */
     .question-card-body { padding: 16px 12px; }
 
-    /* Question Image */
     .question-image {
       width: 100%;
       max-height: 280px;
@@ -554,7 +554,6 @@
       border: 1px solid var(--border);
     }
 
-    /* Question Text - Clean for max width */
     .question-text {
       font-size: 16px;
       font-weight: 500;
@@ -566,14 +565,12 @@
       word-break: break-word;
     }
 
-    /* Fix KaTeX display math from breaking the layout */
     .question-text .katex-display {
       overflow-x: auto;
       overflow-y: hidden;
       max-width: 100%;
       padding: 4px 0;
     }
-    /* Bilingual styling helper */
     .bilingual-hi-text {
       color: var(--text-secondary);
       font-size: 0.95em;
@@ -581,7 +578,6 @@
       margin-top: 4px;
     }
 
-    /* Options - Distinct via dashed border separator */
     .options-list { 
       display: flex; 
       flex-direction: column; 
@@ -681,11 +677,10 @@
     }
     .palette-card-body { padding: 12px; }
 
-    /* Palette grid - 10 columns for half-size squares */
     .palette-grid {
       display: grid;
-      grid-template-columns: repeat(10, 1fr); /* 10 columns */
-      gap: 4px; /* Tighter gap */
+      grid-template-columns: repeat(10, 1fr); 
+      gap: 4px; 
     }
     .palette-section-label {
       font-size: 10px;
@@ -695,17 +690,9 @@
       margin-bottom: 6px;
     }
 
-    .palette-section-label:first-child {
-      margin-top: 0;
-    }
-
-    .palette-section {
-      margin-bottom: 16px;
-    }
-
-    .palette-section:last-child {
-      margin-bottom: 0;
-    }
+    .palette-section-label:first-child { margin-top: 0; }
+    .palette-section { margin-bottom: 16px; }
+    .palette-section:last-child { margin-bottom: 0; }
 
     .palette-section-title {
       font-size: 11px;
@@ -716,12 +703,11 @@
       border-bottom: 1px solid var(--border);
     }
     
-    /* Palette Buttons - Compact and distinct */
     .palette-btn {
       width: 100%;
-      height: 24px; /* Fixed compact height instead of aspect-ratio */
+      height: 24px; 
       border-radius: 4px;
-      font-size: 10px; /* Smaller font */
+      font-size: 10px; 
       font-weight: 700;
       background: var(--palette-unattempted);
       color: var(--text-muted);
@@ -740,7 +726,6 @@
       border-color: var(--primary-dark);
     }
     
-    /* Half Green / Half Orange for Answered & Marked */
     .palette-btn.answered-marked {
       background: linear-gradient(to bottom, var(--palette-answered) 50%, var(--palette-marked) 50%);
       color: #fff;
@@ -750,13 +735,11 @@
     .palette-btn.marked { background: var(--palette-marked); color: #fff; }
     .palette-btn.visited { background: var(--palette-visited); color: #fff; }
 
-    /* Legend */
     .legend-list { display: flex; flex-direction: column; gap: 6px; }
     .legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
     .legend-box { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
     .legend-box.split { background: linear-gradient(to bottom, var(--palette-answered) 50%, var(--palette-marked) 50%); }
 
-    /* Summary */
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .summary-item {
       background: var(--bg-muted);
@@ -805,7 +788,6 @@
       padding-bottom: 12px;
     }
 
-    /* Bottom bar buttons */
     .qbtn {
       width: 100%;
       height: 42px;
@@ -1051,8 +1033,8 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--dark-bar-bg-hover); /* Slightly lighter dark bg */
-      border: 1px solid #475569;
+      background: var(--dark-bar-bg-hover); 
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 99px;
       padding: 4px 10px;
       font-size: 11px;
@@ -1067,7 +1049,7 @@
       top: 100%;
       right: 8px;
       left: 8px;
-      background: var(--bg-card); /* Standard card bg for dropdown items */
+      background: var(--bg-card); 
       border: 1px solid var(--border);
       box-shadow: var(--shadow-md);
       z-index: 60;
@@ -1125,8 +1107,8 @@
     .toast.success { background: var(--success); }
     .toast.warning { background: var(--warning); }
     .toast.error { background: var(--error); }
+    .toast.clickable { pointer-events: auto; cursor: pointer; border: 2px solid #fff; }
     
-    /* Dark Mode Text Color Fix for Default (Info) Toasts */
     body.dark-mode .toast:not(.success):not(.warning):not(.error) {
       color: #0f172a;
     }
@@ -1139,14 +1121,13 @@
 
       :root { --header-height: 44px; --title-bar-height: 36px; }
       
-      /* Hide Desktop Title, Show Mobile Title Bar */
       .quiz-title-desktop { display: none; }
       .quiz-title-bar {
         display: block;
         position: sticky;
         top: var(--header-height);
         z-index: 55;
-        background: var(--dark-bar-bg); /* Dark Bar Background */
+        background: var(--dark-bar-bg); 
         border-bottom: 1px solid #475569;
         height: var(--title-bar-height);
       }
@@ -1155,13 +1136,13 @@
         align-items: center;
         justify-content: space-between;
         height: 100%;
-        position: relative; /* For dropdown positioning */
+        position: relative; 
       }
       .quiz-title-mobile {
         font-family: var(--font-heading);
         font-size: 12px;
         font-weight: 700;
-        color: #fff; /* White text for dark bg */
+        color: #fff; 
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1169,16 +1150,25 @@
         margin-right: 8px;
       }
 
-      /* Hide horizontal section tabs on mobile */
       .section-tabs-wrap { display: none; }
 
+      /* Mobile Timer Horizontal Layout */
       .quiz-timer {
-        padding: 3px 6px;
+        padding: 4px 8px;
         gap: 4px;
       }
-      .timer-label { display: none; } /* Hide label to save space */
-      .timer-value { font-size: 13px; }
-      .timer-icon { font-size: 11px; }
+      .timer-content {
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+      }
+      .timer-label { 
+        display: block !important; 
+        font-size: 8px; 
+        margin-bottom: 0;
+      }
+      .timer-value { font-size: 12px; }
+      .timer-icon { font-size: 10px; }
       
       .quiz-body {
         grid-template-columns: 1fr;
@@ -1230,7 +1220,7 @@
       line-height: inherit;
     }
     .question-text p + p, .option-text p + p {
-      margin-top: 8px; /* Adds a small space between multiple paragraphs */
+      margin-top: 8px; 
     }
     .option-text {
       display: flex;
@@ -1398,7 +1388,7 @@
         <div class="quiz-title-desktop" id="quiz-title-desktop">Loading...</div>
         <div class="quiz-timer" id="quizTimer">
           <i class="fa-solid fa-stopwatch timer-icon"></i>
-          <div>
+          <div class="timer-content">
             <div class="timer-label">Time Left</div>
             <div class="timer-value" id="timerValue">00:00</div>
           </div>
@@ -1706,11 +1696,19 @@
     /* ============================================================
        TOAST & POPUPS
     ============================================================ */
-    function showToast(message, type = 'info', duration = 2500) {
+    function showToast(message, type = 'info', duration = 2500, isClickable = false, onClickCallback = null) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
+      toast.className = `toast ${type} ${isClickable ? 'clickable' : ''}`;
       toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i> ${message}`;
+      
+      if (isClickable && onClickCallback) {
+        toast.addEventListener('click', () => {
+          onClickCallback();
+          toast.remove();
+        });
+      }
+      
       container.appendChild(toast);
       setTimeout(() => toast.remove(), duration);
     }
@@ -1744,6 +1742,15 @@
         document.webkitExitFullscreen();
       }
     }
+
+    // Listen for fullscreen exit to show warning toast
+    function handleFullscreenChange() {
+      if (Quiz.isStarted && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        showToast('You exited full screen. Tap here to return.', 'warning', 5000, true, enterFullscreen);
+      }
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
     /* ============================================================
        INIT — SCREEN 1
@@ -1971,14 +1978,12 @@
         return; 
       }
       
-      // Desktop Tabs
       tabsContainer.innerHTML = sections.map((sec, i) => `
         <button class="section-tab ${i === 0 ? 'active' : ''}" data-section="${i}" onclick="switchSection(${i})">
           ${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)} <span class="tab-answered-count" id="tab-count-${i}">0</span>
         </button>
       `).join('');
       
-      // Mobile Dropdown Menu Items
       mobileMenu.innerHTML = sections.map((sec, i) => `
         <div class="mobile-section-item ${i === 0 ? 'active' : ''}" id="mobile-sec-${i}" onclick="switchSection(${i}); toggleMobileSectionMenu();">
           <span>${escapeHTML(sec.title?.[Quiz.language] || sec.title?.en || `Section ${i + 1}`)}</span>
@@ -2000,7 +2005,6 @@
       Quiz.currentSection = index;
       document.querySelectorAll('.section-tab').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.section) === index));
       
-      // Update mobile active state
       document.querySelectorAll('.mobile-section-item').forEach(item => {
         item.classList.toggle('active', Number(item.id.replace('mobile-sec-', '')) === index);
       });
@@ -2034,12 +2038,10 @@
       if (sectionIndex === -1) return;
       Quiz.currentSection = sectionIndex;
       
-      // Desktop
       document.querySelectorAll('.section-tab').forEach(tab => {
         tab.classList.toggle('active', Number(tab.dataset.section) === sectionIndex);
       });
       
-      // Mobile
       document.querySelectorAll('.mobile-section-item').forEach(item => {
         item.classList.toggle('active', Number(item.id.replace('mobile-sec-', '')) === sectionIndex);
       });
