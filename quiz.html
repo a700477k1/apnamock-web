@@ -66,6 +66,10 @@
       --palette-visited: #dc2626; /* Changed to Red for "Visited but Not Answered" */
       --palette-current: #1a56db;
       --palette-unattempted: #e2e8f0; /* Neutral Grey for "Not Visited" */
+      
+      /* Dark Bar Colors */
+      --dark-bar-bg: #1e293b;
+      --dark-bar-bg-hover: #334155;
     }
 
     /* Dark Mode Compatibility */
@@ -84,6 +88,8 @@
       --error-light: rgba(220, 38, 38, 0.2);
       --purple-light: rgba(124, 58, 237, 0.2);
       --palette-unattempted: #334155;
+      --dark-bar-bg: #0f172a; /* Slightly darker in dark mode */
+      --dark-bar-bg-hover: #1e293b;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -188,7 +194,7 @@
       display: block;
     }
 
-    /* Mobile Test Title Bar (Below Header) */
+    /* Mobile Test Title Bar (Below Header - DARK STRIP) */
     .quiz-title-bar {
       display: none; /* Hidden on desktop */
     }
@@ -241,13 +247,13 @@
     }
 
     /* ============================================================
-       SECTION TABS (STICKY SLIM CAPSULES)
+       SECTION TABS (STICKY SLIM CAPSULES - DARK BAR DESKTOP)
     ============================================================ */
     .section-tabs-wrap {
       position: sticky;
       top: var(--header-height);
       z-index: 40;
-      background: var(--bg-card);
+      background: var(--dark-bar-bg); /* Dark Bar Background */
       border-bottom: 1px solid var(--border);
       padding: 6px 0; /* Tighter padding */
     }
@@ -264,9 +270,9 @@
       padding: 4px 12px; /* Slimmer capsules */
       font-size: 12px; /* Smaller font */
       font-weight: 600;
-      color: var(--text-secondary);
-      background: var(--bg-muted);
-      border: 1px solid var(--border);
+      color: #cbd5e1; /* Light grey text for dark bg */
+      background: var(--dark-bar-bg-hover); /* Slightly lighter dark bg */
+      border: 1px solid #475569;
       border-radius: 99px; /* Capsule shape */
       white-space: nowrap;
       transition: all 0.2s;
@@ -277,18 +283,18 @@
     }
     .section-tab:hover { 
       border-color: var(--primary); 
-      color: var(--primary); 
+      color: #fff; 
     }
     .section-tab.active {
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
-      box-shadow: 0 2px 6px rgba(26,86,219,0.2);
+      box-shadow: 0 2px 6px rgba(26,86,219,0.3);
     }
 
     .tab-answered-count {
-      background: var(--bg-card);
-      color: var(--text-muted);
+      background: var(--dark-bar-bg); /* Dark bg for badge */
+      color: #94a3b8;
       font-size: 9px;
       font-weight: 700;
       padding: 1px 5px;
@@ -1039,19 +1045,19 @@
     .btn-full { width: 100%; }
 
     /* ============================================================
-       MOBILE SECTION SWITCH DROPDOWN
+       MOBILE SECTION SWITCH DROPDOWN (DARK BAR)
     ============================================================ */
     .mobile-section-switch {
       display: flex;
       align-items: center;
       gap: 4px;
-      background: var(--bg-muted);
-      border: 1px solid var(--border);
+      background: var(--dark-bar-bg-hover); /* Slightly lighter dark bg */
+      border: 1px solid #475569;
       border-radius: 99px;
       padding: 4px 10px;
       font-size: 11px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: #fff;
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -1059,14 +1065,15 @@
       display: none;
       position: absolute;
       top: 100%;
-      right: 0;
-      left: 0;
-      background: var(--bg-card);
+      right: 8px;
+      left: 8px;
+      background: var(--bg-card); /* Standard card bg for dropdown items */
       border: 1px solid var(--border);
       box-shadow: var(--shadow-md);
       z-index: 60;
       max-height: 300px;
       overflow-y: auto;
+      border-radius: var(--radius-md);
     }
     .mobile-section-menu.open { display: block; }
     .mobile-section-item {
@@ -1139,8 +1146,8 @@
         position: sticky;
         top: var(--header-height);
         z-index: 55;
-        background: var(--bg-card);
-        border-bottom: 1px solid var(--border);
+        background: var(--dark-bar-bg); /* Dark Bar Background */
+        border-bottom: 1px solid #475569;
         height: var(--title-bar-height);
       }
       .quiz-title-bar-inner {
@@ -1154,7 +1161,7 @@
         font-family: var(--font-heading);
         font-size: 12px;
         font-weight: 700;
-        color: var(--text-primary);
+        color: #fff; /* White text for dark bg */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
