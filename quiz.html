@@ -53,8 +53,8 @@
       --radius-lg: 14px;
       --radius-xl: 20px;
       
-      --header-height: 48px; /* Compact header */
-      --title-bar-height: 36px; /* Compact mobile title bar */
+      --header-height: 48px; 
+      --title-bar-height: 36px; 
 
       --font-body: 'Inter', sans-serif;
       --font-heading: 'Poppins', sans-serif;
@@ -63,9 +63,9 @@
       --palette-answered: #16a34a;
       --palette-wrong: #dc2626;
       --palette-marked: #f59e0b;
-      --palette-visited: #dc2626; /* Changed to Red for "Visited but Not Answered" */
+      --palette-visited: #dc2626; 
       --palette-current: #1a56db;
-      --palette-unattempted: #e2e8f0; /* Neutral Grey for "Not Visited" */
+      --palette-unattempted: #e2e8f0; 
       
       /* Dark Bar Colors */
       --dark-bar-bg: #1e293b;
@@ -88,7 +88,7 @@
       --error-light: rgba(220, 38, 38, 0.2);
       --purple-light: rgba(124, 58, 237, 0.2);
       --palette-unattempted: #334155;
-      --dark-bar-bg: #0f172a; /* Slightly darker in dark mode */
+      --dark-bar-bg: #0f172a; 
       --dark-bar-bg-hover: #1e293b;
     }
 
@@ -199,6 +199,27 @@
       display: none; 
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      background: transparent;
+    }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+
     /* Timer (Placed in Header) */
     .quiz-timer {
       display: flex;
@@ -208,7 +229,6 @@
       border: 1px solid var(--primary);
       border-radius: var(--radius-sm);
       padding: 4px 10px; 
-      flex-shrink: 0;
     }
     .timer-icon { font-size: 12px; color: var(--primary); }
     .timer-label {
@@ -227,7 +247,7 @@
       letter-spacing: 1px;
       line-height: 1;
     }
-    .timer-content { display: flex; flex-direction: column; gap: 2px; }
+    .timer-content { display: flex; flex-direction: column; gap: 2px; align-items: center; }
 
     .quiz-timer.warning { background: var(--warning-light); border-color: var(--warning); }
     .quiz-timer.warning .timer-icon,
@@ -272,9 +292,9 @@
       padding: 4px 12px; 
       font-size: 12px; 
       font-weight: 600;
-      color: #ffffff; /* White text */
-      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
-      border: 1px solid rgba(255, 255, 255, 0.4); /* White border */
+      color: #ffffff; 
+      background: rgba(255, 255, 255, 0.1); 
+      border: 1px solid rgba(255, 255, 255, 0.4); 
       border-radius: 99px; 
       white-space: nowrap;
       transition: all 0.2s;
@@ -308,6 +328,26 @@
     }
 
     /* ============================================================
+       FULLSCREEN WARNING BAR
+    ============================================================ */
+    .fullscreen-warning {
+      display: none;
+      background: var(--warning);
+      color: #fff;
+      padding: 8px 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 45;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .fullscreen-warning i { font-size: 14px; }
+
+    /* ============================================================
        SCREEN SYSTEM
     ============================================================ */
     .screen { display: none; }
@@ -317,9 +357,9 @@
        SCREEN 1 — PRE-QUIZ
     ============================================================ */
     .preq-wrapper {
-      max-width: 700px;
+      max-width: 1200px; /* Matching tests.html width */
       margin: 0 auto;
-      padding: 32px 20px 60px;
+      padding: 28px 20px 60px;
     }
 
     .back-link {
@@ -335,6 +375,8 @@
     .back-link:hover { color: var(--text-primary); }
 
     .preq-card {
+      max-width: 800px;
+      margin: 0 auto; /* Center the card in the wider wrapper */
       background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: var(--radius-xl);
@@ -437,19 +479,31 @@
       padding: 12px 14px;
       border-bottom: 1px solid var(--border);
       font-size: 13.5px;
-      color: var(--text-secondary);
+      color: var(--text-secondary); 
       line-height: 1.5;
     }
     .instruction-item:last-child { border-bottom: none; }
     .instruction-item i { font-size: 13px; margin-top: 3px; flex-shrink: 0; }
     
     .instruction-item.highlight { background: var(--warning-light); color: #92400e; }
-    body.dark-mode .instruction-item.highlight { color: var(--warning); }
+    body.dark-mode .instruction-item.highlight { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
     .instruction-item.highlight i { color: var(--warning); }
     
     .instruction-item.info-blue { background: var(--primary-light); color: var(--primary-dark); }
-    body.dark-mode .instruction-item.info-blue { color: #93c5fd; }
+    body.dark-mode .instruction-item.info-blue { background: rgba(26, 86, 219, 0.15); color: #93c5fd; }
     .instruction-item.info-blue i { color: var(--primary); }
+
+    .instruction-item.warning-item { background: var(--warning-light); color: #92400e; }
+    body.dark-mode .instruction-item.warning-item { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .instruction-item.warning-item i { color: var(--warning); }
+
+    .instruction-item.success-item { background: var(--success-light); color: #14532d; }
+    body.dark-mode .instruction-item.success-item { background: rgba(22, 163, 74, 0.15); color: var(--success); }
+    .instruction-item.success-item i { color: var(--success); }
+
+    .instruction-item.error-item { background: var(--error-light); color: #7f1d1d; }
+    body.dark-mode .instruction-item.error-item { background: rgba(220, 38, 38, 0.15); color: var(--error); }
+    .instruction-item.error-item i { color: var(--error); }
 
     .palette-legend-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0; }
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
@@ -1152,23 +1206,21 @@
 
       .section-tabs-wrap { display: none; }
 
-      /* Mobile Timer Horizontal Layout */
       .quiz-timer {
-        padding: 4px 8px;
+        padding: 3px 6px;
         gap: 4px;
       }
       .timer-content {
-        flex-direction: row;
-        align-items: center;
-        gap: 4px;
+        flex-direction: column; /* Reverted to stacked layout */
+        gap: 1px;
       }
       .timer-label { 
         display: block !important; 
         font-size: 8px; 
         margin-bottom: 0;
       }
-      .timer-value { font-size: 12px; }
-      .timer-icon { font-size: 10px; }
+      .timer-value { font-size: 13px; }
+      .timer-icon { font-size: 11px; }
       
       .quiz-body {
         grid-template-columns: 1fr;
@@ -1300,7 +1352,7 @@
             <div class="instruction-list">
               <div class="instruction-item info-blue">
                 <i class="fa-solid fa-circle-info"></i>
-                <span id="instr-marks">Each correct answer carries marks as specified per question. Wrong answers attract negative marking as applicable.</span>
+                <span id="instr-marks">Each correct answer carries marks as specified per question. Each wrong answer carries negative marking as specified per question.</span>
               </div>
               <div class="instruction-item">
                 <i class="fa-solid fa-hand-pointer"></i>
@@ -1314,20 +1366,20 @@
                 <i class="fa-solid fa-eraser"></i>
                 <span><strong>Clear Response</strong> — Remove your selected answer for the current question.</span>
               </div>
-              <div class="instruction-item" style="background:var(--warning-light);color:#92400e">
-                <i class="fa-solid fa-bookmark" style="color:var(--warning)"></i>
+              <div class="instruction-item warning-item">
+                <i class="fa-solid fa-bookmark"></i>
                 <span><strong>Mark for Review</strong> — Mark the question to revisit later. It will be highlighted in orange in the question palette.</span>
               </div>
-              <div class="instruction-item" style="background:var(--success-light);color:#14532d">
-                <i class="fa-solid fa-floppy-disk" style="color:var(--success)"></i>
+              <div class="instruction-item success-item">
+                <i class="fa-solid fa-floppy-disk"></i>
                 <span><strong>Save & Next</strong> — Save your answer and move to the next question.</span>
               </div>
               <div class="instruction-item">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span><strong>Submit</strong> — Submit your test. A confirmation popup will appear before final submission.</span>
               </div>
-              <div class="instruction-item" style="background:var(--error-light);color:#7f1d1d">
-                <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i>
+              <div class="instruction-item error-item">
+                <i class="fa-solid fa-right-from-bracket"></i>
                 <span><strong>Quit Test</strong> — Exit the test without submitting. Your progress will be saved automatically.</span>
               </div>
               <div class="instruction-item" style="flex-direction:column;align-items:flex-start;gap:10px">
@@ -1386,11 +1438,16 @@
           </div>
         </a>
         <div class="quiz-title-desktop" id="quiz-title-desktop">Loading...</div>
-        <div class="quiz-timer" id="quizTimer">
-          <i class="fa-solid fa-stopwatch timer-icon"></i>
-          <div class="timer-content">
-            <div class="timer-label">Time Left</div>
-            <div class="timer-value" id="timerValue">00:00</div>
+        <div class="header-actions">
+          <button class="btn-icon" id="themeToggleBtn" title="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <div class="quiz-timer" id="quizTimer">
+            <i class="fa-solid fa-stopwatch timer-icon"></i>
+            <div class="timer-content">
+              <div class="timer-label">Time Left</div>
+              <div class="timer-value" id="timerValue">00:00</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1409,6 +1466,10 @@
     <div class="section-tabs-wrap">
       <div class="section-tabs align-wrapper" id="sectionTabs">
         </div>
+    </div>
+
+    <div class="fullscreen-warning" id="fullscreenWarning" onclick="enterFullscreen()">
+      <i class="fa-solid fa-expand"></i> You exited fullscreen. Tap here to return to fullscreen mode.
     </div>
 
     <div class="quiz-body align-wrapper">
@@ -1743,10 +1804,13 @@
       }
     }
 
-    // Listen for fullscreen exit to show warning toast
+    // Listen for fullscreen exit to show persistent warning bar
     function handleFullscreenChange() {
+      const warning = document.getElementById('fullscreenWarning');
       if (Quiz.isStarted && !document.fullscreenElement && !document.webkitFullscreenElement) {
-        showToast('You exited full screen. Tap here to return.', 'warning', 5000, true, enterFullscreen);
+        if(warning) warning.style.display = 'flex';
+      } else {
+        if(warning) warning.style.display = 'none';
       }
     }
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -1756,8 +1820,19 @@
        INIT — SCREEN 1
     ============================================================ */
     async function initScreen1() {
-      const savedTheme = storageGet('theme');
-      if (savedTheme === 'dark') document.body.classList.add('dark-mode');
+      // Theme Toggle Logic
+      const savedTheme = localStorage.getItem('apnamock_theme');
+      if (savedTheme === '"dark"') {
+        document.body.classList.add("dark-mode");
+        document.querySelector("#themeToggleBtn i").className = "fa-solid fa-sun";
+      }
+
+      document.getElementById("themeToggleBtn").addEventListener("click", function() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        document.querySelector("#themeToggleBtn i").className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+        localStorage.setItem('apnamock_theme', JSON.stringify(isDark ? "dark" : "light"));
+      });
 
       Quiz.testId = getParam('test');
       if (!Quiz.testId) return showScreen1Error('No test ID specified. Please go back and select a test.');
@@ -1822,8 +1897,8 @@
 
       document.title = `${title} — ApnaMock`;
 
-      const nm = t.negativeMarking || 0;
-      document.getElementById('instr-marks').textContent = `Each correct answer carries marks as specified per question. ${nm > 0 ? `Negative marking of ${nm} mark(s) per wrong answer applies.` : 'There is no negative marking in this test.'}`;
+      // Updated instruction text
+      document.getElementById('instr-marks').textContent = 'Each correct answer carries marks as specified per question. Each wrong answer carries negative marking as specified per question.';
     }
 
     function showScreen1Error(message) {
