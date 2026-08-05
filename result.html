@@ -525,11 +525,10 @@
     .review-card.skipped { border-left: 4px solid var(--text-muted); }
     .review-card.marked { border-left: 4px solid var(--warning); }
     
-    /* Header Layout */
     .review-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-muted); border-bottom: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
-    .review-card-header-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .review-card-header-left { display: flex; align-items: center; gap: 8px; }
     
-    /* Question Tag - Blue Background (Matching favorites.html) */
+    /* Question Tag - Blue Background */
     .review-q-number { 
       font-size: 11px; 
       font-weight: 700; 
@@ -541,8 +540,10 @@
     
     .review-section-tag { font-size: 11px; background: var(--border); color: var(--text-secondary); padding: 2px 8px; border-radius: 99px; font-weight: 600; }
     
-    /* Status Tag pushed to extreme right */
-    .review-status-tag { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: capitalize; margin-left: auto; }
+    .review-header-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    
+    /* Status Tags - Dark Mode Fixes */
+    .review-status-tag { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: capitalize; }
     .review-status-tag.correct { background: var(--success-light); color: var(--success); }
     .review-status-tag.wrong { background: var(--error-light); color: var(--error); }
     .review-status-tag.skipped { background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border); }
@@ -575,7 +576,6 @@
       overflow-x: auto;
       word-break: break-word;
     }
-    /* Fix KaTeX display math from breaking the layout */
     .review-question-text .katex-display {
       overflow-x: auto;
       overflow-y: hidden;
@@ -597,7 +597,6 @@
       word-break: break-word;
       position: relative;
     }
-    /* Fix KaTeX display math inside options */
     .review-option .katex-display {
       overflow-x: auto;
       overflow-y: hidden;
@@ -654,10 +653,8 @@
       line-height: 1.6;
       word-break: break-word; 
     }
-    /* Dark Mode Explanation Text Fix */
     body.dark-mode .explanation-text { color: #93c5fd; }
 
-    /* Fix KaTeX display math from breaking the container */
     .explanation-text .katex-display {
       overflow-x: auto;
       overflow-y: hidden;
@@ -684,6 +681,7 @@
       border-radius: var(--radius-md); font-size: 14px; font-weight: 600; 
       color: var(--primary); border: 1.5px solid var(--primary); 
       transition: all 0.15s; background: transparent; cursor: pointer;
+      white-space: nowrap;
     }
     .favorite-btn:hover { 
       color: var(--primary-dark); 
@@ -701,7 +699,7 @@
       color: #fff;
     }
 
-    /* Explanation Toggle Button - Blue Background */
+    /* Explanation Toggle Button */
     .expl-toggle-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%; height: 42px; padding: 0 16px;
@@ -709,6 +707,7 @@
       color: #fff; border: none;
       background: var(--primary); cursor: pointer;
       transition: background 0.15s;
+      white-space: nowrap;
     }
     .expl-toggle-btn:hover {
       background: var(--primary-dark);
@@ -734,7 +733,6 @@
     .toast.error { background: var(--error); }
     .toast.info { background: var(--primary); color: #fff; } 
 
-    /* Fix default toast in dark mode so it isn't a white box */
     body.dark-mode .toast:not(.success):not(.error):not(.warning):not(.info) {
       background: #1e293b; 
       color: #f8fafc; 
@@ -764,7 +762,7 @@
     .footer-bottom { max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
       
@@ -774,7 +772,6 @@
       .brand-tagline { display: block; font-size: 9px; letter-spacing: 0.1px; }
       .page-title { font-size: 22px; }
 
-      /* Reduced padding for result cards to make content wider */
       .result-header-card { padding: 20px; }
       .performance-message-card { padding: 16px; flex-direction: column; text-align: center; }
       .score-card { padding: 14px; }
@@ -784,6 +781,15 @@
       
       .actions-row { flex-direction: column; }
       .actions-row .btn { width: 100%; }
+      
+      /* Mobile Footer Buttons Adjustments */
+      .review-card-footer { gap: 8px; }
+      .expl-toggle-btn, .favorite-btn {
+        font-size: 12px; /* Smaller font to fit on one line */
+        padding: 0 8px; /* Tighter padding */
+        gap: 4px; /* Tighter gap */
+        height: 38px;
+      }
     }
 
     @media (max-width: 600px) {
@@ -812,7 +818,6 @@
       flex-direction: column;
     }
 
-        /* QUILL TABLE STYLING */
     .review-question-text table, .review-option table, .explanation-text table {
       border-collapse: collapse;
       width: 100%;
@@ -1063,21 +1068,18 @@ Done
     function renderMathInString(htmlString) {
       if (!window.katex) return htmlString;
 
-      // Helper to unescape HTML entities that Quill might create
       function decodeEntities(str) {
         return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
       }
 
-      // 1. Replace $$ ... $$ (display math)
       htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => {
         try {
-          let cleanMath = math.replace(/<[^>]+>/g, ''); // Strip HTML tags inside math
+          let cleanMath = math.replace(/<[^>]+>/g, '');
           cleanMath = decodeEntities(cleanMath);
           return katex.renderToString(cleanMath, { displayMode: true, throwOnError: false });
         } catch (e) { return match; }
       });
 
-      // 2. Replace \[ ... \] (display math)
       htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => {
         try {
           let cleanMath = math.replace(/<[^>]+>/g, '');
@@ -1086,7 +1088,6 @@ Done
         } catch (e) { return match; }
       });
 
-      // 3. Replace \( ... \) (inline math)
       htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => {
         try {
           let cleanMath = math.replace(/<[^>]+>/g, '');
@@ -1095,7 +1096,6 @@ Done
         } catch (e) { return match; }
       });
 
-      // 4. Replace $ ... $ (inline math) - only if it doesn't span across paragraphs
       htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => {
         if (math.includes('</p>') || math.includes('<p')) return match; 
         try {
@@ -1130,7 +1130,7 @@ Done
       reviewFilter: 'all',
 
       selectedSectionFilter: null,
-selectedSectionName: null,
+      selectedSectionName: null,
       
       favorites: new Set(),
       language: 'bilingual'
@@ -2086,13 +2086,15 @@ function selectSectionFilter(
             <div class="review-card-header-left">
               <span class="review-q-number">Q${qr.questionIndex + 1}</span>
               <span class="review-section-tag">${escapeHTML(sectionName)}</span>
+            </div>
+            <div class="review-header-right">
               <div class="q-time-badge ${timeClass}">
                 <i class="fa-solid fa-stopwatch"></i> Time Taken: ${timeText}
               </div>
-            </div>
-            <div class="review-status-tag ${qr.status}">
-              <i class="fa-solid ${sc.icon}"></i>
-              ${sc.label}
+              <div class="review-status-tag ${qr.status}">
+                <i class="fa-solid ${sc.icon}"></i>
+                ${sc.label}
+              </div>
             </div>
           </div>
 
