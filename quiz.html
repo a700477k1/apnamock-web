@@ -202,7 +202,7 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px; /* Space between clock and toggle */
       flex-shrink: 0;
     }
 
@@ -248,6 +248,17 @@
       line-height: 1;
     }
     .timer-content { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+
+    /* Dark Mode Timer Overrides */
+    body.dark-mode .quiz-timer {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    body.dark-mode .timer-icon,
+    body.dark-mode .timer-label,
+    body.dark-mode .timer-value {
+      color: #ffffff;
+    }
 
     .quiz-timer.warning { background: var(--warning-light); border-color: var(--warning); }
     .quiz-timer.warning .timer-icon,
@@ -357,7 +368,7 @@
        SCREEN 1 — PRE-QUIZ
     ============================================================ */
     .preq-wrapper {
-      max-width: 1200px; /* Matching tests.html width */
+      max-width: 1200px; 
       margin: 0 auto;
       padding: 28px 20px 60px;
     }
@@ -375,8 +386,7 @@
     .back-link:hover { color: var(--text-primary); }
 
     .preq-card {
-      max-width: 800px;
-      margin: 0 auto; /* Center the card in the wider wrapper */
+      width: 100%; /* Full width of the wrapper */
       background: var(--bg-card);
       border: 1.5px solid var(--border);
       border-radius: var(--radius-xl);
@@ -723,7 +733,7 @@
       background: var(--bg-muted);
     }
     .palette-card-title {
-      font-size: 11px;
+      font-size: 13px; /* Increased font size */
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -737,7 +747,7 @@
       gap: 4px; 
     }
     .palette-section-label {
-      font-size: 10px;
+      font-size: 12px; /* Increased font size */
       font-weight: 700;
       color: var(--text-secondary);
       margin-top: 10px;
@@ -749,7 +759,7 @@
     .palette-section:last-child { margin-bottom: 0; }
 
     .palette-section-title {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 8px;
@@ -759,9 +769,9 @@
     
     .palette-btn {
       width: 100%;
-      height: 24px; 
-      border-radius: 4px;
-      font-size: 10px; 
+      height: 30px; /* 20% larger than 24px */
+      border-radius: 5px;
+      font-size: 12px; /* Increased font size */
       font-weight: 700;
       background: var(--palette-unattempted);
       color: var(--text-muted);
@@ -790,8 +800,8 @@
     .palette-btn.visited { background: var(--palette-visited); color: #fff; }
 
     .legend-list { display: flex; flex-direction: column; gap: 6px; }
-    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
-    .legend-box { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); /* Increased font size */ }
+    .legend-box { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; /* 20% larger than 16px */ }
     .legend-box.split { background: linear-gradient(to bottom, var(--palette-answered) 50%, var(--palette-marked) 50%); }
 
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -802,14 +812,14 @@
       text-align: center;
     }
     .summary-value {
-      font-size: 18px;
+      font-size: 20px; /* Increased font size */
       font-weight: 700;
       color: var(--text-primary);
       line-height: 1;
       margin-bottom: 3px;
     }
     .summary-label {
-      font-size: 9px;
+      font-size: 11px; /* Increased font size */
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -1211,7 +1221,7 @@
         gap: 4px;
       }
       .timer-content {
-        flex-direction: column; /* Reverted to stacked layout */
+        flex-direction: column; 
         gap: 1px;
       }
       .timer-label { 
@@ -1439,9 +1449,6 @@
         </a>
         <div class="quiz-title-desktop" id="quiz-title-desktop">Loading...</div>
         <div class="header-actions">
-          <button class="btn-icon" id="themeToggleBtn" title="Toggle Theme">
-            <i class="fa-solid fa-moon"></i>
-          </button>
           <div class="quiz-timer" id="quizTimer">
             <i class="fa-solid fa-stopwatch timer-icon"></i>
             <div class="timer-content">
@@ -1449,6 +1456,9 @@
               <div class="timer-value" id="timerValue">00:00</div>
             </div>
           </div>
+          <button class="btn-icon" id="themeToggleBtn" title="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
         </div>
       </div>
     </header>
