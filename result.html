@@ -717,24 +717,28 @@
     }
 
     /* ============================================================
-       IMAGE SHARE TEMPLATE
+       IMAGE SHARE TEMPLATE (Exact match with jobs.html)
     ============================================================ */
     #shareResultTemplate {
+      position: relative; top: 0; left: 0;
       width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
       font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
-      opacity: 1; /* Must be 1 for html2canvas */
+      opacity: 1;
     }
     .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
     .tpl-alert-bar { background: #ffffff; color: #1a56db; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 12px 20px; border-radius: 12px; font-size: 33px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .tpl-alert-bell { font-size: 1.2em; color: #facc15; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
     .tpl-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 25px; gap: 20px; }
     .tpl-header-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
     .tpl-logo { width: 70px; height: 70px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 36px; color: #1a56db; }
     .tpl-brand-name { color: #fff; font-size: 36px; font-weight: 700; font-family: 'Poppins', sans-serif; line-height: 1; margin: 0; }
     .tpl-tagline { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 6px; }
+    .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+    .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
     .tpl-promo-card { align-self: center; background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none; }
     .tpl-job-info { background: rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 35px; border: 1px solid rgba(255,255,255,0.3); }
-    .tpl-title { margin: 0 0 15px 0; font-size: 30px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; text-align: center; }
-    .tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .tpl-title { margin: 0 0 30px 0; font-size: 30px; color: #ffffff; line-height: 1.3; font-family: 'Poppins', sans-serif; text-align: center; }
+    .tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .tpl-grid-item { background: rgba(15, 23, 42, 0.3); padding: 18px; border-radius: 12px; text-align: center; }
     .tpl-grid-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
     .tpl-grid-value { font-size: 24px; font-weight: 600; color: #ffffff; line-height: 1.2; }
@@ -954,12 +958,12 @@
 
   <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
   <div style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1;">
-    <div id="shareResultTemplate">
+    <div id="shareResultTemplate" style="opacity: 1;">
       <div class="tpl-content-wrapper">
         <div class="tpl-alert-bar">
-          <span>🏆</span>
+          <span class="tpl-alert-bell">🏆</span>
           Mock Test Result
-          <span>🎯</span>
+          <span class="tpl-alert-bell">🎯</span>
         </div>
         <div class="tpl-header">
           <div class="tpl-header-left">
@@ -969,8 +973,11 @@
               <div class="tpl-tagline">Practice. Improve. Succeed.</div>
             </div>
           </div>
-          <div class="tpl-promo-card">I scored on ApnaMock!</div>
+          <div class="tpl-header-right">
+            <div class="tpl-header-promo">Visit ApnaMock for Free Mock Tests, Job Updates and Much More....</div>
+          </div>
         </div>
+        <div class="tpl-promo-card">I scored on ApnaMock!</div>
         <div class="tpl-job-info">
           <h2 id="tplTitle" class="tpl-title">Test Title</h2>
           <div class="tpl-grid">
@@ -978,11 +985,13 @@
             <div class="tpl-grid-item"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
             <div class="tpl-grid-item"><div class="tpl-grid-label">Correct</div><div id="tplCorrect" class="tpl-grid-value">0</div></div>
             <div class="tpl-grid-item"><div class="tpl-grid-label">Wrong</div><div id="tplWrong" class="tpl-grid-value">0</div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Time Taken</div><div id="tplTime" class="tpl-grid-value">0m 0s</div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Strongest Section</div><div id="tplStrongest" class="tpl-grid-value">N/A</div></div>
           </div>
         </div>
         <div class="tpl-footer">
           <div class="tpl-footer-text">Can you beat my score?</div>
-          <div id="tplFooterUrl" class="tpl-footer-box">www.apnamock.com</div>
+          <div id="tplFooterUrl" class="tpl-footer-box">Visit: www.apnamock.com</div>
         </div>
       </div>
     </div>
@@ -1923,9 +1932,9 @@ function selectSectionFilter(
           <a href="/tests.html" class="btn btn-ghost">
             <i class="fa-solid fa-arrow-left"></i> Back to Tests
           </a>
-          <a href="/quiz.html?test=${escapeHTML(R.testId)}" class="btn btn-outline">
-            <i class="fa-solid fa-rotate-right"></i> Reattempt
-          </a>
+          <button class="btn btn-primary" onclick="generateResultImage()">
+            <i class="fa-solid fa-share-nodes"></i> Share Result
+          </button>
         </div>
 
         ${sections.length > 1 ? `
@@ -2003,16 +2012,35 @@ function selectSectionFilter(
       
       const R = Result.data;
       
+      // Calculate Time Taken for Image
+      let validTimeTaken = parseInt(R.timeTaken) || 0;
+      const maxTimeSecs = (parseFloat(R.testData?.duration) || parseInt(R.totalQuestions) || 60) * 60;
+      if (validTimeTaken > maxTimeSecs) {
+          const attempted = (parseInt(R.correct) || 0) + (parseInt(R.wrong) || 0);
+          const totalQs = parseInt(R.totalQuestions) || 1;
+          validTimeTaken = Math.round(maxTimeSecs * (attempted / totalQs));
+          if (validTimeTaken < (attempted * 15)) validTimeTaken = attempted * 15;
+          if (validTimeTaken > maxTimeSecs) validTimeTaken = maxTimeSecs;
+      }
+      const timeTakenFormatted = validTimeTaken > 0 ? `${Math.floor(validTimeTaken / 60)}m ${validTimeTaken % 60}s` : '—';
+
+      // Calculate Strongest Section for Image
+      const sections = computeSectionPerformance();
+      const strongestSection = sections.length > 0 ? sections.reduce((a, b) => a.accuracy > b.accuracy ? a : b) : null;
+
       // 1. Populate the hidden template
       document.getElementById('tplTitle').innerText = R.testTitle || 'Mock Test';
       document.getElementById('tplScore').innerText = `${R.score}/${R.totalMarks}`;
       document.getElementById('tplAccuracy').innerText = `${R.accuracy}%`;
       document.getElementById('tplCorrect').innerText = R.correct;
       document.getElementById('tplWrong').innerText = R.wrong;
+      document.getElementById('tplTime').innerText = timeTakenFormatted;
+      document.getElementById('tplStrongest').innerText = strongestSection ? strongestSection.name : 'N/A';
       
+      // Dynamic URL logic
       const cleanDomain = window.location.hostname.replace(/^www\./i, '');
       const displayDomain = "www." + cleanDomain;
-      document.getElementById('tplFooterUrl').innerText = displayDomain;
+      document.getElementById('tplFooterUrl').innerText = "Visit: " + displayDomain;
       
       _currentImageShareText = `I scored ${R.score}/${R.totalMarks} (${R.accuracy}% accuracy) on ApnaMock's ${R.testTitle}! Can you beat my score? Try it here: ${window.location.origin}`;
 
@@ -2025,7 +2053,7 @@ function selectSectionFilter(
       try {
         const canvas = await html2canvas(template, { 
           useCORS: true, 
-          backgroundColor: '#1a56db', 
+          backgroundColor: null, 
           scale: 2,
           width: 800,
           height: template.scrollHeight,
