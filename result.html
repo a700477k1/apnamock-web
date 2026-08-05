@@ -30,9 +30,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-  
-  <!-- html2canvas for Image Generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     /* ============================================================
@@ -717,7 +714,7 @@
     }
 
     /* ============================================================
-       IMAGE SHARE TEMPLATE (Scaled Up 1.25x for Info & Stats)
+       IMAGE SHARE TEMPLATE
     ============================================================ */
     #shareResultTemplate {
       position: relative; top: 0; left: 0;
@@ -736,7 +733,6 @@
     .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
     .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
     
-    /* White Info Card - Scaled Up 1.25x */
     .tpl-info-card { 
       background: #ffffff; border-radius: 16px; padding: 32px; text-align: center; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -745,7 +741,6 @@
     .tpl-info-title { font-size: 30px; color: #1e293b; font-weight: 700; margin-bottom: 10px; line-height: 1.3; font-family: 'Poppins', sans-serif; }
     .tpl-info-time { font-size: 18px; color: #64748b; font-weight: 500; }
     
-    /* Colorful Stats Grid - Scaled Up 1.25x */
     .tpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .tpl-grid-item { 
       background: #ffffff; padding: 20px 15px; border-radius: 12px; text-align: center; 
@@ -754,7 +749,6 @@
     .tpl-grid-label { font-size: 15px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
     .tpl-grid-value { font-size: 25px; font-weight: 700; line-height: 1.2; color: #1e293b; }
     
-    /* Stat Colors */
     .tpl-grid-item.score { border-color: #1a56db; }
     .tpl-grid-item.score .tpl-grid-value { color: #1a56db; }
     .tpl-grid-item.accuracy { border-color: #7c3aed; }
@@ -777,7 +771,7 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #22c55e; /* Lighter shade of green */
+      background: #22c55e;
       color: #fff;
       width: 52px;
       height: 52px;
@@ -794,6 +788,61 @@
       border: none;
     }
     .sticky-share-btn:hover { background: #16a34a; transform: scale(1.1); }
+
+    /* ============================================================
+       PRINT / PDF SPECIFIC STYLES
+    ============================================================ */
+    #print-header, #print-footer { display: none; }
+    .print-cta { display: none; }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      body.dark-mode { --text-primary: #1e293b; --text-secondary: #334155; --bg-card: #ffffff; --bg-muted: #f8fafc; --border: #e2e8f0; }
+      
+      /* Hide interactive elements */
+      .site-header, .site-footer, .actions-row, .sticky-share-btn, .review-card-footer, .review-header, .load-more-wrap { display: none !important; }
+      
+      /* Force explanations open */
+      .explanation-box { display: block !important; page-break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; background: #f8fafc; }
+      .expl-toggle-btn { display: none !important; }
+      
+      /* Prevent cards from breaking awkwardly */
+      .review-card, .score-card, .performance-message-card, .section-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; }
+      
+      /* Ensure colors print correctly */
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      
+      /* Branding on every page */
+      #print-header {
+        display: flex; justify-content: space-between; align-items: center;
+        position: fixed; top: 0; left: 0; right: 0; height: 50px;
+        border-bottom: 2px solid #1a56db; padding: 0 20px;
+        background: #fff !important; z-index: 1000;
+      }
+      #print-header .ph-logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; color: #1a56db; }
+      #print-header .ph-title { font-size: 12px; color: #334155; font-weight: 600; }
+
+      #print-footer {
+        display: flex; justify-content: center; align-items: center;
+        position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
+        border-top: 2px solid #1a56db; padding: 0 20px;
+        background: #fff !important; z-index: 1000;
+      }
+      #print-footer .pf-cta { font-size: 12px; color: #1a56db; font-weight: 700; }
+      
+      /* Add padding to body so content isn't hidden behind fixed headers */
+      .page-wrapper { padding-top: 60px; padding-bottom: 50px; }
+      
+      /* Unhide and style the frequent CTA */
+      .print-cta {
+        display: flex; justify-content: center; align-items: center;
+        margin: 20px 0; padding: 12px; border: 2px dashed #1a56db; 
+        border-radius: 8px; color: #1a56db; font-weight: 700; font-size: 14px;
+        page-break-inside: avoid;
+      }
+      
+      .result-header-card { color: #fff; } /* Ensure gradient text stays white */
+    }
 
     /* ============================================================
        LOAD MORE & BADGES
@@ -981,6 +1030,15 @@
 
   </main>
 
+  <!-- PRINT BRANDING ELEMENTS (Hidden on screen, visible on PDF) -->
+  <div id="print-header">
+    <div class="ph-logo">ApnaMock</div>
+    <div class="ph-title" id="printTestTitle">Mock Test Result</div>
+  </div>
+  <div id="print-footer">
+    <div class="pf-cta">👉 Want to practice more? Visit ApnaMock.com for free mock tests!</div>
+  </div>
+
   <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
   <div style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1;">
     <div id="shareResultTemplate" style="opacity: 1;">
@@ -1003,14 +1061,12 @@
           </div>
         </div>
         
-        <!-- White Info Card -->
         <div class="tpl-info-card">
           <div id="tplExam" class="tpl-info-exam"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px;"></i>Exam</div>
           <div id="tplTitle" class="tpl-info-title">Test Title</div>
           <div id="tplDate" class="tpl-info-time">Submitted on Date at Time</div>
         </div>
         
-        <!-- Colorful Stats Grid (2 Columns, Scaled Up) -->
         <div class="tpl-grid">
           <div class="tpl-grid-item score"><div class="tpl-grid-label">Score</div><div id="tplScore" class="tpl-grid-value">0/0</div></div>
           <div class="tpl-grid-item accuracy"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
@@ -1050,7 +1106,6 @@
     </div>
   </div>
 
-  <!-- Sticky Share Button (Circular Lighter Green) -->
   <button class="sticky-share-btn" onclick="generateResultImage()" title="Share Result">
     <i class="fa-solid fa-share-nodes"></i>
   </button>
@@ -1802,6 +1857,9 @@ function selectSectionFilter(
       Result.favorites = await getFavorites();
 
       document.title = `Result — ${escapeHTML(resultData.testTitle) || 'ApnaMock'}`;
+      
+      // Update print header title
+      document.getElementById('printTestTitle').innerText = resultData.testTitle || 'Mock Test Result';
 
       renderPage();
     }
@@ -1965,6 +2023,9 @@ function selectSectionFilter(
           <button class="btn btn-primary" onclick="generateResultImage()">
             <i class="fa-solid fa-share-nodes"></i> Share Result
           </button>
+          <button class="btn btn-outline" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i> Save as PDF
+          </button>
         </div>
 
         ${sections.length > 1 ? `
@@ -2033,9 +2094,23 @@ function selectSectionFilter(
     }
 
     /* ============================================================
-       IMAGE SHARE LOGIC
+       IMAGE SHARE LOGIC (Dynamically loads html2canvas)
     ============================================================ */
     let _currentImageShareText = "";
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+          resolve();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
 
     async function generateResultImage() {
       showToast("Preparing your result image...", "info");
@@ -2063,7 +2138,6 @@ function selectSectionFilter(
       const submittedTime = R.submittedAt ? new Date(R.submittedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
 
       // 1. Populate the hidden template
-      // Add graduation cap icon dynamically
       document.getElementById('tplExam').innerHTML = '<i class="fa-solid fa-graduation-cap" style="margin-right: 8px;"></i>' + escapeHTML(R.testData?.exam || 'Exam');
       document.getElementById('tplTitle').innerText = R.testTitle || 'Test Result';
       document.getElementById('tplDate').innerText = `Submitted on ${submittedDate} at ${submittedTime}`;
@@ -2075,17 +2149,22 @@ function selectSectionFilter(
       document.getElementById('tplTime').innerText = timeTakenFormatted;
       document.getElementById('tplStrongest').innerText = strongestSection ? strongestSection.name : 'N/A';
       
-      // Dynamic URL logic
       const cleanDomain = window.location.hostname.replace(/^www\./i, '');
       const displayDomain = "www." + cleanDomain;
       document.getElementById('tplFooterUrl').innerText = "Visit: " + displayDomain;
       
       _currentImageShareText = `I scored ${R.score}/${R.totalMarks} (${R.accuracy}% accuracy) on ApnaMock's ${R.testTitle}! Can you beat my score? Try it here: ${window.location.origin}`;
 
-      // Wait 300ms to ensure DOM updates layout
       await new Promise(r => setTimeout(r, 300));
 
-      // 2. Generate Canvas
+      // 2. Dynamically load html2canvas
+      try {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+      } catch (e) {
+        showToast("Failed to load image generator.", "error");
+        return;
+      }
+
       const template = document.getElementById('shareResultTemplate');
       
       try {
@@ -2099,11 +2178,9 @@ function selectSectionFilter(
         });
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
 
-        // 3. Show Preview
         document.getElementById('generatedImagePreview').src = dataUrl;
         document.getElementById('downloadImageBtn').href = dataUrl;
         
-        // Attach Share Logic
         const shareBtn = document.getElementById('nativeImageShareBtn');
         shareBtn.onclick = async () => {
           try {
@@ -2218,16 +2295,20 @@ function selectSectionFilter(
       const end = Math.min(start + CONFIG.REVIEW_PER_PAGE, Result.filteredResults.length);
       const batch = Result.filteredResults.slice(start, end);
 
-      batch.forEach(qr => {
+      batch.forEach((qr, index) => {
         const q = Result.questions[qr.questionIndex];
         if (!q) return;
 
         reviewList.insertAdjacentHTML('beforeend', renderReviewCard(qr, q));
+        
+        // Inject Print CTA every 5 questions
+        if ((start + index + 1) % 5 === 0) {
+          reviewList.insertAdjacentHTML('beforeend', `<div class="print-cta">👉 Want to practice more? Visit ApnaMock.com for free mock tests!</div>`);
+        }
       });
 
       Result.displayedReviews = end;
 
-      // Load more button
       const wrap = document.getElementById('reviewLoadMoreWrap');
       const text = document.getElementById('reviewLoadMoreText');
       const remaining = Result.filteredResults.length - Result.displayedReviews;
@@ -2278,7 +2359,6 @@ function selectSectionFilter(
 
       const sc = statusConfig[qr.status] || statusConfig.skipped;
 
-      // Time Tracking Logic
       let timeSpent = Result.data.questionTimes ? (Result.data.questionTimes[qId] || 0) : 0;
       let timeText = '';
       let timeClass = 'normal';
@@ -2323,7 +2403,7 @@ function selectSectionFilter(
           tagsHtml += '<span class="option-tag correct-answer-tag">Correct Answer</span>';
         }
         if (isUserAnswer && isCorrectAnswer) {
-            cls = 'review-option user-correct'; // Override class if both
+            cls = 'review-option user-correct';
         }
 
         tagsHtml += '</div>';
@@ -2417,7 +2497,6 @@ function selectSectionFilter(
       const q = Result.questions[questionIndex];
 
       if (Result.favorites.has(qId)) {
-        // Remove Favorite
         Result.favorites.delete(qId);
         await removeFavoriteFromDB(qId);
         
@@ -2425,7 +2504,6 @@ function selectSectionFilter(
         btn.innerHTML = `<i class="fa-regular fa-bookmark"></i> Mark as Favorite`;
         showToast('Removed from favorites', 'info');
       } else {
-        // Add Favorite
         Result.favorites.add(qId);
 
         gtag('event', 'add_favorite', {
