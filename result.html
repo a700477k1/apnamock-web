@@ -626,7 +626,7 @@
     /* Explicit Answer Tags */
     .option-tag {
         font-size: 10px;
-        font-weight: 700,
+        font-weight: 700;
         padding: 2px 6px;
         border-radius: 4px;
         text-transform: uppercase;
@@ -744,11 +744,9 @@
     .tpl-info-exam { font-size: 14px; color: #1a56db; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
     .tpl-info-title { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 8px; line-height: 1.3; font-family: 'Poppins', sans-serif; }
     .tpl-info-time { font-size: 14px; color: #64748b; font-weight: 500; }
-
-    .tpl-promo-card { align-self: center; background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none; }
     
-    /* Colorful Stats Grid */
-    .tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    /* Colorful Stats Grid - Changed to 2 columns */
+    .tpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .tpl-grid-item { 
       background: #ffffff; padding: 15px 10px; border-radius: 12px; text-align: center; 
       border-top: 4px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
@@ -771,31 +769,31 @@
     .tpl-grid-item.strongest .tpl-grid-value { color: #16a34a; font-size: 16px; }
 
     .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .tpl-footer-text { color: #fff; font-size: 18px; font-weight: 600; }
+    .tpl-footer-text { color: #fff; font-size: 16px; font-weight: 600; max-width: 90%; line-height: 1.4; }
     .tpl-footer-box { background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-    /* Sticky Share Button (Circular Green) */
+    /* Sticky Share Button (Circular Lighter Green) */
     .sticky-share-btn {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: var(--success);
+      background: #22c55e; /* Lighter shade of green */
       color: #fff;
       width: 52px;
       height: 52px;
       padding: 0;
       border-radius: 50%;
       font-size: 20px;
-      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 90; /* Below overlays, above content */
+      z-index: 90;
       transition: transform 0.2s, background 0.2s;
       border: none;
     }
-    .sticky-share-btn:hover { background: #15803d; transform: scale(1.1); }
+    .sticky-share-btn:hover { background: #16a34a; transform: scale(1.1); }
 
     /* ============================================================
        LOAD MORE & BADGES
@@ -1007,14 +1005,12 @@
         
         <!-- White Info Card -->
         <div class="tpl-info-card">
-          <div id="tplExam" class="tpl-info-exam">SSC</div>
+          <div id="tplExam" class="tpl-info-exam"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px;"></i>Exam</div>
           <div id="tplTitle" class="tpl-info-title">Test Title</div>
           <div id="tplDate" class="tpl-info-time">Submitted on Date at Time</div>
         </div>
-
-        <div class="tpl-promo-card">I scored on ApnaMock!</div>
         
-        <!-- Colorful Stats Grid -->
+        <!-- Colorful Stats Grid (2 Columns) -->
         <div class="tpl-grid">
           <div class="tpl-grid-item score"><div class="tpl-grid-label">Score</div><div id="tplScore" class="tpl-grid-value">0/0</div></div>
           <div class="tpl-grid-item accuracy"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
@@ -1025,7 +1021,7 @@
         </div>
         
         <div class="tpl-footer">
-          <div class="tpl-footer-text">Can you beat my score?</div>
+          <div class="tpl-footer-text">Can you beat my score? Visit ApnaMock and test your knowledge for free!</div>
           <div id="tplFooterUrl" class="tpl-footer-box">Visit: www.apnamock.com</div>
         </div>
       </div>
@@ -1054,7 +1050,7 @@
     </div>
   </div>
 
-  <!-- Sticky Share Button (Circular Green) -->
+  <!-- Sticky Share Button (Circular Lighter Green) -->
   <button class="sticky-share-btn" onclick="generateResultImage()" title="Share Result">
     <i class="fa-solid fa-share-nodes"></i>
   </button>
@@ -2067,7 +2063,8 @@ function selectSectionFilter(
       const submittedTime = R.submittedAt ? new Date(R.submittedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
 
       // 1. Populate the hidden template
-      document.getElementById('tplExam').innerText = R.testData?.exam || 'Exam';
+      // Add graduation cap icon dynamically
+      document.getElementById('tplExam').innerHTML = '<i class="fa-solid fa-graduation-cap" style="margin-right: 8px;"></i>' + escapeHTML(R.testData?.exam || 'Exam');
       document.getElementById('tplTitle').innerText = R.testTitle || 'Test Result';
       document.getElementById('tplDate').innerText = `Submitted on ${submittedDate} at ${submittedTime}`;
       
