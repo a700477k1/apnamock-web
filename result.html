@@ -784,8 +784,38 @@
       .actions-row { flex-direction: column; }
       .actions-row .btn { width: 100%; }
       
-      .review-card-footer { flex-direction: column; align-items: stretch; }
-      .footer-left, .footer-right { width: 100%; justify-content: space-between; }
+      /* Mobile Header Tags Alignment */
+      .review-card-header { flex-wrap: wrap; gap: 6px; }
+      .review-card-header-left { flex: 0 0 auto; }
+      .review-header-right { 
+        flex: 0 0 auto; 
+        margin-left: auto; 
+        justify-content: flex-end; 
+      }
+      .review-q-number, .review-section-tag, .q-time-badge, .review-status-tag {
+        font-size: 10px;
+      }
+
+      /* Mobile Footer Buttons Side-by-Side */
+      .review-card-footer { 
+        flex-direction: row; 
+        flex-wrap: nowrap;
+        gap: 10px; 
+        align-items: stretch; 
+      }
+      .footer-left, .footer-right { 
+        width: auto; 
+        flex: 1; 
+        justify-content: center; 
+        margin: 0; 
+      }
+      .footer-left .expl-toggle-btn, 
+      .footer-right .favorite-btn { 
+        width: 100%; 
+        justify-content: center; 
+        padding: 8px 10px;
+        font-size: 11px;
+      }
     }
 
     @media (max-width: 600px) {
