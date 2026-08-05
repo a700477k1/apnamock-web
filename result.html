@@ -524,10 +524,22 @@
     .review-card.wrong { border-left: 4px solid var(--error); }
     .review-card.skipped { border-left: 4px solid var(--text-muted); }
     .review-card.marked { border-left: 4px solid var(--warning); }
-    .review-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-muted); border-bottom: 1px solid var(--border); }
+    
+    .review-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-muted); border-bottom: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
     .review-card-header-left { display: flex; align-items: center; gap: 8px; }
-    .review-q-number { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    
+    /* Question Tag - Blue Background (Matching favorites.html) */
+    .review-q-number { 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: #fff; 
+      background: var(--primary); 
+      padding: 3px 9px; 
+      border-radius: 99px; 
+    }
+    
     .review-section-tag { font-size: 11px; background: var(--border); color: var(--text-secondary); padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+    .review-header-right { display: flex; align-items: center; gap: 8px; }
     
     /* Status Tags - Dark Mode Fixes */
     .review-status-tag { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: capitalize; }
@@ -539,6 +551,20 @@
     body.dark-mode .review-status-tag.correct { background: #16a34a; color: #ffffff; }
     body.dark-mode .review-status-tag.wrong { background: #dc2626; color: #ffffff; }
     body.dark-mode .review-status-tag.marked { background: #f59e0b; color: #ffffff; }
+
+    /* Per-Question Time Badge in Header */
+    .q-time-badge {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 3px 8px;
+      border-radius: 99px; color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+    .q-time-badge.fast { color: var(--success); border-color: var(--success); }
+    .q-time-badge.slow { color: var(--error); border-color: var(--error); }
+    body.dark-mode .q-time-badge { background: rgba(255,255,255,0.05); border-color: var(--border-strong); }
+    body.dark-mode .q-time-badge.fast { color: var(--success); border-color: var(--success); background: rgba(22, 163, 74, 0.15); }
+    body.dark-mode .q-time-badge.slow { color: var(--error); border-color: var(--error); background: rgba(220, 38, 38, 0.15); }
 
     .review-card-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .review-question-text { 
@@ -675,32 +701,17 @@
       color: #fff;
     }
 
-    /* Explanation Toggle Button */
+    /* Explanation Toggle Button - Blue Background */
     .expl-toggle-btn {
       display: flex; align-items: center; gap: 6px; padding: 6px 12px;
       border-radius: var(--radius-sm); font-size: 12px; font-weight: 600;
-      color: var(--text-secondary); border: 1.5px solid var(--border);
-      transition: all 0.15s; background: transparent; cursor: pointer;
+      color: #fff; border: none;
+      background: var(--primary); cursor: pointer;
+      transition: background 0.15s;
     }
     .expl-toggle-btn:hover {
-      color: var(--primary);
-      border-color: var(--primary);
-      background: var(--primary-light);
+      background: var(--primary-dark);
     }
-
-    /* Per-Question Time Badge */
-    .q-time-badge {
-      display: flex; align-items: center; gap: 4px;
-      font-size: 11px; font-weight: 600; padding: 4px 8px;
-      border-radius: 99px; color: var(--text-muted);
-      background: var(--bg-muted);
-    }
-    .q-time-badge.fast { color: var(--success); background: var(--success-light); }
-    .q-time-badge.slow { color: var(--error); background: var(--error-light); }
-    body.dark-mode .q-time-badge { background: rgba(255,255,255,0.05); }
-    body.dark-mode .q-time-badge.fast { color: var(--success); background: rgba(22, 163, 74, 0.15); }
-    body.dark-mode .q-time-badge.slow { color: var(--error); background: rgba(220, 38, 38, 0.15); }
-
 
     /* ============================================================
        LOAD MORE & BADGES
@@ -1121,7 +1132,7 @@ Done
       reviewFilter: 'all',
 
       selectedSectionFilter: null,
-      selectedSectionName: null,
+selectedSectionName: null,
       
       favorites: new Set(),
       language: 'bilingual'
@@ -2078,9 +2089,14 @@ function selectSectionFilter(
               <span class="review-q-number">Q${qr.questionIndex + 1}</span>
               <span class="review-section-tag">${escapeHTML(sectionName)}</span>
             </div>
-            <div class="review-status-tag ${qr.status}">
-              <i class="fa-solid ${sc.icon}"></i>
-              ${sc.label}
+            <div class="review-header-right">
+              <div class="q-time-badge ${timeClass}">
+                <i class="fa-solid fa-stopwatch"></i> Time Taken: ${timeText}
+              </div>
+              <div class="review-status-tag ${qr.status}">
+                <i class="fa-solid ${sc.icon}"></i>
+                ${sc.label}
+              </div>
             </div>
           </div>
 
@@ -2108,9 +2124,6 @@ function selectSectionFilter(
                 </button>
             </div>
             <div class="footer-right">
-                <div class="q-time-badge ${timeClass}">
-                    <i class="fa-solid fa-stopwatch"></i> ${timeText}
-                </div>
                 <button
                   class="favorite-btn ${isFavorited ? 'favorited' : ''}"
                   id="fav-btn-${qId}"
