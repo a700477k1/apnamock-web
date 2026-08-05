@@ -790,35 +790,42 @@
     .sticky-share-btn:hover { background: #16a34a; transform: scale(1.1); }
 
     /* ============================================================
-       PRINT / PDF SPECIFIC STYLES (Robust Zero-Margin Strategy)
+       PRINT / PDF SPECIFIC STYLES
     ============================================================ */
     #print-header, #print-footer { display: none; }
     .print-cta { display: none; }
 
     @media print {
-      body { background: #fff; color: #000 !important; margin: 0; padding: 0; }
-      body.dark-mode { --text-primary: #1e293b; --text-secondary: #334155; --bg-card: #ffffff; --bg-muted: #f8fafc; --border: #e2e8f0; }
+      body { background: #fff !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
+      body.dark-mode { --text-primary: #1e293b !important; --text-secondary: #334155 !important; --bg-card: #ffffff !important; --bg-muted: #f8fafc !important; --border: #e2e8f0 !important; }
       
-      /* Set page size to A4 with ZERO margins. We will use body padding to create safe zones. */
+      /* Remove all default browser margins so fixed elements hit the absolute top and bottom edges */
       @page {
         size: A4;
-        margin: 0; 
+        margin: 0;
       }
       
       /* Hide interactive elements */
       .site-header, .site-footer, .actions-row, .sticky-share-btn, .review-card-footer, .review-header, .load-more-wrap, .mobile-menu-btn { display: none !important; }
       
+      /* Main content padding to prevent overlap with fixed header/footer */
+      /* Top padding: 60px (Header 50px + 10px gap). Bottom padding: 50px (Footer 40px + 10px gap). Left/Right: 20px */
+      .page-wrapper {
+        padding: 60px 20px 50px 20px !important; 
+        gap: 15px !important;
+      }
+      
       /* Force explanations open */
       .explanation-box { display: block !important; box-shadow: none; border: 1px solid #cbd5e1; background: #f8fafc; }
       .expl-toggle-btn { display: none !important; }
       
-      /* Allow cards to break cleanly across pages */
+      /* Allow cards to break cleanly across pages if they are too long */
       .review-card, .score-card, .performance-message-card, .section-card, .explanation-box { 
         page-break-inside: auto; 
         box-shadow: none; 
         border: 1px solid #cbd5e1; 
       }
-      /* Prevent orphaned headers */
+      /* Prevent orphaned headers at the bottom of a page */
       .review-card-header, .review-question-text, .review-options, .explanation-label { 
         page-break-after: avoid; 
       }
@@ -826,23 +833,23 @@
       /* Ensure colors print correctly */
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       
-      /* Branding Header on every page */
+      /* Branding Header pinned to the very top of every page */
       #print-header {
         display: flex !important; 
         justify-content: space-between; align-items: center;
-        position: fixed; top: 0; left: 0; right: 0; height: 55px;
+        position: fixed; top: 0; left: 0; right: 0; height: 50px;
         border-bottom: 2px solid #1a56db; padding: 0 20px;
-        background: #ffffff !important; z-index: 9999;
+        background: #fff !important; z-index: 9999;
         -webkit-print-color-adjust: exact !important;
       }
       
-      /* Branding Footer on every page */
+      /* Branding Footer pinned to the very bottom of every page */
       #print-footer {
         display: flex !important; 
         justify-content: center; align-items: center;
         position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
         border-top: 2px solid #1a56db; padding: 0 20px;
-        background: #ffffff !important; z-index: 9999;
+        background: #fff !important; z-index: 9999;
         -webkit-print-color-adjust: exact !important;
       }
       
@@ -855,15 +862,8 @@
         page-break-inside: avoid;
       }
       
-      /* Pad the main content wrapper to sit perfectly between the fixed header (55px) and footer (40px). */
-      .page-wrapper {
-        padding-top: 70px !important; /* 55px header + 15px gap */
-        padding-bottom: 55px !important; /* 40px footer + 15px gap */
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-      }
-      
-      .result-header-card { color: #fff !important; border-radius: 0 !important; border: none !important; }
+      /* Ensure gradient header looks good spanning width */
+      .result-header-card { color: #fff !important; border-radius: 0 !important; border: none !important; margin: -15px -20px 15px -20px !important; }
     }
 
     /* ============================================================
