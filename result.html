@@ -790,18 +790,19 @@
     .sticky-share-btn:hover { background: #16a34a; transform: scale(1.1); }
 
     /* ============================================================
-       PRINT / PDF SPECIFIC STYLES
+       PRINT / PDF SPECIFIC STYLES (Robust Zero-Margin Strategy)
     ============================================================ */
     #print-header, #print-footer { display: none; }
     .print-cta { display: none; }
 
     @media print {
-      body { background: #fff; color: #000; margin: 0; padding: 0; }
+      body { background: #fff; color: #000 !important; margin: 0; padding: 0; }
+      body.dark-mode { --text-primary: #1e293b; --text-secondary: #334155; --bg-card: #ffffff; --bg-muted: #f8fafc; --border: #e2e8f0; }
       
-      /* Define page margins to prevent overlap with fixed headers/footers */
+      /* Set page size to A4 with ZERO margins. We will use body padding to create safe zones. */
       @page {
         size: A4;
-        margin: 70px 15px 55px 15px; /* top right bottom left */
+        margin: 0; 
       }
       
       /* Hide interactive elements */
@@ -811,7 +812,7 @@
       .explanation-box { display: block !important; box-shadow: none; border: 1px solid #cbd5e1; background: #f8fafc; }
       .expl-toggle-btn { display: none !important; }
       
-      /* Allow cards to break across pages if they are too long */
+      /* Allow cards to break cleanly across pages */
       .review-card, .score-card, .performance-message-card, .section-card, .explanation-box { 
         page-break-inside: auto; 
         box-shadow: none; 
@@ -829,9 +830,9 @@
       #print-header {
         display: flex !important; 
         justify-content: space-between; align-items: center;
-        position: fixed; top: 0; left: 0; right: 0; height: 60px;
+        position: fixed; top: 0; left: 0; right: 0; height: 55px;
         border-bottom: 2px solid #1a56db; padding: 0 20px;
-        background: #fff !important; z-index: 9999;
+        background: #ffffff !important; z-index: 9999;
         -webkit-print-color-adjust: exact !important;
       }
       
@@ -839,9 +840,9 @@
       #print-footer {
         display: flex !important; 
         justify-content: center; align-items: center;
-        position: fixed; bottom: 0; left: 0; right: 0; height: 45px;
+        position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
         border-top: 2px solid #1a56db; padding: 0 20px;
-        background: #fff !important; z-index: 9999;
+        background: #ffffff !important; z-index: 9999;
         -webkit-print-color-adjust: exact !important;
       }
       
@@ -854,8 +855,14 @@
         page-break-inside: avoid;
       }
       
-      /* Remove conflicting paddings from wrapper */
-      .page-wrapper { padding-top: 0 !important; padding-bottom: 0 !important; }
+      /* Pad the main content wrapper to sit perfectly between the fixed header (55px) and footer (40px). */
+      .page-wrapper {
+        padding-top: 70px !important; /* 55px header + 15px gap */
+        padding-bottom: 55px !important; /* 40px footer + 15px gap */
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+      
       .result-header-card { color: #fff !important; border-radius: 0 !important; border: none !important; }
     }
 
