@@ -796,52 +796,67 @@
     .print-cta { display: none; }
 
     @media print {
-      body { background: #fff; color: #000; }
-      body.dark-mode { --text-primary: #1e293b; --text-secondary: #334155; --bg-card: #ffffff; --bg-muted: #f8fafc; --border: #e2e8f0; }
+      body { background: #fff; color: #000; margin: 0; padding: 0; }
+      
+      /* Define page margins to prevent overlap with fixed headers/footers */
+      @page {
+        size: A4;
+        margin: 70px 15px 55px 15px; /* top right bottom left */
+      }
       
       /* Hide interactive elements */
-      .site-header, .site-footer, .actions-row, .sticky-share-btn, .review-card-footer, .review-header, .load-more-wrap { display: none !important; }
+      .site-header, .site-footer, .actions-row, .sticky-share-btn, .review-card-footer, .review-header, .load-more-wrap, .mobile-menu-btn { display: none !important; }
       
       /* Force explanations open */
-      .explanation-box { display: block !important; page-break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; background: #f8fafc; }
+      .explanation-box { display: block !important; box-shadow: none; border: 1px solid #cbd5e1; background: #f8fafc; }
       .expl-toggle-btn { display: none !important; }
       
-      /* Prevent cards from breaking awkwardly */
-      .review-card, .score-card, .performance-message-card, .section-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; }
+      /* Allow cards to break across pages if they are too long */
+      .review-card, .score-card, .performance-message-card, .section-card, .explanation-box { 
+        page-break-inside: auto; 
+        box-shadow: none; 
+        border: 1px solid #cbd5e1; 
+      }
+      /* Prevent orphaned headers */
+      .review-card-header, .review-question-text, .review-options, .explanation-label { 
+        page-break-after: avoid; 
+      }
       
       /* Ensure colors print correctly */
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       
-      /* Branding on every page */
+      /* Branding Header on every page */
       #print-header {
-        display: flex; justify-content: space-between; align-items: center;
-        position: fixed; top: 0; left: 0; right: 0; height: 50px;
+        display: flex !important; 
+        justify-content: space-between; align-items: center;
+        position: fixed; top: 0; left: 0; right: 0; height: 60px;
         border-bottom: 2px solid #1a56db; padding: 0 20px;
-        background: #fff !important; z-index: 1000;
+        background: #fff !important; z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
       }
-      #print-header .ph-logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; color: #1a56db; }
-      #print-header .ph-title { font-size: 12px; color: #334155; font-weight: 600; }
-
-      #print-footer {
-        display: flex; justify-content: center; align-items: center;
-        position: fixed; bottom: 0; left: 0; right: 0; height: 40px;
-        border-top: 2px solid #1a56db; padding: 0 20px;
-        background: #fff !important; z-index: 1000;
-      }
-      #print-footer .pf-cta { font-size: 12px; color: #1a56db; font-weight: 700; }
       
-      /* Add padding to body so content isn't hidden behind fixed headers */
-      .page-wrapper { padding-top: 60px; padding-bottom: 50px; }
+      /* Branding Footer on every page */
+      #print-footer {
+        display: flex !important; 
+        justify-content: center; align-items: center;
+        position: fixed; bottom: 0; left: 0; right: 0; height: 45px;
+        border-top: 2px solid #1a56db; padding: 0 20px;
+        background: #fff !important; z-index: 9999;
+        -webkit-print-color-adjust: exact !important;
+      }
       
       /* Unhide and style the frequent CTA */
       .print-cta {
-        display: flex; justify-content: center; align-items: center;
+        display: flex !important; 
+        justify-content: center; align-items: center;
         margin: 20px 0; padding: 12px; border: 2px dashed #1a56db; 
         border-radius: 8px; color: #1a56db; font-weight: 700; font-size: 14px;
         page-break-inside: avoid;
       }
       
-      .result-header-card { color: #fff; } /* Ensure gradient text stays white */
+      /* Remove conflicting paddings from wrapper */
+      .page-wrapper { padding-top: 0 !important; padding-bottom: 0 !important; }
+      .result-header-card { color: #fff !important; border-radius: 0 !important; border: none !important; }
     }
 
     /* ============================================================
@@ -1032,11 +1047,18 @@
 
   <!-- PRINT BRANDING ELEMENTS (Hidden on screen, visible on PDF) -->
   <div id="print-header">
-    <div class="ph-logo">ApnaMock</div>
-    <div class="ph-title" id="printTestTitle">Mock Test Result</div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #1a56db, #f97316); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: 'Poppins', sans-serif;">A</div>
+      <div style="display: flex; flex-direction: column; line-height: 1.1;">
+        <span style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #1a56db;">ApnaMock</span>
+        <span style="font-size: 10px; color: #64748b;">Practice. Improve. Succeed.</span>
+      </div>
+    </div>
+    <div id="printTestTitle" style="font-size: 14px; color: #334155; font-weight: 600;">Mock Test Result</div>
   </div>
+  
   <div id="print-footer">
-    <div class="pf-cta">👉 Want to practice more? Visit ApnaMock.com for free mock tests!</div>
+    <div style="font-size: 12px; color: #1a56db; font-weight: 700;">👉 Want to practice more? Visit ApnaMock.com for free mock tests!</div>
   </div>
 
   <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
