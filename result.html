@@ -717,7 +717,7 @@
     }
 
     /* ============================================================
-       IMAGE SHARE TEMPLATE (Exact match with jobs.html)
+       IMAGE SHARE TEMPLATE (Scaled Up 1.25x for Info & Stats)
     ============================================================ */
     #shareResultTemplate {
       position: relative; top: 0; left: 0;
@@ -736,23 +736,23 @@
     .tpl-header-right { text-align: right; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
     .tpl-header-promo { color: #ffffff; font-size: 16px; font-weight: 600; line-height: 1.4; }
     
-    /* White Info Card (Exam, Title, Date) */
+    /* White Info Card - Scaled Up 1.25x */
     .tpl-info-card { 
-      background: #ffffff; border-radius: 16px; padding: 25px; text-align: center; 
+      background: #ffffff; border-radius: 16px; padding: 32px; text-align: center; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .tpl-info-exam { font-size: 14px; color: #1a56db; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-    .tpl-info-title { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 8px; line-height: 1.3; font-family: 'Poppins', sans-serif; }
-    .tpl-info-time { font-size: 14px; color: #64748b; font-weight: 500; }
+    .tpl-info-exam { font-size: 18px; color: #1a56db; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
+    .tpl-info-title { font-size: 30px; color: #1e293b; font-weight: 700; margin-bottom: 10px; line-height: 1.3; font-family: 'Poppins', sans-serif; }
+    .tpl-info-time { font-size: 18px; color: #64748b; font-weight: 500; }
     
-    /* Colorful Stats Grid - Changed to 2 columns */
-    .tpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    /* Colorful Stats Grid - Scaled Up 1.25x */
+    .tpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .tpl-grid-item { 
-      background: #ffffff; padding: 15px 10px; border-radius: 12px; text-align: center; 
+      background: #ffffff; padding: 20px 15px; border-radius: 12px; text-align: center; 
       border-top: 4px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
     }
-    .tpl-grid-label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; }
-    .tpl-grid-value { font-size: 20px; font-weight: 700; line-height: 1.2; color: #1e293b; }
+    .tpl-grid-label { font-size: 15px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .tpl-grid-value { font-size: 25px; font-weight: 700; line-height: 1.2; color: #1e293b; }
     
     /* Stat Colors */
     .tpl-grid-item.score { border-color: #1a56db; }
@@ -766,7 +766,7 @@
     .tpl-grid-item.time { border-color: #f97316; }
     .tpl-grid-item.time .tpl-grid-value { color: #f97316; }
     .tpl-grid-item.strongest { border-color: #16a34a; }
-    .tpl-grid-item.strongest .tpl-grid-value { color: #16a34a; font-size: 16px; }
+    .tpl-grid-item.strongest .tpl-grid-value { color: #16a34a; font-size: 20px; }
 
     .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .tpl-footer-text { color: #fff; font-size: 16px; font-weight: 600; max-width: 90%; line-height: 1.4; }
@@ -1010,7 +1010,7 @@
           <div id="tplDate" class="tpl-info-time">Submitted on Date at Time</div>
         </div>
         
-        <!-- Colorful Stats Grid (2 Columns) -->
+        <!-- Colorful Stats Grid (2 Columns, Scaled Up) -->
         <div class="tpl-grid">
           <div class="tpl-grid-item score"><div class="tpl-grid-label">Score</div><div id="tplScore" class="tpl-grid-value">0/0</div></div>
           <div class="tpl-grid-item accuracy"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
