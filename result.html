@@ -720,10 +720,9 @@
        IMAGE SHARE TEMPLATE
     ============================================================ */
     #shareResultTemplate {
-      position: absolute; top: 0; left: 0;
       width: 800px; background: linear-gradient(135deg, #1a56db, #f97316); 
       font-family: 'Inter', sans-serif; box-sizing: border-box; overflow: hidden; margin: 0; padding: 0;
-      z-index: -1; opacity: 0; pointer-events: none;
+      opacity: 1; /* Must be 1 for html2canvas */
     }
     .tpl-content-wrapper { padding: 40px; display: flex; flex-direction: column; gap: 30px; }
     .tpl-alert-bar { background: #ffffff; color: #1a56db; display: flex; align-items: center; justify-content: center; gap: 15px; padding: 12px 20px; border-radius: 12px; font-size: 33px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
@@ -742,6 +741,30 @@
     .tpl-footer { text-align: center; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .tpl-footer-text { color: #fff; font-size: 18px; font-weight: 600; }
     .tpl-footer-box { background: #ffffff; color: #1a56db; padding: 12px 35px; border-radius: 99px; font-size: 24px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+    /* Sticky Share Button */
+    .sticky-share-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      z-index: 999;
+      transition: transform 0.2s, background 0.2s;
+      border: none;
+    }
+    .sticky-share-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .sticky-share-btn i { font-size: 16px; }
 
     /* ============================================================
        LOAD MORE & BADGES
@@ -930,35 +953,37 @@
   </main>
 
   <!-- HIDDEN IMAGE GENERATION TEMPLATE -->
-  <div id="shareResultTemplate">
-    <div class="tpl-content-wrapper">
-      <div class="tpl-alert-bar">
-        <span>🏆</span>
-        Mock Test Result
-        <span>🎯</span>
-      </div>
-      <div class="tpl-header">
-        <div class="tpl-header-left">
-          <div class="tpl-logo">A</div>
-          <div>
-            <div class="tpl-brand-name">ApnaMock</div>
-            <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+  <div style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1;">
+    <div id="shareResultTemplate">
+      <div class="tpl-content-wrapper">
+        <div class="tpl-alert-bar">
+          <span>🏆</span>
+          Mock Test Result
+          <span>🎯</span>
+        </div>
+        <div class="tpl-header">
+          <div class="tpl-header-left">
+            <div class="tpl-logo">A</div>
+            <div>
+              <div class="tpl-brand-name">ApnaMock</div>
+              <div class="tpl-tagline">Practice. Improve. Succeed.</div>
+            </div>
+          </div>
+          <div class="tpl-promo-card">I scored on ApnaMock!</div>
+        </div>
+        <div class="tpl-job-info">
+          <h2 id="tplTitle" class="tpl-title">Test Title</h2>
+          <div class="tpl-grid">
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Score</div><div id="tplScore" class="tpl-grid-value">0/0</div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Correct</div><div id="tplCorrect" class="tpl-grid-value">0</div></div>
+            <div class="tpl-grid-item"><div class="tpl-grid-label">Wrong</div><div id="tplWrong" class="tpl-grid-value">0</div></div>
           </div>
         </div>
-        <div class="tpl-promo-card">I scored on ApnaMock!</div>
-      </div>
-      <div class="tpl-job-info">
-        <h2 id="tplTitle" class="tpl-title">Test Title</h2>
-        <div class="tpl-grid">
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Score</div><div id="tplScore" class="tpl-grid-value">0/0</div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Accuracy</div><div id="tplAccuracy" class="tpl-grid-value">0%</div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Correct</div><div id="tplCorrect" class="tpl-grid-value">0</div></div>
-          <div class="tpl-grid-item"><div class="tpl-grid-label">Wrong</div><div id="tplWrong" class="tpl-grid-value">0</div></div>
+        <div class="tpl-footer">
+          <div class="tpl-footer-text">Can you beat my score?</div>
+          <div id="tplFooterUrl" class="tpl-footer-box">www.apnamock.com</div>
         </div>
-      </div>
-      <div class="tpl-footer">
-        <div class="tpl-footer-text">Can you beat my score?</div>
-        <div id="tplFooterUrl" class="tpl-footer-box">www.apnamock.com</div>
       </div>
     </div>
   </div>
@@ -984,6 +1009,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Sticky Share Button -->
+  <button class="sticky-share-btn" onclick="generateResultImage()">
+    <i class="fa-solid fa-share-nodes"></i>
+    Share Result
+  </button>
 
   <div class="overlay" id="reviewFilterOverlay">
     <div class="popup">
@@ -1895,9 +1926,6 @@ function selectSectionFilter(
           <a href="/quiz.html?test=${escapeHTML(R.testId)}" class="btn btn-outline">
             <i class="fa-solid fa-rotate-right"></i> Reattempt
           </a>
-          <button class="btn btn-primary" onclick="generateResultImage()">
-            <i class="fa-solid fa-share-nodes"></i> Share Result
-          </button>
         </div>
 
         ${sections.length > 1 ? `
@@ -1997,9 +2025,9 @@ function selectSectionFilter(
       try {
         const canvas = await html2canvas(template, { 
           useCORS: true, 
-          backgroundColor: null, 
+          backgroundColor: '#1a56db', 
           scale: 2,
-          width: template.scrollWidth,
+          width: 800,
           height: template.scrollHeight,
           windowWidth: 800
         });
