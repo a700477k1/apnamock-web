@@ -1895,6 +1895,9 @@
       const loadMoreWrap = document.getElementById('reviewLoadMoreWrap');
       if (!reviewList) return;
 
+      // Get dynamic domain for the CTA
+      const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+
       // 1. Temporarily load ALL remaining questions for the PDF
       const originalCount = Result.displayedReviews;
       const totalQuestions = Result.filteredResults.length;
@@ -1917,7 +1920,7 @@
                 <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
                 <div class="text-box">
                   <h4>Want to practice more?</h4>
-                  <p>Visit ApnaMock.com for free mock tests!</p>
+                  <p>Visit ${cleanDomain} for free mock tests!</p>
                 </div>
                 <i class="fa-solid fa-arrow-right"></i>
               </div>
@@ -2152,6 +2155,9 @@
       const reviewList = document.getElementById('reviewList');
       if (!reviewList) return;
 
+      // Get dynamic domain for the CTA
+      const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+
       const start = Result.displayedReviews;
       const end = Math.min(start + CONFIG.REVIEW_PER_PAGE, Result.filteredResults.length);
       const batch = Result.filteredResults.slice(start, end);
@@ -2171,7 +2177,7 @@
               <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
               <div class="text-box">
                 <h4>Want to practice more?</h4>
-                <p>Visit ApnaMock.com for free mock tests!</p>
+                <p>Visit ${cleanDomain} for free mock tests!</p>
               </div>
               <i class="fa-solid fa-arrow-right"></i>
             </div>
