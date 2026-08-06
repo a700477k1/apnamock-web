@@ -543,7 +543,7 @@
     .review-header-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
     
     /* Status Tags - Dark Mode Fixes */
-    .review-status-tag { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: capitalize; }
+    .review-status-tag { display: flex; align-items: center; gap: 5ps; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: capitalize; }
     .review-status-tag.correct { background: var(--success-light); color: var(--success); }
     .review-status-tag.wrong { background: var(--error-light); color: var(--error); }
     .review-status-tag.skipped { background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border); }
@@ -1895,8 +1895,9 @@
       const loadMoreWrap = document.getElementById('reviewLoadMoreWrap');
       if (!reviewList) return;
 
-      // Get dynamic domain for the CTA
+      // Get dynamic domain and URL for the CTA
       const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+      const ctaUrl = `${window.location.origin}/tests.html`;
 
       // 1. Temporarily load ALL remaining questions for the PDF
       const originalCount = Result.displayedReviews;
@@ -1916,14 +1917,14 @@
           // Inject Beautiful Print CTA every 2 questions
           if ((start + index + 1) % 2 === 0) {
             htmlBatch += `
-              <div class="print-cta">
+              <a href="${ctaUrl}" class="print-cta">
                 <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
                 <div class="text-box">
                   <h4>Want to practice more?</h4>
                   <p>Visit ${cleanDomain} for free mock tests!</p>
                 </div>
                 <i class="fa-solid fa-arrow-right"></i>
-              </div>
+              </a>
             `;
           }
         });
@@ -2155,8 +2156,9 @@
       const reviewList = document.getElementById('reviewList');
       if (!reviewList) return;
 
-      // Get dynamic domain for the CTA
+      // Get dynamic domain and URL for the CTA
       const cleanDomain = window.location.hostname.replace(/^www\./i, '');
+      const ctaUrl = `${window.location.origin}/tests.html`;
 
       const start = Result.displayedReviews;
       const end = Math.min(start + CONFIG.REVIEW_PER_PAGE, Result.filteredResults.length);
@@ -2173,14 +2175,14 @@
         // Inject Beautiful Print CTA every 2 questions
         if ((start + index + 1) % 2 === 0) {
           htmlBatch += `
-            <div class="print-cta">
+            <a href="${ctaUrl}" class="print-cta">
               <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
               <div class="text-box">
                 <h4>Want to practice more?</h4>
                 <p>Visit ${cleanDomain} for free mock tests!</p>
               </div>
               <i class="fa-solid fa-arrow-right"></i>
-            </div>
+            </a>
           `;
         }
       });
