@@ -976,22 +976,26 @@
       } catch (err) { console.error(err); }
     }
 
-    /* ============================================================
-       LOCAL STORAGE MIGRATION (Crucial for linking result.html data)
-    ============================================================ */
-    // If a user took a test before this IndexedDB implementation, migrate it.
-    async function migrateLocalStorageHistory() {
-      let migrationOccurred = false;
+    /* ============================================================ 
+       LOCAL STORAGE SYNC (Crucial for linking quiz.html data) 
+    ============================================================ */ 
+    // Runs every time to sync new attempts from LocalStorage to IndexedDB
+    async function syncLocalStorageToIndexedDB() {
+      const keysToProcess = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith(CONFIG.STORAGE_PREFIX + 'result_')) {
-          try {
-            const raw = localStorage.getItem(key);
-            const data = JSON.parse(raw);
-            
-            // Build compatible object
+        if (key && (key.startsWith(CONFIG.STORAGE_PREFIX + 'result_') || key.startsWith(CONFIG.STORAGE_PREFIX + 'quiz_progress_'))) {
+          keysToProcess.push(key);
+        }
+      }
+
+      for (const key of keysToProcess) {
+        try {
+          const raw = localStorage.getItem(key);
+          const data = JSON.parse(raw);
+          
+          if (key.startsWith(CONFIG.STORAGE_PREFIX + 'result_')) {
             const attemptId = `atm_${data.submittedAt}_${data.testId}`;
-            
             const historyItem = {
               attemptId: attemptId,
               testId: data.testId,
@@ -1010,30 +1014,15 @@
               totalMarks: data.totalMarks,
               status: 'Completed'
             };
-
             await saveToHistoryDB(historyItem);
-            // Optionally remove from localStorage after migration to save space:
-            // localStorage.removeItem(key); 
-            migrationOccurred = true;
-          } catch(e) {}
-        }
-      }
-
-      // Also migrate abandoned/in-progress attempts
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith(CONFIG.STORAGE_PREFIX + 'quiz_progress_')) {
-          try {
-            const raw = localStorage.getItem(key);
-            const data = JSON.parse(raw);
+          } else if (key.startsWith(CONFIG.STORAGE_PREFIX + 'quiz_progress_')) {
             const answeredCount = Object.keys(data.answers || {}).length;
-            
             if (answeredCount > 0) {
               const attemptId = `atm_prog_${data.savedAt}_${data.testId}`;
               const historyItem = {
                 attemptId: attemptId,
                 testId: data.testId,
-                testTitle: `Incomplete Test (${data.testId})`, // Usually fetched from index in real app
+                testTitle: `Incomplete Test (${data.testId})`,
                 exam: 'General',
                 language: data.language,
                 date: data.savedAt,
@@ -1042,16 +1031,15 @@
                 status: 'Abandoned'
               };
               await saveToHistoryDB(historyItem);
-              migrationOccurred = true;
             }
-          } catch(e) {}
-        }
+          }
+        } catch(e) {}
       }
-      return migrationOccurred;
     }
 
     function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
     function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
+    function storageRemove(key) { try { localStorage.removeItem(CONFIG.STORAGE_PREFIX + key); } catch {} }
 
     /* ============================================================
        TOAST & POPUPS
@@ -1219,22 +1207,8 @@
 
 });
 
-      // Migrate any missing localStorage data first
-     const migrationDone =
- storageGet(
-  'history_migrated'
- );
-
-if (!migrationDone) {
-
- await migrateLocalStorageHistory();
-
- storageSet(
-  'history_migrated',
-  true
- );
-
-}
+      // Sync LocalStorage data to IndexedDB every time to catch new attempts
+      await syncLocalStorageToIndexedDB();
 
       // Load Data
       const rawData = await getAllHistory();
@@ -1636,6 +1610,16 @@ if (!migrationDone) {
       if (!id) return;
 
       await removeHistoryFromDB(id);
+
+      // Also remove from LocalStorage to prevent resurrection on next sync
+      const itemToDelete = State.allHistory.find(f => f.attemptId === id);
+      if (itemToDelete) {
+        if (itemToDelete.status === 'Completed') {
+          storageRemove(`result_${itemToDelete.testId}`);
+        } else if (itemToDelete.status === 'Abandoned') {
+          storageRemove(`quiz_progress_${itemToDelete.testId}`);
+        }
+      }
 
       State.allHistory = State.allHistory.filter(f => f.attemptId !== id);
       State.filteredHistory = State.filteredHistory.filter(f => f.attemptId !== id);
