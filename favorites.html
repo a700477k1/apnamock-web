@@ -639,13 +639,17 @@ display: flex; align-items: center; justify-content: space-between; flex-wrap: w
 
       .page-title { font-size: 22px; }
       
+      /* Fix controls bar to wrap search on top, and buttons on bottom row */
+      .controls-bar { flex-wrap: wrap; gap: 8px; }
+      .search-wrap { min-width: 220px; flex: 1; }
+      .controls-right { width: 100%; justify-content: space-between; gap: 8px; }
+      .ctrl-btn { flex: 1; justify-content: center; padding: 0 10px; }
+
       /* Reduced padding for favorite cards to make content wider */
       .fav-card-header { padding: 12px; }
       .fav-card-body { padding: 14px; }
-      .fav-card-footer { flex-direction: column; align-items: stretch; }
-      .fav-actions-left { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
-      .fav-actions-right { width: 100%; }
-      .fav-actions-right .btn { width: 100%; }
+      .fav-card-footer { flex-wrap: wrap; gap: 8px; }
+      .fav-card-footer .btn { flex: 1; justify-content: center; }
       .fav-explanation { padding: 12px; }
     } 
 
@@ -2162,9 +2166,9 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
           </div> 
  
           <div class="fav-card-footer"> 
-            <button class="btn btn-ghost btn-sm" id="toggle-btn-${qId}" onclick="toggleDetails('${qId}')"> 
+            <button class="btn btn-primary btn-sm" id="toggle-btn-${qId}" onclick="toggleDetails('${qId}')"> 
               <i class="fa-solid fa-eye"></i> View Answer 
-            </button> 
+            </button>
             <a href="/result.html?test=${fav.testId}" class="btn btn-outline btn-sm"> 
               <i class="fa-solid fa-chart-simple"></i> View Result 
             </a> 
