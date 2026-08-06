@@ -1115,7 +1115,16 @@ const State = {
 
         applyFiltersAndSort();
       } catch (err) {
-        document.getElementById('jobsList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">Failed to load jobs.</div>`;
+        document.getElementById('jobsList').innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-icon"><i class="fa-solid fa-wifi" style="color:var(--error)"></i></div>
+            <div class="empty-title">Failed to Load Jobs</div>
+            <div class="empty-subtitle">Could not connect to server. Please check your connection and try again.</div>
+            <button class="btn btn-primary" onclick="loadJobs()">
+              <i class="fa-solid fa-rotate-right"></i> Retry
+            </button>
+          </div>
+        `;
       }
     }
 
