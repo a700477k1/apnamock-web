@@ -637,7 +637,7 @@
         </button>
         <button class="ctrl-btn btn-danger-outline" id="clearHistoryBtn">
           <i class="fa-solid fa-trash-can"></i>
-          <span>Clear All</span>
+          <span>Delete All</span>
         </button>
       </div>
     </div>
@@ -799,19 +799,19 @@
   <div class="overlay" id="clearAllOverlay">
     <div class="popup" style="max-height: auto;">
       <div class="popup-header">
-        <span class="popup-title">Clear All History</span>
+        <span class="popup-title">Delete All History</span>
         <button class="popup-close" onclick="closeOverlay('clearAllOverlay')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="popup-body">
         <div class="confirm-icon-wrap">
           <div class="confirm-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div class="confirm-title">Clear entire history?</div>
+          <div class="confirm-title">Delete entire history?</div>
           <div class="confirm-message">You are about to delete <strong>ALL</strong> your saved mock test attempts. Your progress data will be lost forever.</div>
         </div>
       </div>
       <div class="popup-footer">
         <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('clearAllOverlay')">Cancel</button>
-        <button class="btn btn-danger" style="flex:1" id="confirmClearAllBtn">Yes, Clear All</button>
+        <button class="btn btn-danger" style="flex:1" id="confirmClearAllBtn">Yes, Delete All</button>
       </div>
     </div>
   </div>
@@ -1647,12 +1647,27 @@
 
     document.getElementById('confirmClearAllBtn').addEventListener('click', async () => {
       await clearAllHistoryDB();
+      
+      // NEW: Scan localStorage and remove all quiz results and progress to prevent resurrection
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith(CONFIG.STORAGE_PREFIX + 'result_') || key.startsWith(CONFIG.STORAGE_PREFIX + 'quiz_progress_'))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+      
+      // Also clear the lightweight attempt_history object used by tests.html
+      storageRemove('attempt_history');
+      storageRemove('latest_result');
+
       State.allHistory = [];
       State.filteredHistory = [];
       closeOverlay('clearAllOverlay');
       document.getElementById('dashboardGrid').style.display = 'none';
       applyFiltersAndSort();
-      showToast('All history cleared', 'success');
+      showToast('All history deleted successfully', 'success');
     });
 
     /* ============================================================
