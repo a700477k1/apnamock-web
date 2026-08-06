@@ -382,6 +382,45 @@
     .loading-state { padding: 100px 20px; text-align: center; color: var(--text-muted); }
     .loading-state i { font-size: 30px; margin-bottom: 16px; }
 
+    /* EMPTY / ERROR STATE */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 24px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+    }
+    .empty-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--bg-muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .empty-title {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .empty-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
     /* FOOTER */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
     body.dark-mode .footer-brand-name{ color:#0f172a; }
@@ -942,7 +981,16 @@
 
       } catch (err) {
         console.error(err);
-        root.innerHTML = `<div class="loading-state"><i class="fa-solid fa-wifi" style="font-size:28px;margin-bottom:12px;color:var(--error);"></i><h2>Unable to load job.</h2></div>`;
+        root.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-wifi" style="color:var(--error)"></i></div>
+            <div class="empty-title">Unable to Load Job</div>
+            <div class="empty-subtitle">Could not connect to server. Please check your connection and try again.</div>
+            <button class="btn btn-primary" onclick="loadJob()">
+              <i class="fa-solid fa-rotate-right"></i> Retry
+            </button>
+          </div>
+        `;
       }
     }
 
