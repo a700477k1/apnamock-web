@@ -16,7 +16,7 @@
   </script>
   <!-- ============================================================ -->
 
-    <!-- PWA Setup -->
+    <!-- PWA Setup -->f
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a56db">
 
@@ -387,6 +387,16 @@
     .btn-ghost:hover { background: var(--bg-muted); color: var(--text-primary); }
     .btn-danger { background: var(--error); color: #fff; border-color: var(--error); }
     .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+    .btn-delete-action {
+      background-color: var(--bg-muted);
+      color: var(--error);
+      border-color: transparent;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .btn-delete-action:hover {
+      background-color: var(--border-strong);
+      color: var(--error);
+    }
 
     /* ============================================================
        EMPTY STATE
@@ -1594,7 +1604,7 @@
           <div class="card-actions">
             ${isCompleted ? `<a href="/result.html?test=${item.testId}&t=${item.date}" class="btn btn-primary"><i class="fa-solid fa-chart-simple"></i> View Result</a>` : ''}
             <a href="/quiz.html?test=${item.testId}" class="btn btn-outline"><i class="fa-solid fa-rotate-right"></i> Reattempt</a>
-            <button class="btn btn-ghost" style="color:var(--error);border-color:transparent" onclick="promptDelete('${item.attemptId}')"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="btn btn-delete-action" onclick="promptDelete('${item.attemptId}')"><i class="fa-solid fa-trash-can"></i></button>
           </div>
 
         </div>
