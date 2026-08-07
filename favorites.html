@@ -2253,7 +2253,10 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
  
       // Update State 
       State.allFavorites = State.allFavorites.filter(f => f.qId !== qId); 
-      State.filteredFavorites = State.filteredFavorites.filter(f => f.qId !== qId); 
+      State.filteredFavorites = State.filteredFavorites.filter(f => f.qId !== qId);
+      
+      // FIX: Instantly sync the popup baseline so future additions trigger correctly
+      storageSet('backup_prompt_count_favs', State.allFavorites.length);
  
       // Remove from DOM visually 
       const card = document.getElementById(`card-${qId}`); 
@@ -2296,6 +2299,9 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
           State.allFavorites = [];
           State.filteredFavorites = [];
           State.displayedCount = 0;
+          
+          // FIX: Instantly sync the popup baseline to 0
+          storageSet('backup_prompt_count_favs', 0);
           
           closeOverlay('clearAllFavOverlay');
           applyFiltersAndSort(); // Will instantly render the empty state
