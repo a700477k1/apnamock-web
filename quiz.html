@@ -1850,12 +1850,22 @@
       if (!Quiz.testId) return showScreen1Error('No test ID specified. Please go back and select a test.');
 
       if (Quiz.testId === 'custom') {
+        Quiz.isCustom = true; // ADD THIS FLAG
+        
         const customDataRaw = localStorage.getItem('apnamock_active_custom_test');
         if (!customDataRaw) return showScreen1Error('Custom test data not found or expired.');
         
         Quiz.testData = JSON.parse(customDataRaw);
         Quiz.testId = Quiz.testData.testId; 
         Quiz.questions = Quiz.testData.questions || [];
+        
+        // Update the Back button to go to Custom Tests page
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+          backLink.href = '/custom-tests.html';
+          backLink.innerHTML = '<i class="fa-solid fa-chevron-left"></i> Back to Custom Tests';
+        }
+        
         populateScreen1();
         checkResumeState();
         return; 
@@ -2427,7 +2437,10 @@
       }
 
       if (Quiz.historyPushed) history.back();
-      setTimeout(() => { window.location.href = '/tests.html'; }, 100);
+      
+      // Redirect to custom-tests.html if it was a custom test, otherwise tests.html
+      const redirectUrl = Quiz.isCustom ? '/custom-tests.html' : '/tests.html';
+      setTimeout(() => { window.location.href = redirectUrl; }, 100);
     }
 
     initScreen1();
