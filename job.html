@@ -955,7 +955,7 @@
       } else if (diffDays === 0) {
         return { isExpired: false, tag: "Last Day!", class: "urgency-chip last-day" };
       } else if (diffDays <= 3) {
-        return { isExpired: false, tag: "Closing Soon", class: "urgency-chip closing-soon" };
+        return { isExpired: false, tag: diffDays + (diffDays === 1 ? " Day Left" : " Days Left"), class: "urgency-chip last-day" };
       } else {
         return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-chip days-left" };
       }
