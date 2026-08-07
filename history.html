@@ -1674,6 +1674,9 @@
 
       State.allHistory = State.allHistory.filter(f => f.attemptId !== id);
       State.filteredHistory = State.filteredHistory.filter(f => f.attemptId !== id);
+      
+      // FIX: Instantly sync the popup baseline so future additions trigger correctly
+      storageSet('backup_prompt_count_history', State.allHistory.length);
 
       const card = document.getElementById(`card-${id}`);
       if (card) {
@@ -1715,6 +1718,10 @@
 
       State.allHistory = [];
       State.filteredHistory = [];
+      
+      // FIX: Instantly sync the popup baseline to 0
+      storageSet('backup_prompt_count_history', 0);
+      
       closeOverlay('clearAllOverlay');
       document.getElementById('dashboardGrid').style.display = 'none';
       applyFiltersAndSort();
