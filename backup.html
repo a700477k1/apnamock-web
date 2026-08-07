@@ -1,3 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup & Restore — ApnaMock</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a56db">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
+      --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
+      --error: #dc2626; --error-light: #fee2e2; --warning: #f59e0b; --warning-light: #fef3c7;
+      --bg-base: #f8fafc; --bg-card: #ffffff; --bg-muted: #f1f5f9;
+      --text-primary: #1e293b; --text-secondary: #334155; --text-muted: #64748b;
+      --border: #e2e8f0; --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+      --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --header-height: 64px; --font-body: 'Inter', sans-serif; --font-heading: 'Poppins', sans-serif;
+    }
+    body.dark-mode {
+      --bg-base: #0f172a; --bg-card: #1e293b; --bg-muted: #334155;
+      --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+      --border: #334155; --primary-light: rgba(26, 86, 219, 0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    .align-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); display: flex; align-items: center; }
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+    .back-link:hover { color: var(--primary); }
+
+    .page-wrapper { padding: 28px 20px 60px; flex: 1; }
+    
+    /* Title Section - Desktop (Centered) */
+    .page-header { text-align: center; margin-bottom: 32px; }
+    .page-icon { width: 64px; height: 64px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
+    h1 { font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+    /* Grid Layout for Desktop Side-by-Side */
+    .backup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Side by side on desktop */
+      gap: 24px;
+      /* Removed align-items: start; so grid forces both cards to be equal height */
+    }
+
+    .card { 
+      background: var(--bg-card); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-xl); 
+      padding: 24px; 
+      box-shadow: var(--shadow-md);
+      display: flex; /* Added Flexbox */
+      flex-direction: column; /* Stack header, text, and button vertically */
+    }
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .card-icon { width: 40px; height: 40px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .card-icon.export { background: var(--success-light); color: var(--success); }
+    .card-icon.import { background: var(--primary-light); color: var(--primary); }
+    .card-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
+    .card-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; flex: 1; /* Added flex: 1 to push the button to the bottom */ }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; height: 44px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; width: 100%; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #15803d; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500; box-shadow: var(--shadow-md); animation: toast-in 0.3s ease; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+
+    /* RESPONSIVE - Matches jobs.html mobile layout */
+    @media (max-width: 768px) {
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
+      
+      /* Switch title to left-aligned on mobile */
+      .page-header { text-align: left; margin-bottom: 24px; }
+      .page-icon { width: 48px; height: 48px; font-size: 20px; margin: 0 0 12px 0; }
+      h1 { font-size: 22px; text-align: left; }
+      .subtitle { font-size: 14px; max-width: 100%; margin: 0; }
+
+      /* Stack cards vertically on mobile */
+      .backup-grid { grid-template-columns: 1fr; gap: 16px; }
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Back to ApnaMock
+      </a>
+    </div>
+  </header>
+
+  <main class="page-wrapper align-wrapper">
+    <div class="page-header">
+      <div class="page-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h1>Backup & Restore Data</h1>
+      <p class="subtitle">Your data is stored locally in your browser. Create a backup file to keep your history and favorites safe, or restore data if you switched devices.</p>
+    </div>
+
+    <div class="backup-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon export"><i class="fa-solid fa-file-export"></i></div>
+          <div class="card-title">Export Data</div>
+        </div>
+        <p class="card-text">Download all your saved favorites, test history, and custom tests into a single file. Do this regularly to avoid losing your progress!</p>
+        <button class="btn btn-success" id="exportBtn">
+          <i class="fa-solid fa-download"></i> Download Backup File
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon import"><i class="fa-solid fa-file-import"></i></div>
+          <div class="card-title">Import Data</div>
+        </div>
+        <p class="card-text">Have an ApnaMock backup file? Select it below to restore your data. This will overwrite any existing data on this browser.</p>
+        <input type="file" id="importInput" accept=".json" style="display:none">
+        <button class="btn btn-primary" id="importBtn">
+          <i class="fa-solid fa-upload"></i> Select Backup File
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
   <script>
     const STORAGE_PREFIX = 'apnamock_';
     
@@ -164,3 +308,5 @@
       }
     });
   </script>
+</body>
+</html>
