@@ -776,6 +776,21 @@ PRESET POPUP
           </div>
         </div>
 
+        <!-- NEW: Marking Scheme -->
+        <div class="builder-row">
+          <div class="builder-row-label">
+            Marking Scheme
+            <span class="builder-row-desc">Standardize scores for this test.</span>
+          </div>
+          <div class="builder-controls">
+            <div class="chip-group" id="filter-marking">
+              <div class="chip" data-pos="1" data-neg="0">No Negative (+1/0)</div>
+              <div class="chip active" data-pos="1" data-neg="0.25">Standard (+1/-0.25)</div>
+              <div class="chip" data-pos="2" data-neg="0.50">SSC Pattern (+2/-0.50)</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Question Count -->
         <div class="builder-row">
           <div class="builder-row-label">
@@ -998,7 +1013,8 @@ PRESET POPUP
       difficulty: null, // Initially blank
       qCount: 20,
       timeStrategy: 'auto', // auto | custom
-      customTime: 20
+      customTime: 20,
+      marking: { pos: 1, neg: 0.25 }
     };
     let TestsIndexCache = [];
 let AvailableQuestionCount = 0;
@@ -1426,6 +1442,14 @@ PresetGenerating = false;
 
       // Difficulty single select (Static HTML chips, but NO default selection)
       setupSingleSelect('filter-difficulty', (val) => { State.difficulty = val; checkAvailability(); });
+
+      // NEW: Marking scheme single select
+      setupSingleSelect('filter-marking', (val) => { 
+        const chip = document.querySelector('#filter-marking .chip.selected');
+        State.marking.pos = parseFloat(chip.dataset.pos);
+        State.marking.neg = parseFloat(chip.dataset.neg);
+        checkAvailability(); 
+      });
 
       // Question Count Slider
       const qSlider = document.getElementById('qCountSlider');
@@ -1999,17 +2023,17 @@ const shuffled =
 
     });
 
-    const totalMarks =
-      generatedQuestions.reduce(
-        (sum, q) =>
-          sum + (q.marks || 1),
-        0
-      );
+    // OVERRIDE: Force uniform marking scheme to prevent mixed exam score bugs
+    generatedQuestions.forEach(q => {
+      q.marks = State.marking.pos;
+      q.negativeMarks = State.marking.neg;
+    });
+
+    const totalMarks = generatedQuestions.reduce((sum, q) => sum + q.marks, 0);
 
     const customTestObject = {
-
-      testId:
-        `custom_${Date.now()}`,
+      testId: `custom_${Date.now()}`,
+      test_id: `custom_${Date.now()}`,
 
       test_id:
         `custom_${Date.now()}`,
@@ -2041,8 +2065,8 @@ const shuffled =
       totalMarks:
         totalMarks,
 
-      negativeMarking:
-        0.25,
+      negativeMarking: 
+        State.marking.neg,
 
       language_mode:
         'bilingual',
