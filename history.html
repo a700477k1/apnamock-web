@@ -844,8 +844,8 @@
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
-        <a href="/backup.html" class="btn btn-primary" style="flex:1"><i class="fa-solid fa-download"></i> Backup Now</a>
+        <button class="btn btn-ghost" style="flex:1; white-space: normal;" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
+        <a href="/backup.html" class="btn btn-primary" style="flex:1; white-space: normal; text-decoration: none; padding: 0 12px;"><i class="fa-solid fa-download"></i> Backup Now</a>
       </div>
     </div>
   </div>
@@ -1526,7 +1526,10 @@
             <div class="empty-title">No Attempts Found</div>
             <div class="empty-subtitle">Start your first mock test to build your performance history.</div>
             <a href="/tests.html" class="btn btn-primary" style="margin-top:10px"><i class="fa-solid fa-play"></i> Start Practicing</a>
-            <a href="/backup.html" style="display:block; margin-top:12px; font-size:13px; color:var(--primary); font-weight:600;">Have an ApnaMock backup file? Click here to seamlessly import your past data.</a>
+            <div style="margin-top: 20px; padding: 14px 16px; border: 2px dashed var(--border-strong); border-radius: var(--radius-md); background: var(--bg-muted); text-align: center;">
+              <i class="fa-solid fa-file-import" style="color: var(--primary); margin-bottom: 8px; font-size: 18px; display: block;"></i>
+              <a href="/backup.html" style="display: block; font-size: 13px; color: var(--primary); font-weight: 600; text-decoration: none; line-height: 1.5;">Have an ApnaMock backup file? Click here to seamlessly import your past data.</a>
+            </div>
           </div> 
         `; 
       } else {
