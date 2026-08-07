@@ -830,6 +830,26 @@
     </div>
   </div>
 
+  <div class="overlay" id="backupPopupOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Protect Your Progress</span>
+        <button class="popup-close" onclick="closeOverlay('backupPopupOverlay')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="confirm-icon-wrap">
+          <div class="confirm-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="confirm-title">Don't lose your test history!</div>
+          <div class="confirm-message">You've worked hard on these tests. Because your data is stored locally in your browser, clearing your cache or switching devices will erase it. Create a quick backup file to keep it safe forever.</div>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
+        <a href="/backup.html" class="btn btn-primary" style="flex:1"><i class="fa-solid fa-download"></i> Backup Now</a>
+      </div>
+    </div>
+  </div>
+
   <!-- ============================================================
        TOAST CONTAINER
   ============================================================ -->
@@ -1259,6 +1279,13 @@
       
       buildFilterOptions();
       updateDashboardStats();
+        // Smart Backup Popup Logic
+      const historyCount = State.allHistory.length;
+      const lastPromptCount = storageGet('backup_prompt_count_history') || 0;
+      if (historyCount > 0 && historyCount > lastPromptCount) {
+        openOverlay('backupPopupOverlay');
+        storageSet('backup_prompt_count_history', historyCount);
+      }
       applySearchAndRender();
     }
 
@@ -1499,8 +1526,9 @@
             <div class="empty-title">No Attempts Found</div>
             <div class="empty-subtitle">Start your first mock test to build your performance history.</div>
             <a href="/tests.html" class="btn btn-primary" style="margin-top:10px"><i class="fa-solid fa-play"></i> Start Practicing</a>
-          </div>
-        `;
+            <a href="/backup.html" style="display:block; margin-top:12px; font-size:13px; color:var(--primary); font-weight:600;">Have an ApnaMock backup file? Click here to seamlessly import your past data.</a>
+          </div> 
+        `; 
       } else {
         list.innerHTML = `
           <div class="empty-state" style="padding:40px 20px;">
