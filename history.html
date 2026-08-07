@@ -844,7 +844,7 @@
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1; white-space: normal;" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
+        <button class="btn btn-ghost" style="flex:1; white-space: normal;" onclick="closeOverlay('backupPopupOverlay')">Later</button>
         <a href="/backup.html" class="btn btn-primary" style="flex:1; white-space: normal; text-decoration: none; padding: 0 12px;"><i class="fa-solid fa-download"></i> Backup Now</a>
       </div>
     </div>
@@ -1279,10 +1279,16 @@
       
       buildFilterOptions();
       updateDashboardStats();
-        // Smart Backup Popup Logic
+      // Smart Backup Popup Logic (with deletion baseline reset)
       const historyCount = State.allHistory.length;
-      const lastPromptCount = storageGet('backup_prompt_count_history') || 0;
-      if (historyCount > 0 && historyCount > lastPromptCount) {
+      let lastPromptCount = storageGet('backup_prompt_count_history');
+      if (lastPromptCount === null) lastPromptCount = 0;
+
+      if (historyCount < lastPromptCount) {
+        // User deleted data. Reset the baseline so future additions trigger the popup.
+        storageSet('backup_prompt_count_history', historyCount);
+      } else if (historyCount > 0 && historyCount > lastPromptCount) {
+        // User added new data! Show popup and update baseline.
         openOverlay('backupPopupOverlay');
         storageSet('backup_prompt_count_history', historyCount);
       }
