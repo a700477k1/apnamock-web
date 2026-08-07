@@ -1028,6 +1028,26 @@ undone.</div>
       </div>
     </div>
   </div>
+
+  <div class="overlay" id="backupPopupOverlay">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-title">Protect Your Favorites</span>
+        <button class="popup-close" onclick="closeOverlay('backupPopupOverlay')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="popup-body">
+        <div class="confirm-icon-wrap">
+          <div class="confirm-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="confirm-title">Don't lose your saved questions!</div>
+          <div class="confirm-message">You've saved important questions for revision. Because your data is stored locally in your browser, clearing your cache or switching devices will erase it. Create a quick backup file to keep them safe.</div>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
+        <a href="/backup.html" class="btn btn-primary" style="flex:1"><i class="fa-solid fa-download"></i> Backup Now</a>
+      </div>
+    </div>
+  </div>
  
   <div class="toast-container" id="toastContainer"></div> 
  
@@ -1476,6 +1496,13 @@ newFilters.testTitle.push(btn.dataset.value));
       State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0)); 
        
       buildFilterOptions(); 
+      // Smart Backup Popup Logic
+      const favCount = State.allFavorites.length;
+      const lastPromptCount = storageGet('backup_prompt_count_favs') || 0;
+      if (favCount > 0 && favCount > lastPromptCount) {
+        openOverlay('backupPopupOverlay');
+        storageSet('backup_prompt_count_favs', favCount);
+      }
       applySearchAndRender(); 
     } 
  
@@ -2026,8 +2053,9 @@ important questions to see them here.</div>
             <a href="/tests.html" class="btn btn-primary" style="margin-top:10px"> 
               <i class="fa-solid fa-play"></i> Start Practicing 
             </a> 
+            <a href="/backup.html" style="display:block; margin-top:12px; font-size:13px; color:var(--primary); font-weight:600;">Have an ApnaMock backup file? Click here to seamlessly import your past data.</a>
           </div> 
-        `; 
+        `;  
       } else { 
         grid.innerHTML = ` 
           <div class="empty-state" style="padding:40px 20px;"> 
