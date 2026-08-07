@@ -1043,7 +1043,7 @@ undone.</div>
         </div>
       </div>
       <div class="popup-footer">
-        <button class="btn btn-ghost" style="flex:1; white-space: normal;" onclick="closeOverlay('backupPopupOverlay')">Remind Me Later</button>
+        <button class="btn btn-ghost" style="flex:1; white-space: normal;" onclick="closeOverlay('backupPopupOverlay')">Later</button>
         <a href="/backup.html" class="btn btn-primary" style="flex:1; white-space: normal; text-decoration: none; padding: 0 12px;"><i class="fa-solid fa-download"></i> Backup Now</a>
       </div>
     </div>
@@ -1496,10 +1496,16 @@ newFilters.testTitle.push(btn.dataset.value));
       State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0)); 
        
       buildFilterOptions(); 
-      // Smart Backup Popup Logic
+      // Smart Backup Popup Logic (with deletion baseline reset)
       const favCount = State.allFavorites.length;
-      const lastPromptCount = storageGet('backup_prompt_count_favs') || 0;
-      if (favCount > 0 && favCount > lastPromptCount) {
+      let lastPromptCount = storageGet('backup_prompt_count_favs');
+      if (lastPromptCount === null) lastPromptCount = 0;
+
+      if (favCount < lastPromptCount) {
+        // User deleted data. Reset the baseline so future additions trigger the popup.
+        storageSet('backup_prompt_count_favs', favCount);
+      } else if (favCount > 0 && favCount > lastPromptCount) {
+        // User added new data! Show popup and update baseline.
         openOverlay('backupPopupOverlay');
         storageSet('backup_prompt_count_favs', favCount);
       }
