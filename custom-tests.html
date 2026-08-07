@@ -2031,19 +2031,40 @@ const shuffled =
 
     const totalMarks = generatedQuestions.reduce((sum, q) => sum + q.marks, 0);
 
+    // 1. Build a professional title: [Exam Name] [Subject] Mock Test
+    let dynamicTitle = "Custom Mock Test"; // Default fallback
+    
+    if (ActivePreset && ActivePreset.title) {
+      // If it's a preset, just append "Mock Test" to the preset name
+      dynamicTitle = `${ActivePreset.title} Mock Test`;
+    } else {
+      // 1. Get Exam Name
+      let examName = "All Exams";
+      if (State.exam && State.exam !== 'all') {
+        examName = State.exam;
+      }
+      
+      // 2. Get Subject Context
+      let subjectContext = "Mixed Subjects";
+      if (State.subjects.length === 1) {
+        subjectContext = State.subjects[0];
+      } else if (State.subjects.length === 0) {
+        subjectContext = "General";
+      }
+      
+      // 3. Combine: e.g., "SSC Quantitative Aptitude Mock Test"
+      dynamicTitle = `${examName} ${subjectContext} Mock Test`;
+    }
+
     const customTestObject = {
       testId: `custom_${Date.now()}`,
       test_id: `custom_${Date.now()}`,
-
-      test_id:
-        `custom_${Date.now()}`,
-
-      title:
-        `Custom Test`,
-
+      
+      title: dynamicTitle,
+      
       title_i18n: {
-        en: 'Custom Test',
-        hi: 'कस्टम टेस्ट'
+        en: dynamicTitle,
+        hi: dynamicTitle 
       },
 
       exam:
