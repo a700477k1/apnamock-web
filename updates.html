@@ -26,8 +26,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
   <style>
-    /* DESIGN TOKENS (Matches your other pages) */
+    /* DESIGN TOKENS */
     :root {
       --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
       --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
@@ -73,15 +78,27 @@
     .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
     .mobile-menu-btn { display: none; }
 
-    /* LAYOUT & TYPOGRAPHY */
+    /* LAYOUT & CONTROLS */
     .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
     .page-header { margin-bottom: 24px; }
     .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
-    /* SECTION STYLES */
-    .update-section { margin-bottom: 48px; }
+    .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .search-wrap { flex: 1; min-width: 220px; position: relative; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 0 38px; font-size: 14px; color: var(--text-primary); background: var(--bg-card); outline: none; transition: border-color 0.15s; }
+    .search-input:focus { border-color: var(--primary); }
+    
+    .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); background: var(--bg-card); cursor: pointer; transition: all 0.15s; }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /* SECTIONS */
+    .update-section { margin-bottom: 48px; display: none; }
+    .update-section.visible { display: block; }
     .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
     .section-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
     .section-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); }
@@ -90,12 +107,11 @@
     .update-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: all 0.2s; position: relative; overflow: hidden; }
     .update-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
     
-    /* Urgency Badges */
+    /* Badges & Tags */
     .urgency-badge { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px; }
     .urgency-badge.last-day { background: var(--error-light); color: var(--error); animation: pulse 1.5s infinite; }
     .urgency-badge.closing-soon { background: var(--warning-light); color: #d97706; }
     .urgency-badge.new { background: var(--success-light); color: var(--success); }
-    .urgency-badge.info { background: var(--primary-light); color: var(--primary); }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
     .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -106,18 +122,22 @@
     .tag-exam { background: var(--bg-muted); color: var(--text-secondary); }
     
     .card-title { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
-    .card-desc { font-size: 13px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    /* HTML Description Truncation */
+    .card-desc { font-size: 13px; color: var(--text-muted); max-height: 65px; overflow: hidden; position: relative; }
+    .card-desc p { margin: 0 0 8px 0; padding: 0; line-height: 1.5; }
+    .card-desc p + p { margin-top: 8px; }
+    .card-desc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 20px; background: linear-gradient(to bottom, transparent, var(--bg-card)); }
+    
     .card-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: auto; }
     
     .card-actions { display: flex; gap: 8px; margin-top: 8px; }
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 16px; height: 36px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; transition: all 0.15s; border: 1.5px solid transparent; }
     .btn-primary { background: var(--primary); color: #fff; flex: 1; }
     .btn-primary:hover { background: var(--primary-dark); }
-    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
-    .btn-outline:hover { background: var(--primary-light); }
 
     /* EMPTY STATE */
-    .empty-state { background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; }
+    .empty-state { background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; }
 
     /* FOOTER */
     .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
@@ -159,7 +179,8 @@
         <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
         <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
         <a href="/jobs.html" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
-        <a href="/updates.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Daily Updates</span></a>
+        <a href="/rapid-fire.html" class="nav-link"><i class="fa-solid fa-bolt"></i><span>Rapid Fire</span></a>
+        <a href="/updates.html" class="nav-link active"><i class="fa-solid fa-newspaper"></i><span>Updates</span></a>
       </nav>
       <div class="header-actions">
         <button class="btn-icon" id="themeToggleBtn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
@@ -170,12 +191,27 @@
 
   <main class="page-wrapper align-wrapper">
     <div class="page-header">
-      <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Daily Updates & Announcements</h1>
+      <h1 class="page-title"><i class="fa-solid fa-newspaper"></i> Daily Updates & Announcements</h1>
       <p class="page-subtitle">Your daily dashboard for upcoming deadlines, new mock tests, and official announcements.</p>
     </div>
 
+    <!-- CONTROLS BAR -->
+    <div class="controls-bar">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search updates, jobs, tests..." oninput="handleSearch()" />
+      </div>
+      <div class="filter-chips">
+        <button class="chip active" onclick="setFilter('all', this)">All</button>
+        <button class="chip" onclick="setFilter('urgent', this)">Urgent</button>
+        <button class="chip" onclick="setFilter('jobs', this)">Jobs</button>
+        <button class="chip" onclick="setFilter('tests', this)">Tests</button>
+        <button class="chip" onclick="setFilter('announcements', this)">Announcements</button>
+      </div>
+    </div>
+
     <!-- Section 1: Closing Soon -->
-    <div class="update-section">
+    <div class="update-section visible" id="section-closing">
       <div class="section-header">
         <div class="section-icon" style="background: var(--error-light); color: var(--error);"><i class="fa-solid fa-fire"></i></div>
         <div class="section-title">Closing Soon</div>
@@ -186,7 +222,7 @@
     </div>
 
     <!-- Section 2: Newly Added Jobs -->
-    <div class="update-section">
+    <div class="update-section visible" id="section-jobs">
       <div class="section-header">
         <div class="section-icon" style="background: var(--success-light); color: var(--success);"><i class="fa-solid fa-briefcase"></i></div>
         <div class="section-title">Newly Added Jobs</div>
@@ -197,7 +233,7 @@
     </div>
 
     <!-- Section 3: Newly Added Tests -->
-    <div class="update-section">
+    <div class="update-section visible" id="section-tests">
       <div class="section-header">
         <div class="section-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-file-pen"></i></div>
         <div class="section-title">Newly Added Mock Tests</div>
@@ -208,10 +244,10 @@
     </div>
 
     <!-- Section 4: Announcements -->
-    <div class="update-section">
+    <div class="update-section visible" id="section-announcements">
       <div class="section-header">
         <div class="section-icon" style="background: var(--purple-light); color: var(--purple);"><i class="fa-solid fa-bullhorn"></i></div>
-        <div class="section-title">Announcements & Admit Cards</div>
+        <div class="section-title">Announcements, Admit Cards and More</div>
       </div>
       <div class="update-grid" id="announcementsGrid">
         <div class="empty-state">Loading announcements...</div>
@@ -252,7 +288,6 @@
           <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
           <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
           <a href="/legal.html#contact" class="footer-link">Contact</a>
-          <!-- NEW BACKUP LINK ADDED HERE -->
           <a href="/backup.html" class="footer-link">Backup & Restore</a>
         </div>
       </div>
@@ -269,9 +304,30 @@
       STORAGE_PREFIX: 'apnamock_'
     };
 
+    // State
+    let allClosingJobs = [];
+    let allNewJobs = [];
+    let allNewTests = [];
+    let allAnnouncements = [];
+    let currentFilter = 'all';
+
+    // Helpers
     function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
     function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
     function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    // Quill HTML & Math Helpers
+    function decodeHtmlEntities(str) { if (!str) return ""; const txt = document.createElement("textarea"); txt.innerHTML = str; return txt.value; }
+    function cleanQuillHtml(html) { if (!html) return ""; return html.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>'); }
+    function renderMathInString(htmlString) {
+      if (!window.katex) return htmlString;
+      function decodeEntities(str) { return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'"); }
+      htmlString = htmlString.replace(/\$\$([\s\S]*?)\$\$/g, (match, math) => { try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: true, throwOnError: false }); } catch (e) { return match; } });
+      htmlString = htmlString.replace(/\\\[([\s\S]*?)\\\]/g, (match, math) => { try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: true, throwOnError: false }); } catch (e) { return match; } });
+      htmlString = htmlString.replace(/\\\(([\s\S]*?)\\\)/g, (match, math) => { try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: false, throwOnError: false }); } catch (e) { return match; } });
+      htmlString = htmlString.replace(/\$([^\$\n]*?)\$/g, (match, math) => { if (math.includes('</p>') || math.includes('<p')) return match; try { return katex.renderToString(decodeEntities(math.replace(/<[^>]+>/g, '')), { displayMode: false, throwOnError: false }); } catch (e) { return match; } });
+      return htmlString;
+    }
 
     // Theme Toggle
     const savedTheme = storageGet('theme');
@@ -298,18 +354,15 @@
       const target = new Date(dateStr);
       if (isNaN(target.getTime())) return null;
       target.setHours(23, 59, 59, 999);
-      const diffTime = target - today;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
     }
-
     function getDaysAgo(dateStr) {
       if (!dateStr) return 999;
       const today = new Date(); today.setHours(0, 0, 0, 0);
       const past = new Date(dateStr);
       if (isNaN(past.getTime())) return 999;
       past.setHours(0, 0, 0, 0);
-      const diffTime = today - past;
-      return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      return Math.floor((today - past) / (1000 * 60 * 60 * 24));
     }
 
     // Render Functions
@@ -329,10 +382,8 @@
             ${urgencyBadge}
           </div>
           <div class="card-title">${escapeHtml(job.title)}</div>
-          <div class="card-desc">${escapeHtml(job.company || 'Government Organization')}</div>
-          <div class="card-meta">
-            <i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${escapeHtml(job.lastDate || 'N/A')}</strong>
-          </div>
+          <div class="card-meta"><i class="fa-solid fa-building"></i> ${escapeHtml(job.company || 'Government Organization')}</div>
+          <div class="card-meta"><i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${escapeHtml(job.lastDate || 'N/A')}</strong></div>
           <div class="card-actions">
             <a href="/job.html?job=${encodeURIComponent(job.file_name.replace('.json', ''))}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> View Details</a>
           </div>
@@ -348,10 +399,8 @@
             <span class="urgency-badge new"><i class="fa-solid fa-sparkles"></i> New</span>
           </div>
           <div class="card-title">${escapeHtml(test.title || 'Untitled Test')}</div>
-          <div class="card-desc">${escapeHtml(test.subject || '')} ${test.year ? '• ' + escapeHtml(test.year) : ''}</div>
-          <div class="card-meta">
-            <i class="fa-solid fa-list-ol"></i> ${escapeHtml(test.questions || 0)} Questions
-          </div>
+          <div class="card-meta"><i class="fa-solid fa-tag"></i> ${escapeHtml(test.subject || '')} ${test.year ? '• ' + escapeHtml(test.year) : ''}</div>
+          <div class="card-meta"><i class="fa-solid fa-list-ol"></i> ${escapeHtml(test.questions || 0)} Questions</div>
           <div class="card-actions">
             <a href="/quiz.html?test=${escapeHtml(test.test_id)}" class="btn btn-primary"><i class="fa-solid fa-play"></i> Start Test</a>
           </div>
@@ -361,23 +410,77 @@
 
     function renderAnnouncementCard(ann) {
       const tagClass = `tag-${(ann.type || 'announcement').toLowerCase().replace(/\s+/g, '_')}`;
+      const rawDesc = decodeHtmlEntities(ann.description || "");
+      const cleanDesc = cleanQuillHtml(rawDesc);
+      const htmlDesc = renderMathInString(cleanDesc);
+
       return `
         <div class="update-card">
           <div class="card-tags">
             <span class="tag ${tagClass}">${escapeHtml(ann.type)}</span>
           </div>
           <div class="card-title">${escapeHtml(ann.title)}</div>
-          <div class="card-desc">${escapeHtml(ann.description || '')}</div>
-          <div class="card-meta">
-            <i class="fa-solid fa-calendar"></i> ${escapeHtml(ann.date || 'N/A')}
-          </div>
-          ${ann.link ? `<div class="card-actions"><a href="${escapeHtml(ann.link)}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a></div>` : ''}
+          <div class="card-desc">${htmlDesc}</div>
+          <div class="card-meta"><i class="fa-solid fa-calendar"></i> ${escapeHtml(ann.date || 'N/A')}</div>
+          ${ann.link ? `<div class="card-actions"><a href="${escapeHtml(ann.link)}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a></div>` : ''}
         </div>
       `;
     }
 
     function renderEmptyState(containerId, message) {
       document.getElementById(containerId).innerHTML = `<div class="empty-state">${message}</div>`;
+    }
+
+    // Filtering Logic
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const sections = {
+        'urgent': ['section-closing'],
+        'jobs': ['section-closing', 'section-jobs'],
+        'tests': ['section-tests'],
+        'announcements': ['section-announcements'],
+        'all': ['section-closing', 'section-jobs', 'section-tests', 'section-announcements']
+      };
+      
+      const visibleSections = sections[filter] || sections['all'];
+      document.querySelectorAll('.update-section').forEach(sec => {
+        if (visibleSections.includes(sec.id)) {
+          sec.classList.add('visible');
+        } else {
+          sec.classList.remove('visible');
+        }
+      });
+
+      handleSearch();
+    }
+
+    // Search Logic
+    let searchTimer;
+    function handleSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        
+        // Filter Jobs
+        const fClosing = allClosingJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
+        const fNewJobs = allNewJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
+        
+        // Filter Tests
+        const fTests = allNewTests.filter(t => (t.title || '').toLowerCase().includes(q) || (t.exam_group || '').toLowerCase().includes(q));
+        
+        // Filter Announcements
+        const fAnn = allAnnouncements.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
+
+        // Render Filtered
+        document.getElementById('closingSoonGrid').innerHTML = fClosing.length > 0 ? fClosing.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No matching jobs closing soon.</div>`;
+        document.getElementById('newJobsGrid').innerHTML = fNewJobs.length > 0 ? fNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No matching new jobs.</div>`;
+        document.getElementById('newTestsGrid').innerHTML = fTests.length > 0 ? fTests.map(renderTestCard).join('') : `<div class="empty-state">No matching new tests.</div>`;
+        document.getElementById('announcementsGrid').innerHTML = fAnn.length > 0 ? fAnn.map(renderAnnouncementCard).join('') : `<div class="empty-state">No matching announcements.</div>`;
+
+      }, 300);
     }
 
     // Fetch and Display Data
@@ -388,41 +491,28 @@
         const jobsData = await jobsRes.json();
         const jobs = jobsData.jobs || [];
 
-        const closingSoon = [];
-        const newJobs = [];
-
         jobs.forEach(job => {
           const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
           const daysAgo = getDaysAgo(job.postDate);
 
           if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 5) {
-            closingSoon.push({ job, daysLeft });
+            allClosingJobs.push(job);
           }
           if (daysAgo <= 7) {
-            newJobs.push({ job, daysAgo });
+            allNewJobs.push(job);
           }
         });
 
         // Sort Closing Soon by closest deadline
-        closingSoon.sort((a, b) => a.daysLeft - b.daysLeft);
+        allClosingJobs.sort((a, b) => getDaysRemaining(a.extendedLastDate || a.lastDate) - getDaysRemaining(b.extendedLastDate || b.lastDate));
         // Sort New Jobs by most recent
-        newJobs.sort((a, b) => a.daysAgo - b.daysAgo);
+        allNewJobs.sort((a, b) => getDaysAgo(a.postDate) - getDaysAgo(b.postDate));
 
-        // Render Jobs
-        if (closingSoon.length > 0) {
-          document.getElementById('closingSoonGrid').innerHTML = closingSoon.map(c => renderJobCard(c.job, true)).join('');
-        } else {
-          renderEmptyState('closingSoonGrid', 'No jobs are closing in the next 5 days. You are all caught up!');
-        }
-
-        if (newJobs.length > 0) {
-          document.getElementById('newJobsGrid').innerHTML = newJobs.map(c => renderJobCard(c.job)).join('');
-        } else {
-          renderEmptyState('newJobsGrid', 'No new jobs have been added in the last 7 days.');
-        }
+        // Initial Render
+        document.getElementById('closingSoonGrid').innerHTML = allClosingJobs.length > 0 ? allClosingJobs.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No jobs are closing in the next 5 days. You are all caught up!</div>`;
+        document.getElementById('newJobsGrid').innerHTML = allNewJobs.length > 0 ? allNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No new jobs have been added in the last 7 days.</div>`;
 
       } catch (err) {
-        console.error('Jobs load failed', err);
         renderEmptyState('closingSoonGrid', 'Failed to load job updates.');
         renderEmptyState('newJobsGrid', 'Failed to load job updates.');
       }
@@ -431,17 +521,12 @@
         // 2. Fetch Tests
         const testsRes = await fetch(CONFIG.CDN_BASE + 'data/tests-index.json', { cache: 'no-store' });
         const testsData = await testsRes.json();
-        const tests = testsData.tests || [];
+        allNewTests = testsData.tests || [];
         
-        // For now, we just grab the last 6 tests added to the index as "New"
-        // If you add a `created_at` or `postDate` field to tests later, we can do proper date math here.
-        const newTests = tests.slice(-6).reverse(); 
+        // For now, grab the last 6 tests added to the index
+        allNewTests = allNewTests.slice(-6).reverse(); 
 
-        if (newTests.length > 0) {
-          document.getElementById('newTestsGrid').innerHTML = newTests.map(renderTestCard).join('');
-        } else {
-          renderEmptyState('newTestsGrid', 'No mock tests available yet.');
-        }
+        document.getElementById('newTestsGrid').innerHTML = allNewTests.length > 0 ? allNewTests.map(renderTestCard).join('') : `<div class="empty-state">No mock tests available yet.</div>`;
       } catch (err) {
         renderEmptyState('newTestsGrid', 'Failed to load test updates.');
       }
@@ -450,17 +535,10 @@
         // 3. Fetch Announcements
         const annRes = await fetch(CONFIG.CDN_BASE + 'data/announcements.json', { cache: 'no-store' });
         const annData = await annRes.json();
-        const announcements = annData.announcements || [];
+        allAnnouncements = (annData.announcements || []).filter(a => a.is_active !== false);
 
-        if (announcements.length > 0) {
-          // Only show active ones (the backend should already filter, but just in case)
-          const activeAnn = announcements.filter(a => a.is_active !== false);
-          document.getElementById('announcementsGrid').innerHTML = activeAnn.map(renderAnnouncementCard).join('');
-        } else {
-          renderEmptyState('announcementsGrid', 'No new announcements or admit cards right now.');
-        }
+        document.getElementById('announcementsGrid').innerHTML = allAnnouncements.length > 0 ? allAnnouncements.map(renderAnnouncementCard).join('') : `<div class="empty-state">No new announcements or admit cards right now.</div>`;
       } catch (err) {
-        // If announcements.json doesn't exist yet on GitHub, handle it gracefully
         renderEmptyState('announcementsGrid', 'No announcements available right now.');
       }
     }
