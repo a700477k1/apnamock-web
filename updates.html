@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GOOGLE ANALYTICS -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1DNVHG69MX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1DNVHG69MX');
+  </script>
+
+  <!-- PWA Setup -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a56db">
+
+  <title>Daily Updates — ApnaMock</title>
+  <meta name="description" content="Daily updates on job deadlines, new mock tests, admit cards, and announcements." />
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* DESIGN TOKENS (Matches your other pages) */
+    :root {
+      --primary: #1a56db; --primary-dark: #1e429f; --primary-light: #e8f0fe;
+      --accent: #f97316; --success: #16a34a; --success-light: #dcfce7;
+      --error: #dc2626; --error-light: #fee2e2; --warning: #f59e0b; --warning-light: #fef3c7;
+      --purple: #7c3aed; --purple-light: #ede9fe;
+      --bg-base: #f8fafc; --bg-card: #ffffff; --bg-muted: #f1f5f9;
+      --text-primary: #1e293b; --text-secondary: #334155; --text-muted: #64748b;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.10); --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 20px;
+      --header-height: 64px; --font-body: 'Inter', sans-serif; --font-heading: 'Poppins', sans-serif;
+    }
+    body.dark-mode {
+      --bg-base: #0f172a; --bg-card: #1e293b; --bg-muted: #334155;
+      --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #94a3b8;
+      --border: #334155; --border-strong: #475569; --primary-light: rgba(26, 86, 219, 0.2);
+      --success-light: rgba(22, 163, 74, 0.2); --warning-light: rgba(245, 158, 11, 0.2);
+      --error-light: rgba(220, 38, 38, 0.2); --purple-light: rgba(124, 58, 237, 0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
+
+    /* HEADER */
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: var(--header-height); }
+    body.dark-mode .site-header { background: rgba(30, 41, 59, 0.95); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; font-family: var(--font-heading); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--primary); }
+    .brand-tagline { font-size: 10px; color: var(--text-muted); }
+    .site-nav { display: flex; align-items: center; gap: 4px; }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-secondary); transition: all 0.15s; background: transparent; }
+    .btn-icon:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .mobile-menu-btn { display: none; }
+
+    /* LAYOUT & TYPOGRAPHY */
+    .page-wrapper { padding-top: 28px; padding-bottom: 60px; flex: 1; }
+    .page-header { margin-bottom: 24px; }
+    .page-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .page-title i { color: var(--primary); }
+    .page-subtitle { font-size: 14px; color: var(--text-muted); }
+
+    /* SECTION STYLES */
+    .update-section { margin-bottom: 48px; }
+    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .section-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .section-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text-primary); }
+    
+    .update-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .update-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: all 0.2s; position: relative; overflow: hidden; }
+    .update-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    
+    /* Urgency Badges */
+    .urgency-badge { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px; }
+    .urgency-badge.last-day { background: var(--error-light); color: var(--error); animation: pulse 1.5s infinite; }
+    .urgency-badge.closing-soon { background: var(--warning-light); color: #d97706; }
+    .urgency-badge.new { background: var(--success-light); color: var(--success); }
+    .urgency-badge.info { background: var(--primary-light); color: var(--primary); }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+    .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag { padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+    .tag-announcement { background: var(--purple-light); color: var(--purple); }
+    .tag-admit_card { background: var(--primary-light); color: var(--primary); }
+    .tag-result { background: var(--success-light); color: var(--success); }
+    .tag-exam { background: var(--bg-muted); color: var(--text-secondary); }
+    
+    .card-title { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+    .card-desc { font-size: 13px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: auto; }
+    
+    .card-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 16px; height: 36px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; transition: all 0.15s; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--primary); color: #fff; flex: 1; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    /* EMPTY STATE */
+    .empty-state { background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+    /* FOOTER */
+    .site-footer { background: var(--text-primary); color: #fff; padding: 40px 20px 24px; margin-top: auto; }
+    body.dark-mode .site-footer { color: #0f172a; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+    .footer-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link { font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 768px) {
+      .align-wrapper { padding-left: 8px; padding-right: 8px; }
+      .site-nav { display: none; flex-direction: column; position: absolute; top: var(--header-height); left: 0; width: 100%; background: var(--bg-card); padding: 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md); }
+      .site-nav.mobile-open { display: flex; }
+      .mobile-menu-btn { display: flex; }
+      .page-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner align-wrapper">
+      <a href="/index.html" class="brand">
+        <div class="brand-icon">A</div>
+        <div class="brand-text">
+          <span class="brand-name">ApnaMock</span>
+          <span class="brand-tagline">Practice. Improve. Succeed.</span>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/index.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="/tests.html" class="nav-link"><i class="fa-solid fa-list-check"></i><span>Tests</span></a>
+        <a href="/custom-tests.html" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Custom Tests</span></a>
+        <a href="/favorites.html" class="nav-link"><i class="fa-solid fa-bookmark"></i><span>Favorites</span></a>
+        <a href="/history.html" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+        <a href="/jobs.html" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a>
+        <a href="/updates.html" class="nav-link active"><i class="fa-solid fa-bolt"></i><span>Daily Updates</span></a>
+      </nav>
+      <div class="header-actions">
+        <button class="btn-icon" id="themeToggleBtn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+        <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper align-wrapper">
+    <div class="page-header">
+      <h1 class="page-title"><i class="fa-solid fa-bolt"></i> Daily Updates & Announcements</h1>
+      <p class="page-subtitle">Your daily dashboard for upcoming deadlines, new mock tests, and official announcements.</p>
+    </div>
+
+    <!-- Section 1: Closing Soon -->
+    <div class="update-section">
+      <div class="section-header">
+        <div class="section-icon" style="background: var(--error-light); color: var(--error);"><i class="fa-solid fa-fire"></i></div>
+        <div class="section-title">Closing Soon</div>
+      </div>
+      <div class="update-grid" id="closingSoonGrid">
+        <div class="empty-state">Loading job deadlines...</div>
+      </div>
+    </div>
+
+    <!-- Section 2: Newly Added Jobs -->
+    <div class="update-section">
+      <div class="section-header">
+        <div class="section-icon" style="background: var(--success-light); color: var(--success);"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="section-title">Newly Added Jobs</div>
+      </div>
+      <div class="update-grid" id="newJobsGrid">
+        <div class="empty-state">Loading new jobs...</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Newly Added Tests -->
+    <div class="update-section">
+      <div class="section-header">
+        <div class="section-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-file-pen"></i></div>
+        <div class="section-title">Newly Added Mock Tests</div>
+      </div>
+      <div class="update-grid" id="newTestsGrid">
+        <div class="empty-state">Loading new tests...</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Announcements -->
+    <div class="update-section">
+      <div class="section-header">
+        <div class="section-icon" style="background: var(--purple-light); color: var(--purple);"><i class="fa-solid fa-bullhorn"></i></div>
+        <div class="section-title">Announcements & Admit Cards</div>
+      </div>
+      <div class="update-grid" id="announcementsGrid">
+        <div class="empty-state">Loading announcements...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner align-wrapper">
+      <div>
+        <div class="footer-brand-name">ApnaMock</div>
+        <div class="footer-brand-desc">Free previous year mock tests for competitive exam preparation.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">All Tests</a>
+          <a href="/custom-tests.html" class="footer-link">Custom Tests</a>
+          <a href="/favorites.html" class="footer-link">Favorites</a>
+          <a href="/history.html" class="footer-link">History</a>
+          <a href="/jobs.html" class="footer-link">Jobs</a>
+          <a href="/updates.html" class="footer-link">Daily Updates</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Popular Exams</div>
+        <div class="footer-links">
+          <a href="/tests.html" class="footer-link">SSC CGL</a>
+          <a href="/tests.html" class="footer-link">SSC CHSL</a>
+          <a href="/tests.html" class="footer-link">Railway NTPC</a>
+          <a href="/tests.html" class="footer-link">Railway Group D</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="/legal.html#privacy" class="footer-link">Privacy Policy</a>
+          <a href="/legal.html#terms" class="footer-link">Terms of Use</a>
+          <a href="/legal.html#disclaimer" class="footer-link">Disclaimer</a>
+          <a href="/legal.html#contact" class="footer-link">Contact</a>
+          <!-- NEW BACKUP LINK ADDED HERE -->
+          <a href="/backup.html" class="footer-link">Backup & Restore</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom align-wrapper">
+      <span class="footer-copy">&copy; 2025 ApnaMock. All rights reserved.</span>
+      <span class="footer-copy">Practice. Improve. Succeed.</span>
+    </div>
+  </footer>
+
+  <script>
+    const CONFIG = { 
+      CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
+      STORAGE_PREFIX: 'apnamock_'
+    };
+
+    function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+    function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
+    function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    // Theme Toggle
+    const savedTheme = storageGet('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.querySelector('#themeToggleBtn i').className = 'fa-solid fa-sun';
+    }
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      document.querySelector('#themeToggleBtn i').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      storageSet('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Mobile Menu
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.querySelector('.site-nav').classList.toggle('mobile-open');
+    });
+
+    // Date Helpers
+    function getDaysRemaining(dateStr) {
+      if (!dateStr) return null;
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(dateStr);
+      if (isNaN(target.getTime())) return null;
+      target.setHours(23, 59, 59, 999);
+      const diffTime = target - today;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function getDaysAgo(dateStr) {
+      if (!dateStr) return 999;
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const past = new Date(dateStr);
+      if (isNaN(past.getTime())) return 999;
+      past.setHours(0, 0, 0, 0);
+      const diffTime = today - past;
+      return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    // Render Functions
+    function renderJobCard(job, showUrgency = false) {
+      const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
+      let urgencyBadge = '';
+      
+      if (showUrgency && daysLeft !== null && daysLeft >= 0) {
+        if (daysLeft === 0) urgencyBadge = `<span class="urgency-badge last-day"><i class="fa-solid fa-exclamation-circle"></i> Last Day!</span>`;
+        else if (daysLeft <= 5) urgencyBadge = `<span class="urgency-badge closing-soon"><i class="fa-solid fa-clock"></i> ${daysLeft} Days Left</span>`;
+      }
+
+      return `
+        <div class="update-card">
+          <div class="card-tags">
+            <span class="tag tag-exam">${escapeHtml(job.category || 'General')}</span>
+            ${urgencyBadge}
+          </div>
+          <div class="card-title">${escapeHtml(job.title)}</div>
+          <div class="card-desc">${escapeHtml(job.company || 'Government Organization')}</div>
+          <div class="card-meta">
+            <i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${escapeHtml(job.lastDate || 'N/A')}</strong>
+          </div>
+          <div class="card-actions">
+            <a href="/job.html?job=${encodeURIComponent(job.file_name.replace('.json', ''))}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> View Details</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTestCard(test) {
+      return `
+        <div class="update-card">
+          <div class="card-tags">
+            <span class="tag tag-exam">${escapeHtml(test.exam_group || test.exam || 'Test')}</span>
+            <span class="urgency-badge new"><i class="fa-solid fa-sparkles"></i> New</span>
+          </div>
+          <div class="card-title">${escapeHtml(test.title || 'Untitled Test')}</div>
+          <div class="card-desc">${escapeHtml(test.subject || '')} ${test.year ? '• ' + escapeHtml(test.year) : ''}</div>
+          <div class="card-meta">
+            <i class="fa-solid fa-list-ol"></i> ${escapeHtml(test.questions || 0)} Questions
+          </div>
+          <div class="card-actions">
+            <a href="/quiz.html?test=${escapeHtml(test.test_id)}" class="btn btn-primary"><i class="fa-solid fa-play"></i> Start Test</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAnnouncementCard(ann) {
+      const tagClass = `tag-${(ann.type || 'announcement').toLowerCase().replace(/\s+/g, '_')}`;
+      return `
+        <div class="update-card">
+          <div class="card-tags">
+            <span class="tag ${tagClass}">${escapeHtml(ann.type)}</span>
+          </div>
+          <div class="card-title">${escapeHtml(ann.title)}</div>
+          <div class="card-desc">${escapeHtml(ann.description || '')}</div>
+          <div class="card-meta">
+            <i class="fa-solid fa-calendar"></i> ${escapeHtml(ann.date || 'N/A')}
+          </div>
+          ${ann.link ? `<div class="card-actions"><a href="${escapeHtml(ann.link)}" target="_blank" class="btn btn-outline"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a></div>` : ''}
+        </div>
+      `;
+    }
+
+    function renderEmptyState(containerId, message) {
+      document.getElementById(containerId).innerHTML = `<div class="empty-state">${message}</div>`;
+    }
+
+    // Fetch and Display Data
+    async function loadUpdates() {
+      try {
+        // 1. Fetch Jobs
+        const jobsRes = await fetch(CONFIG.CDN_BASE + 'data/jobs-index.json', { cache: 'no-store' });
+        const jobsData = await jobsRes.json();
+        const jobs = jobsData.jobs || [];
+
+        const closingSoon = [];
+        const newJobs = [];
+
+        jobs.forEach(job => {
+          const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
+          const daysAgo = getDaysAgo(job.postDate);
+
+          if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 5) {
+            closingSoon.push({ job, daysLeft });
+          }
+          if (daysAgo <= 7) {
+            newJobs.push({ job, daysAgo });
+          }
+        });
+
+        // Sort Closing Soon by closest deadline
+        closingSoon.sort((a, b) => a.daysLeft - b.daysLeft);
+        // Sort New Jobs by most recent
+        newJobs.sort((a, b) => a.daysAgo - b.daysAgo);
+
+        // Render Jobs
+        if (closingSoon.length > 0) {
+          document.getElementById('closingSoonGrid').innerHTML = closingSoon.map(c => renderJobCard(c.job, true)).join('');
+        } else {
+          renderEmptyState('closingSoonGrid', 'No jobs are closing in the next 5 days. You are all caught up!');
+        }
+
+        if (newJobs.length > 0) {
+          document.getElementById('newJobsGrid').innerHTML = newJobs.map(c => renderJobCard(c.job)).join('');
+        } else {
+          renderEmptyState('newJobsGrid', 'No new jobs have been added in the last 7 days.');
+        }
+
+      } catch (err) {
+        console.error('Jobs load failed', err);
+        renderEmptyState('closingSoonGrid', 'Failed to load job updates.');
+        renderEmptyState('newJobsGrid', 'Failed to load job updates.');
+      }
+
+      try {
+        // 2. Fetch Tests
+        const testsRes = await fetch(CONFIG.CDN_BASE + 'data/tests-index.json', { cache: 'no-store' });
+        const testsData = await testsRes.json();
+        const tests = testsData.tests || [];
+        
+        // For now, we just grab the last 6 tests added to the index as "New"
+        // If you add a `created_at` or `postDate` field to tests later, we can do proper date math here.
+        const newTests = tests.slice(-6).reverse(); 
+
+        if (newTests.length > 0) {
+          document.getElementById('newTestsGrid').innerHTML = newTests.map(renderTestCard).join('');
+        } else {
+          renderEmptyState('newTestsGrid', 'No mock tests available yet.');
+        }
+      } catch (err) {
+        renderEmptyState('newTestsGrid', 'Failed to load test updates.');
+      }
+
+      try {
+        // 3. Fetch Announcements
+        const annRes = await fetch(CONFIG.CDN_BASE + 'data/announcements.json', { cache: 'no-store' });
+        const annData = await annRes.json();
+        const announcements = annData.announcements || [];
+
+        if (announcements.length > 0) {
+          // Only show active ones (the backend should already filter, but just in case)
+          const activeAnn = announcements.filter(a => a.is_active !== false);
+          document.getElementById('announcementsGrid').innerHTML = activeAnn.map(renderAnnouncementCard).join('');
+        } else {
+          renderEmptyState('announcementsGrid', 'No new announcements or admit cards right now.');
+        }
+      } catch (err) {
+        // If announcements.json doesn't exist yet on GitHub, handle it gracefully
+        renderEmptyState('announcementsGrid', 'No announcements available right now.');
+      }
+    }
+
+    // Initialize
+    loadUpdates();
+  </script>
+</body>
+</html>
