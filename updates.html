@@ -57,7 +57,7 @@
     body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); font-size: 15px; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; }
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
-    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: var(--bg-muted); } ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
     .align-wrapper { max-width: 1200px; margin: 0 auto; width: 100%; padding-left: 20px; padding-right: 20px; }
 
     /* HEADER */
@@ -85,16 +85,19 @@
     .page-title i { color: var(--primary); }
     .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
-    .controls-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    /* SCROLLABLE FILTER CHIPS */
+    .filter-chips-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 16px; scrollbar-width: none; }
+    .filter-chips-wrap::-webkit-scrollbar { display: none; }
+    .filter-chips { display: flex; gap: 8px; white-space: nowrap; padding-bottom: 4px; }
+    .chip { padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); background: var(--bg-card); cursor: pointer; transition: all 0.15s; }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    .controls-bar { margin-bottom: 32px; }
     .search-wrap { flex: 1; min-width: 220px; position: relative; }
     .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
     .search-input { width: 100%; height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 0 12px 0 38px; font-size: 14px; color: var(--text-primary); background: var(--bg-card); outline: none; transition: border-color 0.15s; }
     .search-input:focus { border-color: var(--primary); }
-    
-    .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip { padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); background: var(--bg-card); cursor: pointer; transition: all 0.15s; }
-    .chip:hover { border-color: var(--primary); color: var(--primary); }
-    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
 
     /* SECTIONS */
     .update-section { margin-bottom: 48px; display: none; }
@@ -116,9 +119,12 @@
 
     .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
     .tag { padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
-    .tag-announcement { background: var(--purple-light); color: var(--purple); }
+    .tag-general_announcement { background: var(--purple-light); color: var(--purple); }
     .tag-admit_card { background: var(--primary-light); color: var(--primary); }
     .tag-result { background: var(--success-light); color: var(--success); }
+    .tag-answer_key { background: var(--pink-light, #fce7f3); color: var(--pink, #db2777); }
+    .tag-exam_date { background: var(--warning-light); color: #d97706; }
+    .tag-syllabus_change { background: var(--indigo-light, #e0e7ff); color: var(--indigo, #4f46e5); }
     .tag-exam { background: var(--bg-muted); color: var(--text-secondary); }
     
     .card-title { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
@@ -197,16 +203,25 @@
 
     <!-- CONTROLS BAR -->
     <div class="controls-bar">
+      <!-- HORIZONTALLY SCROLLABLE FILTERS -->
+      <div class="filter-chips-wrap">
+        <div class="filter-chips">
+          <button class="chip active" onclick="setFilter('all', this)">All</button>
+          <button class="chip" onclick="setFilter('urgent', this)">Urgent</button>
+          <button class="chip" onclick="setFilter('jobs', this)">Jobs</button>
+          <button class="chip" onclick="setFilter('tests', this)">Tests</button>
+          <button class="chip" onclick="setFilter('admit_card', this)">Admit Card</button>
+          <button class="chip" onclick="setFilter('result', this)">Result</button>
+          <button class="chip" onclick="setFilter('answer_key', this)">Answer Key</button>
+          <button class="chip" onclick="setFilter('exam_date', this)">Exam Date</button>
+          <button class="chip" onclick="setFilter('syllabus_change', this)">Syllabus Change</button>
+          <button class="chip" onclick="setFilter('general_announcement', this)">General Announcement</button>
+        </div>
+      </div>
+      <!-- SEARCH BAR -->
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input type="text" id="searchInput" class="search-input" placeholder="Search updates, jobs, tests..." oninput="handleSearch()" />
-      </div>
-      <div class="filter-chips">
-        <button class="chip active" onclick="setFilter('all', this)">All</button>
-        <button class="chip" onclick="setFilter('urgent', this)">Urgent</button>
-        <button class="chip" onclick="setFilter('jobs', this)">Jobs</button>
-        <button class="chip" onclick="setFilter('tests', this)">Tests</button>
-        <button class="chip" onclick="setFilter('announcements', this)">Announcements</button>
       </div>
     </div>
 
@@ -310,11 +325,22 @@
     let allNewTests = [];
     let allAnnouncements = [];
     let currentFilter = 'all';
+    const annTypes = ['admit_card', 'result', 'answer_key', 'exam_date', 'syllabus_change', 'general_announcement'];
 
     // Helpers
     function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
     function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
     function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    // Date Formatter (DD-MM-YYYY)
+    function formatDateDDMMYYYY(dateStr) {
+      if (!dateStr) return "—";
+      const parts = dateStr.split('-'); // Assumes YYYY-MM-DD from backend
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    }
 
     // Quill HTML & Math Helpers
     function decodeHtmlEntities(str) { if (!str) return ""; const txt = document.createElement("textarea"); txt.innerHTML = str; return txt.value; }
@@ -347,7 +373,7 @@
       document.querySelector('.site-nav').classList.toggle('mobile-open');
     });
 
-    // Date Helpers
+    // Date Math Helpers
     function getDaysRemaining(dateStr) {
       if (!dateStr) return null;
       const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -383,7 +409,7 @@
           </div>
           <div class="card-title">${escapeHtml(job.title)}</div>
           <div class="card-meta"><i class="fa-solid fa-building"></i> ${escapeHtml(job.company || 'Government Organization')}</div>
-          <div class="card-meta"><i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${escapeHtml(job.lastDate || 'N/A')}</strong></div>
+          <div class="card-meta"><i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${formatDateDDMMYYYY(job.lastDate)}</strong></div>
           <div class="card-actions">
             <a href="/job.html?job=${encodeURIComponent(job.file_name.replace('.json', ''))}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> View Details</a>
           </div>
@@ -409,7 +435,8 @@
     }
 
     function renderAnnouncementCard(ann) {
-      const tagClass = `tag-${(ann.type || 'announcement').toLowerCase().replace(/\s+/g, '_')}`;
+      const typeSlug = (ann.type || 'announcement').toLowerCase().replace(/\s+/g, '_');
+      const tagClass = `tag-${typeSlug}`;
       const rawDesc = decodeHtmlEntities(ann.description || "");
       const cleanDesc = cleanQuillHtml(rawDesc);
       const htmlDesc = renderMathInString(cleanDesc);
@@ -421,7 +448,7 @@
           </div>
           <div class="card-title">${escapeHtml(ann.title)}</div>
           <div class="card-desc">${htmlDesc}</div>
-          <div class="card-meta"><i class="fa-solid fa-calendar"></i> ${escapeHtml(ann.date || 'N/A')}</div>
+          <div class="card-meta"><i class="fa-solid fa-calendar"></i> ${formatDateDDMMYYYY(ann.date)}</div>
           ${ann.link ? `<div class="card-actions"><a href="${escapeHtml(ann.link)}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a></div>` : ''}
         </div>
       `;
@@ -437,22 +464,25 @@
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       
-      const sections = {
-        'urgent': ['section-closing'],
-        'jobs': ['section-closing', 'section-jobs'],
-        'tests': ['section-tests'],
-        'announcements': ['section-announcements'],
-        'all': ['section-closing', 'section-jobs', 'section-tests', 'section-announcements']
-      };
+      let visibleSections = [];
       
-      const visibleSections = sections[filter] || sections['all'];
+      if (filter === 'all') visibleSections = ['section-closing', 'section-jobs', 'section-tests', 'section-announcements'];
+      else if (filter === 'urgent') visibleSections = ['section-closing'];
+      else if (filter === 'jobs') visibleSections = ['section-closing', 'section-jobs'];
+      else if (filter === 'tests') visibleSections = ['section-tests'];
+      else if (annTypes.includes(filter)) visibleSections = ['section-announcements'];
+      
       document.querySelectorAll('.update-section').forEach(sec => {
-        if (visibleSections.includes(sec.id)) {
-          sec.classList.add('visible');
-        } else {
-          sec.classList.remove('visible');
-        }
+        if (visibleSections.includes(sec.id)) sec.classList.add('visible');
+        else sec.classList.remove('visible');
       });
+
+      // Scroll to announcements section if an announcement type is clicked
+      if (annTypes.includes(filter)) {
+        document.getElementById('section-announcements').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
       handleSearch();
     }
@@ -471,8 +501,12 @@
         // Filter Tests
         const fTests = allNewTests.filter(t => (t.title || '').toLowerCase().includes(q) || (t.exam_group || '').toLowerCase().includes(q));
         
-        // Filter Announcements
-        const fAnn = allAnnouncements.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
+        // Filter Announcements (Account for both search query AND active quick filter)
+        let fAnn = allAnnouncements;
+        if (annTypes.includes(currentFilter)) {
+          fAnn = allAnnouncements.filter(a => (a.type || '').toLowerCase().replace(/\s+/g, '_') === currentFilter);
+        }
+        fAnn = fAnn.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
 
         // Render Filtered
         document.getElementById('closingSoonGrid').innerHTML = fClosing.length > 0 ? fClosing.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No matching jobs closing soon.</div>`;
