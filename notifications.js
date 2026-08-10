@@ -66,11 +66,18 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
     if (window.Notification) {
       Notification.requestPermission().then(permission => {
         overlay.remove();
+        
         if (permission === 'granted') {
           setNotifState('final_status', 'granted');
           requestFcmToken(triggerSource);
-        } else {
+        } else if (permission === 'denied') {
+          // Only permanently block if they explicitly clicked "Block"
           setNotifState('final_status', 'denied');
+        } else {
+          // If permission is 'default' (they just closed the native prompt without choosing)
+          // DO NOT permanently block them. Let them try again later.
+          // We will just reset the session flag so they can click the button again immediately.
+          sessionStorage.removeItem('apnamock_notif_session_asked');
         }
       });
     } else {
