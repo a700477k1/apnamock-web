@@ -401,6 +401,10 @@
         else if (daysLeft <= 5) urgencyBadge = `<span class="urgency-badge closing-soon"><i class="fa-solid fa-clock"></i> ${daysLeft} Days Left</span>`;
       }
 
+      // FIX: Use Extended Date if it exists, otherwise use Last Date
+      const activeDate = job.extendedLastDate || job.lastDate;
+      const dateLabel = job.extendedLastDate ? "Extended To" : "Last Date";
+
       return `
         <div class="update-card">
           <div class="card-tags">
@@ -409,7 +413,7 @@
           </div>
           <div class="card-title">${escapeHtml(job.title)}</div>
           <div class="card-meta"><i class="fa-solid fa-building"></i> ${escapeHtml(job.company || 'Government Organization')}</div>
-          <div class="card-meta"><i class="fa-solid fa-calendar-day"></i> Last Date: <strong>${formatDateDDMMYYYY(job.lastDate)}</strong></div>
+          <div class="card-meta"><i class="fa-solid fa-calendar-day"></i> ${dateLabel}: <strong>${formatDateDDMMYYYY(activeDate)}</strong></div>
           <div class="card-actions">
             <a href="/job.html?job=${encodeURIComponent(job.file_name.replace('.json', ''))}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> View Details</a>
           </div>
