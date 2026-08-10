@@ -15,7 +15,8 @@ const urlsToCache = [
   '/legal.html',
   '/manifest.json',
   '/offline.html', 
-  '/404.html'      
+  '/404.html',
+  '/firebase-messaging-sw.js'
 ];
 
 // 1. Install: Cache all the core pages
