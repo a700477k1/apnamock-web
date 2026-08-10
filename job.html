@@ -1017,6 +1017,51 @@
     function renderJob(job) {
       const root = document.getElementById("jobRoot");
 
+      // Check if user is already subscribed to notifications
+      const notifStatus = localStorage.getItem('apnamock_notif_final_status');
+      const isNotifSubscribed = notifStatus ? JSON.parse(notifStatus) === 'granted' : false;
+      
+      // 1. FOMO Notification Banner (with .btn-fomo hover class applied)
+      const fomoBannerHtml = `
+        <div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
+            </h4>
+            <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
+            </p>
+          </div>
+          <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-fomo">
+            <i class="fa-solid fa-bell"></i> Set Deadline Alert
+          </button>
+        </div>
+      `;
+
+      // 2. Social Media Banner (Shown if already subscribed)
+      const socialBannerHtml = `
+        <div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(26, 86, 219, 0.1), rgba(124, 58, 237, 0.05)); border: 1px solid rgba(26, 86, 219, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-users" style="color: #1a56db;"></i> Join Our Community!
+            </h4>
+            <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              You are already subscribed to alerts! Connect with thousands of aspirants on our social channels for daily tips and discussions.
+            </p>
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+              <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+              <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #25D366; border-color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+              <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #C13584; border-color: #C13584;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+              <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #1877F2; border-color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Determine which banner to show
+      const topBanner = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
+      const bottomBanner = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
+
       root.innerHTML = `
         <div class="single-job-container">
           <div class="job-card">
@@ -1104,20 +1149,7 @@
                 ` : ""}
               </div>
 
-<!-- FOMO NOTIFICATION BANNER -->
-<div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-  <div style="flex: 1; min-width: 200px;">
-    <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-      <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
-    </h4>
-    <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-      Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
-    </p>
-  </div>
-  <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-primary" style="background: #d97706; border-color: #d97706; height: 42px; padding: 0 20px; flex-shrink: 0; font-size: 14px;">
-    <i class="fa-solid fa-bell"></i> Set Deadline Alert
-  </button>
-</div>
+              ${topBanner}
 
               <!-- BANNER 1: BEFORE DESCRIPTION -->
               <a href="/tests.html" class="cross-link-banner">
@@ -1165,20 +1197,7 @@
                 })()}
               </div>
 
-<!-- FOMO NOTIFICATION BANNER (At the end) -->
-  <div style="margin-top: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-        <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
-      </h4>
-      <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-        Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
-      </p>
-    </div>
-    <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-fomo">
-      <i class="fa-solid fa-bell"></i> Set Deadline Alert
-    </button>
-  </div>
+               ${bottomBanner}
 
               <!-- PDF ONLY ACTIONS (Visible only when saving as PDF) -->
               <div class="pdf-actions" id="pdfActionsContainer">
