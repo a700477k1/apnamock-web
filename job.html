@@ -537,6 +537,25 @@
         print-color-adjust: exact !important;
       }
     }
+
+/* FOMO Button Hover Effect */
+.btn-fomo {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
+  height: 42px;
+  padding: 0 20px;
+  flex-shrink: 0;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.btn-fomo:hover {
+  background: #b45309; /* Darker orange on hover */
+  border-color: #b45309;
+  transform: translateY(-1px); /* Slight lift */
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+    
   </style>
 </head>
 <body>
@@ -1145,6 +1164,21 @@
                   return "";
                 })()}
               </div>
+
+<!-- FOMO NOTIFICATION BANNER (At the end) -->
+  <div style="margin-top: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 200px;">
+      <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
+      </h4>
+      <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+        Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
+      </p>
+    </div>
+    <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-fomo">
+      <i class="fa-solid fa-bell"></i> Set Deadline Alert
+    </button>
+  </div>
 
               <!-- PDF ONLY ACTIONS (Visible only when saving as PDF) -->
               <div class="pdf-actions" id="pdfActionsContainer">
