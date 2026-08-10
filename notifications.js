@@ -115,6 +115,8 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
         if (permission === 'granted') {
           setNotifState('final_status', 'granted');
           requestFcmToken(triggerSource);
+          // SEND SIGNAL TO THE PAGE TO UPDATE UI INSTANTLY
+          window.dispatchEvent(new Event('apnamock_notif_granted'));
         } else if (permission === 'denied') {
           // The browser explicitly blocked us (either by user clicking Block or browser auto-block)
           setNotifState('final_status', 'denied');
