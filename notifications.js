@@ -16,26 +16,29 @@ function setNotifState(key, value) {
 }
 
 // --- Main Soft-Ask Function ---
-function showNotifSoftAsk(title, message, ctaText, triggerSource) {
-  // 1. Permanent Respect: If already granted or permanently denied, do nothing.
+function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false) {
+  // 1. Permanent Respect: If already granted or permanently denied by browser, do nothing.
   const finalStatus = getNotifState('final_status');
   if (finalStatus === 'granted' || finalStatus === 'denied') return;
 
-  // 2. One Prompt Per Session: If asked in this session, do nothing.
-  if (sessionStorage.getItem('apnamock_notif_session_asked') === 'true') return;
+  // 2. Bypass Rules if forceShow is true (User clicked a direct button)
+  if (!forceShow) {
+    // One Prompt Per Session
+    if (sessionStorage.getItem('apnamock_notif_session_asked') === 'true') return;
 
-  // 3. Cooldown Check: If asked recently and dismissed, wait 3 days.
-  const lastAsked = getNotifState('last_asked_time');
-  if (lastAsked) {
-    const daysPassed = (Date.now() - lastAsked) / (1000 * 60 * 60 * 24);
-    if (daysPassed < NOTIF_CONFIG.COOLDOWN_DAYS) return;
+    // Cooldown Check (3 days)
+    const lastAsked = getNotifState('last_asked_time');
+    if (lastAsked) {
+      const daysPassed = (Date.now() - lastAsked) / (1000 * 60 * 60 * 24);
+      if (daysPassed < NOTIF_CONFIG.COOLDOWN_DAYS) return;
+    }
   }
 
   // Mark as asked in this session
   sessionStorage.setItem('apnamock_notif_session_asked', 'true');
   setNotifState('last_asked_time', Date.now());
 
-  // Build UI
+  // Build UI (Rest of the UI code remains the same)
   const overlay = document.createElement('div');
   overlay.id = 'notifSoftAskOverlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;';
@@ -114,13 +117,14 @@ function checkReturningVisitorTrigger() {
   }
 }
 
-// Trigger 1: Deadline Anxiety (job.html)
+// Trigger 1: Deadline Anxiety (job.html) - Triggered by explicit user click
 function checkDeadlineAnxietyTrigger(jobTitle) {
   showNotifSoftAsk(
     "Never Miss a Deadline!",
     `We will send you a push notification before the form for ${jobTitle} closes. Click 'Allow' on the next popup to set your reminder.`,
     "Set Reminder",
-    "deadline_anxiety"
+    "deadline_anxiety",
+    true // forceShow = true: Bypasses 3-day cooldown because user explicitly clicked the button
   );
 }
 
