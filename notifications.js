@@ -17,12 +17,15 @@ function setNotifState(key, value) {
 
 // --- Main Soft-Ask Function ---
 function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false) {
-  // 1. Permanent Respect: If already granted or permanently denied, do nothing.
+  // 1. Permanent Respect: If already granted, do nothing.
   const finalStatus = getNotifState('final_status');
-  if (finalStatus === 'granted' || finalStatus === 'denied') return;
+  if (finalStatus === 'granted') return;
 
   // 2. Bypass Rules if forceShow is true (User clicked a direct button)
   if (!forceShow) {
+    // If the user previously blocked us, don't show automatic popups.
+    if (finalStatus === 'denied') return;
+
     // One Prompt Per Session
     if (sessionStorage.getItem('apnamock_notif_session_asked') === 'true') return;
 
@@ -71,12 +74,18 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
           setNotifState('final_status', 'granted');
           requestFcmToken(triggerSource);
         } else if (permission === 'denied') {
-          // Only permanently block if they explicitly clicked "Block"
+          // The browser explicitly blocked us (either by user clicking Block or browser auto-block)
           setNotifState('final_status', 'denied');
+          
+          // Show the explanation toast ONLY when this happens
+          if (typeof showToast === 'function') {
+            showToast.warning("Notifications Blocked", "You dismissed or blocked the prompt. Click the lock icon in your browser URL bar to allow notifications for ApnaMock.");
+          } else {
+            alert("Notifications are blocked. Please click the lock icon in your browser URL bar to allow notifications.");
+          }
         } else {
           // If permission is 'default' (they just closed the native prompt without choosing)
           // DO NOT permanently block them. Let them try again later.
-          // We will just reset the session flag so they can click the button again immediately.
           sessionStorage.removeItem('apnamock_notif_session_asked');
         }
       });
@@ -100,6 +109,7 @@ async function requestFcmToken(triggerSource) {
   }
 
   try {
+    // You MUST replace "YOUR_VAPID_KEY_HERE" with your actual VAPID key from Firebase Console!
     const token = await messaging.getToken({ vapidKey: "YOUR_VAPID_KEY_HERE" });
     if (token) {
       console.log('FCM Token received:', token);
@@ -123,7 +133,7 @@ function checkDeadlineAnxietyTrigger(jobTitle) {
     `We will send you a push notification before the form for ${jobTitle} closes. Click 'Allow' on the next popup to set your reminder.`,
     "Set Reminder",
     "deadline_anxiety",
-    true
+    true // forceShow = true: Bypasses rules because user explicitly clicked a button
   );
 }
 
