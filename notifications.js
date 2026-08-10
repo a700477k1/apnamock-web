@@ -37,7 +37,7 @@ function showNotifBlockedInstructions() {
     </p>
     
     <ol style="margin:0 0 24px 0;padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
-      <li>Click the <strong>Lock icon</strong> (🔒) or the "Tune" icon (⚙️) in your browser's address bar at the top.</li>
+      <li>Click the <strong>Site Settings icon</strong> (two sliders/toggles) or the <strong>Lock icon</strong> (🔒) in your browser's address bar at the top.</li>
       <li>Find the <strong>Notifications</strong> section in the menu that drops down.</li>
       <li>Change the dropdown from "Block" to <strong>"Allow"</strong>.</li>
       <li>Refresh the page to start receiving alerts.</li>
