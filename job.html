@@ -1085,6 +1085,21 @@
                 ` : ""}
               </div>
 
+<!-- FOMO NOTIFICATION BANNER -->
+<div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+  <div style="flex: 1; min-width: 200px;">
+    <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+      <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
+    </h4>
+    <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+      Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
+    </p>
+  </div>
+  <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-primary" style="background: #d97706; border-color: #d97706; height: 42px; padding: 0 20px; flex-shrink: 0; font-size: 14px;">
+    <i class="fa-solid fa-bell"></i> Set Deadline Alert
+  </button>
+</div>
+
               <!-- BANNER 1: BEFORE DESCRIPTION -->
               <a href="/tests.html" class="cross-link-banner">
                 <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
@@ -1110,10 +1125,6 @@
               </a>
 
               <div class="job-actions">
-                <!-- NEW: Deadline Anxiety Trigger Button -->
-                <button onclick="checkDeadlineAnxietyTrigger('${escapeHtml(job.title || 'this job')}')" class="btn btn-outline" style="flex: 1; min-width: 140px; height: 42px;">
-                  <i class="fa-solid fa-bell"></i> Remind Me
-                </button>
                 <button class="btn btn-outline" onclick="generatePdfWithCustomLinks()">
                   <i class="fa-solid fa-print"></i> Save as PDF
                 </button>
