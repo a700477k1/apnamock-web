@@ -62,40 +62,48 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
   document.body.appendChild(overlay);
 
   // Handle Accept
-  document.getElementById('notifAcceptBtn').addEventListener('click', async () => {
-    overlay.remove();
-    await requestPermissionAndSubscribe(triggerSource);
+  document.getElementById('notifAcceptBtn').addEventListener('click', function() {
+    // 1. Ask for permission SYNCHRONOUSLY immediately upon click.
+    // This prevents the browser from blocking the native prompt.
+    if (Notification) {
+      Notification.requestPermission().then(permission => {
+        // 2. Remove the popup AFTER the permission prompt is triggered/handled.
+        overlay.remove();
+        
+        if (permission === 'granted') {
+          setNotifState('final_status', 'granted');
+          requestFcmToken(triggerSource); // Separate function to get token
+        } else {
+          setNotifState('final_status', 'denied');
+          console.log('User denied notifications.');
+        }
+      });
+    } else {
+      overlay.remove();
+      console.error('Notifications API not supported in this browser.');
+    }
   });
 
-  // Handle Dismiss
-  document.getElementById('notifDismissBtn').addEventListener('click', () => {
-    overlay.remove();
-  });
-}
-
-// --- Request Permission & Subscribe ---
-async function requestPermissionAndSubscribe(triggerSource) {
-  if (!window.messaging) return;
+// --- Get FCM Token (Called only AFTER permission is granted) ---
+async function requestFcmToken(triggerSource) {
+  if (!window.messaging) {
+    console.error('Firebase Messaging not initialized.');
+    return;
+  }
 
   try {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      setNotifState('final_status', 'granted');
-      
-      // Get FCM Token
-      const token = await messaging.getToken({ vapidKey: "YOUR_VAPID_KEY_HERE" }); // You will need to add your VAPID key from Firebase Console
+    // You MUST replace "YOUR_VAPID_KEY_HERE" with your actual VAPID key from Firebase Console!
+    const token = await messaging.getToken({ vapidKey: "YOUR_VAPID_KEY_HERE" });
+    
+    if (token) {
       console.log('FCM Token received:', token);
-      
       // In Phase 4, we will send this token to our GAS backend to subscribe to the topic.
-      // For now, we just log it.
-      
       showToast("Notifications enabled! You'll get daily updates.", "success", 3000);
     } else {
-      setNotifState('final_status', 'denied');
-      console.log('User denied notifications.');
+      console.log('No registration token available.');
     }
   } catch (err) {
-    console.error('FCM Error:', err);
+    console.error('FCM Token Error:', err);
   }
 }
 
