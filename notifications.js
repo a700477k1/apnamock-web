@@ -3,7 +3,7 @@
    ============================================================ */
 
 const NOTIF_CONFIG = {
-  COOLDOWN_DAYS: 3, // Changed to 3 days as requested
+  COOLDOWN_DAYS: 3,
   TOPIC_NAME: "apnamock_all"
 };
 
@@ -17,7 +17,7 @@ function setNotifState(key, value) {
 
 // --- Main Soft-Ask Function ---
 function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false) {
-  // 1. Permanent Respect: If already granted or permanently denied by browser, do nothing.
+  // 1. Permanent Respect: If already granted or permanently denied, do nothing.
   const finalStatus = getNotifState('final_status');
   if (finalStatus === 'granted' || finalStatus === 'denied') return;
 
@@ -38,51 +38,52 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
   sessionStorage.setItem('apnamock_notif_session_asked', 'true');
   setNotifState('last_asked_time', Date.now());
 
-  // Build UI (Rest of the UI code remains the same)
+  // Build UI
   const overlay = document.createElement('div');
   overlay.id = 'notifSoftAskOverlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;';
   
   const card = document.createElement('div');
-  card.style.cssText = 'background:var(--bg-card,#fff);border-radius:16px;max-width:420px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.3);padding:32px;text-align:center;font-family:Inter,sans-serif;';
+  card.style.cssText = 'background:#ffffff;border-radius:16px;max-width:420px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.3);padding:32px;text-align:center;font-family:Inter,sans-serif;';
   
   card.innerHTML = `
-    <div style="width:64px;height:64px;background:var(--primary-light,#e8f0fe);color:var(--primary,#1a56db);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;">
+    <div style="width:64px;height:64px;background:#e8f0fe;color:#1a56db;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;">
       <i class="fa-solid fa-bell"></i>
     </div>
-    <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:var(--text-primary,#1e293b);">${title}</h3>
-    <p style="margin:0 0 24px 0;font-size:15px;color:var(--text-secondary,#475569);line-height:1.5;">${message}</p>
+    <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#1e293b;">${title}</h3>
+    <p style="margin:0 0 24px 0;font-size:15px;color:#475569;line-height:1.5;">${message}</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button id="notifAcceptBtn" style="background:var(--primary,#1a56db);color:#fff;border:none;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s;">${ctaText || 'Allow Notifications'}</button>
-      <button id="notifDismissBtn" style="background:transparent;color:var(--text-muted,#64748b);border:none;padding:8px;font-size:13px;cursor:pointer;">Not now</button>
+      <button id="notifAcceptBtn" style="background:#1a56db;color:#fff;border:none;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s;">${ctaText || 'Allow Notifications'}</button>
+      <button id="notifDismissBtn" style="background:transparent;color:#64748b;border:none;padding:8px;font-size:13px;cursor:pointer;">Not now</button>
     </div>
   `;
   
   overlay.appendChild(card);
   document.body.appendChild(overlay);
 
-  // Handle Accept
+  // Handle Accept (SYNCHRONOUS request to bypass browser gesture blocking)
   document.getElementById('notifAcceptBtn').addEventListener('click', function() {
-    // 1. Ask for permission SYNCHRONOUSLY immediately upon click.
-    // This prevents the browser from blocking the native prompt.
-    if (Notification) {
+    if (window.Notification) {
       Notification.requestPermission().then(permission => {
-        // 2. Remove the popup AFTER the permission prompt is triggered/handled.
         overlay.remove();
-        
         if (permission === 'granted') {
           setNotifState('final_status', 'granted');
-          requestFcmToken(triggerSource); // Separate function to get token
+          requestFcmToken(triggerSource);
         } else {
           setNotifState('final_status', 'denied');
-          console.log('User denied notifications.');
         }
       });
     } else {
       overlay.remove();
-      console.error('Notifications API not supported in this browser.');
+      console.error('Notifications API not supported.');
     }
   });
+
+  // Handle Dismiss
+  document.getElementById('notifDismissBtn').addEventListener('click', () => {
+    overlay.remove();
+  });
+}
 
 // --- Get FCM Token (Called only AFTER permission is granted) ---
 async function requestFcmToken(triggerSource) {
@@ -92,15 +93,14 @@ async function requestFcmToken(triggerSource) {
   }
 
   try {
-    // You MUST replace "YOUR_VAPID_KEY_HERE" with your actual VAPID key from Firebase Console!
     const token = await messaging.getToken({ vapidKey: "YOUR_VAPID_KEY_HERE" });
-    
     if (token) {
       console.log('FCM Token received:', token);
-      // In Phase 4, we will send this token to our GAS backend to subscribe to the topic.
-      showToast("Notifications enabled! You'll get daily updates.", "success", 3000);
-    } else {
-      console.log('No registration token available.');
+      if (typeof showToast === 'function') {
+        showToast("Notifications enabled! You'll get daily updates.", "success", 3000);
+      } else {
+        alert("Notifications enabled!");
+      }
     }
   } catch (err) {
     console.error('FCM Token Error:', err);
@@ -108,6 +108,17 @@ async function requestFcmToken(triggerSource) {
 }
 
 // --- Trigger Helpers ---
+
+// Trigger 1: Deadline Anxiety (job.html)
+function checkDeadlineAnxietyTrigger(jobTitle) {
+  showNotifSoftAsk(
+    "Never Miss a Deadline!",
+    `We will send you a push notification before the form for ${jobTitle} closes. Click 'Allow' on the next popup to set your reminder.`,
+    "Set Reminder",
+    "deadline_anxiety",
+    true
+  );
+}
 
 // Trigger 4: Returning Visitor (tests.html)
 function checkReturningVisitorTrigger() {
@@ -123,17 +134,6 @@ function checkReturningVisitorTrigger() {
       "returning_visitor"
     );
   }
-}
-
-// Trigger 1: Deadline Anxiety (job.html) - Triggered by explicit user click
-function checkDeadlineAnxietyTrigger(jobTitle) {
-  showNotifSoftAsk(
-    "Never Miss a Deadline!",
-    `We will send you a push notification before the form for ${jobTitle} closes. Click 'Allow' on the next popup to set your reminder.`,
-    "Set Reminder",
-    "deadline_anxiety",
-    true // forceShow = true: Bypasses 3-day cooldown because user explicitly clicked the button
-  );
 }
 
 // Trigger 3: Power User (favorites/history)
