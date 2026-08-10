@@ -15,6 +15,48 @@ function setNotifState(key, value) {
   localStorage.setItem('apnamock_notif_' + key, JSON.stringify(value));
 }
 
+// --- Instructions Modal for Blocked Users ---
+function showNotifBlockedInstructions() {
+  // If the instructions modal is already open, do nothing
+  if (document.getElementById('notifBlockedOverlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'notifBlockedOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.7);backdrop-filter:blur(8px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;';
+  
+  const card = document.createElement('div');
+  card.style.cssText = 'background:#ffffff;border-radius:16px;max-width:480px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.3);padding:32px;font-family:Inter,sans-serif;';
+  
+  card.innerHTML = `
+    <div style="width:64px;height:64px;background:#fee2e2;color:#dc2626;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;">
+      <i class="fa-solid fa-bell-slash"></i>
+    </div>
+    <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#1e293b;text-align:center;">Notifications Are Blocked</h3>
+    <p style="margin:0 0 24px 0;font-size:15px;color:#475569;line-height:1.5;text-align:center;">
+      Your browser is currently blocking notifications for ApnaMock. Follow these steps to enable them so you never miss a deadline:
+    </p>
+    
+    <ol style="margin:0 0 24px 0;padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
+      <li>Click the <strong>Lock icon</strong> (🔒) or the "Tune" icon (⚙️) in your browser's address bar at the top.</li>
+      <li>Find the <strong>Notifications</strong> section in the menu that drops down.</li>
+      <li>Change the dropdown from "Block" to <strong>"Allow"</strong>.</li>
+      <li>Refresh the page to start receiving alerts.</li>
+    </ol>
+
+    <button id="closeBlockedModalBtn" style="background:#1a56db;color:#fff;border:none;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s;width:100%;">
+      Got it
+    </button>
+  `;
+  
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // Handle Close
+  document.getElementById('closeBlockedModalBtn').addEventListener('click', () => {
+    overlay.remove();
+  });
+}
+
 // --- Main Soft-Ask Function ---
 function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false) {
   // 1. Permanent Respect: If already granted, do nothing.
@@ -68,7 +110,7 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
   document.getElementById('notifAcceptBtn').addEventListener('click', function() {
     if (window.Notification) {
       Notification.requestPermission().then(permission => {
-        overlay.remove();
+        overlay.remove(); // Remove the custom soft-ask popup
         
         if (permission === 'granted') {
           setNotifState('final_status', 'granted');
@@ -77,12 +119,8 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
           // The browser explicitly blocked us (either by user clicking Block or browser auto-block)
           setNotifState('final_status', 'denied');
           
-          // Show the explanation toast ONLY when this happens
-          if (typeof showToast === 'function') {
-            showToast.warning("Notifications Blocked", "You dismissed or blocked the prompt. Click the lock icon in your browser URL bar to allow notifications for ApnaMock.");
-          } else {
-            alert("Notifications are blocked. Please click the lock icon in your browser URL bar to allow notifications.");
-          }
+          // SHOW THE INSTRUCTIONS SCREEN INSTEAD OF A TOAST
+          showNotifBlockedInstructions();
         } else {
           // If permission is 'default' (they just closed the native prompt without choosing)
           // DO NOT permanently block them. Let them try again later.
