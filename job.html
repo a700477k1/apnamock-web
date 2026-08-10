@@ -1021,7 +1021,7 @@
       const notifStatus = localStorage.getItem('apnamock_notif_final_status');
       const isNotifSubscribed = notifStatus ? JSON.parse(notifStatus) === 'granted' : false;
       
-      // 1. FOMO Notification Banner (with .btn-fomo hover class applied)
+      // 1. FOMO Notification Banner
       const fomoBannerHtml = `
         <div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 200px;">
@@ -1038,15 +1038,15 @@
         </div>
       `;
 
-      // 2. Social Media Banner (Shown if already subscribed)
+      // 2. Social Media Banner (More convincing message)
       const socialBannerHtml = `
         <div style="margin-top: 16px; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(26, 86, 219, 0.1), rgba(124, 58, 237, 0.05)); border: 1px solid rgba(26, 86, 219, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 200px;">
             <h4 style="margin: 0 0 8px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-              <i class="fa-solid fa-users" style="color: #1a56db;"></i> Join Our Community!
+              <i class="fa-solid fa-check-circle" style="color: #16a34a;"></i> Alerts Activated! 🎉
             </h4>
             <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-              You are already subscribed to alerts! Connect with thousands of aspirants on our social channels for daily tips and discussions.
+              You're all set to receive deadline alerts! Take your prep to the next level. Join thousands of aspirants in our community for daily quizzes, free PDFs, and instant doubt-solving.
             </p>
             <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
               <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
@@ -1059,8 +1059,15 @@
       `;
 
       // Determine which banner to show
-      const topBanner = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
-      const bottomBanner = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
+      const bannerToDisplay = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
+
+      // LISTENER: Swap banner instantly if user grants permission while on the page
+      window.addEventListener('apnamock_notif_granted', function() {
+        const topWrapper = document.getElementById('notifBannerTopWrapper');
+        const bottomWrapper = document.getElementById('notifBannerBottomWrapper');
+        if (topWrapper) topWrapper.innerHTML = socialBannerHtml;
+        if (bottomWrapper) bottomWrapper.innerHTML = socialBannerHtml;
+      }, { once: true }); // { once: true } ensures it doesn't fire multiple times
 
       root.innerHTML = `
         <div class="single-job-container">
@@ -1149,7 +1156,7 @@
                 ` : ""}
               </div>
 
-              ${topBanner}
+              <div id="notifBannerTopWrapper">${bannerToDisplay}</div>
 
               <!-- BANNER 1: BEFORE DESCRIPTION -->
               <a href="/tests.html" class="cross-link-banner">
@@ -1197,7 +1204,7 @@
                 })()}
               </div>
 
-               ${bottomBanner}
+               <div id="notifBannerBottomWrapper">${bannerToDisplay}</div>
 
               <!-- PDF ONLY ACTIONS (Visible only when saving as PDF) -->
               <div class="pdf-actions" id="pdfActionsContainer">
