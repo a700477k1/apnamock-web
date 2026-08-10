@@ -9,10 +9,10 @@ const firebaseConfig = {
   measurementId: "G-R21VE8R481"
 };
 
-// Initialize Firebase only once
-if (!firebase.app.length) {
+// Initialize Firebase only once (FIXED syntax)
+if (!window.firebase || !firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// Initialize Messaging
-const messaging = firebase.messaging();
+// Initialize Messaging globally
+window.messaging = firebase.messaging();
