@@ -141,6 +141,12 @@
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 16px; height: 36px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; transition: all 0.15s; border: 1.5px solid transparent; }
     .btn-primary { background: var(--primary); color: #fff; flex: 1; }
     .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+
+    /* FOMO Button Hover Effect */
+    .btn-fomo { background: #d97706; border-color: #d97706; color: #fff; flex: 1; transition: all 0.2s ease; }
+    .btn-fomo:hover { background: #b45309; border-color: #b45309; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
 
     /* EMPTY STATE */
     .empty-state { background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; }
@@ -157,6 +163,15 @@
     .footer-link:hover { color: #fff; }
     .footer-bottom { max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* TOAST */
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; background: var(--text-primary); color: #fff; padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14px; font-weight: 500; box-shadow: var(--shadow-lg); animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 340px; text-align: center; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+    .toast.warning { background: var(--warning); }
+    .toast.info { background: var(--primary); color: #fff; } 
 
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
@@ -203,13 +218,13 @@
 
     <!-- CONTROLS BAR -->
     <div class="controls-bar">
-      <!-- HORIZONTALLY SCROLLABLE FILTERS -->
       <div class="filter-chips-wrap">
         <div class="filter-chips">
           <button class="chip active" onclick="setFilter('all', this)">All</button>
           <button class="chip" onclick="setFilter('urgent', this)">Urgent</button>
           <button class="chip" onclick="setFilter('jobs', this)">Jobs</button>
           <button class="chip" onclick="setFilter('tests', this)">Tests</button>
+          <button class="chip" onclick="setFilter('latest_updates', this)">Latest Updates</button>
           <button class="chip" onclick="setFilter('admit_card', this)">Admit Card</button>
           <button class="chip" onclick="setFilter('result', this)">Result</button>
           <button class="chip" onclick="setFilter('answer_key', this)">Answer Key</button>
@@ -218,7 +233,6 @@
           <button class="chip" onclick="setFilter('general_announcement', this)">General Announcement</button>
         </div>
       </div>
-      <!-- SEARCH BAR -->
       <div class="search-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input type="text" id="searchInput" class="search-input" placeholder="Search updates, jobs, tests..." oninput="handleSearch()" />
@@ -245,9 +259,26 @@
       <div class="update-grid" id="newJobsGrid">
         <div class="empty-state">Loading new jobs...</div>
       </div>
+      <div style="text-align: center; margin-top: 24px;">
+        <a href="/jobs.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See More Jobs <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
     </div>
 
-    <!-- Section 3: Newly Added Tests -->
+    <!-- FOMO / Community Smart Swap Container -->
+    <div id="notifBannerTopWrapper" style="margin-bottom: 48px;"></div>
+
+    <!-- Section 3: Announcements, Admit Cards and More -->
+    <div class="update-section visible" id="section-announcements">
+      <div class="section-header">
+        <div class="section-icon" style="background: var(--purple-light); color: var(--purple);"><i class="fa-solid fa-bullhorn"></i></div>
+        <div class="section-title">Announcements, Admit Cards and More</div>
+      </div>
+      <div class="update-grid" id="announcementsGrid">
+        <div class="empty-state">Loading announcements...</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Newly Added Mock Tests -->
     <div class="update-section visible" id="section-tests">
       <div class="section-header">
         <div class="section-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fa-solid fa-file-pen"></i></div>
@@ -256,16 +287,24 @@
       <div class="update-grid" id="newTestsGrid">
         <div class="empty-state">Loading new tests...</div>
       </div>
+      <div style="text-align: center; margin-top: 24px;">
+        <a href="/tests.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See More Tests <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
     </div>
 
-    <!-- Section 4: Announcements -->
-    <div class="update-section visible" id="section-announcements">
-      <div class="section-header">
-        <div class="section-icon" style="background: var(--purple-light); color: var(--purple);"><i class="fa-solid fa-bullhorn"></i></div>
-        <div class="section-title">Announcements, Admit Cards and More</div>
-      </div>
-      <div class="update-grid" id="announcementsGrid">
-        <div class="empty-state">Loading announcements...</div>
+    <!-- FINAL JOIN OUR COMMUNITY SECTION -->
+    <div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, var(--primary-light), var(--purple-light)); border: 1px solid var(--border); border-radius: var(--radius-xl); text-align: center;">
+      <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-users" style="color: var(--primary);"></i> Join Our Community
+      </h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        Connect with thousands of aspirants! Get daily tips, job updates, admit card alerts, answer keys and result news, free PDFs, and stay updated with the latest exam notifications.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+        <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="color: #25D366; border-color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #C13584; border-color: #C13584;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="color: #1877F2; border-color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
       </div>
     </div>
   </main>
@@ -313,6 +352,8 @@
     </div>
   </footer>
 
+  <div class="toast-container" id="toastContainer"></div>
+
   <script>
     const CONFIG = { 
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
@@ -332,14 +373,20 @@
     function storageSet(key, value) { try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(value)); } catch {} }
     function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
-    // Date Formatter (DD-MM-YYYY)
-    function formatDateDDMMYYYY(dateStr) {
-      if (!dateStr) return "—";
-      const parts = dateStr.split('-'); // Assumes YYYY-MM-DD from backend
-      if (parts.length === 3) {
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-      }
-      return dateStr;
+    // Toast Helper
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid fa-${
+        type === 'success' ? 'circle-check' :
+        type === 'error' ? 'circle-xmark' :
+        type === 'warning' ? 'triangle-exclamation' :
+        'circle-info'
+      }"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
     }
 
     // Quill HTML & Math Helpers
@@ -372,32 +419,19 @@
     const nav = document.querySelector(".site-nav");
     const menuBtn = document.getElementById("mobileMenuBtn");
     if (menuBtn) {
-      menuBtn.addEventListener("click", function (e) { 
-        nav.classList.toggle("mobile-open"); 
-      });
+      menuBtn.addEventListener("click", function (e) { nav.classList.toggle("mobile-open"); });
     }
-
-    function closeMobileMenu() {
-      if (nav) nav.classList.remove("mobile-open");
-    }
-
-    // Close if user clicks anywhere outside the menu
+    function closeMobileMenu() { if (nav) nav.classList.remove("mobile-open"); }
     document.addEventListener("click", function (e) {
       if (!nav) return;
-      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
-        closeMobileMenu();
-      }
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); }
     });
-
-    // Close if user scrolls the page
     window.addEventListener("scroll", closeMobileMenu);
-
-    // Close if user clicks a link inside the menu
     document.querySelectorAll(".site-nav .nav-link").forEach(function (link) {
       link.addEventListener("click", closeMobileMenu);
     });
 
-    // Date Math Helpers
+    // Date Helpers
     function getDaysRemaining(dateStr) {
       if (!dateStr) return null;
       const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -425,7 +459,6 @@
         else if (daysLeft <= 5) urgencyBadge = `<span class="urgency-badge closing-soon"><i class="fa-solid fa-clock"></i> ${daysLeft} Days Left</span>`;
       }
 
-      // FIX: Use Extended Date if it exists, otherwise use Last Date
       const activeDate = job.extendedLastDate || job.lastDate;
       const dateLabel = job.extendedLastDate ? "Extended To" : "Last Date";
 
@@ -494,10 +527,11 @@
       
       let visibleSections = [];
       
-      if (filter === 'all') visibleSections = ['section-closing', 'section-jobs', 'section-tests', 'section-announcements'];
+      if (filter === 'all') visibleSections = ['section-closing', 'section-jobs', 'section-announcements', 'section-tests'];
       else if (filter === 'urgent') visibleSections = ['section-closing'];
       else if (filter === 'jobs') visibleSections = ['section-closing', 'section-jobs'];
       else if (filter === 'tests') visibleSections = ['section-tests'];
+      else if (filter === 'latest_updates') visibleSections = ['section-announcements']; // NEW: Latest Updates filter
       else if (annTypes.includes(filter)) visibleSections = ['section-announcements'];
       
       document.querySelectorAll('.update-section').forEach(sec => {
@@ -505,8 +539,7 @@
         else sec.classList.remove('visible');
       });
 
-      // Scroll to announcements section if an announcement type is clicked
-      if (annTypes.includes(filter)) {
+      if (filter === 'latest_updates' || annTypes.includes(filter)) {
         document.getElementById('section-announcements').scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -522,21 +555,19 @@
       searchTimer = setTimeout(() => {
         const q = document.getElementById('searchInput').value.toLowerCase();
         
-        // Filter Jobs
         const fClosing = allClosingJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
         const fNewJobs = allNewJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
-        
-        // Filter Tests
         const fTests = allNewTests.filter(t => (t.title || '').toLowerCase().includes(q) || (t.exam_group || '').toLowerCase().includes(q));
         
-        // Filter Announcements (Account for both search query AND active quick filter)
         let fAnn = allAnnouncements;
-        if (annTypes.includes(currentFilter)) {
-          fAnn = allAnnouncements.filter(a => (a.type || '').toLowerCase().replace(/\s+/g, '_') === currentFilter);
+        if (annTypes.includes(currentFilter) || currentFilter === 'latest_updates') {
+          // If a specific ann type is selected, or latest_updates is selected, we show all announcements (or filtered by type)
+          if (annTypes.includes(currentFilter)) {
+             fAnn = allAnnouncements.filter(a => (a.type || '').toLowerCase().replace(/\s+/g, '_') === currentFilter);
+          }
         }
         fAnn = fAnn.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
 
-        // Render Filtered
         document.getElementById('closingSoonGrid').innerHTML = fClosing.length > 0 ? fClosing.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No matching jobs closing soon.</div>`;
         document.getElementById('newJobsGrid').innerHTML = fNewJobs.length > 0 ? fNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No matching new jobs.</div>`;
         document.getElementById('newTestsGrid').innerHTML = fTests.length > 0 ? fTests.map(renderTestCard).join('') : `<div class="empty-state">No matching new tests.</div>`;
@@ -548,7 +579,6 @@
     // Fetch and Display Data
     async function loadUpdates() {
       try {
-        // 1. Fetch Jobs
         const jobsRes = await fetch(CONFIG.CDN_BASE + 'data/jobs-index.json', { cache: 'no-store' });
         const jobsData = await jobsRes.json();
         const jobs = jobsData.jobs || [];
@@ -565,12 +595,9 @@
           }
         });
 
-        // Sort Closing Soon by closest deadline
         allClosingJobs.sort((a, b) => getDaysRemaining(a.extendedLastDate || a.lastDate) - getDaysRemaining(b.extendedLastDate || b.lastDate));
-        // Sort New Jobs by most recent
         allNewJobs.sort((a, b) => getDaysAgo(a.postDate) - getDaysAgo(b.postDate));
 
-        // Initial Render
         document.getElementById('closingSoonGrid').innerHTML = allClosingJobs.length > 0 ? allClosingJobs.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No jobs are closing in the next 5 days. You are all caught up!</div>`;
         document.getElementById('newJobsGrid').innerHTML = allNewJobs.length > 0 ? allNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No new jobs have been added in the last 7 days.</div>`;
 
@@ -580,12 +607,10 @@
       }
 
       try {
-        // 2. Fetch Tests
         const testsRes = await fetch(CONFIG.CDN_BASE + 'data/tests-index.json', { cache: 'no-store' });
         const testsData = await testsRes.json();
         allNewTests = testsData.tests || [];
         
-        // For now, grab the last 6 tests added to the index
         allNewTests = allNewTests.slice(-6).reverse(); 
 
         document.getElementById('newTestsGrid').innerHTML = allNewTests.length > 0 ? allNewTests.map(renderTestCard).join('') : `<div class="empty-state">No mock tests available yet.</div>`;
@@ -594,7 +619,6 @@
       }
 
       try {
-        // 3. Fetch Announcements
         const annRes = await fetch(CONFIG.CDN_BASE + 'data/announcements.json', { cache: 'no-store' });
         const annData = await annRes.json();
         allAnnouncements = (annData.announcements || []).filter(a => a.is_active !== false);
@@ -605,8 +629,79 @@
       }
     }
 
+    // Date Formatter (DD-MM-YYYY)
+    function formatDateDDMMYYYY(dateStr) {
+      if (!dateStr) return "—";
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    }
+
+    // Initialize FOMO / Community Smart Swap
+    function initNotifBanners() {
+      const notifStatus = localStorage.getItem('apnamock_notif_final_status');
+      const isNotifSubscribed = notifStatus ? JSON.parse(notifStatus) === 'granted' : false;
+      
+      const fomoBannerHtml = `
+        <div style="padding: 16px 20px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-triangle-exclamation" style="color: #d97706;"></i> Don't Miss the Deadline!
+            </h4>
+            <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              Thousands of candidates miss application dates every year. Get an instant push notification before this form closes so you never miss out.
+            </p>
+          </div>
+          <button onclick="checkDeadlineAnxietyTrigger('upcoming job deadlines')" class="btn btn-fomo">
+            <i class="fa-solid fa-bell"></i> Set Deadline Alert
+          </button>
+        </div>
+      `;
+
+      const socialBannerHtml = `
+        <div style="padding: 16px 20px; background: linear-gradient(135deg, rgba(26, 86, 219, 0.1), rgba(124, 58, 237, 0.05)); border: 1px solid rgba(26, 86, 219, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 15px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-check-circle" style="color: #16a34a;"></i> Alerts Activated! 🎉
+            </h4>
+            <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              You're all set to receive deadline alerts! Take your prep to the next level. Join thousands of aspirants in our community for daily quizzes, free PDFs, and instant doubt-solving.
+            </p>
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+              <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+              <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #25D366; border-color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+              <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #C13584; border-color: #C13584;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+              <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="height: 36px; padding: 0 14px; font-size: 13px; color: #1877F2; border-color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const topWrapper = document.getElementById('notifBannerTopWrapper');
+      if (topWrapper) {
+        topWrapper.innerHTML = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
+      }
+
+      // Listen for instant swap if permission is granted while on the page
+      window.addEventListener('apnamock_notif_granted', function() {
+        if (topWrapper) topWrapper.innerHTML = socialBannerHtml;
+      }, { once: true });
+    }
+
     // Initialize
     loadUpdates();
+    initNotifBanners();
   </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+  <!-- Our Firebase Config -->
+  <script src="/firebase-config.js"></script>
+  <!-- Our Notifications Logic -->
+  <script src="/notifications.js"></script>
+  
 </body>
 </html>
