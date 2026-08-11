@@ -2553,6 +2553,11 @@ if (State.filters.actualExam.length) {
        INIT
     ============================================================ */
     loadTestsData();
+    
+// Trigger 4: Check if this is the user's 3rd visit
+if (typeof checkReturningVisitorTrigger === 'function') {
+  checkReturningVisitorTrigger();
+}
   </script>
 
     <script>
@@ -2564,6 +2569,32 @@ if (State.filters.actualExam.length) {
       });
     }
   </script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<!-- Our Firebase Config -->
+<script src="/firebase-config.js"></script>
+<!-- Our Notifications Logic -->
+<script src="/notifications.js"></script>
+
+<!-- Toast Notification Helper (Required by notifications.js) -->
+<script>
+  function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fa-solid fa-${
+      type === 'success' ? 'circle-check' :
+      type === 'error' ? 'circle-xmark' :
+      type === 'warning' ? 'triangle-exclamation' :
+      'circle-info'
+    }"></i> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), duration);
+  }
+</script>
  
 </body>
 </html>
