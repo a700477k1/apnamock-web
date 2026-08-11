@@ -58,7 +58,7 @@ function showNotifBlockedInstructions() {
 }
 
 // --- Main Soft-Ask Function ---
-function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false) {
+function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = false, bypassCooldown = false) {
   // 1. Permanent Respect: If already granted, do nothing.
   const finalStatus = getNotifState('final_status');
   if (finalStatus === 'granted') return;
@@ -68,14 +68,16 @@ function showNotifSoftAsk(title, message, ctaText, triggerSource, forceShow = fa
     // If the user previously blocked us, don't show automatic popups.
     if (finalStatus === 'denied') return;
 
-    // One Prompt Per Session
+    // One Prompt Per Session (Keeps it from spamming during back-to-back tests)
     if (sessionStorage.getItem('apnamock_notif_session_asked') === 'true') return;
 
-    // Cooldown Check (3 days)
-    const lastAsked = getNotifState('last_asked_time');
-    if (lastAsked) {
-      const daysPassed = (Date.now() - lastAsked) / (1000 * 60 * 60 * 24);
-      if (daysPassed < NOTIF_CONFIG.COOLDOWN_DAYS) return;
+    // Cooldown Check (3 days) - unless bypassCooldown is true
+    if (!bypassCooldown) {
+      const lastAsked = getNotifState('last_asked_time');
+      if (lastAsked) {
+        const daysPassed = (Date.now() - lastAsked) / (1000 * 60 * 60 * 24);
+        if (daysPassed < NOTIF_CONFIG.COOLDOWN_DAYS) return;
+      }
     }
   }
 
@@ -211,6 +213,8 @@ function checkPostTestTrigger() {
     "Great Job! Keep the Momentum Going 🔥",
     "You just put in the hard work. Don't let your preparation stop here! Enable notifications to get instant alerts for new mock tests and crucial exam updates. Click 'Allow' on the next popup to stay ahead.",
     "Allow Alerts",
-    "post_test"
+    "post_test",
+    false, // forceShow = false (respects permanent block)
+    true   // bypassCooldown = true (shows every day, ignoring the 3-day wait)
   );
 }
