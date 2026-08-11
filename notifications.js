@@ -199,8 +199,8 @@ function checkReturningVisitorTrigger() {
 function checkPowerUserTrigger(count, type) {
   if (count >= 3) {
     showNotifSoftAsk(
-      "Protect Your Progress!",
-      `You have ${count} saved ${type}! Don't lose your hard work if you clear your browser. Enable notifications to get daily revision tips and sync alerts.`,
+      "Protect Your Progress! 🛡️",
+      `You have ${count} saved ${type}! Don't lose your hard work if you clear your browser. Enable notifications to get daily revision tips, sync alerts, and crucial exam updates. Click 'Allow' on the next popup to secure your data.`,
       "Enable Notifications",
       "power_user"
     );
