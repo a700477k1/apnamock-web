@@ -1492,10 +1492,17 @@ newFilters.testTitle.push(btn.dataset.value));
       // Load Data 
       const rawData = await getAllFavorites(); 
        
-      // Sort by newest first 
-      State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0)); 
-       
-      buildFilterOptions(); 
+      // Sort by newest first
+      State.allFavorites = rawData.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+  
+      // Trigger 3: Check if Power User (3+ favorites)
+      if (State.allFavorites.length >= 3) {
+      if (typeof checkPowerUserTrigger === 'function') {
+      checkPowerUserTrigger(State.allFavorites.length, "favorite questions");
+    }
+  }
+
+      buildFilterOptions();
       // Smart Backup Popup Logic (with deletion baseline reset)
       const favCount = State.allFavorites.length;
       let lastPromptCount = storageGet('backup_prompt_count_favs');
@@ -2317,6 +2324,51 @@ muted)"><i class="fa-solid fa-magnifying-glass"></i></div>
        BOOTSTRAP 
     ============================================================ */ 
     initFavorites(); 
-  </script> 
+  </script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+<!-- Our Firebase Config -->
+<script src="/firebase-config.js"></script>
+<!-- Our Notifications Logic -->
+<script src="/notifications.js"></script>
+
+<!-- JOIN OUR COMMUNITY SECTION -->
+<div class="align-wrapper" style="padding-bottom: 40px;">
+  <div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, var(--primary-light), var(--purple-light)); border: 1px solid var(--border); border-radius: var(--radius-xl); text-align: center;">
+    <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <i class="fa-solid fa-users" style="color: var(--primary);"></i> Join Our Community
+    </h3>
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+      Connect with thousands of aspirants! Get daily tips, job updates, admit card alerts, answer keys and result news, free PDFs, and stay updated with the latest exam notifications.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+      <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="color: #25D366; border-color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #C13584; border-color: #C13584;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+      <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="color: #1877F2; border-color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification Helper (Required by notifications.js) -->
+<script>
+  function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fa-solid fa-${
+      type === 'success' ? 'circle-check' :
+      type === 'error' ? 'circle-xmark' :
+      type === 'warning' ? 'triangle-exclamation' :
+      'circle-info'
+    }"></i> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), duration);
+  }
+</script>
+  
 </body> 
 </html>
