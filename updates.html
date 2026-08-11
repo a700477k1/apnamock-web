@@ -368,9 +368,33 @@
       storageSet('theme', isDark ? 'dark' : 'light');
     });
 
-    // Mobile Menu
-    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-      document.querySelector('.site-nav').classList.toggle('mobile-open');
+    // Mobile Menu (Auto-close on click outside or scroll)
+    const nav = document.querySelector(".site-nav");
+    const menuBtn = document.getElementById("mobileMenuBtn");
+    if (menuBtn) {
+      menuBtn.addEventListener("click", function (e) { 
+        nav.classList.toggle("mobile-open"); 
+      });
+    }
+
+    function closeMobileMenu() {
+      if (nav) nav.classList.remove("mobile-open");
+    }
+
+    // Close if user clicks anywhere outside the menu
+    document.addEventListener("click", function (e) {
+      if (!nav) return;
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // Close if user scrolls the page
+    window.addEventListener("scroll", closeMobileMenu);
+
+    // Close if user clicks a link inside the menu
+    document.querySelectorAll(".site-nav .nav-link").forEach(function (link) {
+      link.addEventListener("click", closeMobileMenu);
     });
 
     // Date Math Helpers
