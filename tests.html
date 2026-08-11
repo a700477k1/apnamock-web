@@ -2553,11 +2553,7 @@ if (State.filters.actualExam.length) {
        INIT
     ============================================================ */
     loadTestsData();
-    
-// Trigger 4: Check if this is the user's 3rd visit
-if (typeof checkReturningVisitorTrigger === 'function') {
-  checkReturningVisitorTrigger();
-}
+
   </script>
 
     <script>
@@ -2578,21 +2574,10 @@ if (typeof checkReturningVisitorTrigger === 'function') {
 <!-- Our Notifications Logic -->
 <script src="/notifications.js"></script>
 
-<!-- Toast Notification Helper (Required by notifications.js) -->
+<!-- Trigger 4: Check if this is the user's 3rd visit -->
 <script>
-  function showToast(message, type = 'info', duration = 3000) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<i class="fa-solid fa-${
-      type === 'success' ? 'circle-check' :
-      type === 'error' ? 'circle-xmark' :
-      type === 'warning' ? 'triangle-exclamation' :
-      'circle-info'
-    }"></i> ${message}`;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), duration);
+  if (typeof checkReturningVisitorTrigger === 'function') {
+    checkReturningVisitorTrigger();
   }
 </script>
  
