@@ -208,8 +208,8 @@ function checkPowerUserTrigger(count, type) {
 // Trigger 2: Post-Test High (result.html)
 function checkPostTestTrigger() {
   showNotifSoftAsk(
-    "Great Job!",
-    "Enable notifications to get alerts when new mock tests are added, so you can keep your preparation streak going.",
+    "Great Job! Keep the Momentum Going 🔥",
+    "You just put in the hard work. Don't let your preparation stop here! Enable notifications to get instant alerts for new mock tests and crucial exam updates. Click 'Allow' on the next popup to stay ahead.",
     "Allow Alerts",
     "post_test"
   );
