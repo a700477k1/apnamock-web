@@ -148,6 +148,10 @@
     .btn-fomo { background: #d97706; border-color: #d97706; color: #fff; padding: 0 20px; transition: all 0.2s ease; }
     .btn-fomo:hover { background: #b45309; border-color: #b45309; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
 
+    /* LOAD MORE WRAPPER */
+    .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px; }
+    .load-more-text { font-size: 13px; color: var(--text-muted); }
+
     /* EMPTY STATE */
     .empty-state { background: var(--bg-card); border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; }
 
@@ -179,8 +183,6 @@
       .site-nav.mobile-open { display: flex; }
       .mobile-menu-btn { display: flex; }
       .page-title { font-size: 22px; }
-      
-      /* Make FOMO button full width on mobile */
       .btn-fomo { width: 100%; flex: 1 1 100%; margin-top: 12px; }
     }
   </style>
@@ -251,6 +253,10 @@
       <div class="update-grid" id="closingSoonGrid">
         <div class="empty-state">Loading job deadlines...</div>
       </div>
+      <div class="load-more-wrap" id="closingLoadMore" style="display:none">
+        <span class="load-more-text" id="closingLoadMoreText"></span>
+        <button class="btn btn-outline" onclick="loadMoreSection('closing')">Load More</button>
+      </div>
     </div>
 
     <!-- Section 2: Newly Added Jobs -->
@@ -262,8 +268,12 @@
       <div class="update-grid" id="newJobsGrid">
         <div class="empty-state">Loading new jobs...</div>
       </div>
+      <div class="load-more-wrap" id="newJobsLoadMore" style="display:none">
+        <span class="load-more-text" id="newJobsLoadMoreText"></span>
+        <button class="btn btn-outline" onclick="loadMoreSection('newJobs')">Load More</button>
+      </div>
       <div style="text-align: center; margin-top: 24px;">
-        <a href="/jobs.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See More Jobs <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="/jobs.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See All Jobs <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
 
@@ -279,6 +289,10 @@
       <div class="update-grid" id="announcementsGrid">
         <div class="empty-state">Loading announcements...</div>
       </div>
+      <div class="load-more-wrap" id="annLoadMore" style="display:none">
+        <span class="load-more-text" id="annLoadMoreText"></span>
+        <button class="btn btn-outline" onclick="loadMoreSection('announcements')">Load More</button>
+      </div>
     </div>
 
     <!-- Section 4: Newly Added Mock Tests -->
@@ -290,8 +304,12 @@
       <div class="update-grid" id="newTestsGrid">
         <div class="empty-state">Loading new tests...</div>
       </div>
+      <div class="load-more-wrap" id="newTestsLoadMore" style="display:none">
+        <span class="load-more-text" id="newTestsLoadMoreText"></span>
+        <button class="btn btn-outline" onclick="loadMoreSection('newTests')">Load More</button>
+      </div>
       <div style="text-align: center; margin-top: 24px;">
-        <a href="/tests.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See More Tests <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="/tests.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See All Tests <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
 
@@ -360,16 +378,25 @@
   <script>
     const CONFIG = { 
       CDN_BASE: 'https://cdn.jsdelivr.net/gh/a700477k1/apnamock-static-data@main/',
-      STORAGE_PREFIX: 'apnamock_'
+      STORAGE_PREFIX: 'apnamock_',
+      ITEMS_PER_PAGE_UPDATES: 9 // Pagination limit
     };
 
-    // State
+    // Raw Data State
     let allClosingJobs = [];
     let allNewJobs = [];
     let allNewTests = [];
     let allAnnouncements = [];
     let currentFilter = 'all';
     const annTypes = ['admit_card', 'result', 'answer_key', 'exam_date', 'syllabus_change', 'general_announcement'];
+
+    // Pagination State
+    const PageState = {
+        closing: { filtered: [], count: 0, hasMore: false },
+        newJobs: { filtered: [], count: 0, hasMore: false },
+        announcements: { filtered: [], count: 0, hasMore: false },
+        newTests: { filtered: [], count: 0, hasMore: false }
+    };
 
     // Helpers
     function storageGet(key) { try { const raw = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return raw ? JSON.parse(raw) : null; } catch { return null; } }
@@ -418,21 +445,14 @@
       storageSet('theme', isDark ? 'dark' : 'light');
     });
 
-    // Mobile Menu (Auto-close on click outside or scroll)
+    // Mobile Menu
     const nav = document.querySelector(".site-nav");
     const menuBtn = document.getElementById("mobileMenuBtn");
-    if (menuBtn) {
-      menuBtn.addEventListener("click", function (e) { nav.classList.toggle("mobile-open"); });
-    }
+    if (menuBtn) { menuBtn.addEventListener("click", function (e) { nav.classList.toggle("mobile-open"); }); }
     function closeMobileMenu() { if (nav) nav.classList.remove("mobile-open"); }
-    document.addEventListener("click", function (e) {
-      if (!nav) return;
-      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); }
-    });
+    document.addEventListener("click", function (e) { if (!nav) return; if (!nav.contains(e.target) && !menuBtn.contains(e.target)) { closeMobileMenu(); } });
     window.addEventListener("scroll", closeMobileMenu);
-    document.querySelectorAll(".site-nav .nav-link").forEach(function (link) {
-      link.addEventListener("click", closeMobileMenu);
-    });
+    document.querySelectorAll(".site-nav .nav-link").forEach(function (link) { link.addEventListener("click", closeMobileMenu); });
 
     // Date Helpers
     function getDaysRemaining(dateStr) {
@@ -451,17 +471,21 @@
       past.setHours(0, 0, 0, 0);
       return Math.floor((today - past) / (1000 * 60 * 60 * 24));
     }
+    function formatDateDDMMYYYY(dateStr) {
+      if (!dateStr) return "—";
+      const parts = dateStr.split('-');
+      if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      return dateStr;
+    }
 
     // Render Functions
     function renderJobCard(job, showUrgency = false) {
       const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
       let urgencyBadge = '';
-      
       if (showUrgency && daysLeft !== null && daysLeft >= 0) {
         if (daysLeft === 0) urgencyBadge = `<span class="urgency-badge last-day"><i class="fa-solid fa-exclamation-circle"></i> Last Day!</span>`;
         else if (daysLeft <= 5) urgencyBadge = `<span class="urgency-badge closing-soon"><i class="fa-solid fa-clock"></i> ${daysLeft} Days Left</span>`;
       }
-
       const activeDate = job.extendedLastDate || job.lastDate;
       const dateLabel = job.extendedLastDate ? "Extended To" : "Last Date";
 
@@ -518,8 +542,52 @@
       `;
     }
 
-    function renderEmptyState(containerId, message) {
-      document.getElementById(containerId).innerHTML = `<div class="empty-state">${message}</div>`;
+    // --- PAGINATION LOGIC ---
+    function renderSection(sectionKey, gridId, loadMoreId, textId, renderFn, append) {
+        const state = PageState[sectionKey];
+        const grid = document.getElementById(gridId);
+        const loadMoreWrap = document.getElementById(loadMoreId);
+        const loadMoreText = document.getElementById(textId);
+        
+        if (!append) {
+            grid.innerHTML = '';
+            state.count = 0;
+        }
+        
+        if (state.filtered.length === 0 && !append) {
+            grid.innerHTML = `<div class="empty-state">No items found.</div>`;
+            if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+            return;
+        }
+        
+        const batch = state.filtered.slice(state.count, state.count + CONFIG.ITEMS_PER_PAGE_UPDATES);
+        const html = batch.map(renderFn).join('');
+        grid.insertAdjacentHTML('beforeend', html);
+        
+        state.count += batch.length;
+        state.hasMore = state.count < state.filtered.length;
+        
+        if (state.hasMore) {
+            if (loadMoreWrap) loadMoreWrap.style.display = 'flex';
+            const remaining = state.filtered.length - state.count;
+            if (loadMoreText) loadMoreText.textContent = `${remaining} more item${remaining !== 1 ? 's' : ''} available`;
+        } else {
+            if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+        }
+    }
+
+    function loadMoreSection(sectionKey) {
+        if (sectionKey === 'closing') renderSection('closing', 'closingSoonGrid', 'closingLoadMore', 'closingLoadMoreText', (j) => renderJobCard(j, true), true);
+        if (sectionKey === 'newJobs') renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), true);
+        if (sectionKey === 'announcements') renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, true);
+        if (sectionKey === 'newTests') renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, true);
+    }
+
+    function renderAllSections(append) {
+        renderSection('closing', 'closingSoonGrid', 'closingLoadMore', 'closingLoadMoreText', (j) => renderJobCard(j, true), append);
+        renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), append);
+        renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, append);
+        renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, append);
     }
 
     // Filtering Logic
@@ -529,12 +597,11 @@
       btn.classList.add('active');
       
       let visibleSections = [];
-      
       if (filter === 'all') visibleSections = ['section-closing', 'section-jobs', 'section-announcements', 'section-tests'];
       else if (filter === 'urgent') visibleSections = ['section-closing'];
       else if (filter === 'jobs') visibleSections = ['section-closing', 'section-jobs'];
       else if (filter === 'tests') visibleSections = ['section-tests'];
-      else if (filter === 'latest_updates') visibleSections = ['section-announcements']; // NEW: Latest Updates filter
+      else if (filter === 'latest_updates') visibleSections = ['section-announcements'];
       else if (annTypes.includes(filter)) visibleSections = ['section-announcements'];
       
       document.querySelectorAll('.update-section').forEach(sec => {
@@ -547,7 +614,6 @@
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-
       handleSearch();
     }
 
@@ -558,23 +624,19 @@
       searchTimer = setTimeout(() => {
         const q = document.getElementById('searchInput').value.toLowerCase();
         
-        const fClosing = allClosingJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
-        const fNewJobs = allNewJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
-        const fTests = allNewTests.filter(t => (t.title || '').toLowerCase().includes(q) || (t.exam_group || '').toLowerCase().includes(q));
+        // Filter Data
+        PageState.closing.filtered = allClosingJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
+        PageState.newJobs.filtered = allNewJobs.filter(j => j.title.toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q));
+        PageState.newTests.filtered = allNewTests.filter(t => (t.title || '').toLowerCase().includes(q) || (t.exam_group || '').toLowerCase().includes(q));
         
         let fAnn = allAnnouncements;
-        if (annTypes.includes(currentFilter) || currentFilter === 'latest_updates') {
-          // If a specific ann type is selected, or latest_updates is selected, we show all announcements (or filtered by type)
-          if (annTypes.includes(currentFilter)) {
-             fAnn = allAnnouncements.filter(a => (a.type || '').toLowerCase().replace(/\s+/g, '_') === currentFilter);
-          }
+        if (annTypes.includes(currentFilter)) {
+          fAnn = allAnnouncements.filter(a => (a.type || '').toLowerCase().replace(/\s+/g, '_') === currentFilter);
         }
-        fAnn = fAnn.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
+        PageState.announcements.filtered = fAnn.filter(a => (a.title || '').toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q));
 
-        document.getElementById('closingSoonGrid').innerHTML = fClosing.length > 0 ? fClosing.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No matching jobs closing soon.</div>`;
-        document.getElementById('newJobsGrid').innerHTML = fNewJobs.length > 0 ? fNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No matching new jobs.</div>`;
-        document.getElementById('newTestsGrid').innerHTML = fTests.length > 0 ? fTests.map(renderTestCard).join('') : `<div class="empty-state">No matching new tests.</div>`;
-        document.getElementById('announcementsGrid').innerHTML = fAnn.length > 0 ? fAnn.map(renderAnnouncementCard).join('') : `<div class="empty-state">No matching announcements.</div>`;
+        // Render Fresh
+        renderAllSections(false);
 
       }, 300);
     }
@@ -590,56 +652,41 @@
           const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
           const daysAgo = getDaysAgo(job.postDate);
 
-          if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 5) {
-            allClosingJobs.push(job);
-          }
-          if (daysAgo <= 7) {
-            allNewJobs.push(job);
-          }
+          if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 5) allClosingJobs.push(job);
+          if (daysAgo <= 7) allNewJobs.push(job);
         });
 
         allClosingJobs.sort((a, b) => getDaysRemaining(a.extendedLastDate || a.lastDate) - getDaysRemaining(b.extendedLastDate || b.lastDate));
         allNewJobs.sort((a, b) => getDaysAgo(a.postDate) - getDaysAgo(b.postDate));
 
-        document.getElementById('closingSoonGrid').innerHTML = allClosingJobs.length > 0 ? allClosingJobs.map(j => renderJobCard(j, true)).join('') : `<div class="empty-state">No jobs are closing in the next 5 days. You are all caught up!</div>`;
-        document.getElementById('newJobsGrid').innerHTML = allNewJobs.length > 0 ? allNewJobs.map(j => renderJobCard(j)).join('') : `<div class="empty-state">No new jobs have been added in the last 7 days.</div>`;
+        // Populate initial state
+        PageState.closing.filtered = allClosingJobs;
+        PageState.newJobs.filtered = allNewJobs;
 
       } catch (err) {
-        renderEmptyState('closingSoonGrid', 'Failed to load job updates.');
-        renderEmptyState('newJobsGrid', 'Failed to load job updates.');
+        allClosingJobs = []; allNewJobs = [];
       }
 
       try {
         const testsRes = await fetch(CONFIG.CDN_BASE + 'data/tests-index.json', { cache: 'no-store' });
         const testsData = await testsRes.json();
         allNewTests = testsData.tests || [];
-        
-        allNewTests = allNewTests.slice(-6).reverse(); 
-
-        document.getElementById('newTestsGrid').innerHTML = allNewTests.length > 0 ? allNewTests.map(renderTestCard).join('') : `<div class="empty-state">No mock tests available yet.</div>`;
+        PageState.newTests.filtered = allNewTests;
       } catch (err) {
-        renderEmptyState('newTestsGrid', 'Failed to load test updates.');
+        allNewTests = [];
       }
 
       try {
         const annRes = await fetch(CONFIG.CDN_BASE + 'data/announcements.json', { cache: 'no-store' });
         const annData = await annRes.json();
         allAnnouncements = (annData.announcements || []).filter(a => a.is_active !== false);
-
-        document.getElementById('announcementsGrid').innerHTML = allAnnouncements.length > 0 ? allAnnouncements.map(renderAnnouncementCard).join('') : `<div class="empty-state">No new announcements or admit cards right now.</div>`;
+        PageState.announcements.filtered = allAnnouncements;
       } catch (err) {
-        renderEmptyState('announcementsGrid', 'No announcements available right now.');
+        allAnnouncements = [];
       }
-    }
 
-    // Date Formatter (DD-MM-YYYY)
-    function formatDateDDMMYYYY(dateStr) {
-      if (!dateStr) return "—";
-      const parts = dateStr.split('-');
-      if (parts.length === 3) {
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-      }
-      return dateStr;
+      // Initial Render
+      renderAllSections(false);
     }
 
     // Initialize FOMO / Community Smart Swap
@@ -683,11 +730,8 @@
       `;
 
       const topWrapper = document.getElementById('notifBannerTopWrapper');
-      if (topWrapper) {
-        topWrapper.innerHTML = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
-      }
+      if (topWrapper) topWrapper.innerHTML = isNotifSubscribed ? socialBannerHtml : fomoBannerHtml;
 
-      // Listen for instant swap if permission is granted while on the page
       window.addEventListener('apnamock_notif_granted', function() {
         if (topWrapper) topWrapper.innerHTML = socialBannerHtml;
       }, { once: true });
@@ -701,9 +745,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
-  <!-- Our Firebase Config -->
   <script src="/firebase-config.js"></script>
-  <!-- Our Notifications Logic -->
   <script src="/notifications.js"></script>
   
 </body>
