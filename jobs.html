@@ -307,7 +307,7 @@
     .job-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: var(--bg-muted); border-radius: 14px; padding: 14px; }
     .job-meta { display: flex; gap: 10px; }
     .job-meta i { color: var(--primary); margin-top: 3px; }
-    .job-meta small { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
+    .job-meta small { display: block; font-size: 11px; color: var(--text-muted); text-transform:uppercase; margin-bottom: 3px; }
     .job-meta strong { font-size: 14px; color: var(--text-primary); font-weight: 600; }
     .job-preview { color: var(--text-secondary); line-height: 1.7; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
     .job-actions { display: flex; gap: 10px; margin-top: auto; }
@@ -616,6 +616,9 @@
           <button class="filter-chip-select" data-type="status" data-value="expired">Expired</button>
         </div>
         
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Eligibility</div>
+        <div class="filter-chips-wrap" id="filterEligibility" style="margin-bottom:20px;"></div>
+        
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;">By Category</div>
         <div class="filter-chips-wrap" id="filterCategories" style="margin-bottom:20px;"></div>
         
@@ -722,7 +725,7 @@ const State = {
   filteredJobs: [],
   displayedCount: 0,
   search: '',
-  filters: { status: [], category: [], state: [] }, // <--- ADD state array here
+  filters: { status: [], category: [], state: [], eligibility: [] },
   sort: 'expiry-asc'
 };
 
@@ -950,10 +953,11 @@ const State = {
       const typeLabels = {
         status: 'Status',
         category: 'Category',
-        state: 'State'
+        state: 'State',
+        eligibility: 'Eligibility'
       };
 
-      ['status', 'category', 'state'].forEach(type => {
+      ['status', 'category', 'state', 'eligibility'].forEach(type => {
         (State.filters[type] || []).forEach(value => {
           chips.push(`
             <div class="filter-chip">
@@ -999,12 +1003,11 @@ const State = {
     }
 
     // Helper to remove advanced popup filters from the active tags
-    // Helper to remove advanced popup filters from the active tags
     function removeFilter(type, value) {
       if (State.filters[type]) {
         State.filters[type] = State.filters[type].filter(v => v !== value);
         // Sync UI based on type
-        if (type === 'category' || type === 'state') {
+        if (type === 'category' || type === 'state' || type === 'eligibility') {
           buildFilterOptions();
           renderCategoryChips();
         } else if (type === 'status') {
@@ -1026,6 +1029,14 @@ const State = {
         return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="category" data-value="${cat}">${cat}</button>`;
       }).join('');
       
+      // Eligibility Tags
+      const eligContainer = document.getElementById('filterEligibility');
+      const eligibilities = [...new Set(State.allJobs.map(j => j.eligibility_tag).filter(Boolean))];
+      eligContainer.innerHTML = eligibilities.map(el => {
+        const isSelected = State.filters.eligibility.includes(el);
+        return `<button class="filter-chip-select ${isSelected ? 'selected' : ''}" data-type="eligibility" data-value="${el}">${el}</button>`;
+      }).join('');
+
       // States
       const stateContainer = document.getElementById('filterStates');
       const states = [...new Set(State.allJobs.map(j => j.stateName).filter(Boolean))];
@@ -1035,7 +1046,7 @@ const State = {
       }).join('');
 
       // Attach listeners
-      document.querySelectorAll('#filterStatus .filter-chip-select, #filterCategories .filter-chip-select, #filterStates .filter-chip-select').forEach(btn => {
+      document.querySelectorAll('#filterStatus .filter-chip-select, #filterCategories .filter-chip-select, #filterStates .filter-chip-select, #filterEligibility .filter-chip-select').forEach(btn => {
         btn.addEventListener('click', () => btn.classList.toggle('selected'));
       });
     }
@@ -1190,6 +1201,9 @@ const State = {
       }
       if (State.filters.state.length > 0) {
         filtered = filtered.filter(j => State.filters.state.includes(j.stateName));
+      }
+      if (State.filters.eligibility.length > 0) {
+        filtered = filtered.filter(j => State.filters.eligibility.includes(j.eligibility_tag));
       }
 
       // Sort
@@ -1461,6 +1475,7 @@ const State = {
       State.filters.status = Array.from(document.querySelectorAll('#filterStatus .selected')).map(b => b.dataset.value);
       State.filters.category = Array.from(document.querySelectorAll('#filterCategories .selected')).map(b => b.dataset.value);
       State.filters.state = Array.from(document.querySelectorAll('#filterStates .selected')).map(b => b.dataset.value);
+      State.filters.eligibility = Array.from(document.querySelectorAll('#filterEligibility .selected')).map(b => b.dataset.value);
       
       closeOverlay('filterOverlay');
       renderCategoryChips(); // Sync instant chips
@@ -1470,7 +1485,7 @@ const State = {
 
     function clearAllFilters() {
       document.querySelectorAll('.filter-chip-select').forEach(btn => btn.classList.remove('selected'));
-      State.filters = { status: [], category: [], state: [] };
+      State.filters = { status: [], category: [], state: [], eligibility: [] };
       renderCategoryChips(); 
       renderActiveFilters();
       applyFiltersAndSort();
