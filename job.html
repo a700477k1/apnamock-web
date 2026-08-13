@@ -1080,8 +1080,9 @@
               <div class="job-top">
                 <span class="category-chip">${escapeHtml(job.category || "General")}</span>
                 ${(() => {
-                  const u = getJobUrgency(job); // <-- UPDATED TO PASS WHOLE OBJECT
-                  const displayStatus = u.isExpired ? 'expired' : job.status;
+                  const u = getJobUrgency(job);
+                  // FIX: Calculate status dynamically based on date
+                  const displayStatus = u.isExpired ? 'expired' : 'active';
                   return `
                     <span class="status-chip ${displayStatus === 'expired' ? 'expired' : 'active'}">${displayStatus}</span>
                     ${u.tag && !u.isExpired ? `<span class="${u.class}">${u.tag}</span>` : ''}
