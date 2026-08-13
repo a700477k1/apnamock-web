@@ -237,11 +237,11 @@
 
     /* Urgency Tags */
     .urgency-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .urgency-chip.last-day { background: #fee2e2; color: #dc2626; animation: pulse 1.5s infinite; }
+    .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; animation: pulse 1.5s infinite; }
     .urgency-chip.closing-soon { background: #fef3c7; color: #d97706; }
     .urgency-chip.closing-soon-blink { background: #fef3c7; color: #d97706; animation: pulse 1.5s infinite; }
     .urgency-chip.days-left { background: #e8f0fe; color: #1a56db; }
-    body.dark-mode .urgency-chip.last-day { background: rgba(220, 38, 38, 0.2); color: #fca5a5; }
+    body.dark-mode .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; }
     body.dark-mode .urgency-chip.closing-soon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
     body.dark-mode .urgency-chip.days-left { background: rgba(26, 86, 219, 0.2); color: #93c5fd; }
     
@@ -842,9 +842,10 @@ const State = {
 
     // Helper to calculate days left and urgency tags
     function getJobUrgency(job) {
-      // Use extended_last_date if it exists, otherwise use lastDate
-      const lastDateStr = job.extendedLastDate || job.lastDate;
+      // Strictly check if extendedLastDate is valid, otherwise use lastDate
+      const lastDateStr = (job.extendedLastDate && job.extendedLastDate.trim() !== "") ? job.extendedLastDate : job.lastDate;
       if (!lastDateStr) return { isExpired: false, tag: "", class: "" };
+      
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const lastDate = new Date(lastDateStr);
@@ -856,10 +857,11 @@ const State = {
       
       if (diffDays < 0) {
         return { isExpired: true, tag: "Expired", class: "status-chip expired" };
-      } else if (diffDays === 0) {
-        return { isExpired: false, tag: "Last Day!", class: "urgency-chip last-day" };
+      } else if (diffDays <= 1) {
+        // If 1 or 0 days left, show "Last Day"
+        return { isExpired: false, tag: "Last Day", class: "urgency-chip last-day" };
       } else if (diffDays <= 3) {
-        return { isExpired: false, tag: diffDays + (diffDays === 1 ? " Day Left" : " Days Left"), class: "urgency-chip closing-soon-blink" };
+        return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-chip closing-soon-blink" };
       } else {
         return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-chip days-left" };
       }
