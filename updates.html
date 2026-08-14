@@ -178,7 +178,7 @@
     .footer-bottom { max-width: 1000px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .footer-copy { font-size: 13px; color: rgba(255,255,255,0.4); }
 
-    /* RESPONSIVE - Reduced padding to maximize content width on mobile */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .align-wrapper { padding-left: 8px; padding-right: 8px; }
       
@@ -189,12 +189,9 @@
 
       .page-title { font-size: 22px; }
       
-      /* Reduced padding for builder rows and presets to make content wider */
-      .builder-row { grid-template-columns: 1fr; gap: 12px; padding: 14px; }
-      .preset-card { padding: 14px; }
-      .builder-footer { flex-direction: column; align-items: stretch; text-align: center; padding: 14px; }
-      .availability-status { justify-content: center; }
-
+      /* Fix FOMO button full width on mobile */
+      .btn-fomo { width: 100%; flex: 1 1 100%; margin-top: 12px; }
+      
       .overlay { padding: 16px; }
       .popup { max-width: 380px; }
     }
