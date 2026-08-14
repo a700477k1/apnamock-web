@@ -970,11 +970,16 @@
       lastDate.setHours(23, 59, 59, 999); // End of the last day
       
       const diffTime = lastDate - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      if (diffDays < 0) {
+      // FIX 1: If the raw time difference is negative, it is definitively expired
+      if (diffTime < 0) {
         return { isExpired: true, tag: "Expired", class: "status-chip expired" };
-      } else if (diffDays <= 1) {
+      }
+      
+      // FIX 2: Use Math.floor instead of Math.ceil to accurately count remaining days
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 1) {
         // If 1 or 0 days left, show "Last Day"
         return { isExpired: false, tag: "Last Day", class: "urgency-chip last-day" };
       } else if (diffDays <= 3) {
