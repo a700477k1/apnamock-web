@@ -307,7 +307,7 @@
         <span class="load-more-text" id="newJobsLoadMoreText"></span>
         <button class="btn btn-outline" onclick="loadMoreSection('newJobs')">Load More</button>
       </div>
-      <div style="text-align: center; margin-top: 24px;">
+      <div style="text-align: center; margin-top: 24px;" id="seeAllJobsBtnWrap">
         <a href="/jobs.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See All Jobs <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
@@ -343,7 +343,7 @@
         <span class="load-more-text" id="newTestsLoadMoreText"></span>
         <button class="btn btn-outline" onclick="loadMoreSection('newTests')">Load More</button>
       </div>
-      <div style="text-align: center; margin-top: 24px;">
+      <div style="text-align: center; margin-top: 24px;" id="seeAllTestsBtnWrap">
         <a href="/tests.html" class="btn btn-outline" style="height: 42px; padding: 0 24px;">See All Tests <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
@@ -647,6 +647,15 @@
         renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), append, "No new jobs have been added in the last 7 days.");
         renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, append, "No new announcements, admit cards, or results right now.");
         renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, append, "No new mock tests have been added recently.");
+        
+        // DYNAMIC BUTTON LOGIC:
+        // If "Load More" is visible (hasMore = true), hide "See All". 
+        // If "Load More" is hidden (hasMore = false), show "See All".
+        const seeAllJobsWrap = document.getElementById('seeAllJobsBtnWrap');
+        if (seeAllJobsWrap) seeAllJobsWrap.style.display = PageState.newJobs.hasMore ? 'none' : 'block';
+        
+        const seeAllTestsWrap = document.getElementById('seeAllTestsBtnWrap');
+        if (seeAllTestsWrap) seeAllTestsWrap.style.display = PageState.newTests.hasMore ? 'none' : 'block';
     }
 
     // Filtering Logic
