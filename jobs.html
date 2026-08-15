@@ -417,6 +417,9 @@
       .ctrl-btn span:not(.badge) { display: none; }
       .ctrl-btn { padding: 0 12px; flex-shrink: 0; }
     }
+    /* COMMUNITY SECTION FIX */
+    .community-section-box { margin-top: 40px; padding: 24px; background: linear-gradient(135deg, var(--primary-light), var(--purple-light)); border: 1px solid var(--border); border-radius: var(--radius-xl); text-align: center; }
+    body.dark-mode .community-section-box { background: var(--bg-card); border-color: var(--border-strong); }
   </style>
 </head>
 <body>
@@ -590,7 +593,7 @@
     </div>
 
     <!-- JOIN OUR COMMUNITY SECTION -->
-    <div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, var(--primary-light), var(--purple-light)); border: 1px solid var(--border); border-radius: var(--radius-xl); text-align: center;">
+    <div class="community-section-box">
       <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
         <i class="fa-solid fa-users" style="color: var(--primary);"></i> Join Our Community
       </h3>
