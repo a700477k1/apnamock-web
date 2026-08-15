@@ -111,12 +111,12 @@
     /* Urgency Tags */
     .urgency-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
     .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; animation: pulse 1.5s infinite; }
-    .urgency-chip.closing-soon { background: #fef3c7; color: #d97706; }
-    .urgency-chip.closing-soon-blink { background: #fef3c7; color: #d97706; animation: pulse 1.5s infinite; }
-    .urgency-chip.days-left { background: #e8f0fe; color: #1a56db; }
+    .urgency-chip.closing-soon { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); }
+    .urgency-chip.closing-soon-blink { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); animation: pulse 1.5s infinite; }
+    .urgency-chip.days-left { background: linear-gradient(135deg, #1a56db, #1e429f); color: #ffffff; box-shadow: 0 2px 6px rgba(26, 86, 219, 0.25); }
     body.dark-mode .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; }
-    body.dark-mode .urgency-chip.closing-soon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    body.dark-mode .urgency-chip.days-left { background: rgba(26, 86, 219, 0.2); color: #93c5fd; }
+    body.dark-mode .urgency-chip.closing-soon { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; }
+    body.dark-mode .urgency-chip.days-left { background: linear-gradient(135deg, #1a56db, #1e429f); color: #ffffff; }
     
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
