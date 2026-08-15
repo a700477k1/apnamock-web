@@ -616,6 +616,9 @@
         if (state.filtered.length === 0 && !append) {
             grid.innerHTML = `<div class="empty-state">${emptyMessage}</div>`;
             if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+            // If empty, show the "See All" button so they can go to the main page
+            if (sectionKey === 'newJobs') document.getElementById('seeAllJobsBtnWrap').style.display = 'block';
+            if (sectionKey === 'newTests') document.getElementById('seeAllTestsBtnWrap').style.display = 'block';
             return;
         }
         
@@ -633,6 +636,15 @@
         } else {
             if (loadMoreWrap) loadMoreWrap.style.display = 'none';
         }
+
+        // DYNAMIC BUTTON LOGIC: Toggle "See All" button based on "Load More" visibility
+        if (sectionKey === 'newJobs') {
+            const seeAllJobsWrap = document.getElementById('seeAllJobsBtnWrap');
+            if (seeAllJobsWrap) seeAllJobsWrap.style.display = state.hasMore ? 'none' : 'block';
+        } else if (sectionKey === 'newTests') {
+            const seeAllTestsWrap = document.getElementById('seeAllTestsBtnWrap');
+            if (seeAllTestsWrap) seeAllTestsWrap.style.display = state.hasMore ? 'none' : 'block';
+        }
     }
 
     function loadMoreSection(sectionKey) {
@@ -647,15 +659,6 @@
         renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), append, "No new jobs have been added in the last 7 days.");
         renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, append, "No new announcements, admit cards, or results right now.");
         renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, append, "No new mock tests have been added recently.");
-        
-        // DYNAMIC BUTTON LOGIC:
-        // If "Load More" is visible (hasMore = true), hide "See All". 
-        // If "Load More" is hidden (hasMore = false), show "See All".
-        const seeAllJobsWrap = document.getElementById('seeAllJobsBtnWrap');
-        if (seeAllJobsWrap) seeAllJobsWrap.style.display = PageState.newJobs.hasMore ? 'none' : 'block';
-        
-        const seeAllTestsWrap = document.getElementById('seeAllTestsBtnWrap');
-        if (seeAllTestsWrap) seeAllTestsWrap.style.display = PageState.newTests.hasMore ? 'none' : 'block';
     }
 
     // Filtering Logic
