@@ -125,7 +125,14 @@
     .tag-answer_key { background: var(--pink-light, #fce7f3); color: var(--pink, #db2777); }
     .tag-exam_date { background: var(--warning-light); color: #d97706; }
     .tag-syllabus_change { background: var(--indigo-light, #e0e7ff); color: var(--indigo, #4f46e5); }
-    .tag-exam { background: var(--bg-muted); color: var(--text-secondary); }
+    .tag { padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+    .tag-exam { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #ffffff; box-shadow: 0 2px 6px rgba(26,86,219,0.25); }
+    .tag-active { background: linear-gradient(135deg, #16a34a, #15803d); color: #ffffff; box-shadow: 0 2px 6px rgba(22,163,74,0.25); }
+    .tag-expired { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #ffffff; box-shadow: 0 2px 6px rgba(220,38,38,0.25); }
+    
+    .urgency-badge { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px; }
+    .urgency-badge.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; animation: pulse 1.5s infinite; box-shadow: 0 2px 6px rgba(234, 88, 12, 0.25); }
+    .urgency-badge.closing-soon { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); }
     
     .card-title { font-family: var(--font-heading); font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
     
@@ -483,13 +490,32 @@
     document.querySelectorAll(".site-nav .nav-link").forEach(function (link) { link.addEventListener("click", closeMobileMenu); });
 
     // Date Helpers
-    function getDaysRemaining(dateStr) {
-      if (!dateStr) return null;
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const target = new Date(dateStr);
-      if (isNaN(target.getTime())) return null;
-      target.setHours(23, 59, 59, 999);
-      return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    // Helper to calculate days left and urgency tags dynamically
+    function getJobUrgency(job) {
+      const lastDateStr = (job.extendedLastDate && job.extendedLastDate.trim() !== "") ? job.extendedLastDate : job.lastDate;
+      if (!lastDateStr) return { isExpired: false, tag: "", class: "", daysLeft: null };
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastDate = new Date(lastDateStr);
+      if (isNaN(lastDate.getTime())) return { isExpired: false, tag: "", class: "", daysLeft: null };
+      lastDate.setHours(23, 59, 59, 999); 
+      
+      const diffTime = lastDate - today;
+      
+      if (diffTime < 0) {
+        return { isExpired: true, tag: "Expired", class: "tag-expired", daysLeft: -1 };
+      }
+      
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 1) {
+        return { isExpired: false, tag: "Last Day", class: "urgency-badge last-day", daysLeft: diffDays };
+      } else if (diffDays <= 3) {
+        return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-badge closing-soon", daysLeft: diffDays };
+      } else {
+        return { isExpired: false, tag: diffDays + " Days Left", class: "urgency-badge closing-soon", daysLeft: diffDays };
+      }
     }
     function getDaysAgo(dateStr) {
       if (!dateStr) return 999;
@@ -508,20 +534,25 @@
 
     // Render Functions
     function renderJobCard(job, showUrgency = false) {
-      const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
-      let urgencyBadge = '';
-      if (showUrgency && daysLeft !== null && daysLeft >= 0) {
-        if (daysLeft === 0) urgencyBadge = `<span class="urgency-badge last-day"><i class="fa-solid fa-exclamation-circle"></i> Last Day!</span>`;
-        else if (daysLeft <= 5) urgencyBadge = `<span class="urgency-badge closing-soon"><i class="fa-solid fa-clock"></i> ${daysLeft} Days Left</span>`;
+      let tagsHtml = `<span class="tag tag-exam">${escapeHtml(job.category || 'General')}</span>`;
+      
+      if (showUrgency) {
+        const u = getJobUrgency(job);
+        const displayStatus = u.isExpired ? 'expired' : 'active';
+        tagsHtml += `<span class="tag ${displayStatus === 'expired' ? 'tag-expired' : 'tag-active'}">${displayStatus}</span>`;
+        
+        if (!u.isExpired && u.tag) {
+          tagsHtml += `<span class="${u.class}">${u.tag}</span>`;
+        }
       }
+
       const activeDate = job.extendedLastDate || job.lastDate;
       const dateLabel = job.extendedLastDate ? "Extended To" : "Last Date";
 
       return `
         <div class="update-card">
           <div class="card-tags">
-            <span class="tag tag-exam">${escapeHtml(job.category || 'General')}</span>
-            ${urgencyBadge}
+            ${tagsHtml}
           </div>
           <div class="card-title">${escapeHtml(job.title)}</div>
           <div class="card-meta"><i class="fa-solid fa-building"></i> ${escapeHtml(job.company || 'Government Organization')}</div>
@@ -677,11 +708,16 @@
         const jobs = jobsData.jobs || [];
 
         jobs.forEach(job => {
-          const daysLeft = getDaysRemaining(job.extendedLastDate || job.lastDate);
+          const u = getJobUrgency(job);
+          // If NOT expired, and days left is between 0 and 5
+          if (!u.isExpired && u.daysLeft !== null && u.daysLeft >= 0 && u.daysLeft <= 5) {
+            allClosingJobs.push(job);
+          }
+          
           const daysAgo = getDaysAgo(job.postDate);
-
-          if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 5) allClosingJobs.push(job);
-          if (daysAgo <= 7) allNewJobs.push(job);
+          if (daysAgo <= 7) {
+            allNewJobs.push(job);
+          }
         });
 
         allClosingJobs.sort((a, b) => getDaysRemaining(a.extendedLastDate || a.lastDate) - getDaysRemaining(b.extendedLastDate || b.lastDate));
