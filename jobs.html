@@ -238,12 +238,12 @@
     /* Urgency Tags */
     .urgency-chip { padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
     .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; animation: pulse 1.5s infinite; }
-    .urgency-chip.closing-soon { background: #fef3c7; color: #d97706; }
-    .urgency-chip.closing-soon-blink { background: #fef3c7; color: #d97706; animation: pulse 1.5s infinite; }
-    .urgency-chip.days-left { background: #e8f0fe; color: #1a56db; }
+    .urgency-chip.closing-soon { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); }
+    .urgency-chip.closing-soon-blink { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); animation: pulse 1.5s infinite; }
+    .urgency-chip.days-left { background: linear-gradient(135deg, #1a56db, #1e429f); color: #ffffff; box-shadow: 0 2px 6px rgba(26, 86, 219, 0.25); }
     body.dark-mode .urgency-chip.last-day { background: linear-gradient(135deg, #ea580c, #dc2626); color: #ffffff; }
-    body.dark-mode .urgency-chip.closing-soon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    body.dark-mode .urgency-chip.days-left { background: rgba(26, 86, 219, 0.2); color: #93c5fd; }
+    body.dark-mode .urgency-chip.closing-soon { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; }
+    body.dark-mode .urgency-chip.days-left { background: linear-gradient(135deg, #1a56db, #1e429f); color: #ffffff; }
     
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
@@ -597,11 +597,11 @@
       <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
         Connect with thousands of aspirants! Get daily tips, job updates, admit card alerts, answer keys and result news, free PDFs, and stay updated with the latest exam notifications.
       </p>
-      <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-        <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #0088cc; border-color: #0088cc; padding: 0 12px; height: 38px; font-size: 13px; flex: 1; min-width: 120px;"><i class="fa-brands fa-telegram"></i> Telegram</a>
-        <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="color: #25D366; border-color: #25D366; padding: 0 12px; height: 38px; font-size: 13px; flex: 1; min-width: 120px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-        <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #C13584; border-color: #C13584; padding: 0 12px; height: 38px; font-size: 13px; flex: 1; min-width: 120px;"><i class="fa-brands fa-instagram"></i> Instagram</a>
-        <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="color: #1877F2; border-color: #1877F2; padding: 0 12px; height: 38px; font-size: 13px; flex: 1; min-width: 120px;"><i class="fa-brands fa-facebook"></i> Facebook</a>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="YOUR_TELEGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #0088cc; border-color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+        <a href="YOUR_WHATSAPP_LINK" target="_blank" class="btn btn-outline" style="color: #25D366; border-color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a href="YOUR_INSTAGRAM_LINK" target="_blank" class="btn btn-outline" style="color: #C13584; border-color: #C13584;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="YOUR_FACEBOOK_LINK" target="_blank" class="btn btn-outline" style="color: #1877F2; border-color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
       </div>
     </div>
 
