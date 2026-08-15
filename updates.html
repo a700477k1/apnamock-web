@@ -720,6 +720,7 @@
           }
         });
 
+        // FIX: Sort using getJobUrgency().daysLeft instead of the old getDaysRemaining
         allClosingJobs.sort((a, b) => getJobUrgency(a).daysLeft - getJobUrgency(b).daysLeft);
         allNewJobs.sort((a, b) => getDaysAgo(a.postDate) - getDaysAgo(b.postDate));
 
@@ -728,6 +729,7 @@
         PageState.newJobs.filtered = allNewJobs;
 
       } catch (err) {
+        console.error("Error loading jobs:", err);
         allClosingJobs = []; allNewJobs = [];
       }
 
