@@ -720,7 +720,7 @@
           }
         });
 
-        allClosingJobs.sort((a, b) => getDaysRemaining(a.extendedLastDate || a.lastDate) - getDaysRemaining(b.extendedLastDate || b.lastDate));
+        allClosingJobs.sort((a, b) => getJobUrgency(a).daysLeft - getJobUrgency(b).daysLeft);
         allNewJobs.sort((a, b) => getDaysAgo(a.postDate) - getDaysAgo(b.postDate));
 
         // Populate initial state
