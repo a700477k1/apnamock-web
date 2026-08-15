@@ -602,7 +602,7 @@
     }
 
     // --- PAGINATION LOGIC ---
-    function renderSection(sectionKey, gridId, loadMoreId, textId, renderFn, append) {
+    function renderSection(sectionKey, gridId, loadMoreId, textId, renderFn, append, emptyMessage) {
         const state = PageState[sectionKey];
         const grid = document.getElementById(gridId);
         const loadMoreWrap = document.getElementById(loadMoreId);
@@ -614,7 +614,7 @@
         }
         
         if (state.filtered.length === 0 && !append) {
-            grid.innerHTML = `<div class="empty-state">No items found.</div>`;
+            grid.innerHTML = `<div class="empty-state">${emptyMessage}</div>`;
             if (loadMoreWrap) loadMoreWrap.style.display = 'none';
             return;
         }
@@ -643,10 +643,10 @@
     }
 
     function renderAllSections(append) {
-        renderSection('closing', 'closingSoonGrid', 'closingLoadMore', 'closingLoadMoreText', (j) => renderJobCard(j, true), append);
-        renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), append);
-        renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, append);
-        renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, append);
+        renderSection('closing', 'closingSoonGrid', 'closingLoadMore', 'closingLoadMoreText', (j) => renderJobCard(j, true), append, "No jobs are expiring in the next 5 days. You're all caught up!");
+        renderSection('newJobs', 'newJobsGrid', 'newJobsLoadMore', 'newJobsLoadMoreText', (j) => renderJobCard(j), append, "No new jobs have been added in the last 7 days.");
+        renderSection('announcements', 'announcementsGrid', 'annLoadMore', 'annLoadMoreText', renderAnnouncementCard, append, "No new announcements, admit cards, or results right now.");
+        renderSection('newTests', 'newTestsGrid', 'newTestsLoadMore', 'newTestsLoadMoreText', renderTestCard, append, "No new mock tests have been added recently.");
     }
 
     // Filtering Logic
