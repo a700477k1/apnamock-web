@@ -2404,10 +2404,6 @@
       };
 
       storageSet(`result_${Quiz.testId}`, resObj); 
-    // Update Learning Streak
-    if (typeof updateStreak === 'function') {
-      updateStreak();
-    }      
       storageSet(`latest_result`, resObj);
       
       const history = storageGet('attempt_history') || {};
@@ -2449,6 +2445,5 @@
 
     initScreen1();
   </script>
-  <script src="/streak.js"></script>
 </body>
 </html>
