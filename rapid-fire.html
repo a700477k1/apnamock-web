@@ -1588,6 +1588,10 @@
       document.getElementById('reelOverlay').classList.remove('active');
       document.getElementById('bgMusic').pause();
       rfStats.totalSessions++;
+    // Update Learning Streak
+    if (typeof updateStreak === 'function') {
+      updateStreak();
+    }      
       rfStats.lastPlayed = new Date().toISOString();
       saveRfStats(rfStats);
       // Tell the browser NOT to restore the old scroll position on mobile
@@ -1654,5 +1658,6 @@
 
     initDashboard();
   </script>
+  <script src="/streak.js"></script>
 </body>
 </html>
