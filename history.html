@@ -1255,7 +1255,8 @@
       });
 
       State.allHistory = rawData.map(item => {
-        const siblings = testGroups[item.testId];
+        // SAFEGUARD: Prevent crash if testId is missing or siblings are undefined
+        const siblings = testGroups[item.testId] || [item];
         
         // Find latest
         const latestTime = Math.max(...siblings.map(s => s.date || 0));
@@ -1263,15 +1264,16 @@
 
         // Find best
         if (item.status === 'Completed') {
-            const bestScore = Math.max(...siblings.filter(s => s.status==='Completed').map(s => s.score || 0));
+            const completedSiblings = siblings.filter(s => s.status === 'Completed');
+            const bestScore = completedSiblings.length > 0 ? Math.max(...completedSiblings.map(s => s.score || 0)) : 0;
             item.isBest = (item.score === bestScore && item.score > 0);
             
             // Find improvement vs previous chronologically
-            const completedSiblings = siblings.filter(s => s.status === 'Completed').sort((a,b) => (a.date||0) - (b.date||0));
-            const myIndex = completedSiblings.findIndex(s => s.attemptId === item.attemptId);
+            const sortedCompleted = [...completedSiblings].sort((a,b) => (a.date||0) - (b.date||0));
+            const myIndex = sortedCompleted.findIndex(s => s.attemptId === item.attemptId);
             if (myIndex > 0) {
-               item.improvement = (item.score || 0) - (completedSiblings[myIndex - 1].score || 0);
-               item.accImprovement = (item.accuracy || 0) - (completedSiblings[myIndex - 1].accuracy || 0);
+               item.improvement = (item.score || 0) - (sortedCompleted[myIndex - 1].score || 0);
+               item.accImprovement = (item.accuracy || 0) - (sortedCompleted[myIndex - 1].accuracy || 0);
             }
         }
         return item;
